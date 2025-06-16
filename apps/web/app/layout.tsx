@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Albert_Sans } from "next/font/google";
+import { Inter_Tight } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "The all-in-one platform for landlords to manage properties, tenants, rent collection, and maintenance requests effortlessly.",
 };
 
-const albertSans = Albert_Sans({
+const albertSans = Inter_Tight({
   subsets: ["latin"],
   weight: ["300", "500", "600", "700", "800", "900"],
 });
