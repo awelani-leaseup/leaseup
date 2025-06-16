@@ -33,7 +33,7 @@ export default function Home() {
             </nav>
             <div className="flex items-center gap-4">
               <button className="text-white hover:text-white transition-colors">Sign In</button>
-              <button className="bg-[#3498DB] text-white px-6 py-2 rounded-lg hover:bg-[#2980B9] transition-colors">Get Started</button>
+              <button className="bg-[#1ABC9C] text-white px-6 py-2 rounded-lg hover:bg-[#2980B9] transition-colors">Get Started</button>
             </div>
           </div>
         </div>
@@ -59,6 +59,28 @@ export default function Home() {
                 <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-[#2C3E50] transition-colors flex items-center justify-center gap-2">
                   <i className="fa-solid fa-play"></i>
                   Watch Demo
+                </button>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3 mt-20">
+                <button className="border border-white/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-chart-line"></i>
+                  Dashboard
+                </button>
+                <button className="border border-white/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-building"></i>
+                  Properties
+                </button>
+                <button className="border border-white/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-file-contract"></i>
+                  Leases
+                </button>
+                <button className="border border-white/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-tools"></i>
+                  Maintenance
+                </button>
+                <button className="border border-white/30 text-white px-4 py-2 rounded-lg text-sm hover:bg-white/10 transition-colors flex items-center gap-2">
+                  <i className="fa-solid fa-users"></i>
+                  Tenants
                 </button>
               </div>
             </div>
