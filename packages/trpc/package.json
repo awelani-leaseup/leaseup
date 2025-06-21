@@ -3,10 +3,24 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "exports": {
+    "./server": "./src/server/index.ts",
+    "./trpc": "./src/server/trpc.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@leaseup/prisma": "workspace:*",
+    "@tanstack/react-query": "^5.81.0",
+    "@trpc/client": "^11.4.1",
+    "@trpc/next": "^11.4.2",
+    "@trpc/react-query": "^11.0.0",
+    "@trpc/server": "^11.4.1",
+    "superjson": "^2.2.1",
+    "valibot": "^1.1.0"
+  }
 }

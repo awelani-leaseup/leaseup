@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum LeaseStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
+model Tenant {
+  id          String        @id @default(uuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Lease       Lease[]
+  TenantLease TenantLease[]
+}
+
+model Landlord {
+  id        String     @id @default(uuid())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Property  Property[]
+}
+
+model Property {
+  id           String   @id @default(uuid())
+  name         String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  zip          String
+  ownerId      String
+  owner        Landlord @relation(fields: [ownerId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Unit         Unit[]
+  Lease        Lease[]
+}
+
+model Unit {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Lease {
+  id          String        @id @default(uuid())
+  propertyId  String
+  property    Property      @relation(fields: [propertyId], references: [id])
+  tenantId    String
+  tenant      Tenant        @relation(fields: [tenantId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  rent        Int
+  deposit     Int
+  status      LeaseStatus
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  TenantLease TenantLease[]
+}
+
+model TenantLease {
+  id        String   @id @default(uuid())
+  tenantId  String
+  leaseId   String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  lease     Lease    @relation(fields: [leaseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
