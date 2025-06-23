@@ -16,19 +16,28 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@leaseup/ui": "workspace:*",
+    "@clerk/nextjs": "^6.22.0",
     "@leaseup/trpc": "workspace:*",
+    "@leaseup/ui": "workspace:*",
+    "@novu/framework": "^2.6.7",
+    "@novu/nextjs": "^3.5.0",
+    "@react-email/components": "^0.1.0",
     "@t3-oss/env-nextjs": "^0.12.0",
     "@tanstack/react-query": "^5.69.0",
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.0.0",
     "@trpc/server": "^11.0.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.518.0",
     "next": "^15.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-email": "^4.0.16",
+    "react-hot-toast": "^2.5.2",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
-    "zod": "^3.24.2"
+    "zod": "^3.25.64",
+    "zod-to-json-schema": "^3.24.5"
   },
   "devDependencies": {
     "@leaseup/eslint-config": "workspace:*",

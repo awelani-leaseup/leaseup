@@ -5,9 +5,10 @@ import { createTRPCRouter, publicProcedure } from '../server/trpc';
 export const portfolioRouter = createTRPCRouter({
   hello: publicProcedure
     .input(v.object({ text: v.string() }))
-    .query(({ input }) => {
+    .query(({ input, ctx }) => {
+      const { userId, sessionId } = ctx.auth;
       return {
-        greeting: `Hello ${input.text} 22`,
+        greeting: `Hello ${input.text} 22 ${userId} ${sessionId}`,
       };
     }),
 
@@ -17,11 +18,7 @@ export const portfolioRouter = createTRPCRouter({
       return ctx.db.property.create({
         data: {
           name: input.name,
-          owner: {
-            create: {
-              name: input.name,
-            },
-          },
+          ownerId: ctx.auth.userId ?? '',
           addressLine1: input.name,
           city: input.name,
           state: input.name,
@@ -30,7 +27,7 @@ export const portfolioRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: publicProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.query(async ({ ctx }) => {
     const properties = await ctx.db.property.findMany();
     return properties;
   }),

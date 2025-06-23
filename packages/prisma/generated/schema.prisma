@@ -5,8 +5,30 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  url       = "postgresql://prisma.jdwagelseoljclnlobjv:ford2FfA5zD93P@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
   directUrl = env("DIRECT_URL")
+}
+
+enum LeaseTermType {
+  MONTHLY
+  FIXED_TERM
+}
+
+enum PropertyType {
+  SINGLE_UNIT
+  MULTI_UNIT
+}
+
+enum PropertyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  CANCELLED
+  OVERDUE
 }
 
 enum LeaseStatus {
@@ -16,37 +38,167 @@ enum LeaseStatus {
   EXPIRED
 }
 
+enum DocumentType {
+  LEASE_AGREEMENT
+  RECEIPT
+  OTHER
+}
+
+enum TenantDocumentType {
+  ID
+  DRIVING_LICENSE
+  PROOF_OF_BANK_ACCOUNT
+  PROOF_OF_INCOME
+  PROOF_OF_VEHICLE_REGISTRATION
+  LEASE_AGREEMENT
+  OTHER
+}
+
+enum TenantIncomeType {
+  SALARY
+  SELF_EMPLOYED
+  UNEMPLOYED
+  RETIRED
+  DISABILITY
+  OTHER
+}
+
+enum TenantRelationship {
+  SPOUSE
+  PARENT
+  GRANDPARENT
+  GRANDCHILD
+  SIBLING
+  CHILD
+  AUNT_UNCLE
+  COUSIN
+  NEPHEW_NIECE
+  OTHER
+}
+
+enum MaintenanceRequestStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  CANCELLED
+  COMPLETE
+}
+
+enum MaintenanceRequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum InvoiceCategory {
+  DEPOSIT
+  RENT
+  MAINTENANCE
+  UTILITY_BILL
+  LEVY
+  RATES_AND_TAXES
+  SERVICE_CHARGE
+  WATER_ELECTRICITY
+  OTHER
+}
+
 model Tenant {
-  id          String        @id @default(uuid())
-  name        String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Lease       Lease[]
-  TenantLease TenantLease[]
+  id                     String                   @id @default(uuid())
+  firstName              String
+  lastName               String
+  email                  String
+  altEmail               String?
+  phone                  String
+  altPhone               String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  Lease                  Lease[]
+  TenantLease            TenantLease[]
+  TenantDocument         TenantDocument[]
+  TenantEmergencyContact TenantEmergencyContact[]
+  TenantIncome           TenantIncome[]
 }
 
-model Landlord {
-  id        String     @id @default(uuid())
-  name      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Property  Property[]
-}
-
-model Property {
-  id           String   @id @default(uuid())
+model TenantEmergencyContact {
+  id           String             @id @default(uuid())
+  tenantId     String
+  tenant       Tenant             @relation(fields: [tenantId], references: [id])
   name         String
+  phone        String
+  email        String
+  relationship TenantRelationship
   addressLine1 String
   addressLine2 String?
   city         String
   state        String
   zip          String
-  ownerId      String
-  owner        Landlord @relation(fields: [ownerId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  Unit         Unit[]
-  Lease        Lease[]
+  countryCode  String
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model TenantIncome {
+  id                   String           @id @default(uuid())
+  tenantId             String
+  tenant               Tenant           @relation(fields: [tenantId], references: [id])
+  income               Float
+  incomeType           TenantIncomeType
+  position             String?
+  employer             String?
+  employerAddressLine1 String?
+  employerAddressLine2 String?
+  employerCity         String?
+  employerState        String?
+  employerZip          String?
+  employerCountryCode  String?
+  startDate            DateTime
+  endDate              DateTime
+  currentIncome        Boolean          @default(true)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+}
+
+model Landlord {
+  id           String     @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  zip          String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  Property     Property[]
+}
+
+model Property {
+  id               String             @id @default(uuid())
+  name             String
+  addressLine1     String
+  addressLine2     String?
+  city             String
+  state            String
+  zip              String
+  ownerId          String
+  owner            Landlord           @relation(fields: [ownerId], references: [id])
+  imageUrl         String?
+  propertyType     PropertyType       @default(MULTI_UNIT)
+  propertyStatus   PropertyStatus     @default(ACTIVE)
+  bedrooms         Int                @default(1)
+  bathrooms        Float              @default(1)
+  squareMeters     Float              @default(0)
+  marketRent       Float              @default(0)
+  deposit          Float              @default(0)
+  leaseTerm        Int                @default(12)
+  leaseTermType    LeaseTermType      @default(MONTHLY)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  Unit             Unit[]
+  Lease            Lease[]
+  PropertyDocument PropertyDocument[]
 }
 
 model Unit {
@@ -56,22 +208,57 @@ model Unit {
   name       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  Lease      Lease[]
 }
 
 model Lease {
-  id          String        @id @default(uuid())
-  propertyId  String
-  property    Property      @relation(fields: [propertyId], references: [id])
-  tenantId    String
-  tenant      Tenant        @relation(fields: [tenantId], references: [id])
-  startDate   DateTime
-  endDate     DateTime
-  rent        Int
-  deposit     Int
-  status      LeaseStatus
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  TenantLease TenantLease[]
+  id                 String               @id @default(uuid())
+  unitId             String
+  unit               Unit                 @relation(fields: [unitId], references: [id])
+  tenantId           String
+  tenant             Tenant               @relation(fields: [tenantId], references: [id])
+  startDate          DateTime
+  endDate            DateTime
+  rent               Float
+  deposit            Float
+  rentDueCurrency    String
+  status             LeaseStatus
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  TenantLease        TenantLease[]
+  Property           Property?            @relation(fields: [propertyId], references: [id])
+  propertyId         String?
+  Invoice            Invoice[]
+  Transactions       Transactions[]
+  MaintenanceRequest MaintenanceRequest[]
+  LeaseDocument      LeaseDocument[]
+}
+
+model Invoice {
+  id           String          @id @default(uuid())
+  leaseId      String
+  lease        Lease           @relation(fields: [leaseId], references: [id])
+  description  String
+  dueAmount    Float
+  dueDate      DateTime
+  category     InvoiceCategory
+  status       InvoiceStatus
+  transactions Transactions[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model Transactions {
+  id          String   @id @default(uuid())
+  leaseId     String
+  lease       Lease    @relation(fields: [leaseId], references: [id])
+  description String
+  amountPaid  Float
+  referenceId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  invoiceId   String?
 }
 
 model TenantLease {
@@ -82,4 +269,45 @@ model TenantLease {
   lease     Lease    @relation(fields: [leaseId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model MaintenanceRequest {
+  id          String                     @id @default(uuid())
+  leaseId     String
+  lease       Lease                      @relation(fields: [leaseId], references: [id])
+  description String
+  status      MaintenanceRequestStatus
+  priority    MaintenanceRequestPriority
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+}
+
+model TenantDocument {
+  id           String             @id @default(uuid())
+  tenantId     String
+  tenant       Tenant             @relation(fields: [tenantId], references: [id])
+  documentType TenantDocumentType
+  documentUrl  String
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model LeaseDocument {
+  id           String       @id @default(uuid())
+  leaseId      String
+  lease        Lease        @relation(fields: [leaseId], references: [id])
+  documentType DocumentType
+  documentUrl  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model PropertyDocument {
+  id           String       @id @default(uuid())
+  propertyId   String
+  property     Property     @relation(fields: [propertyId], references: [id])
+  documentType DocumentType
+  documentUrl  String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
