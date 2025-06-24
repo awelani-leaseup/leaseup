@@ -6,7 +6,7 @@ export default async function Dashboard() {
     <HydrateClient>
       <main
         id="main-content"
-        className="bg-[#ECF0F1] px-4 py-8 pt-[73px] md:px-8"
+        className="h-full bg-[#ECF0F1] px-4 py-8 pt-[73px] md:px-8"
       >
         {/* Dashboard Header */}
         <div className="mx-auto max-w-7xl">

@@ -1,3 +1,5 @@
+"use client";
+
 import "@leaseup/ui/global.css";
 
 import {
@@ -7,8 +9,8 @@ import {
   SignedOut,
 } from "@clerk/nextjs";
 import { type Metadata } from "next";
-import { Inter } from "next/font/google";
-import Script from "next/script";
+import { Onest } from "next/font/google";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import {
@@ -36,13 +38,7 @@ import {
 } from "lucide-react";
 import NavHeader from "./_components/navheader";
 
-export const metadata: Metadata = {
-  title: "Leaseup",
-  description: "Leaseup is a property management system for landlords.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
-
-const font = Inter({
+const font = Onest({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -53,26 +49,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${font.className}`}>
-        <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <Script
-            id="fontawesome-config"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.FontAwesomeConfig = {
-                  autoReplaceSvg: 'nest',
-                };
-              `,
-            }}
-          />
-          <Script
-            src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-            strategy="beforeInteractive"
-            crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
-          />
-        </head>
         <body>
           <SidebarProvider>
             <Sidebar>
@@ -131,14 +107,27 @@ export default function RootLayout({
                       </SidebarMenuItem>
                       <SidebarMenuItem>
                         <SidebarMenuButton>
+                          <Folder />
+                          <Link href="/documents">Documents</Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarGroupLabel>Accounting</SidebarGroupLabel>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton>
                           <Banknote />
-                          <Link href="/transactions">Transactions</Link>
+                          <Link href="/invoices">Invoices</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
                         <SidebarMenuButton>
                           <Folder />
-                          <Link href="/documents">Documents</Link>
+                          <Link href="/transactions">Transactions</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     </SidebarMenu>
@@ -152,7 +141,14 @@ export default function RootLayout({
                 <NavHeader />
               </div>
               <TRPCReactProvider>
-                <SignedIn>{children}</SignedIn>
+                <SignedIn>
+                  <APIProvider
+                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
+                    libraries={["places"]}
+                  >
+                    {children}
+                  </APIProvider>
+                </SignedIn>
                 <SignedOut>
                   <RedirectToSignIn />
                 </SignedOut>

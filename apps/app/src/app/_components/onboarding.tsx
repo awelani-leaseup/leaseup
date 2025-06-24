@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAppForm } from "@leaseup/ui/components/form";
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,6 +14,8 @@ import {
   Mail,
   Phone,
   Rocket,
+  MapPin,
+  X,
 } from "lucide-react";
 
 import { api } from "@/trpc/react";
@@ -35,6 +38,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@leaseup/ui/components/select";
+import { useAutocompleteSuggestions } from "@/hooks";
+import { useApiLoadingStatus } from "@vis.gl/react-google-maps";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@leaseup/ui/components/popover";
 
 export const Onboarding = () => {
   const utils = api.useUtils();
@@ -194,6 +204,36 @@ export const Onboarding = () => {
     "Communication Tools",
   ];
 
+  const form = useAppForm({
+    defaultValues: {
+      businessName: "",
+      businessType: "",
+      propertyCount: "",
+      yearsInBusiness: "",
+      businessAddress: "",
+    },
+  });
+
+  const [address, setAddress] = useState("");
+  const [debouncedAddress, setDebouncedAddress] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedAddress(address);
+    }, 300);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [address]);
+
+  const { suggestions, resetSession } = useAutocompleteSuggestions(
+    debouncedAddress,
+    {
+      input: debouncedAddress,
+    },
+  );
+  const status = useApiLoadingStatus();
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#ECF0F1] px-4 py-8">
       <div className="w-full max-w-4xl">
@@ -244,517 +284,492 @@ export const Onboarding = () => {
         </Card>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column - Form Content */}
-          <div className="space-y-6 lg:col-span-2">
-            {/* Welcome Section */}
-            <Card>
-              <CardHeader>
-                <div className="flex">
-                  <div className="flex items-center">
-                    <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#3498DB]">
-                      <Rocket className="text-xl text-white" />
+        <form.AppForm>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {/* Left Column - Form Content */}
+            <div className="space-y-6 lg:col-span-2">
+              {/* Welcome Section */}
+              <Card>
+                <CardHeader>
+                  <div className="flex">
+                    <div className="flex items-center">
+                      <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#3498DB]">
+                        <Rocket className="text-xl text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">
+                        Welcome to LeaseUp
+                      </CardTitle>
+                      <CardDescription>
+                        Let's get your account set up to start managing your
+                        properties
+                      </CardDescription>
                     </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-xl">
-                      Welcome to LeaseUp
-                    </CardTitle>
-                    <CardDescription>
-                      Let's get your account set up to start managing your
-                      properties
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
+                </CardHeader>
+              </Card>
 
-            {/* Business Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <Label
-                      htmlFor="businessName"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Business/Company Name *
-                    </Label>
-                    <Input
-                      id="businessName"
-                      placeholder="Enter your business name"
-                      value={formData.businessName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("businessName", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
+              {/* Business Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Business Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <form.AppField name="businessName">
+                      {(field) => (
+                        <field.TextField
+                          label="Business/Company Name *"
+                          placeholder="Enter your business name"
+                        />
+                      )}
+                    </form.AppField>
 
-                  <div>
-                    <Label
-                      htmlFor="businessType"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Business Type *
-                    </Label>
-                    <Select
-                      value={formData.businessType}
-                      onValueChange={(value: string) =>
-                        handleInputChange("businessType", value)
-                      }
-                    >
-                      <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue placeholder="Select business type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {businessTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <form.AppField name="businessType">
+                      {(field) => (
+                        <field.SelectField
+                          label="Business Type *"
+                          options={businessTypes.map((type) => ({
+                            label: type,
+                            id: type,
+                          }))}
+                        />
+                      )}
+                    </form.AppField>
+
+                    <form.AppField name="propertyCount">
+                      {(field) => (
+                        <field.SelectField
+                          label="Number of Properties *"
+                          options={propertyCounts.map((count) => ({
+                            label: count,
+                            id: count,
+                          }))}
+                        />
+                      )}
+                    </form.AppField>
+
+                    <form.AppField name="yearsInBusiness">
+                      {(field) => (
+                        <field.SelectField
+                          label="Years in Business *"
+                          options={yearsInBusiness.map((years) => ({
+                            label: years,
+                            id: years,
+                          }))}
+                        />
+                      )}
+                    </form.AppField>
                   </div>
 
-                  <div>
-                    <Label
-                      htmlFor="propertyCount"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Number of Properties *
-                    </Label>
-                    <Select
-                      value={formData.propertyCount}
-                      onValueChange={(value: string) =>
-                        handleInputChange("propertyCount", value)
-                      }
-                    >
-                      <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue placeholder="Select property count" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {propertyCounts.map((count) => (
-                          <SelectItem key={count} value={count}>
-                            {count}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="yearsInBusiness"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Years in Business
-                    </Label>
-                    <Select
-                      value={formData.yearsInBusiness}
-                      onValueChange={(value: string) =>
-                        handleInputChange("yearsInBusiness", value)
-                      }
-                    >
-                      <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue placeholder="Select experience" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {yearsInBusiness.map((years) => (
-                          <SelectItem key={years} value={years}>
-                            {years}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <Label
-                    htmlFor="businessAddress"
-                    className="mb-2 block text-sm font-medium text-[#2D3436]"
-                  >
-                    Business Address *
-                  </Label>
-                  <Input
-                    id="businessAddress"
-                    placeholder="Street Address"
-                    value={formData.businessAddress}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      handleInputChange("businessAddress", e.target.value)
-                    }
-                    className="mb-4 w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                  />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <Input
-                      placeholder="City"
-                      value={formData.city}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("city", e.target.value)
-                      }
-                      className="rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                    <Select
-                      value={formData.state}
-                      onValueChange={(value: string) =>
-                        handleInputChange("state", value)
-                      }
-                    >
-                      <SelectTrigger className="rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue placeholder="State" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {states.map((state) => (
-                          <SelectItem key={state} value={state}>
-                            {state}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      placeholder="ZIP Code"
-                      value={formData.zipCode}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("zipCode", e.target.value)
-                      }
-                      className="rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <Label
-                      htmlFor="firstName"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      First Name *
-                    </Label>
-                    <Input
-                      id="firstName"
-                      placeholder="Enter your first name"
-                      value={formData.firstName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("firstName", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="lastName"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Last Name *
-                    </Label>
-                    <Input
-                      id="lastName"
-                      placeholder="Enter your last name"
-                      value={formData.lastName}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("lastName", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Email Address *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email address"
-                      value={formData.email}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("email", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="phone"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Phone Number *
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="(555) 123-4567"
-                      value={formData.phone}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("phone", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="jobTitle"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Job Title
-                    </Label>
-                    <Input
-                      id="jobTitle"
-                      placeholder="e.g., Property Manager, Owner"
-                      value={formData.jobTitle}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        handleInputChange("jobTitle", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
-                  </div>
-
-                  <div>
-                    <Label
-                      htmlFor="preferredContact"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Preferred Contact Method
-                    </Label>
-                    <Select
-                      value={formData.preferredContact}
-                      onValueChange={(value: string) =>
-                        handleInputChange("preferredContact", value)
-                      }
-                    >
-                      <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Email">Email</SelectItem>
-                        <SelectItem value="Phone">Phone</SelectItem>
-                        <SelectItem value="Text Message">
-                          Text Message
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Additional Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Additional Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div>
-                    <Label
-                      htmlFor="heardFrom"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      How did you hear about us?
-                    </Label>
-                    <Select
-                      value={formData.heardFrom}
-                      onValueChange={(value: string) =>
-                        handleInputChange("heardFrom", value)
-                      }
-                    >
-                      <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                        <SelectValue placeholder="Select an option" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {heardFromOptions.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label className="mb-2 block text-sm font-medium text-[#2D3436]">
-                      What features are you most interested in?
-                    </Label>
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                      {features.map((feature) => (
-                        <div key={feature} className="flex items-center">
-                          <Checkbox
-                            id={feature}
-                            checked={formData.features.includes(feature)}
-                            onCheckedChange={() => handleFeatureToggle(feature)}
-                            className="h-4 w-4 rounded border-gray-300 text-[#3498DB] focus:ring-[#3498DB]"
-                          />
-                          <Label
-                            htmlFor={feature}
-                            className="ml-2 text-sm text-[#2D3436]"
+                  <div className="mt-6">
+                    <form.AppField name="businessAddress">
+                      {(field) => (
+                        <>
+                          <Popover
+                            open={
+                              suggestions.length > 0 &&
+                              form.state.values.businessAddress === ""
+                            }
+                            onOpenChange={(e) => {
+                              resetSession();
+                            }}
                           >
-                            {feature}
-                          </Label>
-                        </div>
-                      ))}
+                            <PopoverTrigger className="flex w-full flex-col">
+                              <Label>Address *</Label>
+                              <div className="relative">
+                                <Input
+                                  className="mt-1 mb-2 w-full"
+                                  value={address}
+                                  onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>,
+                                  ) => {
+                                    setAddress(e.target.value);
+                                    field.setValue("");
+                                  }}
+                                />
+                                {/* {form.state.values.businessAddress && (
+                                  <X
+                                    className="absolute top-3 right-2 size-4 cursor-pointer text-rose-500"
+                                    onClick={() => {
+                                      field.setValue("");
+                                      setAddress("");
+                                      resetSession();
+                                    }}
+                                  />
+                                )} */}
+                              </div>
+                            </PopoverTrigger>
+
+                            <PopoverContent className="w-96 p-0" align="start">
+                              <div className="flex flex-col divide-y">
+                                {suggestions.map((suggestion) => (
+                                  <button
+                                    className="flex w-full cursor-pointer items-center gap-2 px-2 py-2 text-left hover:bg-gray-100"
+                                    key={suggestion.placePrediction?.placeId}
+                                    onClick={() => {
+                                      field.setValue(
+                                        suggestion.placePrediction?.text.text ??
+                                          "",
+                                      );
+                                      setAddress(
+                                        suggestion.placePrediction?.text.text ??
+                                          "",
+                                      );
+                                      resetSession();
+                                    }}
+                                  >
+                                    <MapPin className="size-4 shrink-0 stroke-1" />
+                                    <span className="text-sm">
+                                      {suggestion.placePrediction?.text.text}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </>
+                      )}
+                    </form.AppField>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contact Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                      <Label
+                        htmlFor="firstName"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        First Name *
+                      </Label>
+                      <Input
+                        id="firstName"
+                        placeholder="Enter your first name"
+                        value={formData.firstName}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleInputChange("firstName", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="lastName"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Last Name *
+                      </Label>
+                      <Input
+                        id="lastName"
+                        placeholder="Enter your last name"
+                        value={formData.lastName}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleInputChange("lastName", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="email"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Email Address *
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={formData.email}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleInputChange("email", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="phone"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Phone Number *
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="(555) 123-4567"
+                        value={formData.phone}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleInputChange("phone", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="jobTitle"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Job Title
+                      </Label>
+                      <Input
+                        id="jobTitle"
+                        placeholder="e.g., Property Manager, Owner"
+                        value={formData.jobTitle}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleInputChange("jobTitle", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="preferredContact"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Preferred Contact Method
+                      </Label>
+                      <Select
+                        value={formData.preferredContact}
+                        onValueChange={(value: string) =>
+                          handleInputChange("preferredContact", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Email">Email</SelectItem>
+                          <SelectItem value="Phone">Phone</SelectItem>
+                          <SelectItem value="Text Message">
+                            Text Message
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <div>
-                    <Label
-                      htmlFor="challenges"
-                      className="mb-2 block text-sm font-medium text-[#2D3436]"
-                    >
-                      Tell us about your biggest property management challenge
-                    </Label>
-                    <Textarea
-                      id="challenges"
-                      rows={4}
-                      placeholder="Optional: Help us understand how we can best serve you..."
-                      value={formData.challenges}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                        handleInputChange("challenges", e.target.value)
-                      }
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                    />
+              {/* Additional Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Additional Information</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div>
+                      <Label
+                        htmlFor="heardFrom"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        How did you hear about us?
+                      </Label>
+                      <Select
+                        value={formData.heardFrom}
+                        onValueChange={(value: string) =>
+                          handleInputChange("heardFrom", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
+                          <SelectValue placeholder="Select an option" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {heardFromOptions.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label className="mb-2 block text-sm font-medium text-[#2D3436]">
+                        What features are you most interested in?
+                      </Label>
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        {features.map((feature) => (
+                          <div key={feature} className="flex items-center">
+                            <Checkbox
+                              id={feature}
+                              checked={formData.features.includes(feature)}
+                              onCheckedChange={() =>
+                                handleFeatureToggle(feature)
+                              }
+                              className="h-4 w-4 rounded border-gray-300 text-[#3498DB] focus:ring-[#3498DB]"
+                            />
+                            <Label
+                              htmlFor={feature}
+                              className="ml-2 text-sm text-[#2D3436]"
+                            >
+                              {feature}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label
+                        htmlFor="challenges"
+                        className="mb-2 block text-sm font-medium text-[#2D3436]"
+                      >
+                        Tell us about your biggest property management challenge
+                      </Label>
+                      <Textarea
+                        id="challenges"
+                        rows={4}
+                        placeholder="Optional: Help us understand how we can best serve you..."
+                        value={formData.challenges}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                          handleInputChange("challenges", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
+                      />
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between">
-              <Button
-                variant="outlined"
-                disabled={currentStep === 1}
-                onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
-                className="flex items-center rounded-lg border border-[#7F8C8D] px-6 py-3 text-[#7F8C8D] hover:bg-gray-50"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Previous
-              </Button>
-              <div className="flex space-x-3">
+              {/* Navigation Buttons */}
+              <div className="flex justify-between">
                 <Button
                   variant="outlined"
-                  className="flex items-center rounded-lg border border-[#3498DB] px-6 py-3 text-[#3498DB] hover:bg-[#3498DB]/5"
-                >
-                  <Save className="mr-2 h-4 w-4" />
-                  Save as Draft
-                </Button>
-                <Button
+                  disabled={currentStep === 1}
                   onClick={() =>
-                    setCurrentStep((prev) => Math.min(4, prev + 1))
+                    setCurrentStep((prev) => Math.max(1, prev - 1))
                   }
-                  className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]"
+                  className="flex items-center rounded-lg border border-[#7F8C8D] px-6 py-3 text-[#7F8C8D] hover:bg-gray-50"
                 >
-                  Continue
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Previous
                 </Button>
+                <div className="flex space-x-3">
+                  <Button
+                    variant="outlined"
+                    className="flex items-center rounded-lg border border-[#3498DB] px-6 py-3 text-[#3498DB] hover:bg-[#3498DB]/5"
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    Save as Draft
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      setCurrentStep((prev) => Math.min(4, prev + 1))
+                    }
+                    className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]"
+                  >
+                    Continue
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column - Help & Progress */}
-          <div className="space-y-6">
-            {/* Progress Overview */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Getting Started</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {steps.map((step) => (
-                    <div key={step.id} className="flex items-center">
-                      <div
-                        className={`size-8 ${step.id <= currentStep ? "bg-[#3498DB]" : "bg-gray-200"} mr-3 flex items-center justify-center rounded-full`}
-                      >
-                        <step.icon
-                          className={`${step.id <= currentStep ? "text-white" : "text-gray-400"} size-4`}
-                        />
-                      </div>
-                      <span
-                        className={`text-sm ${step.id <= currentStep ? "font-medium text-[#3498DB]" : "text-gray-400"}`}
-                      >
-                        {step.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 rounded-lg bg-[#3498DB]/10 p-3">
-                  <p className="text-sm font-medium text-[#3498DB]">
-                    Step {currentStep} of 4
-                  </p>
-                  <div className="mt-2 h-2 w-full rounded-full bg-gray-200">
-                    <div
-                      className="h-2 rounded-full bg-[#3498DB] transition-all duration-300"
-                      style={{ width: `${(currentStep / 4) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Help & Tips */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="rounded-lg bg-[#ECF0F1] p-3">
-                    <div className="flex items-start">
-                      <Lightbulb className="mt-1 mr-2 size-4 shrink-0 text-[#F39C12]" />
-                      <div>
-                        <p className="text-sm font-medium text-[#2D3436]">
-                          Pro Tip
-                        </p>
-                        <p className="text-xs text-[#7F8C8D]">
-                          Having accurate business information helps us provide
-                          better service and faster processing.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+            {/* Right Column - Help & Progress */}
+            <div className="space-y-6">
+              {/* Progress Overview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Getting Started</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-3">
-                    <div className="flex items-center rounded-lg bg-[#ECF0F1] p-3">
-                      <Mail className="mr-3 size-4 shrink-0 text-[#3498DB]" />
-                      <div>
-                        <p className="text-sm font-medium text-[#2D3436]">
-                          Email Support
-                        </p>
-                        <p className="text-xs text-[#7F8C8D]">
-                          support@rentwise.com
-                        </p>
+                    {steps.map((step) => (
+                      <div key={step.id} className="flex items-center">
+                        <div
+                          className={`size-8 ${step.id <= currentStep ? "bg-[#3498DB]" : "bg-gray-200"} mr-3 flex items-center justify-center rounded-full`}
+                        >
+                          <step.icon
+                            className={`${step.id <= currentStep ? "text-white" : "text-gray-400"} size-4`}
+                          />
+                        </div>
+                        <span
+                          className={`text-sm ${step.id <= currentStep ? "font-medium text-[#3498DB]" : "text-gray-400"}`}
+                        >
+                          {step.title}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 rounded-lg bg-[#3498DB]/10 p-3">
+                    <p className="text-sm font-medium text-[#3498DB]">
+                      Step {currentStep} of 4
+                    </p>
+                    <div className="mt-2 h-2 w-full rounded-full bg-gray-200">
+                      <div
+                        className="h-2 rounded-full bg-[#3498DB] transition-all duration-300"
+                        style={{ width: `${(currentStep / 4) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Help & Tips */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Need Help?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="rounded-lg bg-[#ECF0F1] p-3">
+                      <div className="flex items-start">
+                        <Lightbulb className="mt-1 mr-2 size-4 shrink-0 text-[#F39C12]" />
+                        <div>
+                          <p className="text-sm font-medium text-[#2D3436]">
+                            Pro Tip
+                          </p>
+                          <p className="text-xs text-[#7F8C8D]">
+                            Having accurate business information helps us
+                            provide better service and faster processing.
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center rounded-lg bg-[#ECF0F1] p-3">
-                      <Phone className="mr-3 size-4 shrink-0 text-[#3498DB]" />
-                      <div>
-                        <p className="text-sm font-medium text-[#2D3436]">
-                          Phone Support
-                        </p>
-                        <p className="text-xs text-[#7F8C8D]">(555) 123-4567</p>
+                    <div className="space-y-3">
+                      <div className="flex items-center rounded-lg bg-[#ECF0F1] p-3">
+                        <Mail className="mr-3 size-4 shrink-0 text-[#3498DB]" />
+                        <div>
+                          <p className="text-sm font-medium text-[#2D3436]">
+                            Email Support
+                          </p>
+                          <p className="text-xs text-[#7F8C8D]">
+                            support@rentwise.com
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center rounded-lg bg-[#ECF0F1] p-3">
+                        <Phone className="mr-3 size-4 shrink-0 text-[#3498DB]" />
+                        <div>
+                          <p className="text-sm font-medium text-[#2D3436]">
+                            Phone Support
+                          </p>
+                          <p className="text-xs text-[#7F8C8D]">
+                            (555) 123-4567
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
+        </form.AppForm>
       </div>
     </div>
   );

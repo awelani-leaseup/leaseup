@@ -143,11 +143,12 @@ export const SelectField: FC<{
       </FieldLabel>
       <Select onValueChange={handleChange} value={state.value}>
         <SelectTrigger
+          onBlur={handleBlur}
           className={cn(
             {
               'ring-danger ring': state.meta.errors.length > 0,
             },
-            'mt-1'
+            'mt-1 w-full'
           )}
         >
           <SelectValue placeholder={placeholder}>
