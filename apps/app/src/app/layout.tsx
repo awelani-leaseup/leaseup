@@ -8,8 +8,7 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-import { type Metadata } from "next";
-import { Onest } from "next/font/google";
+import { Albert_Sans } from "next/font/google";
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import { TRPCReactProvider } from "@/trpc/react";
@@ -20,11 +19,18 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
 } from "@leaseup/ui/components/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@leaseup/ui/components/dropdown-menu";
 import Link from "next/link";
 import {
   Banknote,
@@ -34,11 +40,13 @@ import {
   Folder,
   KeyRound,
   LayoutDashboard,
+  Plus,
   SquareUserRound,
 } from "lucide-react";
 import NavHeader from "./_components/navheader";
+import { Button } from "@leaseup/ui/components/button";
 
-const font = Onest({
+const font = Albert_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -48,11 +56,54 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${font.className}`}>
-        <body>
+      <html lang="en">
+        <body
+          style={{
+            backgroundColor: "#ECF0F1",
+          }}
+          className={`${font.className}`}
+        >
           <SidebarProvider>
             <Sidebar>
+              <SidebarHeader>
+                <Link href="/">
+                  <p className="px-2 text-2xl font-bold tracking-tight">
+                    LeaseUp
+                  </p>
+                </Link>
+              </SidebarHeader>
               <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button className="w-full">
+                                <Plus /> Create New
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Link href="/properties/create">Property</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Link href="/units/create">Unit</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Link href="/leases/create">Lease</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Link href="/tenants/create">Tenant</Link>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
                 <SidebarGroup>
                   <SidebarGroupContent>
                     <SidebarMenu>

@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "AmenityParking" AS ENUM ('COVERED', 'DEDICATED_SPACE', 'GARAGE', 'DRIVEWAY', 'STREET', 'PRIVATE_LOT', 'OTHER', 'NONE');
+
+-- CreateEnum
+CREATE TYPE "AmenityLaundry" AS ENUM ('IN_UNIT', 'IN_BUILDING', 'IN_COMMON_AREA', 'OTHER', 'NONE');

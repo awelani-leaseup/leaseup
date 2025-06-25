@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useEffect, useRef, useState } from 'react';
+import { useMapsLibrary } from '@vis.gl/react-google-maps';
 
 export type UseAutocompleteSuggestionsReturn = {
   suggestions: google.maps.places.AutocompleteSuggestion[];
@@ -42,9 +42,9 @@ export type UseAutocompleteSuggestionsReturn = {
  */
 export function useAutocompleteSuggestions(
   inputString: string,
-  requestOptions: Partial<google.maps.places.AutocompleteRequest> = {},
+  requestOptions: Partial<google.maps.places.AutocompleteRequest> = {}
 ): UseAutocompleteSuggestionsReturn {
-  const placesLib = useMapsLibrary("places");
+  const placesLib = useMapsLibrary('places');
 
   // stores the current sessionToken
   const sessionTokenRef =
@@ -78,7 +78,7 @@ export function useAutocompleteSuggestions(
       sessionToken: sessionTokenRef.current,
     };
 
-    if (inputString === "") {
+    if (inputString === '') {
       if (suggestions.length > 0) setSuggestions([]);
       return;
     }

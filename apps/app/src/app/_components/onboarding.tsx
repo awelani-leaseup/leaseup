@@ -22,8 +22,8 @@ import { api } from "@/trpc/react";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
-import { Textarea } from "@leaseup/ui/components/text-area";
-import { Checkbox } from "@leaseup/ui/components/checkbox";
+// import { Textarea } from "@leaseup/ui/components/text-area";
+// import { Checkbox } from "@leaseup/ui/components/checkbox";
 import {
   Card,
   CardContent,
@@ -31,13 +31,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@leaseup/ui/components/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@leaseup/ui/components/select";
 import { useAutocompleteSuggestions } from "@/hooks";
 import { useApiLoadingStatus } from "@vis.gl/react-google-maps";
 import {
@@ -48,7 +48,6 @@ import {
 
 export const Onboarding = () => {
   const utils = api.useUtils();
-  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     // Business Information
     businessName: "",
@@ -73,39 +72,6 @@ export const Onboarding = () => {
     features: [] as string[],
     challenges: "",
   });
-
-  const handleInputChange = (field: string, value: string | string[]) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleFeatureToggle = (feature: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      features: prev.features.includes(feature)
-        ? prev.features.filter((f) => f !== feature)
-        : [...prev.features, feature],
-    }));
-  };
-
-  const steps = [
-    { id: 1, title: "Basic Info", icon: User, color: "bg-[#3498DB]" },
-    { id: 2, title: "Banking Details", icon: CreditCard, color: "bg-gray-200" },
-    {
-      id: 3,
-      title: "Identity Verification",
-      icon: Building2,
-      color: "bg-gray-200",
-    },
-    {
-      id: 4,
-      title: "Review & Submit",
-      icon: CheckCircle,
-      color: "bg-gray-200",
-    },
-  ];
 
   const businessTypes = [
     "Individual Landlord",
@@ -211,6 +177,12 @@ export const Onboarding = () => {
       propertyCount: "",
       yearsInBusiness: "",
       businessAddress: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      jobTitle: "",
+      preferredContact: "Email",
     },
   });
 
@@ -235,54 +207,8 @@ export const Onboarding = () => {
   const status = useApiLoadingStatus();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#ECF0F1] px-4 py-8">
-      <div className="w-full max-w-4xl">
-        {/* Progress Header */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Basic Information</CardTitle>
-              <span className="text-sm text-[#7F8C8D]">
-                Step {currentStep} of 4
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Progress Steps */}
-            <div className="flex items-center space-x-2">
-              {steps.map((step, index) => (
-                <div key={step.id} className="flex flex-1 items-center">
-                  <div
-                    className={`h-8 w-8 ${step.id <= currentStep ? "bg-[#3498DB]" : "bg-gray-200"} flex items-center justify-center rounded-full`}
-                  >
-                    <span
-                      className={`text-sm font-medium ${step.id <= currentStep ? "text-white" : "text-gray-400"}`}
-                    >
-                      {step.id}
-                    </span>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`mx-2 h-2 flex-1 rounded ${step.id < currentStep ? "bg-[#3498DB]" : "bg-gray-200"}`}
-                    ></div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-2 flex justify-between text-sm">
-              {steps.map((step) => (
-                <span
-                  key={step.id}
-                  className={`font-medium ${step.id <= currentStep ? "text-[#3498DB]" : "text-gray-400"}`}
-                >
-                  {step.title}
-                </span>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
+    <div className="bg-[#ECF0F1 mt-6 flex min-h-screen justify-center px-4 sm:px-0">
+      <div className="w-full max-w-5xl">
         {/* Main Content */}
         <form.AppForm>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -389,16 +315,6 @@ export const Onboarding = () => {
                                     field.setValue("");
                                   }}
                                 />
-                                {/* {form.state.values.businessAddress && (
-                                  <X
-                                    className="absolute top-3 right-2 size-4 cursor-pointer text-rose-500"
-                                    onClick={() => {
-                                      field.setValue("");
-                                      setAddress("");
-                                      resetSession();
-                                    }}
-                                  />
-                                )} */}
                               </div>
                             </PopoverTrigger>
 
@@ -443,129 +359,70 @@ export const Onboarding = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                      <Label
-                        htmlFor="firstName"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        First Name *
-                      </Label>
-                      <Input
-                        id="firstName"
-                        placeholder="Enter your first name"
-                        value={formData.firstName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleInputChange("firstName", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
+                    <form.AppField name="firstName">
+                      {(field) => (
+                        <field.TextField
+                          label="First Name *"
+                          placeholder="Enter your first name"
+                        />
+                      )}
+                    </form.AppField>
 
-                    <div>
-                      <Label
-                        htmlFor="lastName"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Last Name *
-                      </Label>
-                      <Input
-                        id="lastName"
-                        placeholder="Enter your last name"
-                        value={formData.lastName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleInputChange("lastName", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
+                    <form.AppField name="lastName">
+                      {(field) => (
+                        <field.TextField
+                          label="Last Name *"
+                          placeholder="Enter your last name"
+                        />
+                      )}
+                    </form.AppField>
 
-                    <div>
-                      <Label
-                        htmlFor="email"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Email Address *
-                      </Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email address"
-                        value={formData.email}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleInputChange("email", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
+                    <form.AppField name="email">
+                      {(field) => (
+                        <field.TextField
+                          label="Email Address *"
+                          placeholder="Enter your email address"
+                        />
+                      )}
+                    </form.AppField>
 
-                    <div>
-                      <Label
-                        htmlFor="phone"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Phone Number *
-                      </Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="(555) 123-4567"
-                        value={formData.phone}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleInputChange("phone", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
+                    <form.AppField name="phone">
+                      {(field) => (
+                        <field.TextField
+                          label="Phone Number *"
+                          placeholder="Enter your phone number"
+                        />
+                      )}
+                    </form.AppField>
 
-                    <div>
-                      <Label
-                        htmlFor="jobTitle"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Job Title
-                      </Label>
-                      <Input
-                        id="jobTitle"
-                        placeholder="e.g., Property Manager, Owner"
-                        value={formData.jobTitle}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleInputChange("jobTitle", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
+                    <form.AppField name="jobTitle">
+                      {(field) => (
+                        <field.TextField
+                          label="Job Title"
+                          placeholder="Enter your job title"
+                        />
+                      )}
+                    </form.AppField>
 
-                    <div>
-                      <Label
-                        htmlFor="preferredContact"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Preferred Contact Method
-                      </Label>
-                      <Select
-                        value={formData.preferredContact}
-                        onValueChange={(value: string) =>
-                          handleInputChange("preferredContact", value)
-                        }
-                      >
-                        <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Email">Email</SelectItem>
-                          <SelectItem value="Phone">Phone</SelectItem>
-                          <SelectItem value="Text Message">
-                            Text Message
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <form.AppField name="preferredContact">
+                      {(field) => (
+                        <field.SelectField
+                          label="Preferred Contact Method"
+                          options={["Email", "Phone", "Text Message"].map(
+                            (option) => ({
+                              label: option,
+                              id: option,
+                            }),
+                          )}
+                        />
+                      )}
+                    </form.AppField>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Additional Information */}
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle>Additional Information</CardTitle>
                 </CardHeader>
@@ -643,16 +500,16 @@ export const Onboarding = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
+              </Card> */}
 
               {/* Navigation Buttons */}
               <div className="flex justify-between">
                 <Button
                   variant="outlined"
-                  disabled={currentStep === 1}
-                  onClick={() =>
-                    setCurrentStep((prev) => Math.max(1, prev - 1))
-                  }
+                  // disabled={currentStep === 1}
+                  // onClick={() =>
+                  //   // setCurrentStep((prev) => Math.max(1, prev - 1))
+                  // }
                   className="flex items-center rounded-lg border border-[#7F8C8D] px-6 py-3 text-[#7F8C8D] hover:bg-gray-50"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
@@ -667,9 +524,9 @@ export const Onboarding = () => {
                     Save as Draft
                   </Button>
                   <Button
-                    onClick={() =>
-                      setCurrentStep((prev) => Math.min(4, prev + 1))
-                    }
+                    // onClick={() =>
+                    //   setCurrentStep((prev) => Math.min(4, prev + 1))
+                    // }
                     className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]"
                   >
                     Continue
@@ -682,7 +539,7 @@ export const Onboarding = () => {
             {/* Right Column - Help & Progress */}
             <div className="space-y-6">
               {/* Progress Overview */}
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle>Getting Started</CardTitle>
                 </CardHeader>
@@ -717,7 +574,7 @@ export const Onboarding = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
+              </Card> */}
 
               {/* Help & Tips */}
               <Card>

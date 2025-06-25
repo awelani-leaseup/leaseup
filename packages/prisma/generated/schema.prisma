@@ -102,6 +102,25 @@ enum InvoiceCategory {
   OTHER
 }
 
+enum AmenityParking {
+  COVERED
+  DEDICATED_SPACE
+  GARAGE
+  DRIVEWAY
+  STREET
+  PRIVATE_LOT
+  OTHER
+  NONE
+}
+
+enum AmenityLaundry {
+  IN_UNIT
+  IN_BUILDING
+  IN_COMMON_AREA
+  OTHER
+  NONE
+}
+
 model Tenant {
   id                     String                   @id @default(uuid())
   firstName              String

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "exports": {
-    "./db.ts": "./src/db.ts"
+    "./db.ts": "./src/db.ts",
+    "./client.ts": "./generated/client.ts"
   },
   "scripts": {
     "db:generate": "prisma migrate dev",

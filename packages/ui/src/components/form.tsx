@@ -8,7 +8,14 @@ import {
 } from './command';
 import { cn } from '../utils/cn';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
-import { Asterisk, CalendarIcon, ChevronDown, CircleCheck } from 'lucide-react';
+import {
+  Asterisk,
+  CalendarIcon,
+  ChevronDown,
+  CircleCheck,
+  Map,
+  MapPin,
+} from 'lucide-react';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { Alert, AlertDescription } from './alert';
@@ -27,6 +34,8 @@ import {
 } from './select';
 import { Textarea } from './text-area';
 import { format } from 'date-fns';
+import { useAutocompleteSuggestions } from '../hooks';
+import { getAddressComponent } from '../utils/google-maps';
 
 const { fieldContext, formContext, useFieldContext, useFormContext } =
   createFormHookContexts();
@@ -265,7 +274,12 @@ export const ComboboxField: FC<{
 }) => {
   const { handleChange, handleBlur, state } = useFieldContext<string>();
   const [open, setOpen] = useState(false);
-
+  // const { suggestions, resetSession } = useAutocompleteSuggestions(
+  //   debouncedAddress,
+  //   {
+  //     input: debouncedAddress,
+  //   },
+  // );
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
@@ -290,7 +304,7 @@ export const ComboboxField: FC<{
             <ChevronDown className='absolute right-3 ml-2 h-4 w-4 shrink-0 bg-white text-gray-400' />
           </button>
         </PopoverTrigger>
-        <PopoverContent className='w-fit p-0 md:max-w-96'>
+        <PopoverContent onBlur={handleBlur} className='w-fit p-0 md:max-w-96'>
           <Command>
             <CommandInput placeholder='Search...' />
             <CommandList>
@@ -436,6 +450,168 @@ export const SubmitFormButton: FC<{ children: ReactNode }> = ({
   );
 };
 
+export const AddressField: FC<{
+  label: string;
+  placeholder?: string;
+  asterisk?: boolean;
+  description?: string;
+}> = ({
+  label,
+  placeholder = 'Enter address',
+  asterisk,
+  description,
+  ...props
+}) => {
+  const [address, setAddress] = useState('');
+  const [open, setOpen] = useState(false);
+  const [debouncedAddress, setDebouncedAddress] = useState('');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedAddress(address);
+    }, 300);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [address]);
+
+  const { handleChange, handleBlur, state, form } = useFieldContext<{
+    placeId: string;
+    text: string;
+  }>();
+  const { suggestions, resetSession } = useAutocompleteSuggestions(
+    debouncedAddress,
+    {
+      input: debouncedAddress,
+    }
+  );
+
+  return (
+    <label className='flex w-full flex-col gap-1'>
+      <FieldLabel>
+        {label}{' '}
+        {asterisk ? (
+          <Asterisk className='text-danger absolute -top-1 -left-3 size-3 stroke-2' />
+        ) : null}
+      </FieldLabel>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant='outlined'
+            role='combobox'
+            aria-expanded={open}
+            className='justify-between truncate mt-1'
+          >
+            {state.value ? state.value.text : placeholder}
+            <Map className='opacity-50' />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align='start'
+          onBlur={handleBlur}
+          className='p-0 w-full md:w-96'
+        >
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder='Search address...'
+              className='h-9'
+              onValueChange={(value) => {
+                setAddress(value);
+              }}
+            />
+            <CommandList>
+              <CommandEmpty>
+                <p className='text-sm font-bold text-center text-muted-foreground tracking-tight'>
+                  No address found.
+                </p>
+              </CommandEmpty>
+              <CommandGroup>
+                {suggestions.map((suggestion) => (
+                  <CommandItem
+                    key={suggestion.placePrediction?.placeId}
+                    value={suggestion.placePrediction?.mainText?.text}
+                    onSelect={async (currentValue) => {
+                      handleChange({
+                        placeId: suggestion.placePrediction?.placeId ?? '',
+                        text: currentValue,
+                      });
+
+                      try {
+                        const place = suggestion?.placePrediction?.toPlace();
+                        const result = await place?.fetchFields({
+                          fields: ['addressComponents'],
+                        });
+
+                        form.setFieldValue(
+                          'addressLine1',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'sublocality_level_1'
+                          )
+                        );
+
+                        form.setFieldValue(
+                          'addressLine2',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'locality'
+                          )
+                        );
+
+                        form.setFieldValue(
+                          'city',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'administrative_area_level_2'
+                          )
+                        );
+
+                        form.setFieldValue(
+                          'state',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'administrative_area_level_1'
+                          )
+                        );
+
+                        form.setFieldValue(
+                          'zip',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'postal_code'
+                          )
+                        );
+
+                        form.setFieldValue(
+                          'countryCode',
+                          getAddressComponent(
+                            result?.place?.addressComponents ?? [],
+                            'country'
+                          )
+                        );
+                      } catch (error) {
+                        console.error('Error fetching place details:', error);
+                      }
+
+                      resetSession();
+                      setOpen(false);
+                    }}
+                  >
+                    <MapPin className='mr-2 size-4 stroke-1' />
+                    {suggestion.placePrediction?.text?.text}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <FieldMessage />
+      {description ? <FieldDescription>{description}</FieldDescription> : null}
+    </label>
+  );
+};
+
 export const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
@@ -448,6 +624,7 @@ export const { useAppForm, withForm } = createFormHook({
     FieldDescription,
     TextAreaField,
     ComboboxField,
+    AddressField,
   },
   formComponents: {
     SubmitFormButton,

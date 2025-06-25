@@ -216,6 +216,31 @@ export const InvoiceCategory: {
 
 export type InvoiceCategory = (typeof InvoiceCategory)[keyof typeof InvoiceCategory]
 
+
+export const AmenityParking: {
+  COVERED: 'COVERED',
+  DEDICATED_SPACE: 'DEDICATED_SPACE',
+  GARAGE: 'GARAGE',
+  DRIVEWAY: 'DRIVEWAY',
+  STREET: 'STREET',
+  PRIVATE_LOT: 'PRIVATE_LOT',
+  OTHER: 'OTHER',
+  NONE: 'NONE'
+};
+
+export type AmenityParking = (typeof AmenityParking)[keyof typeof AmenityParking]
+
+
+export const AmenityLaundry: {
+  IN_UNIT: 'IN_UNIT',
+  IN_BUILDING: 'IN_BUILDING',
+  IN_COMMON_AREA: 'IN_COMMON_AREA',
+  OTHER: 'OTHER',
+  NONE: 'NONE'
+};
+
+export type AmenityLaundry = (typeof AmenityLaundry)[keyof typeof AmenityLaundry]
+
 }
 
 export type LeaseTermType = $Enums.LeaseTermType
@@ -265,6 +290,14 @@ export const MaintenanceRequestPriority: typeof $Enums.MaintenanceRequestPriorit
 export type InvoiceCategory = $Enums.InvoiceCategory
 
 export const InvoiceCategory: typeof $Enums.InvoiceCategory
+
+export type AmenityParking = $Enums.AmenityParking
+
+export const AmenityParking: typeof $Enums.AmenityParking
+
+export type AmenityLaundry = $Enums.AmenityLaundry
+
+export const AmenityLaundry: typeof $Enums.AmenityLaundry
 
 /**
  * ##  Prisma Client ʲˢ
