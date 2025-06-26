@@ -74,34 +74,37 @@ export default function Home() {
               </div>
               <div className='w-full md:w-1/2'>
                 <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                  LeaseUp automates rent collection, reminders, and payments—so
-                  you can focus on growing your portfolio, not chasing tenants
+                  LeaseUp automates rent collection, reminders, and payments.
                 </h3>
                 <p className='mb-4 text-[#475569]'>
                   Set up invoices, send receipts, and create financial reports
                   so you can track every last penny.
                 </p>
-                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2'>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
                   <li>
-                    ✅ Online Invoicing, late fees, and more. Professional and
+                    ✅ Online Invoicing
+                    {/* Professional and
                     Trackable. Every invoice and payment isAdd commentMore
-                    actions tracked in your dashboard—no need for spreadsheets.
+                    actions tracked in your dashboard—no need for spreadsheets. */}
                   </li>
                   <li>
-                    ✅ Automatic Rent Reminders. Reduce Late Payments. Tenants
+                    ✅ Automatic Rent Reminders. Reduce Late Payments
+                    {/* Tenants
                     get email/SMS/Whatsapp reminders days before rent is due.
                     Saves Mental Energy. You don&apos;t need to remember
-                    who&apos;s due when—it&apos;s automatic.
+                    who&apos;s due when—it&apos;s automatic. */}
                   </li>
                   <li>
-                    ✅ Online Payments. Tenants pay in a click—money goes
+                    ✅ Online Payments
+                    {/* Tenants pay in a click—money goes
                     directly to your account. They can pay via card, EFT,
-                    offline bank transfer(free).
+                    offline bank transfer(free). */}
                   </li>
                   <li>
-                    ✅ You get instant notification when rent is paid. Secure &
+                    ✅ You get instant notifications when rent is paid.
+                    {/* Secure &
                     Compliant, built on Paystack—trusted by thousands of African
-                    businesses..
+                    businesses.. */}
                   </li>
                 </ul>
                 <a
@@ -131,27 +134,31 @@ export default function Home() {
                   Everything you need to manage tenants, leases, and
                   communication—organized and automated in one place.
                 </p>
-                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2'>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
                   <li>
-                    ✅ Centralized Tenant Information - Store tenant contact
+                    ✅ Centralized Tenant Information.
+                    {/* Store tenant contact
                     info, lease agreements, documents, and more. Avoid lost
-                    paperwork, scattered files, and manual notes.
+                    paperwork, scattered files, and manual notes. */}
                   </li>
                   <li>
-                    ✅ Lease Tracking & Expiry Notifications - Get alerts before
+                    ✅ Lease Tracking & Expiry Notifications.
+                    {/* Get alerts before
                     leases expire. Easily view active, pending, and past leases.
-                    Stay proactive instead of reactive.
+                    Stay proactive instead of reactive. */}
                   </li>
                   <li>
-                    ✅ Payment History & Tracking - View each tenant&apos;s full
+                    ✅ Payment History & Tracking
+                    {/* .View each tenant&apos;s full
                     rent payment history. Spot late or partial payments
-                    instantly
+                    instantly */}
                   </li>
                   <li>
-                    ✅ Automated Communication - Spend less time calling and
+                    ✅ Automated Communication
+                    {/* .Spend less time calling and
                     messaging. Send rent reminders, invoices, and receipts
                     automatically. Keep communication consistent and
-                    professional
+                    professional */}
                   </li>
                 </ul>
                 <a
@@ -174,20 +181,30 @@ export default function Home() {
                 />
               </div>
               <div className='w-full md:w-1/2'>
-                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                <H3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
                   Put rent collection on auto-pilot
-                </h3>
+                </H3>
                 <p className='mb-4 text-[#475569]'>
                   No need to waste time tracking down rent payments. Give
                   tenants a flexible, easy way to pay online.
                 </p>
-                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
                   <li>
-                    Includes credit, debit, and ACH payment options as well as
-                    cash and check
+                    ✅ Includes credit, debit, and ACH payment options as well
+                    as cash and check.
                   </li>
-                  <li>Accept full or partial payments</li>
-                  <li>Track paid and overdue invoices</li>
+                  <li>
+                    ✅ Accept full or partial payments.
+                    {/* .View each tenant&apos;s full
+                    rent payment history. Spot late or partial payments
+                    instantly */}
+                  </li>
+                  <li>
+                    ✅ Track paid and overdue invoices
+                    {/* .View each tenant&apos;s full
+                    rent payment history. Spot late or partial payments
+                    instantly */}
+                  </li>
                 </ul>
                 <a
                   href='/features/online-rent-collection'
@@ -209,17 +226,23 @@ export default function Home() {
                 />
               </div>
               <div className='w-full md:w-1/2'>
-                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                  Quickly handle maintenance requests & vendors
-                </h3>
+                <H3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  Document Management
+                </H3>
                 <p className='mb-4 text-[#475569]'>
-                  Stay on top of all your maintenance needs with our simple,
-                  online portal.
+                  Manage your property and tenant documents in one place. Easily
+                  upload PDF leases, FICA documents, condition reports, payment
+                  proofs, and maintenance records — all in one place.
                 </p>
-                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
-                  <li>Receive maintenance requests online</li>
-                  <li>Keep track of progress</li>
-                  <li>Get professional bids with our built-in network</li>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
+                  <li>
+                    ✅ Store and manage all your property and tenant documents
+                    in one place.
+                  </li>
+                  <li>
+                    ✅ Generate and download lease agreements, invoices etc.
+                  </li>
+                  <li>✅ Never lose a lease agreement again</li>
                 </ul>
                 <a
                   href='/features/maintenance'
