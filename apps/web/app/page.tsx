@@ -1,1099 +1,24 @@
-'use client';
-
 import { Button } from '@leaseup/ui/components/button';
-import { useState, useEffect } from 'react';
-
-const DashboardPreview = () => {
-  return (
-    <div className='bg-white p-8 rounded-2xl *:text-left scale-[0.75] relative max-h-[670px] overflow-hidden border border-[#CBD5E1] transition-all hover:scale-[0.8]'>
-      <div className='max-w-[1392px] w-[1392px] mx-auto'>
-        {/* Dashboard Header */}
-        <div className='mb-8'>
-          <div className='flex flex-col md:flex-row md:items-center md:justify-between'>
-            <div>
-              <h1 className='text-3xl font-bold text-black'>Dashboard</h1>
-              <p className='text-[#7F8C8D] mt-2'>
-                Welcome back, John! Here's your property overview.
-              </p>
-            </div>
-            <div className='mt-4 md:mt-0 flex space-x-3'>
-              <button className='bg-white border border-gray-200 text-[#2D3436] px-4 py-2 rounded-lg flex items-center'>
-                <i className='fa-solid fa-download mr-2'></i>
-                Export
-              </button>
-              <button className='bg-[#3498DB] text-white px-4 py-2 rounded-lg flex items-center'>
-                <i className='fa-solid fa-plus mr-2'></i>
-                Add Property
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-          <div className='bg-white rounded-xl p-6 border border-gray-200'>
-            <div className='flex items-center justify-between mb-4'>
-              <div className='w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center'>
-                <i className='fa-solid fa-building text-[#3498DB] text-xl'></i>
-              </div>
-              <span className='text-[#7F8C8D]'>Properties</span>
-            </div>
-            <h3 className='text-3xl font-bold text-[#2D3436]'>12</h3>
-            <p className='text-[#7F8C8D] text-sm mt-2'>2 added this month</p>
-          </div>
-
-          <div className='bg-white rounded-xl p-6 border border-gray-200'>
-            <div className='flex items-center justify-between mb-4'>
-              <div className='w-12 h-12 bg-green-100 rounded-full flex items-center justify-center'>
-                <i className='fa-solid fa-users text-[#2ECC71] text-xl'></i>
-              </div>
-              <span className='text-[#7F8C8D]'>Tenants</span>
-            </div>
-            <h3 className='text-3xl font-bold text-[#2D3436]'>48</h3>
-            <p className='text-[#7F8C8D] text-sm mt-2'>95% occupancy rate</p>
-          </div>
-
-          <div className='bg-white rounded-xl p-6 border border-gray-200'>
-            <div className='flex items-center justify-between mb-4'>
-              <div className='w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center'>
-                <i className='fa-solid fa-money-bill-wave text-[#F39C12] text-xl'></i>
-              </div>
-              <span className='text-[#7F8C8D]'>Revenue</span>
-            </div>
-            <h3 className='text-3xl font-bold text-[#2D3436]'>$52.5k</h3>
-            <p className='text-sm text-[#2ECC71] mt-2 flex items-center'>
-              <i className='fa-solid fa-arrow-up mr-1'></i>
-              8.2% from last month
-            </p>
-          </div>
-
-          <div className='bg-white rounded-xl p-6 border border-gray-200'>
-            <div className='flex items-center justify-between mb-4'>
-              <div className='w-12 h-12 bg-red-100 rounded-full flex items-center justify-center'>
-                <i className='fa-solid fa-triangle-exclamation text-[#E74C3C] text-xl'></i>
-              </div>
-              <span className='text-[#7F8C8D]'>Pending Issues</span>
-            </div>
-            <h3 className='text-3xl font-bold text-[#2D3436]'>5</h3>
-            <p className='text-[#7F8C8D] text-sm mt-2'>
-              3 maintenance requests
-            </p>
-          </div>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Left Column */}
-          <div className='lg:col-span-2 space-y-8'>
-            {/* Recent Activity */}
-            <div className='bg-white rounded-xl border border-gray-200 p-6'>
-              <div className='flex justify-between items-center mb-6'>
-                <h2 className='text-xl font-semibold text-[#2D3436]'>
-                  Recent Activity
-                </h2>
-                <button className='text-[#3498DB] text-sm'>View All</button>
-              </div>
-              <div className='space-y-6'>
-                <div className='flex items-start'>
-                  <div className='w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-4'>
-                    <i className='fa-solid fa-key text-[#3498DB]'></i>
-                  </div>
-                  <div className='flex-1'>
-                    <p className='text-[#2D3436]'>
-                      New lease signed for{' '}
-                      <span className='font-medium'>Apt #304</span>
-                    </p>
-                    <p className='text-sm text-[#7F8C8D] mt-1'>2 hours ago</p>
-                  </div>
-                </div>
-                <div className='flex items-start'>
-                  <div className='w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-4'>
-                    <i className='fa-solid fa-dollar-sign text-[#2ECC71]'></i>
-                  </div>
-                  <div className='flex-1'>
-                    <p className='text-[#2D3436]'>
-                      Rent payment received from{' '}
-                      <span className='font-medium'>Sarah Johnson</span>
-                    </p>
-                    <p className='text-sm text-[#7F8C8D] mt-1'>5 hours ago</p>
-                  </div>
-                </div>
-                <div className='flex items-start'>
-                  <div className='w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-4'>
-                    <i className='fa-solid fa-wrench text-[#E74C3C]'></i>
-                  </div>
-                  <div className='flex-1'>
-                    <p className='text-[#2D3436]'>
-                      Maintenance request submitted for{' '}
-                      <span className='font-medium'>Apt #201</span>
-                    </p>
-                    <p className='text-sm text-[#7F8C8D] mt-1'>1 day ago</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Properties Overview */}
-            <div className='bg-white rounded-xl border border-gray-200 p-6'>
-              <div className='flex justify-between items-center mb-6'>
-                <h2 className='text-xl font-semibold text-[#2D3436]'>
-                  Properties Overview
-                </h2>
-                <button className='text-[#3498DB] text-sm'>
-                  Manage Properties
-                </button>
-              </div>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div className='border border-gray-200 rounded-lg p-4'>
-                  <div className='flex items-center mb-4'>
-                    <img
-                      className='w-16 h-16 rounded-lg object-cover mr-4'
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/d13f0792a2-ef656867d059193c23ad.png'
-                      alt='Property'
-                    />
-                    <div>
-                      <h3 className='font-medium text-[#2D3436]'>
-                        Parkview Apartments
-                      </h3>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        12 units • 95% occupied
-                      </p>
-                    </div>
-                  </div>
-                  <div className='flex justify-between text-sm'>
-                    <span className='text-[#7F8C8D]'>Monthly Revenue</span>
-                    <span className='text-[#2D3436] font-medium'>$24,500</span>
-                  </div>
-                </div>
-                <div className='border border-gray-200 rounded-lg p-4'>
-                  <div className='flex items-center mb-4'>
-                    <img
-                      className='w-16 h-16 rounded-lg object-cover mr-4'
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/d13f0792a2-ef656867d059193c23ad.png'
-                      alt='Property'
-                    />
-                    <div>
-                      <h3 className='font-medium text-[#2D3436]'>
-                        Riverside Complex
-                      </h3>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        8 units • 100% occupied
-                      </p>
-                    </div>
-                  </div>
-                  <div className='flex justify-between text-sm'>
-                    <span className='text-[#7F8C8D]'>Monthly Revenue</span>
-                    <span className='text-[#2D3436] font-medium'>$18,000</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className='space-y-8'>
-            {/* Upcoming Payments */}
-            <div className='bg-white rounded-xl border border-gray-200 p-6'>
-              <h2 className='text-xl font-semibold text-[#2D3436] mb-6'>
-                Upcoming Payments
-              </h2>
-              <div className='space-y-4'>
-                <div className='flex items-center justify-between p-3 bg-[#ECF0F1] rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg'
-                      alt='Tenant'
-                      className='w-8 h-8 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Sarah Johnson
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>Due Apr 25, 2025</p>
-                    </div>
-                  </div>
-                  <span className='font-medium text-[#2D3436]'>$1,200</span>
-                </div>
-                <div className='flex items-center justify-between p-3 bg-[#ECF0F1] rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg'
-                      alt='Tenant'
-                      className='w-8 h-8 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Michael Smith
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>Due Apr 28, 2025</p>
-                    </div>
-                  </div>
-                  <span className='font-medium text-[#2D3436]'>$1,450</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Maintenance Requests */}
-            <div className='bg-white rounded-xl border border-gray-200 p-6'>
-              <h2 className='text-xl font-semibold text-[#2D3436] mb-6'>
-                Maintenance Requests
-              </h2>
-              <div className='space-y-4'>
-                <div className='border-l-4 border-[#E74C3C] pl-4'>
-                  <p className='text-[#2D3436] font-medium'>Broken Heater</p>
-                  <p className='text-sm text-[#7F8C8D]'>Apt #201 • Urgent</p>
-                  <p className='text-sm text-[#7F8C8D] mt-1'>
-                    Reported 2 days ago
-                  </p>
-                </div>
-                <div className='border-l-4 border-[#F39C12] pl-4'>
-                  <p className='text-[#2D3436] font-medium'>Leaking Faucet</p>
-                  <p className='text-sm text-[#7F8C8D]'>Apt #304 • Normal</p>
-                  <p className='text-sm text-[#7F8C8D] mt-1'>
-                    Reported 1 day ago
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Lease Renewals */}
-            <div className='bg-white rounded-xl border border-gray-200 p-6'>
-              <h2 className='text-xl font-semibold text-[#2D3436] mb-6'>
-                Upcoming Lease Renewals
-              </h2>
-              <div className='space-y-4'>
-                <div className='flex items-center justify-between'>
-                  <div>
-                    <p className='text-[#2D3436] font-medium'>Apt #102</p>
-                    <p className='text-sm text-[#7F8C8D]'>Expires in 15 days</p>
-                  </div>
-                  <button className='text-[#3498DB] text-sm'>Review</button>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <div>
-                    <p className='text-[#2D3436] font-medium'>Apt #305</p>
-                    <p className='text-sm text-[#7F8C8D]'>Expires in 30 days</p>
-                  </div>
-                  <button className='text-[#3498DB] text-sm'>Review</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#ECF0F1] to-transparent'></div>
-    </div>
-  );
-};
-
-const PropertiesPreview = () => {
-  return (
-    <div className='bg-[#ECF0F1] p-8 rounded-2xl *:text-left scale-90 pointer-events-none relative max-h-[670px] overflow-hidden border border-[#CBD5E1]'>
-      <div className='max-w-[1392px] w-[1392px] mx-auto'>
-        {/* Properties Header */}
-        <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8'>
-          <div>
-            <h1 className='text-2xl font-bold text-black'>Properties</h1>
-            <p className='text-[#7F8C8D]'>Manage your rental properties</p>
-          </div>
-          <button className='bg-[#3498DB] text-white px-4 py-2 rounded-lg flex items-center mt-4 md:mt-0'>
-            <i className='fa-solid fa-plus mr-2'></i>
-            Add Property
-          </button>
-        </div>
-
-        {/* Properties Filter */}
-        <div className='bg-white rounded-xl p-6 mb-8'>
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
-            <div>
-              <input
-                type='text'
-                placeholder='Search properties...'
-                className='w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-[#3498DB]'
-              />
-            </div>
-            <div>
-              <select className='w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-[#3498DB]'>
-                <option value=''>All Types</option>
-                <option value='apartment'>Apartment</option>
-                <option value='house'>House</option>
-                <option value='condo'>Condo</option>
-              </select>
-            </div>
-            <div>
-              <select className='w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-[#3498DB]'>
-                <option value=''>All Status</option>
-                <option value='occupied'>Occupied</option>
-                <option value='vacant'>Vacant</option>
-                <option value='maintenance'>Under Maintenance</option>
-              </select>
-            </div>
-            <div>
-              <select className='w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-[#3498DB]'>
-                <option value=''>Sort By</option>
-                <option value='newest'>Newest</option>
-                <option value='oldest'>Oldest</option>
-                <option value='price-high'>Highest Rent</option>
-                <option value='price-low'>Lowest Rent</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Properties List */}
-        <div className='space-y-6'>
-          {/* Property Item 1 */}
-          <div className='bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100'>
-            <div className='flex flex-col md:flex-row'>
-              <div className='w-full md:w-64 h-48 relative'>
-                <img
-                  className='w-full h-full object-contain bg-gray-50'
-                  src='https://storage.googleapis.com/uxpilot-auth.appspot.com/0df9eb9634-639e150add565c0ac2fa.png'
-                  alt='satellite map view of 123 Park Avenue New York NY showing street layout and building locations'
-                />
-                <div className='absolute top-3 right-3 flex gap-2'>
-                  <span className='bg-[#2ECC71]/90 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full shadow-sm'>
-                    Occupied
-                  </span>
-                  <span className='bg-[#3498DB]/90 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full shadow-sm'>
-                    4 Units
-                  </span>
-                </div>
-              </div>
-              <div className='flex-1 p-5'>
-                <div className='flex justify-between items-start'>
-                  <div>
-                    <h3 className='text-lg font-semibold text-[#2D3436] mb-1.5'>
-                      Parkview Apartments
-                    </h3>
-                    <div className='flex items-center text-[#7F8C8D] text-sm mb-4'>
-                      <i className='fa-solid fa-location-dot mr-2'></i>
-                      <p>123 Park Avenue, New York, NY</p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-xl font-bold text-[#2D3436]'>
-                      $4,800
-                      <span className='text-xs font-normal text-[#7F8C8D] ml-1'>
-                        /mo total
-                      </span>
-                    </p>
-                    <p className='text-sm text-[#7F8C8D]'>$1,200 per unit</p>
-                  </div>
-                </div>
-                <div className='bg-gray-50 p-4 rounded-lg mb-5'>
-                  <div className='flex items-center justify-between mb-3'>
-                    <h4 className='font-medium text-[#2D3436]'>
-                      Units Overview
-                    </h4>
-                    <button className='text-sm text-[#3498DB] hover:underline'>
-                      Manage Units
-                    </button>
-                  </div>
-                  <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-                    <div className='bg-white p-3 rounded-lg border border-gray-100'>
-                      <div className='text-sm text-[#7F8C8D] mb-1'>
-                        Unit #201
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <span className='w-2 h-2 rounded-full bg-[#2ECC71]'></span>
-                        <span className='text-sm'>Occupied</span>
-                      </div>
-                    </div>
-                    <div className='bg-white p-3 rounded-lg border border-gray-100'>
-                      <div className='text-sm text-[#7F8C8D] mb-1'>
-                        Unit #202
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <span className='w-2 h-2 rounded-full bg-[#F39C12]'></span>
-                        <span className='text-sm'>Vacant</span>
-                      </div>
-                    </div>
-                    <div className='bg-white p-3 rounded-lg border border-gray-100'>
-                      <div className='text-sm text-[#7F8C8D] mb-1'>
-                        Unit #203
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <span className='w-2 h-2 rounded-full bg-[#2ECC71]'></span>
-                        <span className='text-sm'>Occupied</span>
-                      </div>
-                    </div>
-                    <div className='bg-white p-3 rounded-lg border border-gray-100'>
-                      <div className='text-sm text-[#7F8C8D] mb-1'>
-                        Unit #204
-                      </div>
-                      <div className='flex items-center gap-2'>
-                        <span className='w-2 h-2 rounded-full bg-[#2ECC71]'></span>
-                        <span className='text-sm'>Occupied</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className='flex justify-between items-center pt-3 border-t border-gray-100'>
-                  <div className='flex gap-2'>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-edit mr-1.5'></i>Edit
-                    </button>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-eye mr-1.5'></i>View
-                    </button>
-                  </div>
-                  <div className='flex items-center text-[#7F8C8D] text-sm'>
-                    <i className='fa-solid fa-clock mr-2 text-xs'></i>
-                    <span>Last updated: Apr 15, 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Property Item 2 */}
-          <div className='bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100'>
-            <div className='flex flex-col md:flex-row'>
-              <div className='w-full md:w-64 h-48 relative'>
-                <img
-                  className='w-full h-full object-contain bg-gray-50'
-                  src='https://storage.googleapis.com/uxpilot-auth.appspot.com/d0202d2baf-c80f43c234e1a2bbe223.png'
-                  alt='satellite map view of 456 Main Street Brooklyn NY showing street intersection and neighborhood layout'
-                />
-                <span className='absolute top-3 right-3 bg-[#F39C12]/90 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full shadow-sm'>
-                  Vacant
-                </span>
-              </div>
-              <div className='flex-1 p-5'>
-                <div className='flex justify-between items-start'>
-                  <div>
-                    <h3 className='text-lg font-semibold text-[#2D3436] mb-1.5'>
-                      Downtown Townhouse
-                    </h3>
-                    <div className='flex items-center text-[#7F8C8D] text-sm mb-4'>
-                      <i className='fa-solid fa-location-dot mr-2'></i>
-                      <p>456 Main St, Brooklyn, NY</p>
-                    </div>
-                  </div>
-                  <p className='text-xl font-bold text-[#2D3436]'>
-                    $2,500
-                    <span className='text-xs font-normal text-[#7F8C8D] ml-1'>
-                      /mo
-                    </span>
-                  </p>
-                </div>
-                <div className='flex flex-wrap items-center gap-5 mb-5'>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-bed text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>3 Beds</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-bath text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>2.5 Baths</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-vector-square text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>1,800 sq ft</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-users text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>0 Occupants</span>
-                  </div>
-                </div>
-                <div className='flex justify-between items-center pt-3 border-t border-gray-100'>
-                  <div className='flex gap-2'>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-edit mr-1.5'></i>Edit
-                    </button>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-eye mr-1.5'></i>View
-                    </button>
-                  </div>
-                  <div className='flex items-center text-[#7F8C8D] text-sm'>
-                    <i className='fa-solid fa-clock mr-2 text-xs'></i>
-                    <span>Last updated: Apr 10, 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Property Item 3 */}
-          <div className='bg-white rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100'>
-            <div className='flex flex-col md:flex-row'>
-              <div className='w-full md:w-64 h-48 relative'>
-                <img
-                  className='w-full h-full object-contain bg-gray-50'
-                  src='https://storage.googleapis.com/uxpilot-auth.appspot.com/a6e9786ee1-9060bf411953a0583fd0.png'
-                  alt='satellite map view of 789 Sky Lane Queens NY showing urban area and surrounding streets'
-                />
-                <span className='absolute top-3 right-3 bg-[#E74C3C]/90 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full shadow-sm'>
-                  Maintenance
-                </span>
-              </div>
-              <div className='flex-1 p-5'>
-                <div className='flex justify-between items-start'>
-                  <div>
-                    <h3 className='text-lg font-semibold text-[#2D3436] mb-1.5'>
-                      Skyline Condos #501
-                    </h3>
-                    <div className='flex items-center text-[#7F8C8D] text-sm mb-4'>
-                      <i className='fa-solid fa-location-dot mr-2'></i>
-                      <p>789 Sky Lane, Queens, NY</p>
-                    </div>
-                  </div>
-                  <p className='text-xl font-bold text-[#2D3436]'>
-                    $1,800
-                    <span className='text-xs font-normal text-[#7F8C8D] ml-1'>
-                      /mo
-                    </span>
-                  </p>
-                </div>
-                <div className='flex flex-wrap items-center gap-5 mb-5'>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-bed text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>1 Bed</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-bath text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>1 Bath</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-vector-square text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>800 sq ft</span>
-                  </div>
-                  <div className='flex items-center bg-gray-50 px-3 py-1.5 rounded-lg'>
-                    <i className='fa-solid fa-users text-[#3498DB] mr-2 text-sm'></i>
-                    <span className='text-[#2D3436] text-sm'>0 Occupants</span>
-                  </div>
-                </div>
-                <div className='flex justify-between items-center pt-3 border-t border-gray-100'>
-                  <div className='flex gap-2'>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-edit mr-1.5'></i>Edit
-                    </button>
-                    <button className='px-3 py-1.5 text-sm text-[#3498DB] bg-[#3498DB]/5 rounded-lg hover:bg-[#3498DB] hover:text-white transition-colors'>
-                      <i className='fa-solid fa-eye mr-1.5'></i>View
-                    </button>
-                  </div>
-                  <div className='flex items-center text-[#7F8C8D] text-sm'>
-                    <i className='fa-solid fa-clock mr-2 text-xs'></i>
-                    <span>Last updated: Apr 5, 2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Pagination */}
-        <div className='mt-8 flex justify-center'>
-          <nav className='flex items-center gap-2'>
-            <button className='px-3 py-2 rounded-lg border border-gray-200 text-[#7F8C8D] hover:border-[#3498DB] hover:text-[#3498DB]'>
-              <i className='fa-solid fa-chevron-left'></i>
-            </button>
-            <button className='px-4 py-2 rounded-lg bg-[#3498DB] text-white'>
-              1
-            </button>
-            <button className='px-4 py-2 rounded-lg border border-gray-200 text-[#7F8C8D] hover:border-[#3498DB] hover:text-[#3498DB]'>
-              2
-            </button>
-            <button className='px-4 py-2 rounded-lg border border-gray-200 text-[#7F8C8D] hover:border-[#3498DB] hover:text-[#3498DB]'>
-              3
-            </button>
-            <button className='px-3 py-2 rounded-lg border border-gray-200 text-[#7F8C8D] hover:border-[#3498DB] hover:text-[#3498DB]'>
-              <i className='fa-solid fa-chevron-right'></i>
-            </button>
-          </nav>
-        </div>
-      </div>
-      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#ECF0F1] to-transparent'></div>
-    </div>
-  );
-};
-
-const AccountingPreview = () => {
-  return (
-    <div className='bg-[#ECF0F1] p-8 rounded-2xl *:text-left scale-90 pointer-events-none relative max-h-[670px] overflow-hidden border border-[#CBD5E1]'>
-      <div className='max-w-[1392px] w-[1392px] mx-auto'>
-        {/* Page Header */}
-        <div className='bg-white rounded-xl p-6 mb-8'>
-          <div className='flex justify-between items-center mb-6'>
-            <div>
-              <h1 className='text-2xl font-bold text-black'>
-                Accounting & Payments
-              </h1>
-              <p className='text-[#7F8C8D]'>
-                Manage income, expenses, invoices and deposits
-              </p>
-            </div>
-            <div className='flex gap-3'>
-              <button className='border border-[#3498DB] text-[#3498DB] px-4 py-2 rounded-lg flex items-center'>
-                <i className='fa-solid fa-download mr-2'></i>
-                Export Report
-              </button>
-              <button className='bg-[#3498DB] text-white px-4 py-2 rounded-lg flex items-center'>
-                <i className='fa-solid fa-plus mr-2'></i>
-                Add Transaction
-              </button>
-            </div>
-          </div>
-
-          {/* Summary Cards */}
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-            <div className='bg-[#2ECC71] text-white p-4 rounded-lg'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <p className='text-green-100 text-sm'>Total Income</p>
-                  <p className='text-2xl font-bold'>$8,400</p>
-                </div>
-                <i className='fa-solid fa-arrow-trend-up text-2xl text-green-100'></i>
-              </div>
-            </div>
-            <div className='bg-[#E74C3C] text-white p-4 rounded-lg'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <p className='text-red-100 text-sm'>Total Expenses</p>
-                  <p className='text-2xl font-bold'>$2,150</p>
-                </div>
-                <i className='fa-solid fa-arrow-trend-down text-2xl text-red-100'></i>
-              </div>
-            </div>
-            <div className='bg-[#3498DB] text-white p-4 rounded-lg'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <p className='text-blue-100 text-sm'>Net Profit</p>
-                  <p className='text-2xl font-bold'>$6,250</p>
-                </div>
-                <i className='fa-solid fa-chart-line text-2xl text-blue-100'></i>
-              </div>
-            </div>
-            <div className='bg-[#F39C12] text-white p-4 rounded-lg'>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <p className='text-orange-100 text-sm'>Pending Invoices</p>
-                  <p className='text-2xl font-bold'>3</p>
-                </div>
-                <i className='fa-solid fa-clock text-2xl text-orange-100'></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Left Column */}
-          <div className='lg:col-span-2 space-y-8'>
-            {/* Income/Expense Management */}
-            <section className='bg-white rounded-xl p-6'>
-              <div className='flex justify-between items-center mb-6'>
-                <h2 className='text-xl font-semibold text-[#2D3436]'>
-                  Recent Transactions
-                </h2>
-                <div className='flex gap-2'>
-                  <button className='text-sm border border-gray-300 px-3 py-1 rounded-lg'>
-                    All
-                  </button>
-                  <button className='text-sm bg-[#2ECC71] text-white px-3 py-1 rounded-lg'>
-                    Income
-                  </button>
-                  <button className='text-sm border border-gray-300 px-3 py-1 rounded-lg'>
-                    Expenses
-                  </button>
-                </div>
-              </div>
-
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <div className='w-10 h-10 bg-[#2ECC71] rounded-full flex items-center justify-center mr-3'>
-                      <i className='fa-solid fa-plus text-white text-sm'></i>
-                    </div>
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Rent Payment - Unit 203
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        Sarah Johnson • Jan 15, 2024
-                      </p>
-                    </div>
-                  </div>
-                  <span className='text-[#2ECC71] font-semibold'>+$1,200</span>
-                </div>
-
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <div className='w-10 h-10 bg-[#E74C3C] rounded-full flex items-center justify-center mr-3'>
-                      <i className='fa-solid fa-minus text-white text-sm'></i>
-                    </div>
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Maintenance - Plumbing Repair
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        Mike's Plumbing • Jan 12, 2024
-                      </p>
-                    </div>
-                  </div>
-                  <span className='text-[#E74C3C] font-semibold'>-$350</span>
-                </div>
-
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <div className='w-10 h-10 bg-[#2ECC71] rounded-full flex items-center justify-center mr-3'>
-                      <i className='fa-solid fa-plus text-white text-sm'></i>
-                    </div>
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Rent Payment - Unit 101
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        John Davis • Jan 10, 2024
-                      </p>
-                    </div>
-                  </div>
-                  <span className='text-[#2ECC71] font-semibold'>+$1,100</span>
-                </div>
-              </div>
-            </section>
-
-            {/* Rental Invoices */}
-            <section className='bg-white rounded-xl p-6'>
-              <div className='flex justify-between items-center mb-6'>
-                <h2 className='text-xl font-semibold text-[#2D3436]'>
-                  Rental Invoices
-                </h2>
-                <button className='bg-[#3498DB] text-white px-4 py-2 rounded-lg text-sm flex items-center'>
-                  <i className='fa-solid fa-plus mr-2'></i>
-                  Create Invoice
-                </button>
-              </div>
-
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg'
-                      alt='Sarah Johnson'
-                      className='w-10 h-10 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Invoice #INV-2024-001
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        Sarah Johnson • Unit 203 • Feb 2024
-                      </p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$1,200</p>
-                    <span className='bg-[#2ECC71] text-white text-xs px-2 py-1 rounded-full'>
-                      Paid
-                    </span>
-                  </div>
-                </div>
-
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg'
-                      alt='John Davis'
-                      className='w-10 h-10 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Invoice #INV-2024-002
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        John Davis • Unit 101 • Feb 2024
-                      </p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$1,100</p>
-                    <span className='bg-[#F39C12] text-white text-xs px-2 py-1 rounded-full'>
-                      Pending
-                    </span>
-                  </div>
-                </div>
-
-                <div className='flex items-center justify-between p-4 border border-gray-200 rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg'
-                      alt='Mike Wilson'
-                      className='w-10 h-10 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium'>
-                        Invoice #INV-2024-003
-                      </p>
-                      <p className='text-sm text-[#7F8C8D]'>
-                        Mike Wilson • Unit 105 • Feb 2024
-                      </p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$950</p>
-                    <span className='bg-[#E74C3C] text-white text-xs px-2 py-1 rounded-full'>
-                      Overdue
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* Right Column */}
-          <div className='space-y-8'>
-            {/* Notice Management */}
-            <section className='bg-white rounded-xl p-6'>
-              <div className='flex justify-between items-center mb-4'>
-                <h2 className='text-xl font-semibold text-[#2D3436]'>
-                  Notices
-                </h2>
-                <button className='text-[#3498DB] text-sm'>
-                  <i className='fa-solid fa-plus mr-1'></i>
-                  Add Notice
-                </button>
-              </div>
-
-              <div className='space-y-3'>
-                <div className='p-3 bg-[#FFF3CD] border border-[#F39C12] rounded-lg'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='text-xs bg-[#F39C12] text-white px-2 py-1 rounded-full'>
-                      Late Payment
-                    </span>
-                    <span className='text-xs text-[#7F8C8D]'>2 days ago</span>
-                  </div>
-                  <p className='text-sm text-[#2D3436] font-medium'>
-                    Unit 101 - Rent Overdue
-                  </p>
-                  <p className='text-xs text-[#7F8C8D]'>
-                    Notice sent to John Davis
-                  </p>
-                </div>
-
-                <div className='p-3 bg-[#D1ECF1] border border-[#3498DB] rounded-lg'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='text-xs bg-[#3498DB] text-white px-2 py-1 rounded-full'>
-                      Maintenance
-                    </span>
-                    <span className='text-xs text-[#7F8C8D]'>1 week ago</span>
-                  </div>
-                  <p className='text-sm text-[#2D3436] font-medium'>
-                    Building Inspection Notice
-                  </p>
-                  <p className='text-xs text-[#7F8C8D]'>Sent to all tenants</p>
-                </div>
-
-                <div className='p-3 bg-[#D4EDDA] border border-[#2ECC71] rounded-lg'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='text-xs bg-[#2ECC71] text-white px-2 py-1 rounded-full'>
-                      Lease Renewal
-                    </span>
-                    <span className='text-xs text-[#7F8C8D]'>2 weeks ago</span>
-                  </div>
-                  <p className='text-sm text-[#2D3436] font-medium'>
-                    Unit 203 - Lease Renewal
-                  </p>
-                  <p className='text-xs text-[#7F8C8D]'>
-                    Notice sent to Sarah Johnson
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* Tenant Deposits */}
-            <section className='bg-white rounded-xl p-6'>
-              <h2 className='text-xl font-semibold text-[#2D3436] mb-4'>
-                Security Deposits
-              </h2>
-
-              <div className='space-y-4'>
-                <div className='flex items-center justify-between p-3 bg-[#ECF0F1] rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg'
-                      alt='Sarah Johnson'
-                      className='w-8 h-8 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium text-sm'>
-                        Sarah Johnson
-                      </p>
-                      <p className='text-xs text-[#7F8C8D]'>Unit 203</p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$1,800</p>
-                    <span className='text-xs bg-[#2ECC71] text-white px-2 py-1 rounded-full'>
-                      Held
-                    </span>
-                  </div>
-                </div>
-
-                <div className='flex items-center justify-between p-3 bg-[#ECF0F1] rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg'
-                      alt='John Davis'
-                      className='w-8 h-8 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium text-sm'>
-                        John Davis
-                      </p>
-                      <p className='text-xs text-[#7F8C8D]'>Unit 101</p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$1,650</p>
-                    <span className='text-xs bg-[#2ECC71] text-white px-2 py-1 rounded-full'>
-                      Held
-                    </span>
-                  </div>
-                </div>
-
-                <div className='flex items-center justify-between p-3 bg-[#ECF0F1] rounded-lg'>
-                  <div className='flex items-center'>
-                    <img
-                      src='https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg'
-                      alt='Mike Wilson'
-                      className='w-8 h-8 rounded-full mr-3'
-                    />
-                    <div>
-                      <p className='text-[#2D3436] font-medium text-sm'>
-                        Mike Wilson
-                      </p>
-                      <p className='text-xs text-[#7F8C8D]'>Unit 105</p>
-                    </div>
-                  </div>
-                  <div className='text-right'>
-                    <p className='text-[#2D3436] font-semibold'>$1,425</p>
-                    <span className='text-xs bg-[#2ECC71] text-white px-2 py-1 rounded-full'>
-                      Held
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className='mt-4 pt-4 border-t border-gray-200'>
-                <div className='flex justify-between items-center'>
-                  <span className='text-[#7F8C8D] text-sm'>
-                    Total Deposits Held:
-                  </span>
-                  <span className='text-[#2D3436] font-semibold'>$4,875</span>
-                </div>
-              </div>
-            </section>
-
-            {/* Quick Actions */}
-            <section className='bg-white rounded-xl p-6'>
-              <h2 className='text-xl font-semibold text-[#2D3436] mb-4'>
-                Quick Actions
-              </h2>
-
-              <div className='space-y-3'>
-                <button className='w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'>
-                  <i className='fa-solid fa-file-invoice text-[#3498DB] mr-3'></i>
-                  <span className='text-[#2D3436]'>
-                    Generate Monthly Report
-                  </span>
-                </button>
-
-                <button className='w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'>
-                  <i className='fa-solid fa-bell text-[#F39C12] mr-3'></i>
-                  <span className='text-[#2D3436]'>Send Payment Reminder</span>
-                </button>
-
-                <button className='w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors'>
-                  <i className='fa-solid fa-chart-bar text-[#2ECC71] mr-3'></i>
-                  <span className='text-[#2D3436]'>View Analytics</span>
-                </button>
-              </div>
-            </section>
-          </div>
-        </div>
-      </div>
-      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#ECF0F1] to-transparent'></div>
-    </div>
-  );
-};
+import { Previews } from './_components/previews';
+import {
+  ArrowRight,
+  Banknote,
+  Building,
+  Calendar,
+  ChartLine,
+  FolderCheck,
+  Play,
+  Rocket,
+  Users,
+  Wrench,
+} from 'lucide-react';
+import { cn } from '../../../packages/ui/src/utils/cn';
+import Link from 'next/link';
 
 export default function Home() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activePreview, setActivePreview] = useState<
-    'dashboard' | 'properties' | 'accounting'
-  >('dashboard');
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <main>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-          isScrolled
-            ? 'bg-[#ECF0F1]/80 backdrop-blur-md shadow-lg'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className='max-w-7xl mx-auto px-4 md:px-8'>
-          <div className='flex items-center justify-between h-16'>
-            <div className='flex items-center gap-3'>
-              <img
-                src='leaseup-logo.svg'
-                alt='Leaseup'
-                className='w-8 h-8 rounded-lg'
-              />
-              <span
-                className={`text-xl font-bold ${isScrolled ? 'text-black' : 'text-black'}`}
-              >
-                Leaseup
-              </span>
-            </div>
-            <nav className='hidden md:flex items-center gap-8'>
-              <span
-                className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-white transition-colors cursor-pointer`}
-              >
-                Features
-              </span>
-              <span
-                className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors cursor-pointer`}
-              >
-                Pricing
-              </span>
-              <span
-                className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors cursor-pointer`}
-              >
-                Reviews
-              </span>
-              <span
-                className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors cursor-pointer`}
-              >
-                Contact
-              </span>
-            </nav>
-            <div className='flex items-center gap-4'>
-              <button
-                className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors`}
-              >
-                Sign In
-              </button>
-              <Button>Sign In</Button>
-              <button className='bg-[#1ABC9C] text-white px-6 py-2 rounded-lg hover:bg-[#2980B9] transition-colors'>
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <section className='bg-[#ECF0F1] text-[#1E293B] pt-40 sm:pt-52 min-h-[700px] flex items-center'>
+      <section className='bg-[#fefefe] text-[#1E293B] pt-40 sm:pt-52 min-h-[700px] flex items-center'>
         <div className='max-w-[1392px] mx-auto px-4 md:px-8 w-full'>
           <div className='flex flex-col items-center text-center gap-0 w-full'>
             <div className='max-w-3xl w-full'>
@@ -1103,63 +28,26 @@ export default function Home() {
                 Management
               </h1>
               <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed'>
-                The all-in-one platform for landlords to manage properties,
-                tenants, rent collection, and maintenance requests effortlessly.
+                Dead simple platform for landlords to manage their properties,
+                tenants, collection rent, manage documentation and more.
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center w-full'>
-                <button className='bg-[#1ABC9C] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2 text-base sm:text-lg'>
-                  <i className='fa-solid fa-rocket'></i>
+                <Button size='lg'>
+                  <Rocket />
                   Start Free Trial
-                </button>
-                <button className='border-2 border-[#1E293B] text-[#1E293B] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#1E293B] hover:text-white transition-colors flex items-center justify-center gap-2 text-base sm:text-lg'>
-                  <i className='fa-solid fa-play'></i>
+                </Button>
+                <Button size='lg'>
+                  <Play />
                   Watch Demo
-                </button>
-              </div>
-              <div className='flex flex-wrap justify-center gap-3 mt-10 sm:mt-20 w-full'>
-                <button
-                  onClick={() => {
-                    setActivePreview('dashboard');
-                  }}
-                  className={`border border-[#1E293B]/30 text-[#1E293B] px-4 py-2 rounded-lg text-sm hover:bg-[#1E293B]/10 transition-colors flex items-center gap-2 ${activePreview === 'dashboard' ? 'bg-[#1E293B]/10' : ''}`}
-                >
-                  <i className='fa-solid fa-chart-line'></i>
-                  Dashboard
-                </button>
-                <button
-                  onClick={() => {
-                    setActivePreview('properties');
-                  }}
-                  className={`border border-[#1E293B]/30 text-[#1E293B] px-4 py-2 rounded-lg text-sm hover:bg-[#1E293B]/10 transition-colors flex items-center gap-2 ${activePreview === 'properties' ? 'bg-[#1E293B]/10' : ''}`}
-                >
-                  <i className='fa-solid fa-building'></i>
-                  Properties
-                </button>
-                <button
-                  onClick={() => {
-                    setActivePreview('accounting');
-                  }}
-                  className={`border border-[#1E293B]/30 text-[#1E293B] px-4 py-2 rounded-lg text-sm hover:bg-[#1E293B]/10 transition-colors flex items-center gap-2 ${activePreview === 'accounting' ? 'bg-[#1E293B]/10' : ''}`}
-                >
-                  <i className='fa-solid fa-tools'></i>
-                  Accounting & Payments
-                </button>
-                <button className='border border-[#1E293B]/30 text-[#1E293B] px-4 py-2 rounded-lg text-sm hover:bg-[#1E293B]/10 transition-colors flex items-center gap-2'>
-                  <i className='fa-solid fa-users'></i>
-                  Tenants
-                </button>
+                </Button>
               </div>
             </div>
-            <div className='w-full flex flex-col items-center'>
-              {activePreview === 'dashboard' && <DashboardPreview />}
-              {activePreview === 'properties' && <PropertiesPreview />}
-              {activePreview === 'accounting' && <AccountingPreview />}
-            </div>
+            <Previews />
           </div>
         </div>
       </section>
 
-      <section className='py-20 bg-[#ECF0F1]'>
+      <section id='features' className='py-20 bg-[#ECF0F1]'>
         <div className='max-w-7xl mx-auto px-4 md:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl sm:text-4xl font-bold text-[#2C3E50] mb-4'>
@@ -1174,46 +62,52 @@ export default function Home() {
             {/* Feature cards */}
             {[
               {
-                icon: 'building',
-                color: '#3498DB',
-                title: 'Property Management',
-                description:
-                  'Organize all your properties in one place. Track units, amenities, and property details with ease.',
-              },
-              {
-                icon: 'users',
-                color: '#2ECC71',
-                title: 'Tenant Management',
-                description:
-                  'Store tenant information, lease agreements, and communication history in one secure location.',
-              },
-              {
-                icon: 'credit-card',
+                icon: <Banknote />,
                 color: '#1ABC9C',
                 title: 'Rent Collection',
                 description:
                   'Automate rent collection with online payments, late fee tracking, and payment reminders.',
+                link: '/features/online-rent-collection',
               },
               {
-                icon: 'tools',
+                icon: <Building />,
+                color: '#3498DB',
+                title: 'Property Management',
+                description:
+                  'Organize all your properties in one place. Track units, amenities, and property details with ease.',
+                link: '/features/property-management',
+              },
+              {
+                icon: <Users />,
+                color: '#2ECC71',
+                title: 'Tenant Management',
+                description:
+                  'Store tenant information, lease agreements, and communication history in one secure location.',
+                link: '/features/tenant-management',
+              },
+              {
+                icon: <FolderCheck />,
+                color: '#E74C3C',
+                title: 'Document Management',
+                description:
+                  'Store and manage all your property and tenant documents in one secure location.',
+                link: '/features/document-management',
+              },
+              {
+                icon: <Wrench />,
                 color: '#F39C12',
                 title: 'Maintenance Requests',
                 description:
                   'Handle maintenance requests efficiently with photo uploads, priority levels, and contractor management.',
+                link: '/features/maintenance-requests',
               },
               {
-                icon: 'chart-line',
+                icon: <ChartLine />,
                 color: '#9B59B6',
                 title: 'Financial Reports',
                 description:
                   'Generate detailed financial reports for tax season and track your rental income performance.',
-              },
-              {
-                icon: 'mobile-alt',
-                color: '#E74C3C',
-                title: 'Mobile App',
-                description:
-                  'Manage your properties on-the-go with our mobile app for iOS and Android devices.',
+                link: '/features/financial-reports',
               },
             ].map((feature, index) => (
               <div
@@ -1221,13 +115,12 @@ export default function Home() {
                 className='bg-white rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow flex flex-col items-center'
               >
                 <div
-                  className={`h-14 w-14 sm:h-16 sm:w-16 rounded-xl flex items-center justify-center mb-6`}
+                  className={cn(
+                    `h-14 w-14 sm:h-16 sm:w-16 rounded-xl flex items-center justify-center mb-6`
+                  )}
                   style={{ background: feature.color + '20' }}
                 >
-                  <i
-                    className={`fa-solid fa-${feature.icon} text-2xl sm:text-3xl`}
-                    style={{ color: feature.color }}
-                  ></i>
+                  {feature.icon}
                 </div>
                 <h3 className='text-lg sm:text-xl font-bold text-[#2C3E50] mb-2 sm:mb-4'>
                   {feature.title}
@@ -1235,380 +128,25 @@ export default function Home() {
                 <p className='text-[#7F8C8D] leading-relaxed text-sm sm:text-base'>
                   {feature.description}
                 </p>
+                <div className='mt-4'>
+                  <Link href={feature.link}>
+                    <Button
+                      variant='outlined'
+                      size='sm'
+                      className='text-[#7F8C8D] border-[#7F8C8D] hover:bg-[#7F8C8D] hover:text-white'
+                    >
+                      <ArrowRight />
+                      Learn More
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Rent Collection Feature Expansion - Split Card Layout */}
-      <section className='py-16 sm:py-20 bg-gradient-to-br from-[#F8FAFC] to-[#ECF0F1]'>
-        <div className='max-w-5xl mx-auto px-4 sm:px-6 md:px-8'>
-          <div className='mb-12 sm:mb-16'>
-            <h2 className='text-2xl sm:text-4xl font-bold text-[#1ABC9C] mb-4'>
-              Modern Rent Collection, Simplified
-            </h2>
-            <p className='text-base sm:text-xl text-[#475569] max-w-2xl'>
-              LeaseUp automates rent collection, reminders, and payments—so you
-              can focus on growing your portfolio, not chasing tenants.
-            </p>
-            <div className='mt-4 sm:mt-6'>
-              <a
-                href='#'
-                className='font-semibold text-[#1ABC9C] hover:underline flex items-center gap-2 text-base sm:text-lg'
-              >
-                Book a demo <i className='fa-solid fa-arrow-right'></i>
-              </a>
-            </div>
-          </div>
-          {/* Card 1: Online Invoicing */}
-          <div className='flex flex-col md:flex-row bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#E8F8F5] rounded-xl md:mr-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-file-invoice-dollar text-[#1ABC9C] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                🧾 Online Invoicing
-              </h3>
-              <p className='text-[#7F8C8D] mb-1 sm:mb-2 font-medium text-sm sm:text-base'>
-                Professional and Trackable
-              </p>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Stop chasing tenants manually—automate it once and get your
-                time back."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Saves Time:</b> No more WhatsApp messages or manually
-                    typed emails.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Professionalism:</b> Tenants receive branded, itemized
-                    invoices with due dates and secure payment links.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Automatic Records:</b> Every invoice and payment is
-                    tracked in your dashboard—no need for spreadsheets.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Attach Late Fees Easily:</b> Build in automatic charges
-                    for overdue payments.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 2: Automatic Rent Reminders */}
-          <div className='flex flex-col md:flex-row-reverse bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#FEF5E7] rounded-xl md:ml-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-bell text-[#F39C12] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                🔔 Automatic Rent Reminders
-              </h3>
-              <p className='text-[#7F8C8D] mb-1 sm:mb-2 font-medium text-sm sm:text-base'>
-                Reduce Late Payments
-              </p>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Most tenants don't forget on purpose—help them remember."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Boost On-Time Payments:</b> Tenants get email/SMS
-                    reminders days before rent is due.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Fewer Excuses:</b> Systematically nudge tenants—reminders
-                    come from the platform, not from you personally.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Saves Mental Energy:</b> You don't need to remember who's
-                    due when—it's automatic.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 3: Online Payments */}
-          <div className='flex flex-col md:flex-row bg-white rounded-2xl shadow p-6 sm:p-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#EBF5FB] rounded-xl md:mr-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-money-check-dollar text-[#3498DB] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                💳 Online Payments
-              </h3>
-              <p className='text-[#7F8C8D] mb-1 sm:mb-2 font-medium text-sm sm:text-base'>
-                Fast, Secure, and Recorded
-              </p>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Tenants pay in a click—money goes directly to your account."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Convenient for Tenants:</b> They can pay via card, bank
-                    transfer, or mobile money 24/7.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Instant Notification:</b> You get notified immediately
-                    when rent is paid.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>No Need to Handle Cash or Bank Proofs:</b> Payments are
-                    verified automatically.
-                  </span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  <span>
-                    <b>Secure & Compliant:</b> Built on Paystack—trusted by
-                    thousands of African businesses.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tenant Management Feature Expansion - Split Card Layout */}
-      <section className='py-16 sm:py-20 bg-gradient-to-br from-[#F8FAFC] to-[#ECF0F1]'>
-        <div className='max-w-5xl mx-auto px-4 sm:px-6 md:px-8'>
-          <div className='mb-12 sm:mb-16'>
-            <h2 className='text-2xl sm:text-4xl font-bold text-[#3498DB] mb-4'>
-              Tenant Management, Made Effortless
-            </h2>
-            <p className='text-base sm:text-xl text-[#475569] max-w-2xl'>
-              Everything you need to manage tenants, leases, and
-              communication—organized and automated in one place.
-            </p>
-          </div>
-          {/* Card 1: Centralized Tenant Information */}
-          <div className='flex flex-col md:flex-row bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#EAF2FB] rounded-xl md:mr-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-folder-tree text-[#3498DB] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                🗂 Centralized Tenant Information
-              </h3>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Know everything about your tenants in one place."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Store tenant contact info, lease agreements, ID documents
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Quickly look up which tenant is in which unit
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Avoid lost paperwork, scattered files, and manual notes
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 2: Lease Tracking and Expiry Notifications */}
-          <div className='flex flex-col md:flex-row-reverse bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#FDF6E3] rounded-xl md:ml-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-calendar-check text-[#F39C12] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                📅 Lease Tracking & Expiry Notifications
-              </h3>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Never forget when a lease is ending or needs renewal."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Get alerts before leases expire
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Easily view active, pending, and past leases
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Stay proactive instead of reactive
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 3: Payment History & Tracking */}
-          <div className='flex flex-col md:flex-row bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#E8F8F5] rounded-xl md:mr-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-money-bill-trend-up text-[#1ABC9C] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                💰 Payment History & Tracking
-              </h3>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Know who's paid, who hasn't, and how often."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  View each tenant's full rent payment history
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Spot late or partial payments instantly
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Use data to enforce penalties, send reminders, or decide on
-                  renewals
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 4: Automated Communication */}
-          <div className='flex flex-col md:flex-row-reverse bg-white rounded-2xl shadow p-6 sm:p-8 mb-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#F3EAFB] rounded-xl md:ml-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-envelope-open-text text-[#9B59B6] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                📧 Automated Communication
-              </h3>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Spend less time calling and messaging."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Send rent reminders, invoices, and receipts automatically
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Keep communication consistent and professional
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Avoid awkward money conversations—let the system do it
-                </li>
-              </ul>
-            </div>
-          </div>
-          {/* Card 5: Better Tenant Experience */}
-          <div className='flex flex-col md:flex-row bg-white rounded-2xl shadow p-6 sm:p-8 items-center md:items-stretch'>
-            <div className='flex-1 flex items-center justify-center bg-[#FDF6E3] rounded-xl md:mr-8 mb-4 md:mb-0 min-h-[120px] sm:min-h-[180px] w-full'>
-              <i className='fa-solid fa-house-chimney-heart text-[#F39C12] text-4xl sm:text-6xl'></i>
-            </div>
-            <div className='flex-1 flex flex-col justify-center w-full'>
-              <h3 className='text-lg sm:text-2xl font-bold text-[#2C3E50] mb-1 sm:mb-2'>
-                🏡 Better Tenant Experience = Longer Stays
-              </h3>
-              <blockquote className='italic text-[#475569] mb-2 sm:mb-3 text-sm sm:text-base'>
-                "Professional landlords attract serious tenants."
-              </blockquote>
-              <ul className='space-y-1 sm:space-y-2 text-[#475569] text-sm sm:text-base'>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Tenants appreciate transparency and structure
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Easy payments, clear records, and regular updates make tenants
-                  more likely to renew
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='text-[#2ECC71] mt-1'>
-                    <i className='fa-solid fa-check-circle'></i>
-                  </span>{' '}
-                  Happier tenants = lower turnover = less vacancy loss
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className='py-20 bg-white'>
+      <section id='pricing' className='py-20 bg-white'>
         <div className='max-w-7xl mx-auto px-4 md:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-4xl font-bold text-[#2C3E50] mb-4'>
@@ -1623,7 +161,7 @@ export default function Home() {
             {[
               {
                 name: 'Professional',
-                price: '$79',
+                price: 'R799.00',
                 features: [
                   'Send Rent Invoices Online',
                   'Automated Rent Reminders',
@@ -1682,20 +220,21 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  className={`w-full ${plan.popular ? 'bg-white text-[#3498DB] hover:bg-gray-100' : 'bg-[#3498DB] text-white hover:bg-[#2980B9]'} py-3 rounded-lg font-medium transition-colors`}
+                <Button
+                  className={`w-full ${plan.popular ? 'bg-white text-[#3498DB] hover:bg-gray-100' : 'bg-[#3498DB] text-white hover:bg-[#2980B9]'} rounded-lg font-medium transition-colors`}
                 >
+                  <Rocket />
                   {plan.name === 'Enterprise'
                     ? 'Contact Sales'
                     : 'Start Free Trial'}
-                </button>
+                </Button>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className='py-20 bg-[#ECF0F1]'>
+      <section id='reviews' className='py-20 bg-[#ECF0F1]'>
         <div className='max-w-7xl mx-auto px-4 md:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-4xl font-bold text-[#2C3E50] mb-4'>
@@ -1859,14 +398,20 @@ export default function Home() {
             properties efficiently.
           </p>
           <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-            <button className='bg-[#1ABC9C] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2'>
-              <i className='fa-solid fa-rocket'></i>
+            <Button
+              size='lg'
+              className='bg-[#1ABC9C] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2'
+            >
+              <Rocket />
               Start Your Free Trial
-            </button>
-            <button className='border-2 border-white text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-[#2C3E50] transition-colors flex items-center justify-center gap-2'>
-              <i className='fa-solid fa-calendar'></i>
+            </Button>
+            <Button
+              size='lg'
+              className='border-2 border-white/10 text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-[#2C3E50] transition-colors flex items-center justify-center gap-2'
+            >
+              <Calendar />
               Schedule Demo
-            </button>
+            </Button>
           </div>
         </div>
       </section>

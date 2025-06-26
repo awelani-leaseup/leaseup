@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter_Tight } from 'next/font/google';
+import { Albert_Sans } from 'next/font/google';
 
 import '@leaseup/ui/global.css';
+import { Header } from './_components/header';
+import { Footer } from './_components/footer';
 
 export const metadata: Metadata = {
   title: 'Leaseup - Property Management Made Simple',
@@ -59,7 +61,7 @@ export const metadata: Metadata = {
   },
 };
 
-const onest = Inter_Tight({
+const onest = Albert_Sans({
   subsets: ['latin'],
   weight: ['400'],
 });
@@ -78,7 +80,11 @@ export default function RootLayout({
           referrerPolicy='no-referrer'
         />
       </head>
-      <body className={onest.className + ' antialiased'}>{children}</body>
+      <body className={onest.className + ' antialiased'}>
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -14,6 +14,7 @@
     "@leaseup/ui": "workspace:*",
     "@prisma/client": "^6.10.1",
     "@tailwindcss/postcss": "^4.0.15",
+    "lucide-react": "^0.518.0",
     "next": "^15.3.0",
     "postcss": "^8.5.3",
     "react": "^19.1.0",

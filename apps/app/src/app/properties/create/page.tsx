@@ -260,8 +260,8 @@ export default function CreatePropertyPage() {
                             className="mb-4 rounded-lg border border-gray-200 p-6"
                           >
                             <div className="mb-4 flex items-center justify-between">
-                              <h3 className="font-semibold text-[#2D3436]">
-                                Unit #{idx + 1}
+                              <h3 className="flex items-center gap-2 font-semibold text-[#2D3436]">
+                                Unit <Badge variant="outline">{idx + 1}</Badge>
                               </h3>
                               <Button
                                 type="button"
@@ -395,6 +395,7 @@ export default function CreatePropertyPage() {
                   <div className="flex flex-wrap gap-4">
                     {AMENITIES.map((amenity) => (
                       <Badge
+                        key={amenity}
                         variant="outline"
                         className="cursor-pointer"
                         // onClick={() => handleAmenityToggle(amenity)}

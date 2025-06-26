@@ -43,7 +43,7 @@ import {
   Plus,
   SquareUserRound,
 } from "lucide-react";
-import NavHeader from "./_components/navheader";
+import NavHeader from "./_components/nav-header";
 import { Button } from "@leaseup/ui/components/button";
 
 const font = Albert_Sans({
@@ -77,7 +77,7 @@ export default function RootLayout({
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton asChild>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button className="w-full">
