@@ -6,47 +6,8 @@ import {
   CardTitle,
   CardContent,
 } from "@leaseup/ui/components/card";
-import { Building2, CheckCircle, CreditCard, User } from "lucide-react";
 import { useState } from "react";
-
-export const steps = [
-  {
-    id: 1,
-    title: "Basic Info",
-    icon: User,
-    color: "bg-[#3498DB]",
-    url: "/onboarding/basic-info",
-    prev: null,
-    next: "/onboarding/banking-details",
-  },
-  {
-    id: 2,
-    title: "Banking Details",
-    icon: CreditCard,
-    color: "bg-gray-200",
-    url: "/onboarding/banking-details",
-    prev: "/onboarding/basic-info",
-    next: "/onboarding/identity-verification",
-  },
-  {
-    id: 3,
-    title: "Identity Verification",
-    icon: Building2,
-    color: "bg-gray-200",
-    url: "/onboarding/identity-verification",
-    prev: "/onboarding/banking-details",
-    next: "/onboarding/review-submit",
-  },
-  {
-    id: 4,
-    title: "Review & Submit",
-    icon: CheckCircle,
-    color: "bg-gray-200",
-    url: "/onboarding/review-submit",
-    prev: "/onboarding/identity-verification",
-    next: null,
-  },
-] as const;
+import { steps } from "./constants";
 
 export default function OnboardingLayout({
   children,
@@ -58,7 +19,6 @@ export default function OnboardingLayout({
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8 sm:px-0">
       <div className="w-full max-w-5xl">
-        {/* Progress Header */}
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -69,7 +29,6 @@ export default function OnboardingLayout({
             </div>
           </CardHeader>
           <CardContent>
-            {/* Progress Steps */}
             <div className="flex items-center space-x-2">
               {steps.map((step, index) => (
                 <div key={step.id} className="flex flex-1 items-center">

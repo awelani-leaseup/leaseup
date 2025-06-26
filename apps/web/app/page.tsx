@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../../packages/ui/src/utils/cn';
 import Link from 'next/link';
+import { H3 } from '@leaseup/ui/components/typography';
 
 export default function Home() {
   return (
@@ -27,7 +28,7 @@ export default function Home() {
                 <span className='text-[#1ABC9C]'> Rental </span>
                 Management
               </h1>
-              <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed'>
+              <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed text-pretty'>
                 Dead simple platform for landlords to manage their properties,
                 tenants, collection rent, manage documentation and more.
               </p>
@@ -53,95 +54,204 @@ export default function Home() {
             <h2 className='text-3xl sm:text-4xl font-bold text-[#2C3E50] mb-4'>
               Everything You Need to Manage Properties
             </h2>
-            <p className='text-base sm:text-xl text-[#7F8C8D] max-w-2xl mx-auto'>
+            <p className='text-base sm:text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
               Streamline your rental business with powerful tools designed for
               modern landlords
             </p>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-            {/* Feature cards */}
-            {[
-              {
-                icon: <Banknote />,
-                color: '#1ABC9C',
-                title: 'Rent Collection',
-                description:
-                  'Automate rent collection with online payments, late fee tracking, and payment reminders.',
-                link: '/features/online-rent-collection',
-              },
-              {
-                icon: <Building />,
-                color: '#3498DB',
-                title: 'Property Management',
-                description:
-                  'Organize all your properties in one place. Track units, amenities, and property details with ease.',
-                link: '/features/property-management',
-              },
-              {
-                icon: <Users />,
-                color: '#2ECC71',
-                title: 'Tenant Management',
-                description:
-                  'Store tenant information, lease agreements, and communication history in one secure location.',
-                link: '/features/tenant-management',
-              },
-              {
-                icon: <FolderCheck />,
-                color: '#E74C3C',
-                title: 'Document Management',
-                description:
-                  'Store and manage all your property and tenant documents in one secure location.',
-                link: '/features/document-management',
-              },
-              {
-                icon: <Wrench />,
-                color: '#F39C12',
-                title: 'Maintenance Requests',
-                description:
-                  'Handle maintenance requests efficiently with photo uploads, priority levels, and contractor management.',
-                link: '/features/maintenance-requests',
-              },
-              {
-                icon: <ChartLine />,
-                color: '#9B59B6',
-                title: 'Financial Reports',
-                description:
-                  'Generate detailed financial reports for tax season and track your rental income performance.',
-                link: '/features/financial-reports',
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className='bg-white rounded-2xl p-6 sm:p-8 hover:shadow-lg transition-shadow flex flex-col items-center'
-              >
-                <div
-                  className={cn(
-                    `h-14 w-14 sm:h-16 sm:w-16 rounded-xl flex items-center justify-center mb-6`
-                  )}
-                  style={{ background: feature.color + '20' }}
-                >
-                  {feature.icon}
-                </div>
-                <h3 className='text-lg sm:text-xl font-bold text-[#2C3E50] mb-2 sm:mb-4'>
-                  {feature.title}
-                </h3>
-                <p className='text-[#7F8C8D] leading-relaxed text-sm sm:text-base'>
-                  {feature.description}
-                </p>
-                <div className='mt-4'>
-                  <Link href={feature.link}>
-                    <Button
-                      variant='outlined'
-                      size='sm'
-                      className='text-[#7F8C8D] border-[#7F8C8D] hover:bg-[#7F8C8D] hover:text-white'
-                    >
-                      <ArrowRight />
-                      Learn More
-                    </Button>
-                  </Link>
-                </div>
+
+          {/* Features List - alternating layout */}
+          <div className='space-y-24'>
+            {/* Feature 1 */}
+            <div className='flex flex-col md:flex-row items-center gap-12'>
+              <div className='relative w-full md:w-1/2 flex justify-center'>
+                <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
+                <img
+                  src='/feature-accounting.svg'
+                  alt='Accounting Illustration'
+                  className='rounded-xl shadow-lg w-full max-w-md'
+                />
               </div>
-            ))}
+              <div className='w-full md:w-1/2'>
+                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  LeaseUp automates rent collection, reminders, and payments—so
+                  you can focus on growing your portfolio, not chasing tenants
+                </h3>
+                <p className='mb-4 text-[#475569]'>
+                  Set up invoices, send receipts, and create financial reports
+                  so you can track every last penny.
+                </p>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2'>
+                  <li>
+                    ✅ <b>Automate invoices</b>, late fees, and more
+                  </li>
+                  <li>
+                    ✅ <b>Saves Time:</b> No more WhatsApp(manually typed)
+                    messages or manually typed emails.
+                  </li>
+                  <li>
+                    ✅ <b>Automatic Records:</b> Every invoice and payment is
+                    tracked in your dashboard—no need for spreadsheets.
+                  </li>
+                  <li>
+                    ✅ <b>Automatic Reminders:</b> Boost On-Time Payments
+                    Tenants get email/SMSAdd commentMore actions reminders days
+                    before rent is due.
+                  </li>
+                </ul>
+                <a
+                  href='/features/accounting'
+                  className='text-[#1ABC9C] font-medium hover:underline'
+                >
+                  More &gt;
+                </a>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className='flex flex-col md:flex-row-reverse items-center gap-12'>
+              <div className='relative w-full md:w-1/2 flex justify-center'>
+                <div className='absolute -z-10 top-6 right-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
+                <img
+                  src='/feature-leasing.svg'
+                  alt='Leasing Illustration'
+                  className='rounded-xl shadow-lg w-full max-w-md'
+                />
+              </div>
+              <div className='w-full md:w-1/2'>
+                <H3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  Tenant Management, Made Effortless
+                </H3>
+                <p className='mb-4 text-[#475569]'>
+                  Everything you need to manage tenants, leases, and
+                  communication—organized and automated in one place.
+                </p>
+                <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2'>
+                  <li>
+                    ✅ Centralized Tenant Information - Store tenant contact
+                    info, lease agreements, documents, and more. Avoid lost
+                    paperwork, scattered files, and manual notes.
+                  </li>
+                  <li>
+                    ✅ Lease Tracking & Expiry Notifications - Get alerts before
+                    leases expire. Easily view active, pending, and past leases.
+                    Stay proactive instead of reactive.
+                  </li>
+                  <li>
+                    ✅ Payment History & Tracking - View each tenant&apos;s full
+                    rent payment history. Spot late or partial payments
+                    instantly
+                  </li>
+                </ul>
+                <a
+                  href='/features/leasing'
+                  className='text-[#1ABC9C] font-medium hover:underline'
+                >
+                  More &gt;
+                </a>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className='flex flex-col md:flex-row items-center gap-12'>
+              <div className='relative w-full md:w-1/2 flex justify-center'>
+                <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
+                <img
+                  src='/feature-rent-collection.svg'
+                  alt='Rent Collection Illustration'
+                  className='rounded-xl shadow-lg w-full max-w-md'
+                />
+              </div>
+              <div className='w-full md:w-1/2'>
+                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  Put rent collection on auto-pilot
+                </h3>
+                <p className='mb-4 text-[#475569]'>
+                  No need to waste time tracking down rent payments. Give
+                  tenants a flexible, easy way to pay online.
+                </p>
+                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
+                  <li>
+                    Includes credit, debit, and ACH payment options as well as
+                    cash and check
+                  </li>
+                  <li>Accept full or partial payments</li>
+                  <li>Track paid and overdue invoices</li>
+                </ul>
+                <a
+                  href='/features/online-rent-collection'
+                  className='text-[#1ABC9C] font-medium hover:underline'
+                >
+                  More &gt;
+                </a>
+              </div>
+            </div>
+
+            {/* Feature 4 */}
+            <div className='flex flex-col md:flex-row-reverse items-center gap-12'>
+              <div className='relative w-full md:w-1/2 flex justify-center'>
+                <div className='absolute -z-10 top-6 right-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
+                <img
+                  src='/feature-maintenance.svg'
+                  alt='Maintenance Illustration'
+                  className='rounded-xl shadow-lg w-full max-w-md'
+                />
+              </div>
+              <div className='w-full md:w-1/2'>
+                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  Quickly handle maintenance requests & vendors
+                </h3>
+                <p className='mb-4 text-[#475569]'>
+                  Stay on top of all your maintenance needs with our simple,
+                  online portal.
+                </p>
+                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
+                  <li>Receive maintenance requests online</li>
+                  <li>Keep track of progress</li>
+                  <li>Get professional bids with our built-in network</li>
+                </ul>
+                <a
+                  href='/features/maintenance'
+                  className='text-[#1ABC9C] font-medium hover:underline'
+                >
+                  More &gt;
+                </a>
+              </div>
+            </div>
+
+            {/* Feature 5 */}
+            <div className='flex flex-col md:flex-row items-center gap-12'>
+              <div className='relative w-full md:w-1/2 flex justify-center'>
+                <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
+                <img
+                  src='/feature-marketing.svg'
+                  alt='Marketing Illustration'
+                  className='rounded-xl shadow-lg w-full max-w-md'
+                />
+              </div>
+              <div className='w-full md:w-1/2'>
+                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
+                  Syndicate your property listings and get a free custom website
+                </h3>
+                <p className='mb-4 text-[#475569]'>
+                  Get more eyes on your properties with easy syndication and a
+                  personal listing site.
+                </p>
+                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
+                  <li>
+                    Push to RentRoom, Apartments.com, Realtor.com, and more
+                  </li>
+                  <li>Customise your own listing website</li>
+                  <li>Receive rental applications online</li>
+                </ul>
+                <a
+                  href='/features/marketing'
+                  className='text-[#1ABC9C] font-medium hover:underline'
+                >
+                  More &gt;
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
