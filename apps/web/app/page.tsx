@@ -83,20 +83,25 @@ export default function Home() {
                 </p>
                 <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2'>
                   <li>
-                    ✅ <b>Automate invoices</b>, late fees, and more
+                    ✅ Online Invoicing, late fees, and more. Professional and
+                    Trackable. Every invoice and payment isAdd commentMore
+                    actions tracked in your dashboard—no need for spreadsheets.
                   </li>
                   <li>
-                    ✅ <b>Saves Time:</b> No more WhatsApp(manually typed)
-                    messages or manually typed emails.
+                    ✅ Automatic Rent Reminders. Reduce Late Payments. Tenants
+                    get email/SMS/Whatsapp reminders days before rent is due.
+                    Saves Mental Energy. You don&apos;t need to remember
+                    who&apos;s due when—it&apos;s automatic.
                   </li>
                   <li>
-                    ✅ <b>Automatic Records:</b> Every invoice and payment is
-                    tracked in your dashboard—no need for spreadsheets.
+                    ✅ Online Payments. Tenants pay in a click—money goes
+                    directly to your account. They can pay via card, EFT,
+                    offline bank transfer(free).
                   </li>
                   <li>
-                    ✅ <b>Automatic Reminders:</b> Boost On-Time Payments
-                    Tenants get email/SMSAdd commentMore actions reminders days
-                    before rent is due.
+                    ✅ You get instant notification when rent is paid. Secure &
+                    Compliant, built on Paystack—trusted by thousands of African
+                    businesses..
                   </li>
                 </ul>
                 <a
@@ -141,6 +146,12 @@ export default function Home() {
                     ✅ Payment History & Tracking - View each tenant&apos;s full
                     rent payment history. Spot late or partial payments
                     instantly
+                  </li>
+                  <li>
+                    ✅ Automated Communication - Spend less time calling and
+                    messaging. Send rent reminders, invoices, and receipts
+                    automatically. Keep communication consistent and
+                    professional
                   </li>
                 </ul>
                 <a
