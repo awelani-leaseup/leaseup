@@ -16,7 +16,7 @@ import {
   Map,
   MapPin,
 } from 'lucide-react';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { type FC, type ReactNode, useEffect, useState } from 'react';
 
 import { Alert, AlertDescription } from './alert';
 import { Button } from './button';

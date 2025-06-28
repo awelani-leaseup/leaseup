@@ -252,40 +252,6 @@ export default function Home() {
                 </a>
               </div>
             </div>
-
-            {/* Feature 5 */}
-            <div className='flex flex-col md:flex-row items-center gap-12'>
-              <div className='relative w-full md:w-1/2 flex justify-center'>
-                <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
-                <img
-                  src='/feature-marketing.svg'
-                  alt='Marketing Illustration'
-                  className='rounded-xl shadow-lg w-full max-w-md'
-                />
-              </div>
-              <div className='w-full md:w-1/2'>
-                <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                  Syndicate your property listings and get a free custom website
-                </h3>
-                <p className='mb-4 text-[#475569]'>
-                  Get more eyes on your properties with easy syndication and a
-                  personal listing site.
-                </p>
-                <ul className='list-disc pl-5 text-[#2C3E50] mb-2'>
-                  <li>
-                    Push to RentRoom, Apartments.com, Realtor.com, and more
-                  </li>
-                  <li>Customise your own listing website</li>
-                  <li>Receive rental applications online</li>
-                </ul>
-                <a
-                  href='/features/marketing'
-                  className='text-[#1ABC9C] font-medium hover:underline'
-                >
-                  More &gt;
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -296,8 +262,9 @@ export default function Home() {
             <h2 className='text-4xl font-bold text-[#2C3E50] mb-4'>
               Simple, Transparent Pricing
             </h2>
-            <p className='text-xl text-[#7F8C8D]'>
-              Choose the plan that fits your portfolio size
+            <p className='text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
+              One plan, unlimited properties. Price stays the same no matter how
+              many properties you have.
             </p>
           </div>
 

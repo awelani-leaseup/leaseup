@@ -1,6 +1,6 @@
 import { Search, ShieldAlert } from 'lucide-react';
-import { FC, ReactNode } from 'react';
-// @ts-expect-error - tailwind-variants is not typed
+import { type FC, type ReactNode } from 'react';
+
 import { tv, type VariantProps } from 'tailwind-variants';
 
 import { Button } from './button';
