@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Albert_Sans } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 
 import '@leaseup/ui/global.css';
 import { Header } from './_components/header';
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   },
 };
 
-const onest = Albert_Sans({
+const onest = DM_Sans({
   subsets: ['latin'],
   weight: ['400'],
 });

@@ -6,5 +6,6 @@
   ],
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "prisma.fileWatcher": true
 }

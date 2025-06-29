@@ -41,6 +41,9 @@ importers:
       '@t3-oss/env-nextjs':
         specifier: ^0.12.0
         version: 0.12.0(typescript@5.8.2)(valibot@1.1.0(typescript@5.8.2))(zod@3.25.64)
+      '@tanstack/react-form':
+        specifier: ^1.12.3
+        version: 1.12.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-query':
         specifier: ^5.69.0
         version: 5.80.7(react@19.1.0)

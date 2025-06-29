@@ -8,9 +8,9 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-import { Albert_Sans } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import { APIProvider } from "@vis.gl/react-google-maps";
-
+import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "@/trpc/react";
 import {
   Sidebar,
@@ -46,7 +46,7 @@ import {
 import NavHeader from "./_components/nav-header";
 import { Button } from "@leaseup/ui/components/button";
 
-const font = Albert_Sans({
+const font = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -197,6 +197,7 @@ export default function RootLayout({
                     apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}
                     libraries={["places"]}
                   >
+                    <Toaster position="top-right" />
                     {children}
                   </APIProvider>
                 </SignedIn>

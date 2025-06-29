@@ -50,33 +50,42 @@ export const CheckboxField: FC<{ label: string }> = ({ label }) => {
   );
 };
 
-export const TextField: FC<{
-  label: string;
-  placeholder?: string;
-  asterisk?: boolean;
-  description?: string;
-  icon?: ReactNode;
-}> = ({ label, asterisk, placeholder = '', description, icon, ...props }) => {
-  // & InputProps
-  const { handleChange, handleBlur, state, name } = useFieldContext<string>();
+export const TextField: FC<
+  {
+    label: string;
+    placeholder?: string;
+    asterisk?: boolean;
+    description?: string;
+    icon?: ReactNode;
+  } & Omit<React.ComponentProps<'input'>, 'size'>
+> = ({ label, asterisk, placeholder = '', description, icon, ...props }) => {
+  const { handleChange, handleBlur, state, name } = useFieldContext<
+    string | number
+  >();
   return (
     <label className='relative flex w-full flex-col gap-1'>
       <FieldLabel>
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-0 -left-3 size-3 stroke-2' />
+          <Asterisk className='text-rose-600 absolute -top-0 -left-3 size-3 stroke-2' />
         ) : null}
         {label}
       </FieldLabel>
       <Input
-        // icon={icon}
+        icon={icon}
         placeholder={placeholder}
         name={name}
         value={state.value}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => {
+          if (props.type === 'number') {
+            handleChange(Number(e.target.value));
+          } else {
+            handleChange(e.target.value);
+          }
+        }}
         onBlur={handleBlur}
         className={cn(
           {
-            'ring-danger ring': state.meta.errors.length > 0,
+            'ring-rose-600 ring': state.meta.errors.length > 0,
           },
           'mt-1'
         )}
@@ -88,18 +97,20 @@ export const TextField: FC<{
   );
 };
 
-export const TextAreaField: FC<{
-  label: string;
-  placeholder?: string;
-  asterisk?: boolean;
-  description?: string;
-}> = ({ label, asterisk, placeholder = '', description, ...props }) => {
+export const TextAreaField: FC<
+  {
+    label: string;
+    placeholder?: string;
+    asterisk?: boolean;
+    description?: string;
+  } & React.ComponentProps<'textarea'>
+> = ({ label, asterisk, placeholder = '', description, ...props }) => {
   const { handleChange, handleBlur, state, name } = useFieldContext<string>();
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-0 -left-3 size-2 stroke-2' />
+          <Asterisk className='text-rose-600 absolute -top-0 -left-3 size-2 stroke-2' />
         ) : null}
         {label}
       </FieldLabel>
@@ -111,7 +122,7 @@ export const TextAreaField: FC<{
         onBlur={handleBlur}
         className={cn(
           {
-            'ring-danger ring': state.meta.errors.length > 0,
+            'ring-rose-600 ring': state.meta.errors.length > 0,
           },
           'mt-1'
         )}
@@ -146,7 +157,7 @@ export const SelectField: FC<{
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-1 -left-3 size-3 stroke-2' />
+          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
         ) : null}
         {label}
       </FieldLabel>
@@ -155,7 +166,7 @@ export const SelectField: FC<{
           onBlur={handleBlur}
           className={cn(
             {
-              'ring-danger ring': state.meta.errors.length > 0,
+              'ring-rose-600 ring': state.meta.errors.length > 0,
             },
             'mt-1 w-full'
           )}
@@ -209,7 +220,7 @@ const DateField: FC<{
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-1 -left-3 size-3 stroke-2' />
+          <Asterisk className='text-rose-500 absolute -top-1 -left-3 size-3 stroke-2' />
         ) : null}
         {label}
       </FieldLabel>
@@ -223,7 +234,7 @@ const DateField: FC<{
               'mt-1 w-full pl-3 text-left font-normal',
               !state.value && 'text-muted-foreground',
               {
-                'ring-danger border-0 ring': state.meta.errors.length > 0,
+                'ring-rose-600 border-0 ring': state.meta.errors.length > 0,
               }
             )}
           >
@@ -274,17 +285,12 @@ export const ComboboxField: FC<{
 }) => {
   const { handleChange, handleBlur, state } = useFieldContext<string>();
   const [open, setOpen] = useState(false);
-  // const { suggestions, resetSession } = useAutocompleteSuggestions(
-  //   debouncedAddress,
-  //   {
-  //     input: debouncedAddress,
-  //   },
-  // );
+
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-1 -left-3 size-3 stroke-2' />
+          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
         ) : null}
         {label}
       </FieldLabel>
@@ -355,7 +361,7 @@ export const FieldMessage: FC<{
   return (
     <p
       className={cn('animate-in fade-in-0 text-sm font-semibold', {
-        'text-danger': state.meta.errors.length > 0,
+        'text-rose-500': state.meta.errors.length > 0,
       })}
     >
       {body}
@@ -386,8 +392,9 @@ export const FormMessage: FC<{
         if (errors.length === 0) {
           return null;
         }
+        console.log('Errors', errors);
         return (
-          <Alert variant='default' color='destructive' className='mt-4'>
+          <Alert variant='destructive' color='destructive' className='mt-4'>
             <AlertDescription>
               Fix all the errors before submitting the form.
             </AlertDescription>
@@ -407,7 +414,7 @@ export const FieldLabel: FC<{
       title={children?.toLocaleString().replace(',', '')}
       className={cn(
         {
-          'text-danger': state.meta.errors.length > 0,
+          'text-rose-600': state.meta.errors.length > 0,
         },
         'relative line-clamp-1 shrink-0'
       )}
@@ -455,11 +462,13 @@ export const AddressField: FC<{
   placeholder?: string;
   asterisk?: boolean;
   description?: string;
+  callback?: () => void;
 }> = ({
   label,
   placeholder = 'Enter address',
   asterisk,
   description,
+
   ...props
 }) => {
   const [address, setAddress] = useState('');
@@ -475,10 +484,7 @@ export const AddressField: FC<{
     };
   }, [address]);
 
-  const { handleChange, handleBlur, state, form } = useFieldContext<{
-    placeId: string;
-    text: string;
-  }>();
+  const { handleChange, handleBlur, state, form } = useFieldContext<string>();
   const { suggestions, resetSession } = useAutocompleteSuggestions(
     debouncedAddress,
     {
@@ -491,7 +497,7 @@ export const AddressField: FC<{
       <FieldLabel>
         {label}{' '}
         {asterisk ? (
-          <Asterisk className='text-danger absolute -top-1 -left-3 size-3 stroke-2' />
+          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
         ) : null}
       </FieldLabel>
       <Popover open={open} onOpenChange={setOpen}>
@@ -502,7 +508,7 @@ export const AddressField: FC<{
             aria-expanded={open}
             className='justify-between truncate mt-1'
           >
-            {state.value ? state.value.text : placeholder}
+            {state.value ? state.value : placeholder}
             <Map className='opacity-50' />
           </Button>
         </PopoverTrigger>
@@ -531,10 +537,11 @@ export const AddressField: FC<{
                     key={suggestion.placePrediction?.placeId}
                     value={suggestion.placePrediction?.mainText?.text}
                     onSelect={async (currentValue) => {
-                      handleChange({
-                        placeId: suggestion.placePrediction?.placeId ?? '',
-                        text: currentValue,
-                      });
+                      handleChange(
+                        suggestion.placePrediction?.mainText?.text +
+                          ' ' +
+                          suggestion.placePrediction?.secondaryText?.text
+                      );
 
                       try {
                         const place = suggestion?.placePrediction?.toPlace();
@@ -544,10 +551,10 @@ export const AddressField: FC<{
 
                         form.setFieldValue(
                           'addressLine1',
-                          getAddressComponent(
+                          `${suggestion.placePrediction?.mainText?.text} ${getAddressComponent(
                             result?.place?.addressComponents ?? [],
                             'sublocality_level_1'
-                          )
+                          )}`
                         );
 
                         form.setFieldValue(
@@ -586,9 +593,12 @@ export const AddressField: FC<{
                           'countryCode',
                           getAddressComponent(
                             result?.place?.addressComponents ?? [],
-                            'country'
+                            'country',
+                            false
                           )
                         );
+
+                        form.validateAllFields('submit');
                       } catch (error) {
                         console.error('Error fetching place details:', error);
                       }

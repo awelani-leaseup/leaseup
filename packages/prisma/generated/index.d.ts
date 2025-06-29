@@ -621,8 +621,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.9.0
-   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+   * Prisma Client JS version: 6.10.1
+   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
    */
   export type PrismaVersion = {
     client: string
@@ -2268,18 +2268,18 @@ export namespace Prisma {
 
   export type TenantCountOutputType = {
     Lease: number
-    TenantLease: number
-    TenantDocument: number
-    TenantEmergencyContact: number
-    TenantIncome: number
+    tenantLease: number
+    tenantDocument: number
+    tenantEmergencyContact: number
+    tenantIncome: number
   }
 
   export type TenantCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Lease?: boolean | TenantCountOutputTypeCountLeaseArgs
-    TenantLease?: boolean | TenantCountOutputTypeCountTenantLeaseArgs
-    TenantDocument?: boolean | TenantCountOutputTypeCountTenantDocumentArgs
-    TenantEmergencyContact?: boolean | TenantCountOutputTypeCountTenantEmergencyContactArgs
-    TenantIncome?: boolean | TenantCountOutputTypeCountTenantIncomeArgs
+    tenantLease?: boolean | TenantCountOutputTypeCountTenantLeaseArgs
+    tenantDocument?: boolean | TenantCountOutputTypeCountTenantDocumentArgs
+    tenantEmergencyContact?: boolean | TenantCountOutputTypeCountTenantEmergencyContactArgs
+    tenantIncome?: boolean | TenantCountOutputTypeCountTenantIncomeArgs
   }
 
   // Custom InputTypes
@@ -2334,11 +2334,11 @@ export namespace Prisma {
    */
 
   export type LandlordCountOutputType = {
-    Property: number
+    property: number
   }
 
   export type LandlordCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Property?: boolean | LandlordCountOutputTypeCountPropertyArgs
+    property?: boolean | LandlordCountOutputTypeCountPropertyArgs
   }
 
   // Custom InputTypes
@@ -2365,15 +2365,15 @@ export namespace Prisma {
    */
 
   export type PropertyCountOutputType = {
-    Unit: number
+    unit: number
+    propertyDocument: number
     Lease: number
-    PropertyDocument: number
   }
 
   export type PropertyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Unit?: boolean | PropertyCountOutputTypeCountUnitArgs
+    unit?: boolean | PropertyCountOutputTypeCountUnitArgs
+    propertyDocument?: boolean | PropertyCountOutputTypeCountPropertyDocumentArgs
     Lease?: boolean | PropertyCountOutputTypeCountLeaseArgs
-    PropertyDocument?: boolean | PropertyCountOutputTypeCountPropertyDocumentArgs
   }
 
   // Custom InputTypes
@@ -2397,15 +2397,15 @@ export namespace Prisma {
   /**
    * PropertyCountOutputType without action
    */
-  export type PropertyCountOutputTypeCountLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LeaseWhereInput
+  export type PropertyCountOutputTypeCountPropertyDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PropertyDocumentWhereInput
   }
 
   /**
    * PropertyCountOutputType without action
    */
-  export type PropertyCountOutputTypeCountPropertyDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PropertyDocumentWhereInput
+  export type PropertyCountOutputTypeCountLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeaseWhereInput
   }
 
 
@@ -2414,11 +2414,11 @@ export namespace Prisma {
    */
 
   export type UnitCountOutputType = {
-    Lease: number
+    lease: number
   }
 
   export type UnitCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Lease?: boolean | UnitCountOutputTypeCountLeaseArgs
+    lease?: boolean | UnitCountOutputTypeCountLeaseArgs
   }
 
   // Custom InputTypes
@@ -2445,19 +2445,19 @@ export namespace Prisma {
    */
 
   export type LeaseCountOutputType = {
-    TenantLease: number
-    Invoice: number
-    Transactions: number
-    MaintenanceRequest: number
-    LeaseDocument: number
+    tenantLease: number
+    invoice: number
+    transactions: number
+    maintenanceRequest: number
+    leaseDocument: number
   }
 
   export type LeaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    TenantLease?: boolean | LeaseCountOutputTypeCountTenantLeaseArgs
-    Invoice?: boolean | LeaseCountOutputTypeCountInvoiceArgs
-    Transactions?: boolean | LeaseCountOutputTypeCountTransactionsArgs
-    MaintenanceRequest?: boolean | LeaseCountOutputTypeCountMaintenanceRequestArgs
-    LeaseDocument?: boolean | LeaseCountOutputTypeCountLeaseDocumentArgs
+    tenantLease?: boolean | LeaseCountOutputTypeCountTenantLeaseArgs
+    invoice?: boolean | LeaseCountOutputTypeCountInvoiceArgs
+    transactions?: boolean | LeaseCountOutputTypeCountTransactionsArgs
+    maintenanceRequest?: boolean | LeaseCountOutputTypeCountMaintenanceRequestArgs
+    leaseDocument?: boolean | LeaseCountOutputTypeCountLeaseDocumentArgs
   }
 
   // Custom InputTypes
@@ -2739,10 +2739,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     Lease?: boolean | Tenant$LeaseArgs<ExtArgs>
-    TenantLease?: boolean | Tenant$TenantLeaseArgs<ExtArgs>
-    TenantDocument?: boolean | Tenant$TenantDocumentArgs<ExtArgs>
-    TenantEmergencyContact?: boolean | Tenant$TenantEmergencyContactArgs<ExtArgs>
-    TenantIncome?: boolean | Tenant$TenantIncomeArgs<ExtArgs>
+    tenantLease?: boolean | Tenant$tenantLeaseArgs<ExtArgs>
+    tenantDocument?: boolean | Tenant$tenantDocumentArgs<ExtArgs>
+    tenantEmergencyContact?: boolean | Tenant$tenantEmergencyContactArgs<ExtArgs>
+    tenantIncome?: boolean | Tenant$tenantIncomeArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tenant"]>
 
@@ -2785,10 +2785,10 @@ export namespace Prisma {
   export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "altEmail" | "phone" | "altPhone" | "createdAt" | "updatedAt", ExtArgs["result"]["tenant"]>
   export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Lease?: boolean | Tenant$LeaseArgs<ExtArgs>
-    TenantLease?: boolean | Tenant$TenantLeaseArgs<ExtArgs>
-    TenantDocument?: boolean | Tenant$TenantDocumentArgs<ExtArgs>
-    TenantEmergencyContact?: boolean | Tenant$TenantEmergencyContactArgs<ExtArgs>
-    TenantIncome?: boolean | Tenant$TenantIncomeArgs<ExtArgs>
+    tenantLease?: boolean | Tenant$tenantLeaseArgs<ExtArgs>
+    tenantDocument?: boolean | Tenant$tenantDocumentArgs<ExtArgs>
+    tenantEmergencyContact?: boolean | Tenant$tenantEmergencyContactArgs<ExtArgs>
+    tenantIncome?: boolean | Tenant$tenantIncomeArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2798,10 +2798,10 @@ export namespace Prisma {
     name: "Tenant"
     objects: {
       Lease: Prisma.$LeasePayload<ExtArgs>[]
-      TenantLease: Prisma.$TenantLeasePayload<ExtArgs>[]
-      TenantDocument: Prisma.$TenantDocumentPayload<ExtArgs>[]
-      TenantEmergencyContact: Prisma.$TenantEmergencyContactPayload<ExtArgs>[]
-      TenantIncome: Prisma.$TenantIncomePayload<ExtArgs>[]
+      tenantLease: Prisma.$TenantLeasePayload<ExtArgs>[]
+      tenantDocument: Prisma.$TenantDocumentPayload<ExtArgs>[]
+      tenantEmergencyContact: Prisma.$TenantEmergencyContactPayload<ExtArgs>[]
+      tenantIncome: Prisma.$TenantIncomePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3208,10 +3208,10 @@ export namespace Prisma {
   export interface Prisma__TenantClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Lease<T extends Tenant$LeaseArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$LeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    TenantLease<T extends Tenant$TenantLeaseArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$TenantLeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantLeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    TenantDocument<T extends Tenant$TenantDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$TenantDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    TenantEmergencyContact<T extends Tenant$TenantEmergencyContactArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$TenantEmergencyContactArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantEmergencyContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    TenantIncome<T extends Tenant$TenantIncomeArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$TenantIncomeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantIncomePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenantLease<T extends Tenant$tenantLeaseArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$tenantLeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantLeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenantDocument<T extends Tenant$tenantDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$tenantDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenantEmergencyContact<T extends Tenant$tenantEmergencyContactArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$tenantEmergencyContactArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantEmergencyContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenantIncome<T extends Tenant$tenantIncomeArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$tenantIncomeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantIncomePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3662,9 +3662,9 @@ export namespace Prisma {
   }
 
   /**
-   * Tenant.TenantLease
+   * Tenant.tenantLease
    */
-  export type Tenant$TenantLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Tenant$tenantLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TenantLease
      */
@@ -3686,9 +3686,9 @@ export namespace Prisma {
   }
 
   /**
-   * Tenant.TenantDocument
+   * Tenant.tenantDocument
    */
-  export type Tenant$TenantDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Tenant$tenantDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TenantDocument
      */
@@ -3710,9 +3710,9 @@ export namespace Prisma {
   }
 
   /**
-   * Tenant.TenantEmergencyContact
+   * Tenant.tenantEmergencyContact
    */
-  export type Tenant$TenantEmergencyContactArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Tenant$tenantEmergencyContactArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TenantEmergencyContact
      */
@@ -3734,9 +3734,9 @@ export namespace Prisma {
   }
 
   /**
-   * Tenant.TenantIncome
+   * Tenant.tenantIncome
    */
-  export type Tenant$TenantIncomeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Tenant$tenantIncomeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TenantIncome
      */
@@ -6419,7 +6419,7 @@ export namespace Prisma {
     zip?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    Property?: boolean | Landlord$PropertyArgs<ExtArgs>
+    property?: boolean | Landlord$propertyArgs<ExtArgs>
     _count?: boolean | LandlordCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["landlord"]>
 
@@ -6470,7 +6470,7 @@ export namespace Prisma {
 
   export type LandlordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "phone" | "addressLine1" | "addressLine2" | "city" | "state" | "zip" | "createdAt" | "updatedAt", ExtArgs["result"]["landlord"]>
   export type LandlordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Property?: boolean | Landlord$PropertyArgs<ExtArgs>
+    property?: boolean | Landlord$propertyArgs<ExtArgs>
     _count?: boolean | LandlordCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LandlordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6479,7 +6479,7 @@ export namespace Prisma {
   export type $LandlordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Landlord"
     objects: {
-      Property: Prisma.$PropertyPayload<ExtArgs>[]
+      property: Prisma.$PropertyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6888,7 +6888,7 @@ export namespace Prisma {
    */
   export interface Prisma__LandlordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Property<T extends Landlord$PropertyArgs<ExtArgs> = {}>(args?: Subset<T, Landlord$PropertyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    property<T extends Landlord$propertyArgs<ExtArgs> = {}>(args?: Subset<T, Landlord$propertyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7318,9 +7318,9 @@ export namespace Prisma {
   }
 
   /**
-   * Landlord.Property
+   * Landlord.property
    */
-  export type Landlord$PropertyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Landlord$propertyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Property
      */
@@ -7379,6 +7379,7 @@ export namespace Prisma {
     marketRent: number | null
     deposit: number | null
     leaseTerm: number | null
+    sqmt: number | null
   }
 
   export type PropertySumAggregateOutputType = {
@@ -7388,6 +7389,7 @@ export namespace Prisma {
     marketRent: number | null
     deposit: number | null
     leaseTerm: number | null
+    sqmt: number | null
   }
 
   export type PropertyMinAggregateOutputType = {
@@ -7398,6 +7400,7 @@ export namespace Prisma {
     city: string | null
     state: string | null
     zip: string | null
+    countryCode: string | null
     ownerId: string | null
     imageUrl: string | null
     propertyType: $Enums.PropertyType | null
@@ -7411,6 +7414,8 @@ export namespace Prisma {
     leaseTermType: $Enums.LeaseTermType | null
     createdAt: Date | null
     updatedAt: Date | null
+    sqmt: number | null
+    test: string | null
   }
 
   export type PropertyMaxAggregateOutputType = {
@@ -7421,6 +7426,7 @@ export namespace Prisma {
     city: string | null
     state: string | null
     zip: string | null
+    countryCode: string | null
     ownerId: string | null
     imageUrl: string | null
     propertyType: $Enums.PropertyType | null
@@ -7434,6 +7440,8 @@ export namespace Prisma {
     leaseTermType: $Enums.LeaseTermType | null
     createdAt: Date | null
     updatedAt: Date | null
+    sqmt: number | null
+    test: string | null
   }
 
   export type PropertyCountAggregateOutputType = {
@@ -7444,6 +7452,7 @@ export namespace Prisma {
     city: number
     state: number
     zip: number
+    countryCode: number
     ownerId: number
     imageUrl: number
     propertyType: number
@@ -7457,6 +7466,10 @@ export namespace Prisma {
     leaseTermType: number
     createdAt: number
     updatedAt: number
+    sqmt: number
+    features: number
+    amenities: number
+    test: number
     _all: number
   }
 
@@ -7468,6 +7481,7 @@ export namespace Prisma {
     marketRent?: true
     deposit?: true
     leaseTerm?: true
+    sqmt?: true
   }
 
   export type PropertySumAggregateInputType = {
@@ -7477,6 +7491,7 @@ export namespace Prisma {
     marketRent?: true
     deposit?: true
     leaseTerm?: true
+    sqmt?: true
   }
 
   export type PropertyMinAggregateInputType = {
@@ -7487,6 +7502,7 @@ export namespace Prisma {
     city?: true
     state?: true
     zip?: true
+    countryCode?: true
     ownerId?: true
     imageUrl?: true
     propertyType?: true
@@ -7500,6 +7516,8 @@ export namespace Prisma {
     leaseTermType?: true
     createdAt?: true
     updatedAt?: true
+    sqmt?: true
+    test?: true
   }
 
   export type PropertyMaxAggregateInputType = {
@@ -7510,6 +7528,7 @@ export namespace Prisma {
     city?: true
     state?: true
     zip?: true
+    countryCode?: true
     ownerId?: true
     imageUrl?: true
     propertyType?: true
@@ -7523,6 +7542,8 @@ export namespace Prisma {
     leaseTermType?: true
     createdAt?: true
     updatedAt?: true
+    sqmt?: true
+    test?: true
   }
 
   export type PropertyCountAggregateInputType = {
@@ -7533,6 +7554,7 @@ export namespace Prisma {
     city?: true
     state?: true
     zip?: true
+    countryCode?: true
     ownerId?: true
     imageUrl?: true
     propertyType?: true
@@ -7546,6 +7568,10 @@ export namespace Prisma {
     leaseTermType?: true
     createdAt?: true
     updatedAt?: true
+    sqmt?: true
+    features?: true
+    amenities?: true
+    test?: true
     _all?: true
   }
 
@@ -7643,6 +7669,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode: string
     ownerId: string
     imageUrl: string | null
     propertyType: $Enums.PropertyType
@@ -7656,6 +7683,10 @@ export namespace Prisma {
     leaseTermType: $Enums.LeaseTermType
     createdAt: Date
     updatedAt: Date
+    sqmt: number
+    features: string[]
+    amenities: string[]
+    test: string | null
     _count: PropertyCountAggregateOutputType | null
     _avg: PropertyAvgAggregateOutputType | null
     _sum: PropertySumAggregateOutputType | null
@@ -7685,6 +7716,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     zip?: boolean
+    countryCode?: boolean
     ownerId?: boolean
     imageUrl?: boolean
     propertyType?: boolean
@@ -7698,10 +7730,14 @@ export namespace Prisma {
     leaseTermType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    sqmt?: boolean
+    features?: boolean
+    amenities?: boolean
+    test?: boolean
     owner?: boolean | LandlordDefaultArgs<ExtArgs>
-    Unit?: boolean | Property$UnitArgs<ExtArgs>
+    unit?: boolean | Property$unitArgs<ExtArgs>
+    propertyDocument?: boolean | Property$propertyDocumentArgs<ExtArgs>
     Lease?: boolean | Property$LeaseArgs<ExtArgs>
-    PropertyDocument?: boolean | Property$PropertyDocumentArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -7713,6 +7749,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     zip?: boolean
+    countryCode?: boolean
     ownerId?: boolean
     imageUrl?: boolean
     propertyType?: boolean
@@ -7726,6 +7763,10 @@ export namespace Prisma {
     leaseTermType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    sqmt?: boolean
+    features?: boolean
+    amenities?: boolean
+    test?: boolean
     owner?: boolean | LandlordDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -7737,6 +7778,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     zip?: boolean
+    countryCode?: boolean
     ownerId?: boolean
     imageUrl?: boolean
     propertyType?: boolean
@@ -7750,6 +7792,10 @@ export namespace Prisma {
     leaseTermType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    sqmt?: boolean
+    features?: boolean
+    amenities?: boolean
+    test?: boolean
     owner?: boolean | LandlordDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -7761,6 +7807,7 @@ export namespace Prisma {
     city?: boolean
     state?: boolean
     zip?: boolean
+    countryCode?: boolean
     ownerId?: boolean
     imageUrl?: boolean
     propertyType?: boolean
@@ -7774,14 +7821,18 @@ export namespace Prisma {
     leaseTermType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    sqmt?: boolean
+    features?: boolean
+    amenities?: boolean
+    test?: boolean
   }
 
-  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "addressLine1" | "addressLine2" | "city" | "state" | "zip" | "ownerId" | "imageUrl" | "propertyType" | "propertyStatus" | "bedrooms" | "bathrooms" | "squareMeters" | "marketRent" | "deposit" | "leaseTerm" | "leaseTermType" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
+  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "addressLine1" | "addressLine2" | "city" | "state" | "zip" | "countryCode" | "ownerId" | "imageUrl" | "propertyType" | "propertyStatus" | "bedrooms" | "bathrooms" | "squareMeters" | "marketRent" | "deposit" | "leaseTerm" | "leaseTermType" | "createdAt" | "updatedAt" | "sqmt" | "features" | "amenities" | "test", ExtArgs["result"]["property"]>
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | LandlordDefaultArgs<ExtArgs>
-    Unit?: boolean | Property$UnitArgs<ExtArgs>
+    unit?: boolean | Property$unitArgs<ExtArgs>
+    propertyDocument?: boolean | Property$propertyDocumentArgs<ExtArgs>
     Lease?: boolean | Property$LeaseArgs<ExtArgs>
-    PropertyDocument?: boolean | Property$PropertyDocumentArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PropertyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7795,9 +7846,9 @@ export namespace Prisma {
     name: "Property"
     objects: {
       owner: Prisma.$LandlordPayload<ExtArgs>
-      Unit: Prisma.$UnitPayload<ExtArgs>[]
+      unit: Prisma.$UnitPayload<ExtArgs>[]
+      propertyDocument: Prisma.$PropertyDocumentPayload<ExtArgs>[]
       Lease: Prisma.$LeasePayload<ExtArgs>[]
-      PropertyDocument: Prisma.$PropertyDocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7807,6 +7858,7 @@ export namespace Prisma {
       city: string
       state: string
       zip: string
+      countryCode: string
       ownerId: string
       imageUrl: string | null
       propertyType: $Enums.PropertyType
@@ -7820,6 +7872,10 @@ export namespace Prisma {
       leaseTermType: $Enums.LeaseTermType
       createdAt: Date
       updatedAt: Date
+      sqmt: number
+      features: string[]
+      amenities: string[]
+      test: string | null
     }, ExtArgs["result"]["property"]>
     composites: {}
   }
@@ -8215,9 +8271,9 @@ export namespace Prisma {
   export interface Prisma__PropertyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     owner<T extends LandlordDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LandlordDefaultArgs<ExtArgs>>): Prisma__LandlordClient<$Result.GetResult<Prisma.$LandlordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Unit<T extends Property$UnitArgs<ExtArgs> = {}>(args?: Subset<T, Property$UnitArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    unit<T extends Property$unitArgs<ExtArgs> = {}>(args?: Subset<T, Property$unitArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    propertyDocument<T extends Property$propertyDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Property$propertyDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Lease<T extends Property$LeaseArgs<ExtArgs> = {}>(args?: Subset<T, Property$LeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    PropertyDocument<T extends Property$PropertyDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Property$PropertyDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8254,6 +8310,7 @@ export namespace Prisma {
     readonly city: FieldRef<"Property", 'String'>
     readonly state: FieldRef<"Property", 'String'>
     readonly zip: FieldRef<"Property", 'String'>
+    readonly countryCode: FieldRef<"Property", 'String'>
     readonly ownerId: FieldRef<"Property", 'String'>
     readonly imageUrl: FieldRef<"Property", 'String'>
     readonly propertyType: FieldRef<"Property", 'PropertyType'>
@@ -8267,6 +8324,10 @@ export namespace Prisma {
     readonly leaseTermType: FieldRef<"Property", 'LeaseTermType'>
     readonly createdAt: FieldRef<"Property", 'DateTime'>
     readonly updatedAt: FieldRef<"Property", 'DateTime'>
+    readonly sqmt: FieldRef<"Property", 'Float'>
+    readonly features: FieldRef<"Property", 'String[]'>
+    readonly amenities: FieldRef<"Property", 'String[]'>
+    readonly test: FieldRef<"Property", 'String'>
   }
     
 
@@ -8663,9 +8724,9 @@ export namespace Prisma {
   }
 
   /**
-   * Property.Unit
+   * Property.unit
    */
-  export type Property$UnitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Property$unitArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Unit
      */
@@ -8684,6 +8745,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UnitScalarFieldEnum | UnitScalarFieldEnum[]
+  }
+
+  /**
+   * Property.propertyDocument
+   */
+  export type Property$propertyDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PropertyDocument
+     */
+    select?: PropertyDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PropertyDocument
+     */
+    omit?: PropertyDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PropertyDocumentInclude<ExtArgs> | null
+    where?: PropertyDocumentWhereInput
+    orderBy?: PropertyDocumentOrderByWithRelationInput | PropertyDocumentOrderByWithRelationInput[]
+    cursor?: PropertyDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PropertyDocumentScalarFieldEnum | PropertyDocumentScalarFieldEnum[]
   }
 
   /**
@@ -8711,30 +8796,6 @@ export namespace Prisma {
   }
 
   /**
-   * Property.PropertyDocument
-   */
-  export type Property$PropertyDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PropertyDocument
-     */
-    select?: PropertyDocumentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PropertyDocument
-     */
-    omit?: PropertyDocumentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PropertyDocumentInclude<ExtArgs> | null
-    where?: PropertyDocumentWhereInput
-    orderBy?: PropertyDocumentOrderByWithRelationInput | PropertyDocumentOrderByWithRelationInput[]
-    cursor?: PropertyDocumentWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PropertyDocumentScalarFieldEnum | PropertyDocumentScalarFieldEnum[]
-  }
-
-  /**
    * Property without action
    */
   export type PropertyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8759,14 +8820,37 @@ export namespace Prisma {
 
   export type AggregateUnit = {
     _count: UnitCountAggregateOutputType | null
+    _avg: UnitAvgAggregateOutputType | null
+    _sum: UnitSumAggregateOutputType | null
     _min: UnitMinAggregateOutputType | null
     _max: UnitMaxAggregateOutputType | null
+  }
+
+  export type UnitAvgAggregateOutputType = {
+    bedrooms: number | null
+    bathrooms: number | null
+    sqmt: number | null
+    marketRent: number | null
+    deposit: number | null
+  }
+
+  export type UnitSumAggregateOutputType = {
+    bedrooms: number | null
+    bathrooms: number | null
+    sqmt: number | null
+    marketRent: number | null
+    deposit: number | null
   }
 
   export type UnitMinAggregateOutputType = {
     id: string | null
     propertyId: string | null
     name: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    sqmt: number | null
+    marketRent: number | null
+    deposit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8775,6 +8859,11 @@ export namespace Prisma {
     id: string | null
     propertyId: string | null
     name: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    sqmt: number | null
+    marketRent: number | null
+    deposit: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -8783,16 +8872,42 @@ export namespace Prisma {
     id: number
     propertyId: number
     name: number
+    bedrooms: number
+    bathrooms: number
+    sqmt: number
+    marketRent: number
+    deposit: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type UnitAvgAggregateInputType = {
+    bedrooms?: true
+    bathrooms?: true
+    sqmt?: true
+    marketRent?: true
+    deposit?: true
+  }
+
+  export type UnitSumAggregateInputType = {
+    bedrooms?: true
+    bathrooms?: true
+    sqmt?: true
+    marketRent?: true
+    deposit?: true
+  }
+
   export type UnitMinAggregateInputType = {
     id?: true
     propertyId?: true
     name?: true
+    bedrooms?: true
+    bathrooms?: true
+    sqmt?: true
+    marketRent?: true
+    deposit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8801,6 +8916,11 @@ export namespace Prisma {
     id?: true
     propertyId?: true
     name?: true
+    bedrooms?: true
+    bathrooms?: true
+    sqmt?: true
+    marketRent?: true
+    deposit?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -8809,6 +8929,11 @@ export namespace Prisma {
     id?: true
     propertyId?: true
     name?: true
+    bedrooms?: true
+    bathrooms?: true
+    sqmt?: true
+    marketRent?: true
+    deposit?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -8852,6 +8977,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UnitAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UnitSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UnitMinAggregateInputType
@@ -8882,6 +9019,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UnitCountAggregateInputType | true
+    _avg?: UnitAvgAggregateInputType
+    _sum?: UnitSumAggregateInputType
     _min?: UnitMinAggregateInputType
     _max?: UnitMaxAggregateInputType
   }
@@ -8890,9 +9029,16 @@ export namespace Prisma {
     id: string
     propertyId: string
     name: string
+    bedrooms: number
+    bathrooms: number
+    sqmt: number
+    marketRent: number
+    deposit: number
     createdAt: Date
     updatedAt: Date
     _count: UnitCountAggregateOutputType | null
+    _avg: UnitAvgAggregateOutputType | null
+    _sum: UnitSumAggregateOutputType | null
     _min: UnitMinAggregateOutputType | null
     _max: UnitMaxAggregateOutputType | null
   }
@@ -8915,10 +9061,15 @@ export namespace Prisma {
     id?: boolean
     propertyId?: boolean
     name?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    sqmt?: boolean
+    marketRent?: boolean
+    deposit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
-    Lease?: boolean | Unit$LeaseArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
+    lease?: boolean | Unit$leaseArgs<ExtArgs>
     _count?: boolean | UnitCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["unit"]>
 
@@ -8926,51 +9077,71 @@ export namespace Prisma {
     id?: boolean
     propertyId?: boolean
     name?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    sqmt?: boolean
+    marketRent?: boolean
+    deposit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["unit"]>
 
   export type UnitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     propertyId?: boolean
     name?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    sqmt?: boolean
+    marketRent?: boolean
+    deposit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["unit"]>
 
   export type UnitSelectScalar = {
     id?: boolean
     propertyId?: boolean
     name?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    sqmt?: boolean
+    marketRent?: boolean
+    deposit?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UnitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["unit"]>
+  export type UnitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "bedrooms" | "bathrooms" | "sqmt" | "marketRent" | "deposit" | "createdAt" | "updatedAt", ExtArgs["result"]["unit"]>
   export type UnitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
-    Lease?: boolean | Unit$LeaseArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
+    lease?: boolean | Unit$leaseArgs<ExtArgs>
     _count?: boolean | UnitCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UnitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
   }
   export type UnitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    Property?: boolean | PropertyDefaultArgs<ExtArgs>
   }
 
   export type $UnitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Unit"
     objects: {
-      property: Prisma.$PropertyPayload<ExtArgs>
-      Lease: Prisma.$LeasePayload<ExtArgs>[]
+      Property: Prisma.$PropertyPayload<ExtArgs>
+      lease: Prisma.$LeasePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       propertyId: string
       name: string
+      bedrooms: number
+      bathrooms: number
+      sqmt: number
+      marketRent: number
+      deposit: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["unit"]>
@@ -9367,8 +9538,8 @@ export namespace Prisma {
    */
   export interface Prisma__UnitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    property<T extends PropertyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyDefaultArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Lease<T extends Unit$LeaseArgs<ExtArgs> = {}>(args?: Subset<T, Unit$LeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Property<T extends PropertyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyDefaultArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    lease<T extends Unit$leaseArgs<ExtArgs> = {}>(args?: Subset<T, Unit$leaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9401,6 +9572,11 @@ export namespace Prisma {
     readonly id: FieldRef<"Unit", 'String'>
     readonly propertyId: FieldRef<"Unit", 'String'>
     readonly name: FieldRef<"Unit", 'String'>
+    readonly bedrooms: FieldRef<"Unit", 'Int'>
+    readonly bathrooms: FieldRef<"Unit", 'Float'>
+    readonly sqmt: FieldRef<"Unit", 'Float'>
+    readonly marketRent: FieldRef<"Unit", 'Float'>
+    readonly deposit: FieldRef<"Unit", 'Float'>
     readonly createdAt: FieldRef<"Unit", 'DateTime'>
     readonly updatedAt: FieldRef<"Unit", 'DateTime'>
   }
@@ -9799,9 +9975,9 @@ export namespace Prisma {
   }
 
   /**
-   * Unit.Lease
+   * Unit.lease
    */
-  export type Unit$LeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Unit$leaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Lease
      */
@@ -10101,12 +10277,12 @@ export namespace Prisma {
     propertyId?: boolean
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    TenantLease?: boolean | Lease$TenantLeaseArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
-    Invoice?: boolean | Lease$InvoiceArgs<ExtArgs>
-    Transactions?: boolean | Lease$TransactionsArgs<ExtArgs>
-    MaintenanceRequest?: boolean | Lease$MaintenanceRequestArgs<ExtArgs>
-    LeaseDocument?: boolean | Lease$LeaseDocumentArgs<ExtArgs>
+    tenantLease?: boolean | Lease$tenantLeaseArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
+    invoice?: boolean | Lease$invoiceArgs<ExtArgs>
+    transactions?: boolean | Lease$transactionsArgs<ExtArgs>
+    maintenanceRequest?: boolean | Lease$maintenanceRequestArgs<ExtArgs>
+    leaseDocument?: boolean | Lease$leaseDocumentArgs<ExtArgs>
     _count?: boolean | LeaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
@@ -10125,7 +10301,7 @@ export namespace Prisma {
     propertyId?: boolean
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
   export type LeaseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10143,7 +10319,7 @@ export namespace Prisma {
     propertyId?: boolean
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
   export type LeaseSelectScalar = {
@@ -10165,23 +10341,23 @@ export namespace Prisma {
   export type LeaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    TenantLease?: boolean | Lease$TenantLeaseArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
-    Invoice?: boolean | Lease$InvoiceArgs<ExtArgs>
-    Transactions?: boolean | Lease$TransactionsArgs<ExtArgs>
-    MaintenanceRequest?: boolean | Lease$MaintenanceRequestArgs<ExtArgs>
-    LeaseDocument?: boolean | Lease$LeaseDocumentArgs<ExtArgs>
+    tenantLease?: boolean | Lease$tenantLeaseArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
+    invoice?: boolean | Lease$invoiceArgs<ExtArgs>
+    transactions?: boolean | Lease$transactionsArgs<ExtArgs>
+    maintenanceRequest?: boolean | Lease$maintenanceRequestArgs<ExtArgs>
+    leaseDocument?: boolean | Lease$leaseDocumentArgs<ExtArgs>
     _count?: boolean | LeaseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LeaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
   }
   export type LeaseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     unit?: boolean | UnitDefaultArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
-    Property?: boolean | Lease$PropertyArgs<ExtArgs>
+    property?: boolean | Lease$propertyArgs<ExtArgs>
   }
 
   export type $LeasePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10189,12 +10365,12 @@ export namespace Prisma {
     objects: {
       unit: Prisma.$UnitPayload<ExtArgs>
       tenant: Prisma.$TenantPayload<ExtArgs>
-      TenantLease: Prisma.$TenantLeasePayload<ExtArgs>[]
-      Property: Prisma.$PropertyPayload<ExtArgs> | null
-      Invoice: Prisma.$InvoicePayload<ExtArgs>[]
-      Transactions: Prisma.$TransactionsPayload<ExtArgs>[]
-      MaintenanceRequest: Prisma.$MaintenanceRequestPayload<ExtArgs>[]
-      LeaseDocument: Prisma.$LeaseDocumentPayload<ExtArgs>[]
+      tenantLease: Prisma.$TenantLeasePayload<ExtArgs>[]
+      property: Prisma.$PropertyPayload<ExtArgs> | null
+      invoice: Prisma.$InvoicePayload<ExtArgs>[]
+      transactions: Prisma.$TransactionsPayload<ExtArgs>[]
+      maintenanceRequest: Prisma.$MaintenanceRequestPayload<ExtArgs>[]
+      leaseDocument: Prisma.$LeaseDocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10605,12 +10781,12 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     unit<T extends UnitDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UnitDefaultArgs<ExtArgs>>): Prisma__UnitClient<$Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    TenantLease<T extends Lease$TenantLeaseArgs<ExtArgs> = {}>(args?: Subset<T, Lease$TenantLeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantLeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Property<T extends Lease$PropertyArgs<ExtArgs> = {}>(args?: Subset<T, Lease$PropertyArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    Invoice<T extends Lease$InvoiceArgs<ExtArgs> = {}>(args?: Subset<T, Lease$InvoiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Transactions<T extends Lease$TransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Lease$TransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    MaintenanceRequest<T extends Lease$MaintenanceRequestArgs<ExtArgs> = {}>(args?: Subset<T, Lease$MaintenanceRequestArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaintenanceRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    LeaseDocument<T extends Lease$LeaseDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Lease$LeaseDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeaseDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenantLease<T extends Lease$tenantLeaseArgs<ExtArgs> = {}>(args?: Subset<T, Lease$tenantLeaseArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantLeasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    property<T extends Lease$propertyArgs<ExtArgs> = {}>(args?: Subset<T, Lease$propertyArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invoice<T extends Lease$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Lease$invoiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transactions<T extends Lease$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Lease$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    maintenanceRequest<T extends Lease$maintenanceRequestArgs<ExtArgs> = {}>(args?: Subset<T, Lease$maintenanceRequestArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaintenanceRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    leaseDocument<T extends Lease$leaseDocumentArgs<ExtArgs> = {}>(args?: Subset<T, Lease$leaseDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeaseDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11048,9 +11224,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.TenantLease
+   * Lease.tenantLease
    */
-  export type Lease$TenantLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$tenantLeaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the TenantLease
      */
@@ -11072,9 +11248,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.Property
+   * Lease.property
    */
-  export type Lease$PropertyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$propertyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Property
      */
@@ -11091,9 +11267,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.Invoice
+   * Lease.invoice
    */
-  export type Lease$InvoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$invoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Invoice
      */
@@ -11115,9 +11291,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.Transactions
+   * Lease.transactions
    */
-  export type Lease$TransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Transactions
      */
@@ -11139,9 +11315,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.MaintenanceRequest
+   * Lease.maintenanceRequest
    */
-  export type Lease$MaintenanceRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$maintenanceRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the MaintenanceRequest
      */
@@ -11163,9 +11339,9 @@ export namespace Prisma {
   }
 
   /**
-   * Lease.LeaseDocument
+   * Lease.leaseDocument
    */
-  export type Lease$LeaseDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lease$leaseDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the LeaseDocument
      */
@@ -12602,7 +12778,7 @@ export namespace Prisma {
     updatedAt?: boolean
     invoiceId?: boolean
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["transactions"]>
 
   export type TransactionsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12615,7 +12791,7 @@ export namespace Prisma {
     updatedAt?: boolean
     invoiceId?: boolean
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["transactions"]>
 
   export type TransactionsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12628,7 +12804,7 @@ export namespace Prisma {
     updatedAt?: boolean
     invoiceId?: boolean
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["transactions"]>
 
   export type TransactionsSelectScalar = {
@@ -12645,22 +12821,22 @@ export namespace Prisma {
   export type TransactionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "amountPaid" | "referenceId" | "createdAt" | "updatedAt" | "invoiceId", ExtArgs["result"]["transactions"]>
   export type TransactionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }
   export type TransactionsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }
   export type TransactionsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
-    Invoice?: boolean | Transactions$InvoiceArgs<ExtArgs>
+    invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
   }
 
   export type $TransactionsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Transactions"
     objects: {
       lease: Prisma.$LeasePayload<ExtArgs>
-      Invoice: Prisma.$InvoicePayload<ExtArgs> | null
+      invoice: Prisma.$InvoicePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13066,7 +13242,7 @@ export namespace Prisma {
   export interface Prisma__TransactionsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lease<T extends LeaseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LeaseDefaultArgs<ExtArgs>>): Prisma__LeaseClient<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Invoice<T extends Transactions$InvoiceArgs<ExtArgs> = {}>(args?: Subset<T, Transactions$InvoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invoice<T extends Transactions$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Transactions$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13500,9 +13676,9 @@ export namespace Prisma {
   }
 
   /**
-   * Transactions.Invoice
+   * Transactions.invoice
    */
-  export type Transactions$InvoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Transactions$invoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Invoice
      */
@@ -18998,6 +19174,7 @@ export namespace Prisma {
     city: 'city',
     state: 'state',
     zip: 'zip',
+    countryCode: 'countryCode',
     ownerId: 'ownerId',
     imageUrl: 'imageUrl',
     propertyType: 'propertyType',
@@ -19010,7 +19187,11 @@ export namespace Prisma {
     leaseTerm: 'leaseTerm',
     leaseTermType: 'leaseTermType',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    sqmt: 'sqmt',
+    features: 'features',
+    amenities: 'amenities',
+    test: 'test'
   };
 
   export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
@@ -19020,6 +19201,11 @@ export namespace Prisma {
     id: 'id',
     propertyId: 'propertyId',
     name: 'name',
+    bedrooms: 'bedrooms',
+    bathrooms: 'bathrooms',
+    sqmt: 'sqmt',
+    marketRent: 'marketRent',
+    deposit: 'deposit',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -19411,10 +19597,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
     Lease?: LeaseListRelationFilter
-    TenantLease?: TenantLeaseListRelationFilter
-    TenantDocument?: TenantDocumentListRelationFilter
-    TenantEmergencyContact?: TenantEmergencyContactListRelationFilter
-    TenantIncome?: TenantIncomeListRelationFilter
+    tenantLease?: TenantLeaseListRelationFilter
+    tenantDocument?: TenantDocumentListRelationFilter
+    tenantEmergencyContact?: TenantEmergencyContactListRelationFilter
+    tenantIncome?: TenantIncomeListRelationFilter
   }
 
   export type TenantOrderByWithRelationInput = {
@@ -19428,10 +19614,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     Lease?: LeaseOrderByRelationAggregateInput
-    TenantLease?: TenantLeaseOrderByRelationAggregateInput
-    TenantDocument?: TenantDocumentOrderByRelationAggregateInput
-    TenantEmergencyContact?: TenantEmergencyContactOrderByRelationAggregateInput
-    TenantIncome?: TenantIncomeOrderByRelationAggregateInput
+    tenantLease?: TenantLeaseOrderByRelationAggregateInput
+    tenantDocument?: TenantDocumentOrderByRelationAggregateInput
+    tenantEmergencyContact?: TenantEmergencyContactOrderByRelationAggregateInput
+    tenantIncome?: TenantIncomeOrderByRelationAggregateInput
   }
 
   export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -19448,10 +19634,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
     Lease?: LeaseListRelationFilter
-    TenantLease?: TenantLeaseListRelationFilter
-    TenantDocument?: TenantDocumentListRelationFilter
-    TenantEmergencyContact?: TenantEmergencyContactListRelationFilter
-    TenantIncome?: TenantIncomeListRelationFilter
+    tenantLease?: TenantLeaseListRelationFilter
+    tenantDocument?: TenantDocumentListRelationFilter
+    tenantEmergencyContact?: TenantEmergencyContactListRelationFilter
+    tenantIncome?: TenantIncomeListRelationFilter
   }, "id">
 
   export type TenantOrderByWithAggregationInput = {
@@ -19717,7 +19903,7 @@ export namespace Prisma {
     zip?: StringFilter<"Landlord"> | string
     createdAt?: DateTimeFilter<"Landlord"> | Date | string
     updatedAt?: DateTimeFilter<"Landlord"> | Date | string
-    Property?: PropertyListRelationFilter
+    property?: PropertyListRelationFilter
   }
 
   export type LandlordOrderByWithRelationInput = {
@@ -19733,7 +19919,7 @@ export namespace Prisma {
     zip?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    Property?: PropertyOrderByRelationAggregateInput
+    property?: PropertyOrderByRelationAggregateInput
   }
 
   export type LandlordWhereUniqueInput = Prisma.AtLeast<{
@@ -19752,7 +19938,7 @@ export namespace Prisma {
     zip?: StringFilter<"Landlord"> | string
     createdAt?: DateTimeFilter<"Landlord"> | Date | string
     updatedAt?: DateTimeFilter<"Landlord"> | Date | string
-    Property?: PropertyListRelationFilter
+    property?: PropertyListRelationFilter
   }, "id">
 
   export type LandlordOrderByWithAggregationInput = {
@@ -19802,6 +19988,7 @@ export namespace Prisma {
     city?: StringFilter<"Property"> | string
     state?: StringFilter<"Property"> | string
     zip?: StringFilter<"Property"> | string
+    countryCode?: StringFilter<"Property"> | string
     ownerId?: StringFilter<"Property"> | string
     imageUrl?: StringNullableFilter<"Property"> | string | null
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
@@ -19815,10 +20002,14 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFilter<"Property"> | $Enums.LeaseTermType
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    sqmt?: FloatFilter<"Property"> | number
+    features?: StringNullableListFilter<"Property">
+    amenities?: StringNullableListFilter<"Property">
+    test?: StringNullableFilter<"Property"> | string | null
     owner?: XOR<LandlordScalarRelationFilter, LandlordWhereInput>
-    Unit?: UnitListRelationFilter
+    unit?: UnitListRelationFilter
+    propertyDocument?: PropertyDocumentListRelationFilter
     Lease?: LeaseListRelationFilter
-    PropertyDocument?: PropertyDocumentListRelationFilter
   }
 
   export type PropertyOrderByWithRelationInput = {
@@ -19829,6 +20020,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
+    countryCode?: SortOrder
     ownerId?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     propertyType?: SortOrder
@@ -19842,10 +20034,14 @@ export namespace Prisma {
     leaseTermType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sqmt?: SortOrder
+    features?: SortOrder
+    amenities?: SortOrder
+    test?: SortOrderInput | SortOrder
     owner?: LandlordOrderByWithRelationInput
-    Unit?: UnitOrderByRelationAggregateInput
+    unit?: UnitOrderByRelationAggregateInput
+    propertyDocument?: PropertyDocumentOrderByRelationAggregateInput
     Lease?: LeaseOrderByRelationAggregateInput
-    PropertyDocument?: PropertyDocumentOrderByRelationAggregateInput
   }
 
   export type PropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -19859,6 +20055,7 @@ export namespace Prisma {
     city?: StringFilter<"Property"> | string
     state?: StringFilter<"Property"> | string
     zip?: StringFilter<"Property"> | string
+    countryCode?: StringFilter<"Property"> | string
     ownerId?: StringFilter<"Property"> | string
     imageUrl?: StringNullableFilter<"Property"> | string | null
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
@@ -19872,10 +20069,14 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFilter<"Property"> | $Enums.LeaseTermType
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    sqmt?: FloatFilter<"Property"> | number
+    features?: StringNullableListFilter<"Property">
+    amenities?: StringNullableListFilter<"Property">
+    test?: StringNullableFilter<"Property"> | string | null
     owner?: XOR<LandlordScalarRelationFilter, LandlordWhereInput>
-    Unit?: UnitListRelationFilter
+    unit?: UnitListRelationFilter
+    propertyDocument?: PropertyDocumentListRelationFilter
     Lease?: LeaseListRelationFilter
-    PropertyDocument?: PropertyDocumentListRelationFilter
   }, "id">
 
   export type PropertyOrderByWithAggregationInput = {
@@ -19886,6 +20087,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
+    countryCode?: SortOrder
     ownerId?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     propertyType?: SortOrder
@@ -19899,6 +20101,10 @@ export namespace Prisma {
     leaseTermType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sqmt?: SortOrder
+    features?: SortOrder
+    amenities?: SortOrder
+    test?: SortOrderInput | SortOrder
     _count?: PropertyCountOrderByAggregateInput
     _avg?: PropertyAvgOrderByAggregateInput
     _max?: PropertyMaxOrderByAggregateInput
@@ -19917,6 +20123,7 @@ export namespace Prisma {
     city?: StringWithAggregatesFilter<"Property"> | string
     state?: StringWithAggregatesFilter<"Property"> | string
     zip?: StringWithAggregatesFilter<"Property"> | string
+    countryCode?: StringWithAggregatesFilter<"Property"> | string
     ownerId?: StringWithAggregatesFilter<"Property"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"Property"> | string | null
     propertyType?: EnumPropertyTypeWithAggregatesFilter<"Property"> | $Enums.PropertyType
@@ -19930,6 +20137,10 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeWithAggregatesFilter<"Property"> | $Enums.LeaseTermType
     createdAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Property"> | Date | string
+    sqmt?: FloatWithAggregatesFilter<"Property"> | number
+    features?: StringNullableListFilter<"Property">
+    amenities?: StringNullableListFilter<"Property">
+    test?: StringNullableWithAggregatesFilter<"Property"> | string | null
   }
 
   export type UnitWhereInput = {
@@ -19939,20 +20150,30 @@ export namespace Prisma {
     id?: StringFilter<"Unit"> | string
     propertyId?: StringFilter<"Unit"> | string
     name?: StringFilter<"Unit"> | string
+    bedrooms?: IntFilter<"Unit"> | number
+    bathrooms?: FloatFilter<"Unit"> | number
+    sqmt?: FloatFilter<"Unit"> | number
+    marketRent?: FloatFilter<"Unit"> | number
+    deposit?: FloatFilter<"Unit"> | number
     createdAt?: DateTimeFilter<"Unit"> | Date | string
     updatedAt?: DateTimeFilter<"Unit"> | Date | string
-    property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
-    Lease?: LeaseListRelationFilter
+    Property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
+    lease?: LeaseListRelationFilter
   }
 
   export type UnitOrderByWithRelationInput = {
     id?: SortOrder
     propertyId?: SortOrder
     name?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    property?: PropertyOrderByWithRelationInput
-    Lease?: LeaseOrderByRelationAggregateInput
+    Property?: PropertyOrderByWithRelationInput
+    lease?: LeaseOrderByRelationAggregateInput
   }
 
   export type UnitWhereUniqueInput = Prisma.AtLeast<{
@@ -19962,21 +20183,33 @@ export namespace Prisma {
     NOT?: UnitWhereInput | UnitWhereInput[]
     propertyId?: StringFilter<"Unit"> | string
     name?: StringFilter<"Unit"> | string
+    bedrooms?: IntFilter<"Unit"> | number
+    bathrooms?: FloatFilter<"Unit"> | number
+    sqmt?: FloatFilter<"Unit"> | number
+    marketRent?: FloatFilter<"Unit"> | number
+    deposit?: FloatFilter<"Unit"> | number
     createdAt?: DateTimeFilter<"Unit"> | Date | string
     updatedAt?: DateTimeFilter<"Unit"> | Date | string
-    property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
-    Lease?: LeaseListRelationFilter
+    Property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
+    lease?: LeaseListRelationFilter
   }, "id">
 
   export type UnitOrderByWithAggregationInput = {
     id?: SortOrder
     propertyId?: SortOrder
     name?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UnitCountOrderByAggregateInput
+    _avg?: UnitAvgOrderByAggregateInput
     _max?: UnitMaxOrderByAggregateInput
     _min?: UnitMinOrderByAggregateInput
+    _sum?: UnitSumOrderByAggregateInput
   }
 
   export type UnitScalarWhereWithAggregatesInput = {
@@ -19986,6 +20219,11 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Unit"> | string
     propertyId?: StringWithAggregatesFilter<"Unit"> | string
     name?: StringWithAggregatesFilter<"Unit"> | string
+    bedrooms?: IntWithAggregatesFilter<"Unit"> | number
+    bathrooms?: FloatWithAggregatesFilter<"Unit"> | number
+    sqmt?: FloatWithAggregatesFilter<"Unit"> | number
+    marketRent?: FloatWithAggregatesFilter<"Unit"> | number
+    deposit?: FloatWithAggregatesFilter<"Unit"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Unit"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Unit"> | Date | string
   }
@@ -20008,12 +20246,12 @@ export namespace Prisma {
     propertyId?: StringNullableFilter<"Lease"> | string | null
     unit?: XOR<UnitScalarRelationFilter, UnitWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-    TenantLease?: TenantLeaseListRelationFilter
-    Property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
-    Invoice?: InvoiceListRelationFilter
-    Transactions?: TransactionsListRelationFilter
-    MaintenanceRequest?: MaintenanceRequestListRelationFilter
-    LeaseDocument?: LeaseDocumentListRelationFilter
+    tenantLease?: TenantLeaseListRelationFilter
+    property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
+    invoice?: InvoiceListRelationFilter
+    transactions?: TransactionsListRelationFilter
+    maintenanceRequest?: MaintenanceRequestListRelationFilter
+    leaseDocument?: LeaseDocumentListRelationFilter
   }
 
   export type LeaseOrderByWithRelationInput = {
@@ -20031,12 +20269,12 @@ export namespace Prisma {
     propertyId?: SortOrderInput | SortOrder
     unit?: UnitOrderByWithRelationInput
     tenant?: TenantOrderByWithRelationInput
-    TenantLease?: TenantLeaseOrderByRelationAggregateInput
-    Property?: PropertyOrderByWithRelationInput
-    Invoice?: InvoiceOrderByRelationAggregateInput
-    Transactions?: TransactionsOrderByRelationAggregateInput
-    MaintenanceRequest?: MaintenanceRequestOrderByRelationAggregateInput
-    LeaseDocument?: LeaseDocumentOrderByRelationAggregateInput
+    tenantLease?: TenantLeaseOrderByRelationAggregateInput
+    property?: PropertyOrderByWithRelationInput
+    invoice?: InvoiceOrderByRelationAggregateInput
+    transactions?: TransactionsOrderByRelationAggregateInput
+    maintenanceRequest?: MaintenanceRequestOrderByRelationAggregateInput
+    leaseDocument?: LeaseDocumentOrderByRelationAggregateInput
   }
 
   export type LeaseWhereUniqueInput = Prisma.AtLeast<{
@@ -20057,12 +20295,12 @@ export namespace Prisma {
     propertyId?: StringNullableFilter<"Lease"> | string | null
     unit?: XOR<UnitScalarRelationFilter, UnitWhereInput>
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
-    TenantLease?: TenantLeaseListRelationFilter
-    Property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
-    Invoice?: InvoiceListRelationFilter
-    Transactions?: TransactionsListRelationFilter
-    MaintenanceRequest?: MaintenanceRequestListRelationFilter
-    LeaseDocument?: LeaseDocumentListRelationFilter
+    tenantLease?: TenantLeaseListRelationFilter
+    property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
+    invoice?: InvoiceListRelationFilter
+    transactions?: TransactionsListRelationFilter
+    maintenanceRequest?: MaintenanceRequestListRelationFilter
+    leaseDocument?: LeaseDocumentListRelationFilter
   }, "id">
 
   export type LeaseOrderByWithAggregationInput = {
@@ -20196,7 +20434,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Transactions"> | Date | string
     invoiceId?: StringNullableFilter<"Transactions"> | string | null
     lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
-    Invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
+    invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
   }
 
   export type TransactionsOrderByWithRelationInput = {
@@ -20209,7 +20447,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     invoiceId?: SortOrderInput | SortOrder
     lease?: LeaseOrderByWithRelationInput
-    Invoice?: InvoiceOrderByWithRelationInput
+    invoice?: InvoiceOrderByWithRelationInput
   }
 
   export type TransactionsWhereUniqueInput = Prisma.AtLeast<{
@@ -20225,7 +20463,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Transactions"> | Date | string
     invoiceId?: StringNullableFilter<"Transactions"> | string | null
     lease?: XOR<LeaseScalarRelationFilter, LeaseWhereInput>
-    Invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
+    invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
   }, "id">
 
   export type TransactionsOrderByWithAggregationInput = {
@@ -20572,10 +20810,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateInput = {
@@ -20589,10 +20827,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUpdateInput = {
@@ -20606,10 +20844,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateInput = {
@@ -20623,10 +20861,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateManyInput = {
@@ -20935,7 +21173,7 @@ export namespace Prisma {
     zip: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    Property?: PropertyCreateNestedManyWithoutOwnerInput
+    property?: PropertyCreateNestedManyWithoutOwnerInput
   }
 
   export type LandlordUncheckedCreateInput = {
@@ -20951,7 +21189,7 @@ export namespace Prisma {
     zip: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    Property?: PropertyUncheckedCreateNestedManyWithoutOwnerInput
+    property?: PropertyUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type LandlordUpdateInput = {
@@ -20967,7 +21205,7 @@ export namespace Prisma {
     zip?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Property?: PropertyUpdateManyWithoutOwnerNestedInput
+    property?: PropertyUpdateManyWithoutOwnerNestedInput
   }
 
   export type LandlordUncheckedUpdateInput = {
@@ -20983,7 +21221,7 @@ export namespace Prisma {
     zip?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Property?: PropertyUncheckedUpdateManyWithoutOwnerNestedInput
+    property?: PropertyUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type LandlordCreateManyInput = {
@@ -21039,6 +21277,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -21051,10 +21290,14 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
     owner: LandlordCreateNestedOneWithoutPropertyInput
-    Unit?: UnitCreateNestedManyWithoutPropertyInput
+    unit?: UnitCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
     Lease?: LeaseCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateInput = {
@@ -21065,6 +21308,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     ownerId: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
@@ -21078,9 +21322,13 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
-    Unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
     Lease?: LeaseUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUpdateInput = {
@@ -21091,6 +21339,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -21103,10 +21352,14 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
     owner?: LandlordUpdateOneRequiredWithoutPropertyNestedInput
-    Unit?: UnitUpdateManyWithoutPropertyNestedInput
+    unit?: UnitUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateInput = {
@@ -21117,6 +21370,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
@@ -21130,9 +21384,13 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateManyInput = {
@@ -21143,6 +21401,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     ownerId: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
@@ -21156,6 +21415,10 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
   }
 
   export type PropertyUpdateManyMutationInput = {
@@ -21166,6 +21429,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -21178,6 +21442,10 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PropertyUncheckedUpdateManyInput = {
@@ -21188,6 +21456,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
@@ -21201,48 +21470,77 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UnitCreateInput = {
     id?: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    property: PropertyCreateNestedOneWithoutUnitInput
-    Lease?: LeaseCreateNestedManyWithoutUnitInput
+    Property: PropertyCreateNestedOneWithoutUnitInput
+    lease?: LeaseCreateNestedManyWithoutUnitInput
   }
 
   export type UnitUncheckedCreateInput = {
     id?: string
     propertyId: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    Lease?: LeaseUncheckedCreateNestedManyWithoutUnitInput
+    lease?: LeaseUncheckedCreateNestedManyWithoutUnitInput
   }
 
   export type UnitUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    property?: PropertyUpdateOneRequiredWithoutUnitNestedInput
-    Lease?: LeaseUpdateManyWithoutUnitNestedInput
+    Property?: PropertyUpdateOneRequiredWithoutUnitNestedInput
+    lease?: LeaseUpdateManyWithoutUnitNestedInput
   }
 
   export type UnitUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     propertyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Lease?: LeaseUncheckedUpdateManyWithoutUnitNestedInput
+    lease?: LeaseUncheckedUpdateManyWithoutUnitNestedInput
   }
 
   export type UnitCreateManyInput = {
     id?: string
     propertyId: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21250,6 +21548,11 @@ export namespace Prisma {
   export type UnitUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21258,6 +21561,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     propertyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21274,12 +21582,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateInput = {
@@ -21295,11 +21603,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUpdateInput = {
@@ -21314,12 +21622,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateInput = {
@@ -21335,11 +21643,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseCreateManyInput = {
@@ -21479,7 +21787,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lease: LeaseCreateNestedOneWithoutTransactionsInput
-    Invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
+    invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
   }
 
   export type TransactionsUncheckedCreateInput = {
@@ -21501,7 +21809,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lease?: LeaseUpdateOneRequiredWithoutTransactionsNestedInput
-    Invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
+    invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
   }
 
   export type TransactionsUncheckedUpdateInput = {
@@ -22322,6 +22630,14 @@ export namespace Prisma {
     not?: NestedEnumLeaseTermTypeFilter<$PrismaModel> | $Enums.LeaseTermType
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type LandlordScalarRelationFilter = {
     is?: LandlordWhereInput
     isNot?: LandlordWhereInput
@@ -22355,6 +22671,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
+    countryCode?: SortOrder
     ownerId?: SortOrder
     imageUrl?: SortOrder
     propertyType?: SortOrder
@@ -22368,6 +22685,10 @@ export namespace Prisma {
     leaseTermType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sqmt?: SortOrder
+    features?: SortOrder
+    amenities?: SortOrder
+    test?: SortOrder
   }
 
   export type PropertyAvgOrderByAggregateInput = {
@@ -22377,6 +22698,7 @@ export namespace Prisma {
     marketRent?: SortOrder
     deposit?: SortOrder
     leaseTerm?: SortOrder
+    sqmt?: SortOrder
   }
 
   export type PropertyMaxOrderByAggregateInput = {
@@ -22387,6 +22709,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
+    countryCode?: SortOrder
     ownerId?: SortOrder
     imageUrl?: SortOrder
     propertyType?: SortOrder
@@ -22400,6 +22723,8 @@ export namespace Prisma {
     leaseTermType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sqmt?: SortOrder
+    test?: SortOrder
   }
 
   export type PropertyMinOrderByAggregateInput = {
@@ -22410,6 +22735,7 @@ export namespace Prisma {
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
+    countryCode?: SortOrder
     ownerId?: SortOrder
     imageUrl?: SortOrder
     propertyType?: SortOrder
@@ -22423,6 +22749,8 @@ export namespace Prisma {
     leaseTermType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    sqmt?: SortOrder
+    test?: SortOrder
   }
 
   export type PropertySumOrderByAggregateInput = {
@@ -22432,6 +22760,7 @@ export namespace Prisma {
     marketRent?: SortOrder
     deposit?: SortOrder
     leaseTerm?: SortOrder
+    sqmt?: SortOrder
   }
 
   export type EnumPropertyTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -22489,14 +22818,32 @@ export namespace Prisma {
     id?: SortOrder
     propertyId?: SortOrder
     name?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UnitAvgOrderByAggregateInput = {
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
   }
 
   export type UnitMaxOrderByAggregateInput = {
     id?: SortOrder
     propertyId?: SortOrder
     name?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22505,8 +22852,21 @@ export namespace Prisma {
     id?: SortOrder
     propertyId?: SortOrder
     name?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UnitSumOrderByAggregateInput = {
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    sqmt?: SortOrder
+    marketRent?: SortOrder
+    deposit?: SortOrder
   }
 
   export type EnumLeaseStatusFilter<$PrismaModel = never> = {
@@ -23275,6 +23635,14 @@ export namespace Prisma {
     deleteMany?: PropertyScalarWhereInput | PropertyScalarWhereInput[]
   }
 
+  export type PropertyCreatefeaturesInput = {
+    set: string[]
+  }
+
+  export type PropertyCreateamenitiesInput = {
+    set: string[]
+  }
+
   export type LandlordCreateNestedOneWithoutPropertyInput = {
     create?: XOR<LandlordCreateWithoutPropertyInput, LandlordUncheckedCreateWithoutPropertyInput>
     connectOrCreate?: LandlordCreateOrConnectWithoutPropertyInput
@@ -23288,18 +23656,18 @@ export namespace Prisma {
     connect?: UnitWhereUniqueInput | UnitWhereUniqueInput[]
   }
 
-  export type LeaseCreateNestedManyWithoutPropertyInput = {
-    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
-    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
-    createMany?: LeaseCreateManyPropertyInputEnvelope
-    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-  }
-
   export type PropertyDocumentCreateNestedManyWithoutPropertyInput = {
     create?: XOR<PropertyDocumentCreateWithoutPropertyInput, PropertyDocumentUncheckedCreateWithoutPropertyInput> | PropertyDocumentCreateWithoutPropertyInput[] | PropertyDocumentUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: PropertyDocumentCreateOrConnectWithoutPropertyInput | PropertyDocumentCreateOrConnectWithoutPropertyInput[]
     createMany?: PropertyDocumentCreateManyPropertyInputEnvelope
     connect?: PropertyDocumentWhereUniqueInput | PropertyDocumentWhereUniqueInput[]
+  }
+
+  export type LeaseCreateNestedManyWithoutPropertyInput = {
+    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
+    createMany?: LeaseCreateManyPropertyInputEnvelope
+    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
   }
 
   export type UnitUncheckedCreateNestedManyWithoutPropertyInput = {
@@ -23309,18 +23677,18 @@ export namespace Prisma {
     connect?: UnitWhereUniqueInput | UnitWhereUniqueInput[]
   }
 
-  export type LeaseUncheckedCreateNestedManyWithoutPropertyInput = {
-    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
-    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
-    createMany?: LeaseCreateManyPropertyInputEnvelope
-    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-  }
-
   export type PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput = {
     create?: XOR<PropertyDocumentCreateWithoutPropertyInput, PropertyDocumentUncheckedCreateWithoutPropertyInput> | PropertyDocumentCreateWithoutPropertyInput[] | PropertyDocumentUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: PropertyDocumentCreateOrConnectWithoutPropertyInput | PropertyDocumentCreateOrConnectWithoutPropertyInput[]
     createMany?: PropertyDocumentCreateManyPropertyInputEnvelope
     connect?: PropertyDocumentWhereUniqueInput | PropertyDocumentWhereUniqueInput[]
+  }
+
+  export type LeaseUncheckedCreateNestedManyWithoutPropertyInput = {
+    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
+    createMany?: LeaseCreateManyPropertyInputEnvelope
+    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
   }
 
   export type EnumPropertyTypeFieldUpdateOperationsInput = {
@@ -23341,6 +23709,16 @@ export namespace Prisma {
 
   export type EnumLeaseTermTypeFieldUpdateOperationsInput = {
     set?: $Enums.LeaseTermType
+  }
+
+  export type PropertyUpdatefeaturesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type PropertyUpdateamenitiesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type LandlordUpdateOneRequiredWithoutPropertyNestedInput = {
@@ -23365,20 +23743,6 @@ export namespace Prisma {
     deleteMany?: UnitScalarWhereInput | UnitScalarWhereInput[]
   }
 
-  export type LeaseUpdateManyWithoutPropertyNestedInput = {
-    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
-    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
-    upsert?: LeaseUpsertWithWhereUniqueWithoutPropertyInput | LeaseUpsertWithWhereUniqueWithoutPropertyInput[]
-    createMany?: LeaseCreateManyPropertyInputEnvelope
-    set?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    disconnect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    delete?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    update?: LeaseUpdateWithWhereUniqueWithoutPropertyInput | LeaseUpdateWithWhereUniqueWithoutPropertyInput[]
-    updateMany?: LeaseUpdateManyWithWhereWithoutPropertyInput | LeaseUpdateManyWithWhereWithoutPropertyInput[]
-    deleteMany?: LeaseScalarWhereInput | LeaseScalarWhereInput[]
-  }
-
   export type PropertyDocumentUpdateManyWithoutPropertyNestedInput = {
     create?: XOR<PropertyDocumentCreateWithoutPropertyInput, PropertyDocumentUncheckedCreateWithoutPropertyInput> | PropertyDocumentCreateWithoutPropertyInput[] | PropertyDocumentUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: PropertyDocumentCreateOrConnectWithoutPropertyInput | PropertyDocumentCreateOrConnectWithoutPropertyInput[]
@@ -23391,6 +23755,20 @@ export namespace Prisma {
     update?: PropertyDocumentUpdateWithWhereUniqueWithoutPropertyInput | PropertyDocumentUpdateWithWhereUniqueWithoutPropertyInput[]
     updateMany?: PropertyDocumentUpdateManyWithWhereWithoutPropertyInput | PropertyDocumentUpdateManyWithWhereWithoutPropertyInput[]
     deleteMany?: PropertyDocumentScalarWhereInput | PropertyDocumentScalarWhereInput[]
+  }
+
+  export type LeaseUpdateManyWithoutPropertyNestedInput = {
+    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
+    upsert?: LeaseUpsertWithWhereUniqueWithoutPropertyInput | LeaseUpsertWithWhereUniqueWithoutPropertyInput[]
+    createMany?: LeaseCreateManyPropertyInputEnvelope
+    set?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    disconnect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    delete?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    update?: LeaseUpdateWithWhereUniqueWithoutPropertyInput | LeaseUpdateWithWhereUniqueWithoutPropertyInput[]
+    updateMany?: LeaseUpdateManyWithWhereWithoutPropertyInput | LeaseUpdateManyWithWhereWithoutPropertyInput[]
+    deleteMany?: LeaseScalarWhereInput | LeaseScalarWhereInput[]
   }
 
   export type UnitUncheckedUpdateManyWithoutPropertyNestedInput = {
@@ -23407,20 +23785,6 @@ export namespace Prisma {
     deleteMany?: UnitScalarWhereInput | UnitScalarWhereInput[]
   }
 
-  export type LeaseUncheckedUpdateManyWithoutPropertyNestedInput = {
-    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
-    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
-    upsert?: LeaseUpsertWithWhereUniqueWithoutPropertyInput | LeaseUpsertWithWhereUniqueWithoutPropertyInput[]
-    createMany?: LeaseCreateManyPropertyInputEnvelope
-    set?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    disconnect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    delete?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
-    update?: LeaseUpdateWithWhereUniqueWithoutPropertyInput | LeaseUpdateWithWhereUniqueWithoutPropertyInput[]
-    updateMany?: LeaseUpdateManyWithWhereWithoutPropertyInput | LeaseUpdateManyWithWhereWithoutPropertyInput[]
-    deleteMany?: LeaseScalarWhereInput | LeaseScalarWhereInput[]
-  }
-
   export type PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput = {
     create?: XOR<PropertyDocumentCreateWithoutPropertyInput, PropertyDocumentUncheckedCreateWithoutPropertyInput> | PropertyDocumentCreateWithoutPropertyInput[] | PropertyDocumentUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: PropertyDocumentCreateOrConnectWithoutPropertyInput | PropertyDocumentCreateOrConnectWithoutPropertyInput[]
@@ -23433,6 +23797,20 @@ export namespace Prisma {
     update?: PropertyDocumentUpdateWithWhereUniqueWithoutPropertyInput | PropertyDocumentUpdateWithWhereUniqueWithoutPropertyInput[]
     updateMany?: PropertyDocumentUpdateManyWithWhereWithoutPropertyInput | PropertyDocumentUpdateManyWithWhereWithoutPropertyInput[]
     deleteMany?: PropertyDocumentScalarWhereInput | PropertyDocumentScalarWhereInput[]
+  }
+
+  export type LeaseUncheckedUpdateManyWithoutPropertyNestedInput = {
+    create?: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput> | LeaseCreateWithoutPropertyInput[] | LeaseUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: LeaseCreateOrConnectWithoutPropertyInput | LeaseCreateOrConnectWithoutPropertyInput[]
+    upsert?: LeaseUpsertWithWhereUniqueWithoutPropertyInput | LeaseUpsertWithWhereUniqueWithoutPropertyInput[]
+    createMany?: LeaseCreateManyPropertyInputEnvelope
+    set?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    disconnect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    delete?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    connect?: LeaseWhereUniqueInput | LeaseWhereUniqueInput[]
+    update?: LeaseUpdateWithWhereUniqueWithoutPropertyInput | LeaseUpdateWithWhereUniqueWithoutPropertyInput[]
+    updateMany?: LeaseUpdateManyWithWhereWithoutPropertyInput | LeaseUpdateManyWithWhereWithoutPropertyInput[]
+    deleteMany?: LeaseScalarWhereInput | LeaseScalarWhereInput[]
   }
 
   export type PropertyCreateNestedOneWithoutUnitInput = {
@@ -24323,12 +24701,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutTenantInput = {
@@ -24343,11 +24721,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutTenantInput = {
@@ -24675,9 +25053,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutTenantEmergencyContactInput = {
@@ -24691,9 +25069,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutTenantEmergencyContactInput = {
@@ -24723,9 +25101,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutTenantEmergencyContactInput = {
@@ -24739,9 +25117,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateWithoutTenantIncomeInput = {
@@ -24755,9 +25133,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutTenantIncomeInput = {
@@ -24771,9 +25149,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutTenantIncomeInput = {
@@ -24803,9 +25181,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutTenantIncomeInput = {
@@ -24819,9 +25197,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type PropertyCreateWithoutOwnerInput = {
@@ -24832,6 +25210,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -24844,9 +25223,13 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
-    Unit?: UnitCreateNestedManyWithoutPropertyInput
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    unit?: UnitCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
     Lease?: LeaseCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutOwnerInput = {
@@ -24857,6 +25240,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -24869,9 +25253,13 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
-    Unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
     Lease?: LeaseUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutOwnerInput = {
@@ -24911,6 +25299,7 @@ export namespace Prisma {
     city?: StringFilter<"Property"> | string
     state?: StringFilter<"Property"> | string
     zip?: StringFilter<"Property"> | string
+    countryCode?: StringFilter<"Property"> | string
     ownerId?: StringFilter<"Property"> | string
     imageUrl?: StringNullableFilter<"Property"> | string | null
     propertyType?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
@@ -24924,6 +25313,10 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFilter<"Property"> | $Enums.LeaseTermType
     createdAt?: DateTimeFilter<"Property"> | Date | string
     updatedAt?: DateTimeFilter<"Property"> | Date | string
+    sqmt?: FloatFilter<"Property"> | number
+    features?: StringNullableListFilter<"Property">
+    amenities?: StringNullableListFilter<"Property">
+    test?: StringNullableFilter<"Property"> | string | null
   }
 
   export type LandlordCreateWithoutPropertyInput = {
@@ -24964,17 +25357,27 @@ export namespace Prisma {
   export type UnitCreateWithoutPropertyInput = {
     id?: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    Lease?: LeaseCreateNestedManyWithoutUnitInput
+    lease?: LeaseCreateNestedManyWithoutUnitInput
   }
 
   export type UnitUncheckedCreateWithoutPropertyInput = {
     id?: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    Lease?: LeaseUncheckedCreateNestedManyWithoutUnitInput
+    lease?: LeaseUncheckedCreateNestedManyWithoutUnitInput
   }
 
   export type UnitCreateOrConnectWithoutPropertyInput = {
@@ -24984,54 +25387,6 @@ export namespace Prisma {
 
   export type UnitCreateManyPropertyInputEnvelope = {
     data: UnitCreateManyPropertyInput | UnitCreateManyPropertyInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LeaseCreateWithoutPropertyInput = {
-    id?: string
-    startDate: Date | string
-    endDate: Date | string
-    rent: number
-    deposit: number
-    rentDueCurrency: string
-    status: $Enums.LeaseStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    unit: UnitCreateNestedOneWithoutLeaseInput
-    tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
-  }
-
-  export type LeaseUncheckedCreateWithoutPropertyInput = {
-    id?: string
-    unitId: string
-    tenantId: string
-    startDate: Date | string
-    endDate: Date | string
-    rent: number
-    deposit: number
-    rentDueCurrency: string
-    status: $Enums.LeaseStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
-  }
-
-  export type LeaseCreateOrConnectWithoutPropertyInput = {
-    where: LeaseWhereUniqueInput
-    create: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput>
-  }
-
-  export type LeaseCreateManyPropertyInputEnvelope = {
-    data: LeaseCreateManyPropertyInput | LeaseCreateManyPropertyInput[]
     skipDuplicates?: boolean
   }
 
@@ -25058,6 +25413,54 @@ export namespace Prisma {
 
   export type PropertyDocumentCreateManyPropertyInputEnvelope = {
     data: PropertyDocumentCreateManyPropertyInput | PropertyDocumentCreateManyPropertyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LeaseCreateWithoutPropertyInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    rent: number
+    deposit: number
+    rentDueCurrency: string
+    status: $Enums.LeaseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    unit: UnitCreateNestedOneWithoutLeaseInput
+    tenant: TenantCreateNestedOneWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseUncheckedCreateWithoutPropertyInput = {
+    id?: string
+    unitId: string
+    tenantId: string
+    startDate: Date | string
+    endDate: Date | string
+    rent: number
+    deposit: number
+    rentDueCurrency: string
+    status: $Enums.LeaseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+  }
+
+  export type LeaseCreateOrConnectWithoutPropertyInput = {
+    where: LeaseWhereUniqueInput
+    create: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput>
+  }
+
+  export type LeaseCreateManyPropertyInputEnvelope = {
+    data: LeaseCreateManyPropertyInput | LeaseCreateManyPropertyInput[]
     skipDuplicates?: boolean
   }
 
@@ -25125,24 +25528,13 @@ export namespace Prisma {
     id?: StringFilter<"Unit"> | string
     propertyId?: StringFilter<"Unit"> | string
     name?: StringFilter<"Unit"> | string
+    bedrooms?: IntFilter<"Unit"> | number
+    bathrooms?: FloatFilter<"Unit"> | number
+    sqmt?: FloatFilter<"Unit"> | number
+    marketRent?: FloatFilter<"Unit"> | number
+    deposit?: FloatFilter<"Unit"> | number
     createdAt?: DateTimeFilter<"Unit"> | Date | string
     updatedAt?: DateTimeFilter<"Unit"> | Date | string
-  }
-
-  export type LeaseUpsertWithWhereUniqueWithoutPropertyInput = {
-    where: LeaseWhereUniqueInput
-    update: XOR<LeaseUpdateWithoutPropertyInput, LeaseUncheckedUpdateWithoutPropertyInput>
-    create: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput>
-  }
-
-  export type LeaseUpdateWithWhereUniqueWithoutPropertyInput = {
-    where: LeaseWhereUniqueInput
-    data: XOR<LeaseUpdateWithoutPropertyInput, LeaseUncheckedUpdateWithoutPropertyInput>
-  }
-
-  export type LeaseUpdateManyWithWhereWithoutPropertyInput = {
-    where: LeaseScalarWhereInput
-    data: XOR<LeaseUpdateManyMutationInput, LeaseUncheckedUpdateManyWithoutPropertyInput>
   }
 
   export type PropertyDocumentUpsertWithWhereUniqueWithoutPropertyInput = {
@@ -25173,6 +25565,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"PropertyDocument"> | Date | string
   }
 
+  export type LeaseUpsertWithWhereUniqueWithoutPropertyInput = {
+    where: LeaseWhereUniqueInput
+    update: XOR<LeaseUpdateWithoutPropertyInput, LeaseUncheckedUpdateWithoutPropertyInput>
+    create: XOR<LeaseCreateWithoutPropertyInput, LeaseUncheckedCreateWithoutPropertyInput>
+  }
+
+  export type LeaseUpdateWithWhereUniqueWithoutPropertyInput = {
+    where: LeaseWhereUniqueInput
+    data: XOR<LeaseUpdateWithoutPropertyInput, LeaseUncheckedUpdateWithoutPropertyInput>
+  }
+
+  export type LeaseUpdateManyWithWhereWithoutPropertyInput = {
+    where: LeaseScalarWhereInput
+    data: XOR<LeaseUpdateManyMutationInput, LeaseUncheckedUpdateManyWithoutPropertyInput>
+  }
+
   export type PropertyCreateWithoutUnitInput = {
     id?: string
     name: string
@@ -25181,6 +25589,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -25193,9 +25602,13 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
     owner: LandlordCreateNestedOneWithoutPropertyInput
+    propertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
     Lease?: LeaseCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutUnitInput = {
@@ -25206,6 +25619,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     ownerId: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
@@ -25219,8 +25633,12 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    propertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
     Lease?: LeaseUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutUnitInput = {
@@ -25239,12 +25657,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutUnitInput = {
@@ -25259,11 +25677,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutUnitInput = {
@@ -25295,6 +25713,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -25307,9 +25726,13 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
     owner?: LandlordUpdateOneRequiredWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutUnitInput = {
@@ -25320,6 +25743,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
@@ -25333,8 +25757,12 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    propertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type LeaseUpsertWithWhereUniqueWithoutUnitInput = {
@@ -25356,15 +25784,25 @@ export namespace Prisma {
   export type UnitCreateWithoutLeaseInput = {
     id?: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    property: PropertyCreateNestedOneWithoutUnitInput
+    Property: PropertyCreateNestedOneWithoutUnitInput
   }
 
   export type UnitUncheckedCreateWithoutLeaseInput = {
     id?: string
     propertyId: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -25384,10 +25822,10 @@ export namespace Prisma {
     altPhone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    TenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutLeaseInput = {
@@ -25400,10 +25838,10 @@ export namespace Prisma {
     altPhone?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutLeaseInput = {
@@ -25443,6 +25881,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -25455,9 +25894,13 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
     owner: LandlordCreateNestedOneWithoutPropertyInput
-    Unit?: UnitCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
+    unit?: UnitCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutLeaseInput = {
@@ -25468,6 +25911,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     ownerId: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
@@ -25481,8 +25925,12 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
-    Unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
-    PropertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    propertyDocument?: PropertyDocumentUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutLeaseInput = {
@@ -25531,7 +25979,7 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    Invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
+    invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
   }
 
   export type TransactionsUncheckedCreateWithoutLeaseInput = {
@@ -25622,15 +26070,25 @@ export namespace Prisma {
   export type UnitUpdateWithoutLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    property?: PropertyUpdateOneRequiredWithoutUnitNestedInput
+    Property?: PropertyUpdateOneRequiredWithoutUnitNestedInput
   }
 
   export type UnitUncheckedUpdateWithoutLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
     propertyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25656,10 +26114,10 @@ export namespace Prisma {
     altPhone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    TenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutLeaseInput = {
@@ -25672,10 +26130,10 @@ export namespace Prisma {
     altPhone?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantLeaseUpsertWithWhereUniqueWithoutLeaseInput = {
@@ -25713,6 +26171,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -25725,9 +26184,13 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
     owner?: LandlordUpdateOneRequiredWithoutPropertyNestedInput
-    Unit?: UnitUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
+    unit?: UnitUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutLeaseInput = {
@@ -25738,6 +26201,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
@@ -25751,8 +26215,12 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type InvoiceUpsertWithWhereUniqueWithoutLeaseInput = {
@@ -25885,11 +26353,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutInvoiceInput = {
@@ -25905,10 +26373,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutInvoiceInput = {
@@ -25969,11 +26437,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutInvoiceInput = {
@@ -25989,10 +26457,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type TransactionsUpsertWithWhereUniqueWithoutInvoiceInput = {
@@ -26023,11 +26491,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutTransactionsInput = {
@@ -26043,10 +26511,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutTransactionsInput = {
@@ -26106,11 +26574,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutTransactionsInput = {
@@ -26126,10 +26594,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type InvoiceUpsertWithoutTransactionsInput = {
@@ -26178,9 +26646,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutTenantLeaseInput = {
@@ -26194,9 +26662,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
+    tenantDocument?: TenantDocumentUncheckedCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutTenantLeaseInput = {
@@ -26216,11 +26684,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutTenantLeaseInput = {
@@ -26236,10 +26704,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutTenantLeaseInput = {
@@ -26269,9 +26737,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutTenantLeaseInput = {
@@ -26285,9 +26753,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
+    tenantDocument?: TenantDocumentUncheckedUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type LeaseUpsertWithoutTenantLeaseInput = {
@@ -26313,11 +26781,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutTenantLeaseInput = {
@@ -26333,10 +26801,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseCreateWithoutMaintenanceRequestInput = {
@@ -26351,11 +26819,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutMaintenanceRequestInput = {
@@ -26371,10 +26839,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    LeaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    leaseDocument?: LeaseDocumentUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutMaintenanceRequestInput = {
@@ -26405,11 +26873,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutMaintenanceRequestInput = {
@@ -26425,10 +26893,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type TenantCreateWithoutTenantDocumentInput = {
@@ -26442,9 +26910,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutTenantDocumentInput = {
@@ -26458,9 +26926,9 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     Lease?: LeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
-    TenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutTenantInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedCreateNestedManyWithoutTenantInput
+    tenantIncome?: TenantIncomeUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutTenantDocumentInput = {
@@ -26490,9 +26958,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutTenantDocumentInput = {
@@ -26506,9 +26974,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Lease?: LeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
-    TenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
-    TenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
+    tenantEmergencyContact?: TenantEmergencyContactUncheckedUpdateManyWithoutTenantNestedInput
+    tenantIncome?: TenantIncomeUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type LeaseCreateWithoutLeaseDocumentInput = {
@@ -26523,11 +26991,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     unit: UnitCreateNestedOneWithoutLeaseInput
     tenant: TenantCreateNestedOneWithoutLeaseInput
-    TenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
-    Property?: PropertyCreateNestedOneWithoutLeaseInput
-    Invoice?: InvoiceCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseCreateNestedManyWithoutLeaseInput
+    property?: PropertyCreateNestedOneWithoutLeaseInput
+    invoice?: InvoiceCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseUncheckedCreateWithoutLeaseDocumentInput = {
@@ -26543,10 +27011,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     propertyId?: string | null
-    TenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
-    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
-    Transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
+    tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
+    invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutLeaseInput
+    maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
   }
 
   export type LeaseCreateOrConnectWithoutLeaseDocumentInput = {
@@ -26577,11 +27045,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutLeaseDocumentInput = {
@@ -26597,10 +27065,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type PropertyCreateWithoutPropertyDocumentInput = {
@@ -26611,6 +27079,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -26623,8 +27092,12 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
     owner: LandlordCreateNestedOneWithoutPropertyInput
-    Unit?: UnitCreateNestedManyWithoutPropertyInput
+    unit?: UnitCreateNestedManyWithoutPropertyInput
     Lease?: LeaseCreateNestedManyWithoutPropertyInput
   }
 
@@ -26636,6 +27109,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     ownerId: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
@@ -26649,7 +27123,11 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
-    Unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
+    unit?: UnitUncheckedCreateNestedManyWithoutPropertyInput
     Lease?: LeaseUncheckedCreateNestedManyWithoutPropertyInput
   }
 
@@ -26677,6 +27155,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -26689,8 +27168,12 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
     owner?: LandlordUpdateOneRequiredWithoutPropertyNestedInput
-    Unit?: UnitUpdateManyWithoutPropertyNestedInput
+    unit?: UnitUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUpdateManyWithoutPropertyNestedInput
   }
 
@@ -26702,6 +27185,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     ownerId?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
@@ -26715,7 +27199,11 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
@@ -26794,12 +27282,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutTenantInput = {
@@ -26814,11 +27302,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateManyWithoutTenantInput = {
@@ -26993,6 +27481,7 @@ export namespace Prisma {
     city: string
     state: string
     zip: string
+    countryCode?: string
     imageUrl?: string | null
     propertyType?: $Enums.PropertyType
     propertyStatus?: $Enums.PropertyStatus
@@ -27005,6 +27494,10 @@ export namespace Prisma {
     leaseTermType?: $Enums.LeaseTermType
     createdAt?: Date | string
     updatedAt?: Date | string
+    sqmt?: number
+    features?: PropertyCreatefeaturesInput | string[]
+    amenities?: PropertyCreateamenitiesInput | string[]
+    test?: string | null
   }
 
   export type PropertyUpdateWithoutOwnerInput = {
@@ -27015,6 +27508,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -27027,9 +27521,13 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Unit?: UnitUpdateManyWithoutPropertyNestedInput
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: UnitUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutOwnerInput = {
@@ -27040,6 +27538,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -27052,9 +27551,13 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
+    unit?: UnitUncheckedUpdateManyWithoutPropertyNestedInput
+    propertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
     Lease?: LeaseUncheckedUpdateManyWithoutPropertyNestedInput
-    PropertyDocument?: PropertyDocumentUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateManyWithoutOwnerInput = {
@@ -27065,6 +27568,7 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     state?: StringFieldUpdateOperationsInput | string
     zip?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     propertyType?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     propertyStatus?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
@@ -27077,11 +27581,28 @@ export namespace Prisma {
     leaseTermType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    features?: PropertyUpdatefeaturesInput | string[]
+    amenities?: PropertyUpdateamenitiesInput | string[]
+    test?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UnitCreateManyPropertyInput = {
     id?: string
     name: string
+    bedrooms?: number
+    bathrooms?: number
+    sqmt?: number
+    marketRent?: number
+    deposit?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PropertyDocumentCreateManyPropertyInput = {
+    id?: string
+    documentType: $Enums.DocumentType
+    documentUrl: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27100,85 +27621,40 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type PropertyDocumentCreateManyPropertyInput = {
-    id?: string
-    documentType: $Enums.DocumentType
-    documentUrl: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type UnitUpdateWithoutPropertyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Lease?: LeaseUpdateManyWithoutUnitNestedInput
+    lease?: LeaseUpdateManyWithoutUnitNestedInput
   }
 
   export type UnitUncheckedUpdateWithoutPropertyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Lease?: LeaseUncheckedUpdateManyWithoutUnitNestedInput
+    lease?: LeaseUncheckedUpdateManyWithoutUnitNestedInput
   }
 
   export type UnitUncheckedUpdateManyWithoutPropertyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LeaseUpdateWithoutPropertyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: FloatFieldUpdateOperationsInput | number
+    sqmt?: FloatFieldUpdateOperationsInput | number
+    marketRent?: FloatFieldUpdateOperationsInput | number
     deposit?: FloatFieldUpdateOperationsInput | number
-    rentDueCurrency?: StringFieldUpdateOperationsInput | string
-    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
-  }
-
-  export type LeaseUncheckedUpdateWithoutPropertyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    unitId?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
-    rentDueCurrency?: StringFieldUpdateOperationsInput | string
-    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
-  }
-
-  export type LeaseUncheckedUpdateManyWithoutPropertyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    unitId?: StringFieldUpdateOperationsInput | string
-    tenantId?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    rent?: FloatFieldUpdateOperationsInput | number
-    deposit?: FloatFieldUpdateOperationsInput | number
-    rentDueCurrency?: StringFieldUpdateOperationsInput | string
-    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27203,6 +27679,58 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     documentType?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
     documentUrl?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaseUpdateWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
+    rentDueCurrency?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    unit?: UnitUpdateOneRequiredWithoutLeaseNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseUncheckedUpdateWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    unitId?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
+    rentDueCurrency?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type LeaseUncheckedUpdateManyWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    unitId?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rent?: FloatFieldUpdateOperationsInput | number
+    deposit?: FloatFieldUpdateOperationsInput | number
+    rentDueCurrency?: StringFieldUpdateOperationsInput | string
+    status?: EnumLeaseStatusFieldUpdateOperationsInput | $Enums.LeaseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27232,12 +27760,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutLeaseNestedInput
-    TenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
-    Property?: PropertyUpdateOneWithoutLeaseNestedInput
-    Invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUpdateManyWithoutLeaseNestedInput
+    property?: PropertyUpdateOneWithoutLeaseNestedInput
+    invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateWithoutUnitInput = {
@@ -27252,11 +27780,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
-    TenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
-    Invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
-    Transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
-    MaintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
-    LeaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
+    tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
+    invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutLeaseNestedInput
+    maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
+    leaseDocument?: LeaseDocumentUncheckedUpdateManyWithoutLeaseNestedInput
   }
 
   export type LeaseUncheckedUpdateManyWithoutUnitInput = {
@@ -27381,7 +27909,7 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
+    invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
   }
 
   export type TransactionsUncheckedUpdateWithoutLeaseInput = {

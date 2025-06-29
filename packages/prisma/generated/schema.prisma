@@ -132,10 +132,10 @@ model Tenant {
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
   Lease                  Lease[]
-  TenantLease            TenantLease[]
-  TenantDocument         TenantDocument[]
-  TenantEmergencyContact TenantEmergencyContact[]
-  TenantIncome           TenantIncome[]
+  tenantLease            TenantLease[]
+  tenantDocument         TenantDocument[]
+  tenantEmergencyContact TenantEmergencyContact[]
+  tenantIncome           TenantIncome[]
 }
 
 model TenantEmergencyContact {
@@ -190,7 +190,7 @@ model Landlord {
   zip          String
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
-  Property     Property[]
+  property     Property[]
 }
 
 model Property {
@@ -201,6 +201,7 @@ model Property {
   city             String
   state            String
   zip              String
+  countryCode      String             @default("ZA")
   ownerId          String
   owner            Landlord           @relation(fields: [ownerId], references: [id])
   imageUrl         String?
@@ -215,19 +216,28 @@ model Property {
   leaseTermType    LeaseTermType      @default(MONTHLY)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  Unit             Unit[]
+  unit             Unit[]
+  sqmt             Float              @default(0)
+  features         String[]
+  amenities        String[]
+  test             String?
+  propertyDocument PropertyDocument[]
   Lease            Lease[]
-  PropertyDocument PropertyDocument[]
 }
 
 model Unit {
   id         String   @id @default(uuid())
   propertyId String
-  property   Property @relation(fields: [propertyId], references: [id])
+  Property   Property @relation(fields: [propertyId], references: [id])
   name       String
+  bedrooms   Int      @default(1)
+  bathrooms  Float    @default(1)
+  sqmt       Float    @default(0)
+  marketRent Float    @default(0)
+  deposit    Float    @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Lease      Lease[]
+  lease      Lease[]
 }
 
 model Lease {
@@ -244,13 +254,13 @@ model Lease {
   status             LeaseStatus
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  TenantLease        TenantLease[]
-  Property           Property?            @relation(fields: [propertyId], references: [id])
+  tenantLease        TenantLease[]
+  property           Property?            @relation(fields: [propertyId], references: [id])
   propertyId         String?
-  Invoice            Invoice[]
-  Transactions       Transactions[]
-  MaintenanceRequest MaintenanceRequest[]
-  LeaseDocument      LeaseDocument[]
+  invoice            Invoice[]
+  transactions       Transactions[]
+  maintenanceRequest MaintenanceRequest[]
+  leaseDocument      LeaseDocument[]
 }
 
 model Invoice {
@@ -276,7 +286,7 @@ model Transactions {
   referenceId String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
   invoiceId   String?
 }
 
