@@ -69,8 +69,8 @@ model Unit {
 
 model Lease {
   id                 String               @id @default(uuid())
-  startDate          DateTime
-  endDate            DateTime?
+  startDate          DateTime             @db.Date
+  endDate            DateTime?            @db.Date
   rent               Float
   deposit            Float
   status             LeaseStatus

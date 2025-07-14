@@ -1,14 +1,18 @@
-import { logger, task } from '@trigger.dev/sdk/v3';
+import { logger, schedules } from '@trigger.dev/sdk/v3';
 import { db } from '@leaseup/prisma/db.ts';
 import { createInvoice } from '@leaseup/paystack/invoice';
 import { addDays, addMonths, isAfter, isBefore, startOfDay } from 'date-fns';
 import { nanoid } from 'nanoid';
-import { Lease } from '@leaseup/prisma/client/index.js';
 
-export const checkUpcomingInvoicesTask = task({
+export const checkUpcomingInvoicesTask = schedules.task({
   id: 'check-upcoming-invoices',
   maxDuration: 300, // 5 minutes
-  run: async (payload: any, { ctx }) => {
+  cron: {
+    //7am every day Johannesburg time
+    pattern: '0 5 * * *',
+    timezone: 'Africa/Johannesburg',
+  },
+  run: async (payload: any, { ctx }: { ctx: any }) => {
     logger.log('Starting check for upcoming invoices', { payload, ctx });
 
     try {
@@ -117,9 +121,9 @@ export const checkUpcomingInvoicesTask = task({
       // Create invoices for each lease that needs one
       for (const invoiceData of invoicesToCreate) {
         try {
-          const resp = await createInvoice({
+          const resp: any = await createInvoice({
             customer: 'CUS_8jb0ozhu6wpknbk',
-            amount: invoiceData.rent,
+            amount: Math.round(invoiceData.rent * 100), // convert to cents
             currency: 'ZAR',
             dueDate: invoiceData.nextInvoiceDate,
             description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
@@ -135,6 +139,7 @@ export const checkUpcomingInvoicesTask = task({
               dueAmount: invoiceData.rent,
               category: 'RENT',
               status: 'PENDING',
+              paystackId: resp?.data?.request_code,
             },
           });
 

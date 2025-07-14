@@ -6,7 +6,7 @@ export const createInvoice = async (invoice: PaymentRequestCreate) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+      Authorization: `Bearer sk_test_5ef59214386204ce14f664f98322ce7b93b590ce`,
     },
     body: JSON.stringify(invoice),
   });
