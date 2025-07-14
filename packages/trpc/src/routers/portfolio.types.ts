@@ -37,14 +37,7 @@ export const VCreatePropertySchema = v.object({
       marketRent: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
     })
   ),
-  bedrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
-  bathrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
-  sqmt: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
-  marketRent: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
-  deposit: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
   features: v.array(v.string()),
   amenities: v.array(v.string()),
-  propertyFeatures: v.array(v.string()),
-  propertyAmenities: v.array(v.string()),
   files: v.pipe(v.array(ImageSchema)),
 });

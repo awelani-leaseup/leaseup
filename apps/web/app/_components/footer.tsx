@@ -76,28 +76,22 @@ export const Footer = () => {
             <H5 className='font-semibold mb-4'>Company</H5>
             <div className='flex flex-col gap-4'>
               <Link
-                href='#'
+                href='/terms-of-service'
                 className='text-gray-400 hover:text-white cursor-pointer'
               >
                 Terms of Service
               </Link>
               <Link
-                href='#'
+                href='/privacy-policy'
                 className='text-gray-400 hover:text-white cursor-pointer'
               >
                 Privacy Policy
               </Link>
               <Link
-                href='#'
+                href='/cookie-policy'
                 className='text-gray-400 hover:text-white cursor-pointer'
               >
                 Cookie Policy
-              </Link>
-              <Link
-                href='#'
-                className='text-gray-400 hover:text-white cursor-pointer'
-              >
-                Security
               </Link>
             </div>
           </div>

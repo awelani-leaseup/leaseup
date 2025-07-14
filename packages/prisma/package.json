@@ -4,7 +4,7 @@
   "description": "",
   "exports": {
     "./db.ts": "./src/db.ts",
-    "./client.ts": "./generated/client.ts"
+    "./*": "./generated/*"
   },
   "scripts": {
     "db:generate": "prisma migrate dev",
@@ -21,6 +21,8 @@
     "@prisma/client": "^6.9.0"
   },
   "devDependencies": {
-    "prisma": "^6.5.0"
+    "@faker-js/faker": "^9.9.0",
+    "prisma": "^6.5.0",
+    "@leaseup/typescript-config": "workspace:*"
   }
 }

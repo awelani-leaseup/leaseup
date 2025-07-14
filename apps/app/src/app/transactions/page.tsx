@@ -1,8 +1,12 @@
-import { H5 } from "@leaseup/ui/components/typography";
-export default async function Properties() {
+import { Card, CardHeader, CardTitle } from "@leaseup/ui/components/card";
+export default async function Transactions() {
   return (
-    <div className="mx-auto mt-10 max-w-7xl">
-      <H5>Transactions</H5>
+    <div className="mx-auto mt-10 flex max-w-7xl flex-col">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Transactions</CardTitle>
+        </CardHeader>
+      </Card>
     </div>
   );
 }

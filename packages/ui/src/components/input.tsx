@@ -40,7 +40,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {icon && (
           <span
             aria-hidden='true'
-            className='pointer-events-none col-start-1 row-start-1 ml-3 mt-1 self-center [&_svg]:size-5 [&_svg]:text-gray-400 [&_svg]:sm:size-4'
+            className='pointer-events-none col-start-1 row-start-1 ml-3 self-center [&_svg]:size-5 [&_svg]:text-gray-400 [&_svg]:sm:size-4'
           >
             {icon}
           </span>

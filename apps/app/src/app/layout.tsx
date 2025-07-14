@@ -8,7 +8,7 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-import { DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "@/trpc/react";
@@ -45,8 +45,9 @@ import {
 } from "lucide-react";
 import NavHeader from "./_components/nav-header";
 import { Button } from "@leaseup/ui/components/button";
+import { usePathname } from "next/navigation";
 
-const font = DM_Sans({
+const font = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -54,6 +55,8 @@ const font = DM_Sans({
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const pathname = usePathname();
+  const isActive = (path: string) => pathname.includes(path);
   return (
     <ClerkProvider>
       <html lang="en">
@@ -61,15 +64,15 @@ export default function RootLayout({
           style={{
             backgroundColor: "#ECF0F1",
           }}
-          className={`${font.className}`}
+          className={`${font.className} antialiased`}
         >
           <SidebarProvider>
             <Sidebar>
               <SidebarHeader>
                 <Link href="/">
-                  <p className="px-2 text-2xl font-bold tracking-tight">
+                  <span className="px-2 text-2xl font-bold tracking-tight">
                     LeaseUp
-                  </p>
+                  </span>
                 </Link>
               </SidebarHeader>
               <SidebarContent>
@@ -108,7 +111,7 @@ export default function RootLayout({
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/dashboard")}>
                           <LayoutDashboard />
                           <Link href="/dashboard">Dashboard</Link>
                         </SidebarMenuButton>
@@ -121,19 +124,19 @@ export default function RootLayout({
                     <SidebarGroupLabel>Portfolio</SidebarGroupLabel>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/properties")}>
                           <Building />
                           <Link href="/properties">Properties</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/units")}>
                           <DoorOpen />
                           <Link href="/units">Units</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/keys")}>
                           <KeyRound />
                           <Link href="/keys">Keys</Link>
                         </SidebarMenuButton>
@@ -145,21 +148,21 @@ export default function RootLayout({
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/tenants")}>
                           <SquareUserRound />
                           <Link href="/tenants">Tenants</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/leases")}>
                           <FileText />
                           <Link href="/leases">Leases</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/documents")}>
                           <Folder />
-                          <Link href="/documents">Documents</Link>
+                          <Link href="/documents">File Storage</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     </SidebarMenu>
@@ -170,13 +173,13 @@ export default function RootLayout({
                     <SidebarGroupLabel>Accounting</SidebarGroupLabel>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/invoices")}>
                           <Banknote />
                           <Link href="/invoices">Invoices</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton isActive={isActive("/transactions")}>
                           <Folder />
                           <Link href="/transactions">Transactions</Link>
                         </SidebarMenuButton>

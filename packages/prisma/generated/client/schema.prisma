@@ -1,0 +1,265 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+  directUrl = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+}
+
+model Tenant {
+  id                     String        @id @default(uuid())
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  avatarUrl              String?
+  email                  String
+  firstName              String
+  lastName               String
+  phone                  String
+  landlordId             String
+  dateOfBirth            DateTime?
+  tenantEmergencyContact Json?
+  tenantIncome           Json?
+  additionalEmails       String[]
+  additionalPhones       String[]
+  emergencyContacts      Json?
+  vehicles               Json?
+  fullName               String?
+  files                  File[]
+  tenantLease            TenantLease[]
+}
+
+model Property {
+  id             String         @id @default(uuid())
+  name           String
+  addressLine1   String
+  addressLine2   String?
+  city           String
+  state          String
+  zip            String
+  ownerId        String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  imageUrl       String?
+  propertyStatus PropertyStatus @default(ACTIVE)
+  propertyType   PropertyType   @default(MULTI_UNIT)
+  amenities      String[]
+  countryCode    String         @default("ZA")
+  features       String[]
+  files          File[]
+  unit           Unit[]
+}
+
+model Unit {
+  id         String   @id @default(uuid())
+  propertyId String
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  bathrooms  Float    @default(1)
+  bedrooms   Int      @default(1)
+  deposit    Float    @default(0)
+  marketRent Float    @default(0)
+  sqmt       Float    @default(0)
+  lease      Lease[]
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Lease {
+  id                 String               @id @default(uuid())
+  startDate          DateTime
+  endDate            DateTime?
+  rent               Float
+  deposit            Float
+  status             LeaseStatus
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  rentDueCurrency    String
+  unitId             String?
+  File               File[]
+  invoice            Invoice[]
+  leaseType          LeaseTermType
+  invoiceCycle       InvoiceCycle         @default(MONTHLY)
+  automaticInvoice   Boolean              @default(false)
+  unit               Unit?                @relation(fields: [unitId], references: [id])
+  maintenanceRequest MaintenanceRequest[]
+  tenantLease        TenantLease[]
+  transactions       Transactions[]
+}
+
+model Invoice {
+  id           String          @id @default(uuid())
+  leaseId      String
+  description  String
+  dueAmount    Float
+  paystackId   String?
+  category     InvoiceCategory
+  status       InvoiceStatus
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  File         File[]
+  lease        Lease           @relation(fields: [leaseId], references: [id])
+  transactions Transactions[]
+}
+
+model Transactions {
+  id          String   @id @default(uuid())
+  leaseId     String
+  description String
+  amountPaid  Float
+  referenceId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  lease       Lease    @relation(fields: [leaseId], references: [id])
+}
+
+model TenantLease {
+  id       String @id @default(uuid())
+  tenantId String
+  leaseId  String
+  lease    Lease  @relation(fields: [leaseId], references: [id])
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+}
+
+model MaintenanceRequest {
+  id          String                     @id @default(uuid())
+  leaseId     String
+  description String
+  status      MaintenanceRequestStatus
+  priority    MaintenanceRequestPriority
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  File        File[]
+  lease       Lease                      @relation(fields: [leaseId], references: [id])
+}
+
+model File {
+  id                   String              @id @default(uuid())
+  name                 String
+  url                  String
+  type                 String?
+  size                 Int?
+  ownerId              String
+  tenantId             String?
+  propertyId           String?
+  leaseId              String?
+  invoiceId            String?
+  maintenanceRequestId String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  invoice              Invoice?            @relation(fields: [invoiceId], references: [id])
+  lease                Lease?              @relation(fields: [leaseId], references: [id])
+  maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
+  property             Property?           @relation(fields: [propertyId], references: [id])
+  tenant               Tenant?             @relation(fields: [tenantId], references: [id])
+}
+
+enum InvoiceCycle {
+  MONTHLY
+}
+
+enum LeaseTermType {
+  MONTHLY
+  FIXED_TERM
+}
+
+enum PropertyType {
+  SINGLE_UNIT
+  MULTI_UNIT
+}
+
+enum PropertyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  CANCELLED
+  OVERDUE
+}
+
+enum LeaseStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  EXPIRED
+}
+
+enum TenantIncomeType {
+  SALARY
+  SELF_EMPLOYED
+  UNEMPLOYED
+  RETIRED
+  DISABILITY
+  OTHER
+}
+
+enum TenantRelationship {
+  SPOUSE
+  PARENT
+  GRANDPARENT
+  GRANDCHILD
+  SIBLING
+  CHILD
+  AUNT_UNCLE
+  COUSIN
+  NEPHEW_NIECE
+  OTHER
+}
+
+enum MaintenanceRequestStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  CANCELLED
+  COMPLETE
+}
+
+enum MaintenanceRequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum InvoiceCategory {
+  DEPOSIT
+  RENT
+  MAINTENANCE
+  UTILITY_BILL
+  LEVY
+  RATES_AND_TAXES
+  SERVICE_CHARGE
+  WATER_ELECTRICITY
+  OTHER
+}
+
+enum PropertyAmenity {
+  BBQ_GRILL
+  POOL
+  FITNESS_CENTER
+  PET_FRIENDLY
+  GYM
+  LAUNDRY
+  PARKING
+  STORAGE
+}
+
+enum PropertyFeature {
+  ALARM_SYSTEM
+  AIR_CONDITIONING
+  WIFI_INTERNET
+  CABLE_TV
+  DISHWASHER
+  DRYER
+  FRIDGE
+  MICROWAVE
+  OVEN
+  STOVE
+  FIREPLACE
+}

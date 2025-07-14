@@ -7,7 +7,11 @@ import {
   CommandList,
 } from './command';
 import { cn } from '../utils/cn';
-import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import {
+  createFormHook,
+  createFormHookContexts,
+  useStore,
+} from '@tanstack/react-form';
 import {
   Asterisk,
   CalendarIcon,
@@ -15,8 +19,10 @@ import {
   CircleCheck,
   Map,
   MapPin,
+  Phone,
 } from 'lucide-react';
 import { type FC, type ReactNode, useEffect, useState } from 'react';
+import PhoneInput from 'react-phone-number-input/input';
 
 import { Alert, AlertDescription } from './alert';
 import { Button } from './button';
@@ -36,6 +42,7 @@ import { Textarea } from './text-area';
 import { format } from 'date-fns';
 import { useAutocompleteSuggestions } from '../hooks';
 import { getAddressComponent } from '../utils/google-maps';
+import { DayPicker } from 'react-day-picker';
 
 const { fieldContext, formContext, useFieldContext, useFormContext } =
   createFormHookContexts();
@@ -50,6 +57,14 @@ export const CheckboxField: FC<{ label: string }> = ({ label }) => {
   );
 };
 
+const CustomInput = (
+  props: Omit<React.ComponentProps<'input'>, 'size'> & {
+    size?: 'default' | 'sm' | 'lg' | null;
+  }
+) => {
+  return <Input icon={<Phone />} {...props} />;
+};
+
 export const TextField: FC<
   {
     label: string;
@@ -62,6 +77,7 @@ export const TextField: FC<
   const { handleChange, handleBlur, state, name } = useFieldContext<
     string | number
   >();
+
   return (
     <label className='relative flex w-full flex-col gap-1'>
       <FieldLabel>
@@ -70,27 +86,43 @@ export const TextField: FC<
         ) : null}
         {label}
       </FieldLabel>
-      <Input
-        icon={icon}
-        placeholder={placeholder}
-        name={name}
-        value={state.value}
-        onChange={(e) => {
-          if (props.type === 'number') {
-            handleChange(Number(e.target.value));
-          } else {
-            handleChange(e.target.value);
-          }
-        }}
-        onBlur={handleBlur}
-        className={cn(
-          {
-            'ring-rose-600 ring': state.meta.errors.length > 0,
-          },
-          'mt-1'
-        )}
-        {...props}
-      />
+      {props.type === 'tel' ? (
+        <PhoneInput
+          smartCaret
+          inputComponent={CustomInput}
+          country='ZA'
+          name={name}
+          value={state.value as string}
+          onChange={(value) => {
+            if (value) {
+              handleChange(value);
+            }
+          }}
+          onBlur={handleBlur}
+        />
+      ) : (
+        <Input
+          icon={icon}
+          placeholder={placeholder}
+          name={name}
+          value={state.value}
+          onChange={(e) => {
+            if (props.type === 'number') {
+              handleChange(Number(e.target.value));
+            } else {
+              handleChange(e.target.value);
+            }
+          }}
+          onBlur={handleBlur}
+          className={cn(
+            {
+              'ring-rose-600 ring': state.meta.errors.length > 0,
+            },
+            'mt-1'
+          )}
+          {...props}
+        />
+      )}
       <FieldMessage />
       {description ? <FieldDescription>{description}</FieldDescription> : null}
     </label>
@@ -145,12 +177,14 @@ export const SelectField: FC<{
   placeholder?: string;
   asterisk?: boolean;
   description?: string;
+  disabled?: boolean;
 }> = ({
   label,
   options,
   placeholder = 'Select a value',
   asterisk,
   description,
+  disabled,
 }) => {
   const { handleChange, handleBlur, state } = useFieldContext<string>();
   return (
@@ -161,7 +195,11 @@ export const SelectField: FC<{
         ) : null}
         {label}
       </FieldLabel>
-      <Select onValueChange={handleChange} value={state.value}>
+      <Select
+        onValueChange={handleChange}
+        value={state.value}
+        disabled={disabled}
+      >
         <SelectTrigger
           onBlur={handleBlur}
           className={cn(
@@ -194,22 +232,32 @@ export const SelectField: FC<{
   );
 };
 
-const DateField: FC<{
-  label: string;
-  asterisk?: boolean;
-  description?: string;
-  closeOnSelect?: boolean;
-  mode: 'single' | 'multiple' | 'range';
-}> = ({ label, asterisk, description, closeOnSelect = true, ...props }) => {
+const DateField: FC<
+  {
+    label: string;
+    asterisk?: boolean;
+    description?: string;
+    closeOnSelect?: boolean;
+    mode: 'single' | 'multiple' | 'range';
+    disabled?: boolean;
+  } & React.ComponentProps<typeof DayPicker>
+> = ({
+  label,
+  asterisk,
+  description,
+  closeOnSelect = true,
+  disabled,
+  ...props
+}) => {
   // & CalendarProps
-  const { handleChange, state } = useFieldContext<string>();
+  const { handleChange, state } = useFieldContext<Date | null>();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(
     state?.value ? new Date(state.value) : undefined
   );
 
   useEffect(() => {
-    handleChange(date ? new Date(date).toISOString() : '');
+    handleChange(date ? new Date(date) : null);
     if (closeOnSelect) {
       setOpen(false);
     }
@@ -227,6 +275,7 @@ const DateField: FC<{
       <Popover modal open={open}>
         <PopoverTrigger asChild>
           <Button
+            disabled={disabled}
             onClick={() => setOpen((prev) => !prev)}
             variant='outlined'
             color='secondary'
@@ -249,12 +298,14 @@ const DateField: FC<{
         <PopoverContent className='w-auto p-0' align='start'>
           {props.mode === 'single' ? (
             <Calendar
-              mode='single'
+              captionLayout='dropdown'
               autoFocus
               selected={date}
               onSelect={setDate}
               required={false}
-              // {...props}
+              disabled={disabled}
+              {...props}
+              mode='single'
             />
           ) : null}
         </PopoverContent>
@@ -350,9 +401,11 @@ export const ComboboxField: FC<{
 export const FieldMessage: FC<{
   children?: ReactNode;
 }> = ({ children }) => {
-  const { state } = useFieldContext<string>();
-  const body =
-    state.meta.errors.length > 0 ? state.meta.errors[0]?.message : children;
+  const form = useFieldContext<string>();
+
+  const errors = useStore(form.store, (state) => state.meta.errors);
+
+  const body = errors.length > 0 ? errors[0]?.message : children;
 
   if (!body) {
     return null;
@@ -361,7 +414,7 @@ export const FieldMessage: FC<{
   return (
     <p
       className={cn('animate-in fade-in-0 text-sm font-semibold', {
-        'text-rose-500': state.meta.errors.length > 0,
+        'text-rose-500': errors.length > 0,
       })}
     >
       {body}
@@ -622,6 +675,64 @@ export const AddressField: FC<{
   );
 };
 
+export const ArraySubField: FC<{
+  label: string;
+  placeholder?: string;
+  asterisk?: boolean;
+  description?: string;
+  onChange: (value: string | number) => void;
+  value: string | number;
+  type?: 'text' | 'number';
+  errors: { message: string }[];
+}> = ({
+  label,
+  placeholder,
+  asterisk,
+  value,
+  onChange,
+  errors,
+  type = 'text',
+}) => {
+  return (
+    <label className='flex w-full flex-col gap-1'>
+      <Label
+        title={label?.toLocaleString().replace(',', '')}
+        className={cn(
+          {
+            'text-rose-600': errors.length > 0,
+          },
+          'relative line-clamp-1 shrink-0'
+        )}
+        asChild
+      >
+        <span>
+          {label}
+          {asterisk ? (
+            <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
+          ) : null}
+        </span>
+      </Label>
+      <Input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => {
+          if (type === 'number') {
+            onChange(Number(e.target.value));
+          } else {
+            onChange(e.target.value);
+          }
+        }}
+      />
+      {errors && errors.length > 0 && (
+        <p className='mt-1 font-semibold text-sm tracking-tight text-rose-600'>
+          {errors[0]?.message}
+        </p>
+      )}
+    </label>
+  );
+};
+
 export const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
@@ -639,5 +750,6 @@ export const { useAppForm, withForm } = createFormHook({
   formComponents: {
     SubmitFormButton,
     FormMessage,
+    ArraySubField,
   },
 });

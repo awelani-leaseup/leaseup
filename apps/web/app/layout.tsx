@@ -1,7 +1,8 @@
+import './index.css';
+
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
 
-import '@leaseup/ui/global.css';
 import { Header } from './_components/header';
 import { Footer } from './_components/footer';
 
@@ -12,27 +13,28 @@ export const metadata: Metadata = {
   keywords: [
     'property management',
     'landlord software',
-    'rent collection',
+    'online rent collection',
     'tenant management',
     'lease management',
     'real estate',
     'maintenance requests',
     'property rental',
     'accounting',
+    'document management',
     'property dashboard',
     'Leaseup',
   ],
-  authors: [{ name: 'Leaseup', url: 'https://leaseup.com' }],
+  authors: [{ name: 'Leaseup', url: 'https://leaseup.co.za' }],
   creator: 'Leaseup',
   openGraph: {
     title: 'Leaseup - Property Management Made Simple',
     description:
       'The all-in-one platform for landlords to manage properties, tenants, rent collection, and maintenance requests effortlessly.',
-    url: 'https://leaseup.com',
+    url: 'https://leaseup.co.za',
     siteName: 'Leaseup',
     images: [
       {
-        url: 'https://leaseup.com/leaseup-logo.svg',
+        url: 'https://leaseup.co.za/leaseup-logo.svg',
         width: 1200,
         height: 630,
         alt: 'Leaseup Logo',
@@ -55,9 +57,9 @@ export const metadata: Metadata = {
     follow: true,
     nocache: false,
   },
-  metadataBase: new URL('https://leaseup.com'),
+  metadataBase: new URL('https://leaseup.co.za'),
   alternates: {
-    canonical: 'https://leaseup.com',
+    canonical: 'https://leaseup.co.za',
   },
 };
 

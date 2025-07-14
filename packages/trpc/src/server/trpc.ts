@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ValiError } from 'valibot';
 import { auth } from '@clerk/nextjs/server';
-
+import { supabaseServer } from '../utils/supabase';
 import { db } from '@leaseup/prisma/db.ts';
 
 /**
@@ -25,9 +25,16 @@ import { db } from '@leaseup/prisma/db.ts';
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext: (opts: { headers: Headers }) => Promise<
+  {
+    db: typeof db;
+    supabaseServer: typeof supabaseServer;
+    auth: Awaited<ReturnType<typeof auth>>;
+  } & { headers: Headers }
+> = async (opts) => {
   return {
     db,
+    supabaseServer,
     auth: await auth(),
     ...opts,
   };
@@ -116,4 +123,4 @@ const isAuthed = t.middleware(({ next, ctx }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure: typeof t.procedure = t.procedure.use(isAuthed);

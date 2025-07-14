@@ -1,46 +1,143 @@
-import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
-import { cva, type VariantProps } from 'class-variance-authority';
-
 import { cn } from '../utils/cn';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
 const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-md border px-2 py-1.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
+  'inline-flex items-center justify-center rounded-full text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 [&_svg]:pointer-events-none [&_svg]:shrink-0 gap-1 tracking-tight whitespace-nowrap ',
   {
     variants: {
       variant: {
-        default:
-          'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-        secondary:
-          'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
-        destructive:
-          'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline:
-          'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+        solid: '',
+        outlined: 'border-[0.6px]',
+        soft: 'bg-opacity-20 border-[0.6px] ',
+      },
+      color: {
+        primary: '',
+        secondary: '',
+        danger: '',
+        success: '',
+        warning: '',
+        info: '',
+        outline: 'text-foreground',
+      },
+      size: {
+        sm: 'px-1.5 py-1 text-xs [&_svg]:size-3',
+        md: 'px-2 py-1.5 text-sm [&_svg]:size-4',
+        lg: 'px-2 py-1.5 text-base [&_svg]:size-5',
       },
     },
+    compoundVariants: [
+      {
+        variant: 'solid',
+        color: 'primary',
+        class:
+          'bg-primary border-transparent text-primary-foreground hover:bg-primary/80 shadow',
+      },
+      {
+        variant: 'solid',
+        color: 'secondary',
+        class:
+          'bg-secondary border-transparent text-secondary-foreground hover:bg-secondary/80',
+      },
+      {
+        variant: 'solid',
+        color: 'danger',
+        class:
+          'bg-destructive border-transparent text-destructive-foreground hover:bg-destructive/80 shadow',
+      },
+      {
+        variant: 'solid',
+        color: 'success',
+        class:
+          'bg-success border-transparent text-success-foreground hover:bg-success/80 shadow',
+      },
+      {
+        variant: 'solid',
+        color: 'warning',
+        class:
+          'bg-warning border-transparent text-warning-foreground hover:bg-warning/80 shadow',
+      },
+      {
+        variant: 'solid',
+        color: 'info',
+        class:
+          'bg-info text-info-foreground border-transparent hover:bg-info/80 shadow',
+      },
+      {
+        variant: 'outlined',
+        color: 'primary',
+        class: 'text-primary border-primary',
+      },
+      {
+        variant: 'outlined',
+        color: 'secondary',
+        class: 'text-secondary border-secondary',
+      },
+      {
+        variant: 'outlined',
+        color: 'danger',
+        class: 'text-destructive border-destructive',
+      },
+      {
+        variant: 'outlined',
+        color: 'success',
+        class: 'text-success border-success',
+      },
+      {
+        variant: 'outlined',
+        color: 'warning',
+        class: 'text-warning border-warning',
+      },
+      { variant: 'outlined', color: 'info', class: 'text-info border-info' },
+      {
+        variant: 'soft',
+        color: 'primary',
+        class: 'bg-primary/10 text-primary border-primary',
+      },
+      {
+        variant: 'soft',
+        color: 'secondary',
+        class: 'bg-secondary/10 text-secondary border-secondary',
+      },
+      {
+        variant: 'soft',
+        color: 'danger',
+        class: 'bg-destructive/10 text-destructive border-destructive',
+      },
+      {
+        variant: 'soft',
+        color: 'success',
+        class: 'bg-success/10 text-success border-success',
+      },
+      {
+        variant: 'soft',
+        color: 'warning',
+        class: 'bg-warning/10 text-warning border-warning',
+      },
+      {
+        variant: 'soft',
+        color: 'info',
+        class: 'bg-info/10 text-info border-info',
+      },
+    ],
     defaultVariants: {
-      variant: 'default',
+      color: 'primary',
+      variant: 'solid',
+      size: 'md',
     },
   }
 );
 
-function Badge({
-  className,
-  variant,
-  asChild = false,
-  ...props
-}: React.ComponentProps<'span'> &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : 'span';
+export interface BadgeProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color'>,
+    VariantProps<typeof badgeVariants> {}
 
+function Badge({ className, color, variant, size, ...props }: BadgeProps) {
   return (
-    <Comp
-      data-slot='badge'
-      className={cn(badgeVariants({ variant }), className)}
+    <div
+      className={cn(badgeVariants({ color, variant, size }), className)}
       {...props}
     />
   );
 }
-
 export { Badge, badgeVariants };

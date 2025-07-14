@@ -11,15 +11,10 @@ export const PropertyStaticMap = ({ address }: { address: string }) => {
     center: address,
     zoom: 17,
     language: "en",
-    markers: [
-      {
-        location: address,
-      },
-    ],
   });
   return (
     <StaticMap
-      className="map shadow-md` h-[6rem] max-h-[6rem] rounded-md"
+      className="map shadow-md` h-full w-56 rounded-l-md object-cover"
       url={staticMapsUrl}
     />
   );

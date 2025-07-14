@@ -1,4 +1,4 @@
-import * as v from 'valibot';
+import { nanoid } from 'nanoid';
 
 import {
   createTRPCRouter,
@@ -7,48 +7,40 @@ import {
 } from '../server/trpc';
 import { VCreatePropertySchema } from './portfolio.types';
 
-export const portfolioRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(v.object({ text: v.string() }))
-    .query(({ input, ctx }) => {
-      const { userId, sessionId } = ctx.auth;
-      return {
-        greeting: `Hello ${input.text} 22 ${userId} ${sessionId}`,
-      };
-    }),
+const FEATURE_OPTIONS = [
+  'Alarm System',
+  'Air Conditioning',
+  'WIFI Internet',
+  'Cable TV',
+  'Dishwasher',
+  'Dryer',
+  'Fridge',
+  'Microwave',
+  'Oven',
+  'Stove',
+  'Fireplace',
+];
 
+const AMENITIES = [
+  'BBQ Grill',
+  'Pool',
+  'Fitness Center',
+  'Pet Friendly',
+  'Gym',
+  'Laundry',
+  'Parking',
+  'Storage',
+];
+
+export const portfolioRouter = createTRPCRouter({
   createProperty: protectedProcedure
     .input(VCreatePropertySchema)
     .mutation(async ({ ctx, input }) => {
-      const owner = await ctx.db.landlord.findUnique({
-        where: {
-          id: ctx.auth.userId ?? '',
-        },
-      });
-
       await ctx.db.$transaction(async (tx) => {
-        let ownerId = owner?.id || '';
-        if (!owner) {
-          const newOwner = await tx.landlord.create({
-            data: {
-              id: ctx.auth.userId ?? '',
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'john.doe@example.com',
-              phone: '+27712345678',
-              addressLine1: input.addressLine1,
-              addressLine2: input.addressLine2,
-              city: input.city,
-              state: input.state,
-              zip: input.zip,
-            },
-          });
-          ownerId = newOwner.id;
-        }
-
         return tx.property.create({
           data: {
-            ownerId: ownerId,
+            id: nanoid(),
+            ownerId: ctx.auth.userId ?? '',
             name: input.name,
             addressLine1: input.addressLine1,
             addressLine2: input.addressLine2,
@@ -57,13 +49,8 @@ export const portfolioRouter = createTRPCRouter({
             zip: input.zip,
             countryCode: 'ZA',
             propertyType: input.propertyType,
-            bedrooms: input.bedrooms,
-            bathrooms: input.bathrooms,
-            sqmt: input.sqmt,
-            marketRent: input.marketRent,
-            deposit: input.deposit,
-            features: input.propertyFeatures,
-            amenities: input.propertyAmenities,
+            features: input.features,
+            amenities: input.amenities,
             unit: {
               create:
                 input.propertyUnits.map((unit) => ({
@@ -72,6 +59,7 @@ export const portfolioRouter = createTRPCRouter({
                   bathrooms: unit.bathrooms,
                   sqmt: unit.sqmt,
                   marketRent: unit.marketRent,
+                  deposit: 0,
                 })) ?? [],
             },
           },
@@ -83,12 +71,20 @@ export const portfolioRouter = createTRPCRouter({
       };
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     const properties = await ctx.db.property.findMany({
       include: {
         unit: {
           include: {
-            lease: true,
+            lease: {
+              include: {
+                tenantLease: {
+                  include: {
+                    tenant: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -97,5 +93,11 @@ export const portfolioRouter = createTRPCRouter({
       },
     });
     return properties;
+  }),
+  getPropertyFeatures: publicProcedure.query(async ({ ctx }) => {
+    return FEATURE_OPTIONS;
+  }),
+  getPropertyAmenities: publicProcedure.query(async ({ ctx }) => {
+    return AMENITIES;
   }),
 });

@@ -11,6 +11,8 @@
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
+  "type": "module",
+  "module": "esm",
   "devDependencies": {
     "@leaseup/eslint-config": "workspace:*",
     "@leaseup/typescript-config": "workspace:*",

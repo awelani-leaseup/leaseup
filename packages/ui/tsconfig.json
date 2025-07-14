@@ -1,6 +1,8 @@
 {
   "extends": "@leaseup/typescript-config/react-library.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "outDir": "dist"
   },
   "include": ["src"],

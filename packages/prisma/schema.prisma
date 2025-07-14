@@ -1,12 +1,165 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated/"
+  output   = "./generated/client"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = "postgresql://prisma.jdwagelseoljclnlobjv:ford2FfA5zD93P@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
-  directUrl = env("DIRECT_URL")
+  url       = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+  directUrl = "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+}
+
+model Tenant {
+  id                     String        @id @default(uuid())
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  avatarUrl              String?
+  email                  String
+  firstName              String
+  lastName               String
+  phone                  String
+  landlordId             String
+  dateOfBirth            DateTime?
+  tenantEmergencyContact Json?
+  tenantIncome           Json?
+  additionalEmails       String[]
+  additionalPhones       String[]
+  emergencyContacts      Json?
+  vehicles               Json?
+  fullName               String?
+  files                  File[]
+  tenantLease            TenantLease[]
+}
+
+model Property {
+  id             String         @id @default(uuid())
+  name           String
+  addressLine1   String
+  addressLine2   String?
+  city           String
+  state          String
+  zip            String
+  ownerId        String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  imageUrl       String?
+  propertyStatus PropertyStatus @default(ACTIVE)
+  propertyType   PropertyType   @default(MULTI_UNIT)
+  amenities      String[]
+  countryCode    String         @default("ZA")
+  features       String[]
+  files          File[]
+  unit           Unit[]
+}
+
+model Unit {
+  id         String   @id @default(uuid())
+  propertyId String
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  bathrooms  Float    @default(1)
+  bedrooms   Int      @default(1)
+  deposit    Float    @default(0)
+  marketRent Float    @default(0)
+  sqmt       Float    @default(0)
+  lease      Lease[]
+  property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model Lease {
+  id                 String               @id @default(uuid())
+  startDate          DateTime             @db.Date
+  endDate            DateTime?            @db.Date
+  rent               Float
+  deposit            Float
+  status             LeaseStatus
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  rentDueCurrency    String
+  unitId             String?
+  File               File[]
+  invoice            Invoice[]
+  leaseType          LeaseTermType
+  invoiceCycle       InvoiceCycle         @default(MONTHLY)
+  automaticInvoice   Boolean              @default(false)
+  unit               Unit?                @relation(fields: [unitId], references: [id])
+  maintenanceRequest MaintenanceRequest[]
+  tenantLease        TenantLease[]
+  transactions       Transactions[]
+}
+
+model Invoice {
+  id           String          @id @default(uuid())
+  leaseId      String
+  description  String
+  dueAmount    Float
+  paystackId   String?
+  category     InvoiceCategory
+  status       InvoiceStatus
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  File         File[]
+  lease        Lease           @relation(fields: [leaseId], references: [id])
+  transactions Transactions[]
+}
+
+model Transactions {
+  id          String   @id @default(uuid())
+  leaseId     String
+  description String
+  amountPaid  Float
+  referenceId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+  lease       Lease    @relation(fields: [leaseId], references: [id])
+}
+
+model TenantLease {
+  id       String @id @default(uuid())
+  tenantId String
+  leaseId  String
+  lease    Lease  @relation(fields: [leaseId], references: [id])
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+}
+
+model MaintenanceRequest {
+  id          String                     @id @default(uuid())
+  leaseId     String
+  description String
+  status      MaintenanceRequestStatus
+  priority    MaintenanceRequestPriority
+  createdAt   DateTime                   @default(now())
+  updatedAt   DateTime                   @updatedAt
+  File        File[]
+  lease       Lease                      @relation(fields: [leaseId], references: [id])
+}
+
+model File {
+  id                   String              @id @default(uuid())
+  name                 String
+  url                  String
+  type                 String?
+  size                 Int?
+  ownerId              String
+  tenantId             String?
+  propertyId           String?
+  leaseId              String?
+  invoiceId            String?
+  maintenanceRequestId String?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  invoice              Invoice?            @relation(fields: [invoiceId], references: [id])
+  lease                Lease?              @relation(fields: [leaseId], references: [id])
+  maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
+  property             Property?           @relation(fields: [propertyId], references: [id])
+  tenant               Tenant?             @relation(fields: [tenantId], references: [id])
+}
+
+enum InvoiceCycle {
+  MONTHLY
 }
 
 enum LeaseTermType {
@@ -36,22 +189,6 @@ enum LeaseStatus {
   ACTIVE
   INACTIVE
   EXPIRED
-}
-
-enum DocumentType {
-  LEASE_AGREEMENT
-  RECEIPT
-  OTHER
-}
-
-enum TenantDocumentType {
-  ID
-  DRIVING_LICENSE
-  PROOF_OF_BANK_ACCOUNT
-  PROOF_OF_INCOME
-  PROOF_OF_VEHICLE_REGISTRATION
-  LEASE_AGREEMENT
-  OTHER
 }
 
 enum TenantIncomeType {
@@ -102,241 +239,27 @@ enum InvoiceCategory {
   OTHER
 }
 
-enum AmenityParking {
-  COVERED
-  DEDICATED_SPACE
-  GARAGE
-  DRIVEWAY
-  STREET
-  PRIVATE_LOT
-  OTHER
-  NONE
+enum PropertyAmenity {
+  BBQ_GRILL
+  POOL
+  FITNESS_CENTER
+  PET_FRIENDLY
+  GYM
+  LAUNDRY
+  PARKING
+  STORAGE
 }
 
-enum AmenityLaundry {
-  IN_UNIT
-  IN_BUILDING
-  IN_COMMON_AREA
-  OTHER
-  NONE
-}
-
-model Tenant {
-  id                     String                   @id @default(uuid())
-  firstName              String
-  lastName               String
-  email                  String
-  altEmail               String?
-  phone                  String
-  altPhone               String?
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime                 @updatedAt
-  Lease                  Lease[]
-  tenantLease            TenantLease[]
-  tenantDocument         TenantDocument[]
-  tenantEmergencyContact TenantEmergencyContact[]
-  tenantIncome           TenantIncome[]
-}
-
-model TenantEmergencyContact {
-  id           String             @id @default(uuid())
-  tenantId     String
-  tenant       Tenant             @relation(fields: [tenantId], references: [id])
-  name         String
-  phone        String
-  email        String
-  relationship TenantRelationship
-  addressLine1 String
-  addressLine2 String?
-  city         String
-  state        String
-  zip          String
-  countryCode  String
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-}
-
-model TenantIncome {
-  id                   String           @id @default(uuid())
-  tenantId             String
-  tenant               Tenant           @relation(fields: [tenantId], references: [id])
-  income               Float
-  incomeType           TenantIncomeType
-  position             String?
-  employer             String?
-  employerAddressLine1 String?
-  employerAddressLine2 String?
-  employerCity         String?
-  employerState        String?
-  employerZip          String?
-  employerCountryCode  String?
-  startDate            DateTime
-  endDate              DateTime
-  currentIncome        Boolean          @default(true)
-  createdAt            DateTime         @default(now())
-  updatedAt            DateTime         @updatedAt
-}
-
-model Landlord {
-  id           String     @id @default(uuid())
-  firstName    String
-  lastName     String
-  email        String
-  phone        String
-  addressLine1 String
-  addressLine2 String?
-  city         String
-  state        String
-  zip          String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  property     Property[]
-}
-
-model Property {
-  id               String             @id @default(uuid())
-  name             String
-  addressLine1     String
-  addressLine2     String?
-  city             String
-  state            String
-  zip              String
-  countryCode      String             @default("ZA")
-  ownerId          String
-  owner            Landlord           @relation(fields: [ownerId], references: [id])
-  imageUrl         String?
-  propertyType     PropertyType       @default(MULTI_UNIT)
-  propertyStatus   PropertyStatus     @default(ACTIVE)
-  bedrooms         Int                @default(1)
-  bathrooms        Float              @default(1)
-  squareMeters     Float              @default(0)
-  marketRent       Float              @default(0)
-  deposit          Float              @default(0)
-  leaseTerm        Int                @default(12)
-  leaseTermType    LeaseTermType      @default(MONTHLY)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  unit             Unit[]
-  sqmt             Float              @default(0)
-  features         String[]
-  amenities        String[]
-  test             String?
-  propertyDocument PropertyDocument[]
-  Lease            Lease[]
-}
-
-model Unit {
-  id         String   @id @default(uuid())
-  propertyId String
-  Property   Property @relation(fields: [propertyId], references: [id])
-  name       String
-  bedrooms   Int      @default(1)
-  bathrooms  Float    @default(1)
-  sqmt       Float    @default(0)
-  marketRent Float    @default(0)
-  deposit    Float    @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  lease      Lease[]
-}
-
-model Lease {
-  id                 String               @id @default(uuid())
-  unitId             String
-  unit               Unit                 @relation(fields: [unitId], references: [id])
-  tenantId           String
-  tenant             Tenant               @relation(fields: [tenantId], references: [id])
-  startDate          DateTime
-  endDate            DateTime
-  rent               Float
-  deposit            Float
-  rentDueCurrency    String
-  status             LeaseStatus
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  tenantLease        TenantLease[]
-  property           Property?            @relation(fields: [propertyId], references: [id])
-  propertyId         String?
-  invoice            Invoice[]
-  transactions       Transactions[]
-  maintenanceRequest MaintenanceRequest[]
-  leaseDocument      LeaseDocument[]
-}
-
-model Invoice {
-  id           String          @id @default(uuid())
-  leaseId      String
-  lease        Lease           @relation(fields: [leaseId], references: [id])
-  description  String
-  dueAmount    Float
-  dueDate      DateTime
-  category     InvoiceCategory
-  status       InvoiceStatus
-  transactions Transactions[]
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-}
-
-model Transactions {
-  id          String   @id @default(uuid())
-  leaseId     String
-  lease       Lease    @relation(fields: [leaseId], references: [id])
-  description String
-  amountPaid  Float
-  referenceId String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
-  invoiceId   String?
-}
-
-model TenantLease {
-  id        String   @id @default(uuid())
-  tenantId  String
-  leaseId   String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  lease     Lease    @relation(fields: [leaseId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model MaintenanceRequest {
-  id          String                     @id @default(uuid())
-  leaseId     String
-  lease       Lease                      @relation(fields: [leaseId], references: [id])
-  description String
-  status      MaintenanceRequestStatus
-  priority    MaintenanceRequestPriority
-  createdAt   DateTime                   @default(now())
-  updatedAt   DateTime                   @updatedAt
-}
-
-model TenantDocument {
-  id           String             @id @default(uuid())
-  tenantId     String
-  tenant       Tenant             @relation(fields: [tenantId], references: [id])
-  documentType TenantDocumentType
-  documentUrl  String
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-}
-
-model LeaseDocument {
-  id           String       @id @default(uuid())
-  leaseId      String
-  lease        Lease        @relation(fields: [leaseId], references: [id])
-  documentType DocumentType
-  documentUrl  String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-}
-
-model PropertyDocument {
-  id           String       @id @default(uuid())
-  propertyId   String
-  property     Property     @relation(fields: [propertyId], references: [id])
-  documentType DocumentType
-  documentUrl  String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+enum PropertyFeature {
+  ALARM_SYSTEM
+  AIR_CONDITIONING
+  WIFI_INTERNET
+  CABLE_TV
+  DISHWASHER
+  DRYER
+  FRIDGE
+  MICROWAVE
+  OVEN
+  STOVE
+  FIREPLACE
 }
