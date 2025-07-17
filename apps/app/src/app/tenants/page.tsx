@@ -99,7 +99,7 @@ export default async function Tenants() {
                       <p className="text flex items-center gap-2 text-sm leading-none font-semibold">
                         {tenant?.firstName} {tenant?.lastName}
                       </p>
-                      <p className="text-muted-foreground mt-1 line-clamp-2 text-sm leading-none font-semibold text-pretty">
+                      <p className="text-muted-foreground mt-1 line-clamp-2 text-sm leading-none font-normal text-pretty">
                         {tenant?.tenantLease[0]?.lease
                           ? [
                               tenant?.tenantLease[0]?.lease?.unit?.property

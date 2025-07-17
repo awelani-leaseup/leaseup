@@ -533,8 +533,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.11.1
-   * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
+   * Prisma Client JS version: 6.9.0
+   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
    */
   export type PrismaVersion = {
     client: string
@@ -2059,6 +2059,7 @@ export namespace Prisma {
 
   export type TenantMinAggregateOutputType = {
     id: string | null
+    paystackCustomerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     avatarUrl: string | null
@@ -2073,6 +2074,7 @@ export namespace Prisma {
 
   export type TenantMaxAggregateOutputType = {
     id: string | null
+    paystackCustomerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     avatarUrl: string | null
@@ -2087,6 +2089,7 @@ export namespace Prisma {
 
   export type TenantCountAggregateOutputType = {
     id: number
+    paystackCustomerId: number
     createdAt: number
     updatedAt: number
     avatarUrl: number
@@ -2109,6 +2112,7 @@ export namespace Prisma {
 
   export type TenantMinAggregateInputType = {
     id?: true
+    paystackCustomerId?: true
     createdAt?: true
     updatedAt?: true
     avatarUrl?: true
@@ -2123,6 +2127,7 @@ export namespace Prisma {
 
   export type TenantMaxAggregateInputType = {
     id?: true
+    paystackCustomerId?: true
     createdAt?: true
     updatedAt?: true
     avatarUrl?: true
@@ -2137,6 +2142,7 @@ export namespace Prisma {
 
   export type TenantCountAggregateInputType = {
     id?: true
+    paystackCustomerId?: true
     createdAt?: true
     updatedAt?: true
     avatarUrl?: true
@@ -2230,6 +2236,7 @@ export namespace Prisma {
 
   export type TenantGroupByOutputType = {
     id: string
+    paystackCustomerId: string | null
     createdAt: Date
     updatedAt: Date
     avatarUrl: string | null
@@ -2267,6 +2274,7 @@ export namespace Prisma {
 
   export type TenantSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    paystackCustomerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     avatarUrl?: boolean
@@ -2290,6 +2298,7 @@ export namespace Prisma {
 
   export type TenantSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    paystackCustomerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     avatarUrl?: boolean
@@ -2310,6 +2319,7 @@ export namespace Prisma {
 
   export type TenantSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    paystackCustomerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     avatarUrl?: boolean
@@ -2330,6 +2340,7 @@ export namespace Prisma {
 
   export type TenantSelectScalar = {
     id?: boolean
+    paystackCustomerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     avatarUrl?: boolean
@@ -2348,7 +2359,7 @@ export namespace Prisma {
     fullName?: boolean
   }
 
-  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "avatarUrl" | "email" | "firstName" | "lastName" | "phone" | "landlordId" | "dateOfBirth" | "tenantEmergencyContact" | "tenantIncome" | "additionalEmails" | "additionalPhones" | "emergencyContacts" | "vehicles" | "fullName", ExtArgs["result"]["tenant"]>
+  export type TenantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "paystackCustomerId" | "createdAt" | "updatedAt" | "avatarUrl" | "email" | "firstName" | "lastName" | "phone" | "landlordId" | "dateOfBirth" | "tenantEmergencyContact" | "tenantIncome" | "additionalEmails" | "additionalPhones" | "emergencyContacts" | "vehicles" | "fullName", ExtArgs["result"]["tenant"]>
   export type TenantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     files?: boolean | Tenant$filesArgs<ExtArgs>
     tenantLease?: boolean | Tenant$tenantLeaseArgs<ExtArgs>
@@ -2365,6 +2376,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      paystackCustomerId: string | null
       createdAt: Date
       updatedAt: Date
       avatarUrl: string | null
@@ -2807,6 +2819,7 @@ export namespace Prisma {
    */
   interface TenantFieldRefs {
     readonly id: FieldRef<"Tenant", 'String'>
+    readonly paystackCustomerId: FieldRef<"Tenant", 'String'>
     readonly createdAt: FieldRef<"Tenant", 'DateTime'>
     readonly updatedAt: FieldRef<"Tenant", 'DateTime'>
     readonly avatarUrl: FieldRef<"Tenant", 'String'>
@@ -7099,6 +7112,7 @@ export namespace Prisma {
     leaseId: string | null
     description: string | null
     dueAmount: number | null
+    dueDate: Date | null
     paystackId: string | null
     category: $Enums.InvoiceCategory | null
     status: $Enums.InvoiceStatus | null
@@ -7111,6 +7125,7 @@ export namespace Prisma {
     leaseId: string | null
     description: string | null
     dueAmount: number | null
+    dueDate: Date | null
     paystackId: string | null
     category: $Enums.InvoiceCategory | null
     status: $Enums.InvoiceStatus | null
@@ -7123,6 +7138,7 @@ export namespace Prisma {
     leaseId: number
     description: number
     dueAmount: number
+    dueDate: number
     paystackId: number
     category: number
     status: number
@@ -7145,6 +7161,7 @@ export namespace Prisma {
     leaseId?: true
     description?: true
     dueAmount?: true
+    dueDate?: true
     paystackId?: true
     category?: true
     status?: true
@@ -7157,6 +7174,7 @@ export namespace Prisma {
     leaseId?: true
     description?: true
     dueAmount?: true
+    dueDate?: true
     paystackId?: true
     category?: true
     status?: true
@@ -7169,6 +7187,7 @@ export namespace Prisma {
     leaseId?: true
     description?: true
     dueAmount?: true
+    dueDate?: true
     paystackId?: true
     category?: true
     status?: true
@@ -7268,6 +7287,7 @@ export namespace Prisma {
     leaseId: string
     description: string
     dueAmount: number
+    dueDate: Date | null
     paystackId: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -7299,6 +7319,7 @@ export namespace Prisma {
     leaseId?: boolean
     description?: boolean
     dueAmount?: boolean
+    dueDate?: boolean
     paystackId?: boolean
     category?: boolean
     status?: boolean
@@ -7315,6 +7336,7 @@ export namespace Prisma {
     leaseId?: boolean
     description?: boolean
     dueAmount?: boolean
+    dueDate?: boolean
     paystackId?: boolean
     category?: boolean
     status?: boolean
@@ -7328,6 +7350,7 @@ export namespace Prisma {
     leaseId?: boolean
     description?: boolean
     dueAmount?: boolean
+    dueDate?: boolean
     paystackId?: boolean
     category?: boolean
     status?: boolean
@@ -7341,6 +7364,7 @@ export namespace Prisma {
     leaseId?: boolean
     description?: boolean
     dueAmount?: boolean
+    dueDate?: boolean
     paystackId?: boolean
     category?: boolean
     status?: boolean
@@ -7348,7 +7372,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "paystackId" | "category" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "dueDate" | "paystackId" | "category" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     File?: boolean | Invoice$FileArgs<ExtArgs>
     lease?: boolean | LeaseDefaultArgs<ExtArgs>
@@ -7374,6 +7398,7 @@ export namespace Prisma {
       leaseId: string
       description: string
       dueAmount: number
+      dueDate: Date | null
       paystackId: string | null
       category: $Enums.InvoiceCategory
       status: $Enums.InvoiceStatus
@@ -7809,6 +7834,7 @@ export namespace Prisma {
     readonly leaseId: FieldRef<"Invoice", 'String'>
     readonly description: FieldRef<"Invoice", 'String'>
     readonly dueAmount: FieldRef<"Invoice", 'Float'>
+    readonly dueDate: FieldRef<"Invoice", 'DateTime'>
     readonly paystackId: FieldRef<"Invoice", 'String'>
     readonly category: FieldRef<"Invoice", 'InvoiceCategory'>
     readonly status: FieldRef<"Invoice", 'InvoiceStatus'>
@@ -12927,6 +12953,7 @@ export namespace Prisma {
 
   export const TenantScalarFieldEnum: {
     id: 'id',
+    paystackCustomerId: 'paystackCustomerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     avatarUrl: 'avatarUrl',
@@ -13010,6 +13037,7 @@ export namespace Prisma {
     leaseId: 'leaseId',
     description: 'description',
     dueAmount: 'dueAmount',
+    dueDate: 'dueDate',
     paystackId: 'paystackId',
     category: 'category',
     status: 'status',
@@ -13332,6 +13360,7 @@ export namespace Prisma {
     OR?: TenantWhereInput[]
     NOT?: TenantWhereInput | TenantWhereInput[]
     id?: StringFilter<"Tenant"> | string
+    paystackCustomerId?: StringNullableFilter<"Tenant"> | string | null
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
     avatarUrl?: StringNullableFilter<"Tenant"> | string | null
@@ -13354,6 +13383,7 @@ export namespace Prisma {
 
   export type TenantOrderByWithRelationInput = {
     id?: SortOrder
+    paystackCustomerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     avatarUrl?: SortOrderInput | SortOrder
@@ -13379,6 +13409,7 @@ export namespace Prisma {
     AND?: TenantWhereInput | TenantWhereInput[]
     OR?: TenantWhereInput[]
     NOT?: TenantWhereInput | TenantWhereInput[]
+    paystackCustomerId?: StringNullableFilter<"Tenant"> | string | null
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
     avatarUrl?: StringNullableFilter<"Tenant"> | string | null
@@ -13401,6 +13432,7 @@ export namespace Prisma {
 
   export type TenantOrderByWithAggregationInput = {
     id?: SortOrder
+    paystackCustomerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     avatarUrl?: SortOrderInput | SortOrder
@@ -13427,6 +13459,7 @@ export namespace Prisma {
     OR?: TenantScalarWhereWithAggregatesInput[]
     NOT?: TenantScalarWhereWithAggregatesInput | TenantScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Tenant"> | string
+    paystackCustomerId?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Tenant"> | Date | string
     avatarUrl?: StringNullableWithAggregatesFilter<"Tenant"> | string | null
@@ -13763,6 +13796,7 @@ export namespace Prisma {
     leaseId?: StringFilter<"Invoice"> | string
     description?: StringFilter<"Invoice"> | string
     dueAmount?: FloatFilter<"Invoice"> | number
+    dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paystackId?: StringNullableFilter<"Invoice"> | string | null
     category?: EnumInvoiceCategoryFilter<"Invoice"> | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -13778,6 +13812,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     description?: SortOrder
     dueAmount?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
     paystackId?: SortOrderInput | SortOrder
     category?: SortOrder
     status?: SortOrder
@@ -13796,6 +13831,7 @@ export namespace Prisma {
     leaseId?: StringFilter<"Invoice"> | string
     description?: StringFilter<"Invoice"> | string
     dueAmount?: FloatFilter<"Invoice"> | number
+    dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paystackId?: StringNullableFilter<"Invoice"> | string | null
     category?: EnumInvoiceCategoryFilter<"Invoice"> | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -13811,6 +13847,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     description?: SortOrder
     dueAmount?: SortOrder
+    dueDate?: SortOrderInput | SortOrder
     paystackId?: SortOrderInput | SortOrder
     category?: SortOrder
     status?: SortOrder
@@ -13831,6 +13868,7 @@ export namespace Prisma {
     leaseId?: StringWithAggregatesFilter<"Invoice"> | string
     description?: StringWithAggregatesFilter<"Invoice"> | string
     dueAmount?: FloatWithAggregatesFilter<"Invoice"> | number
+    dueDate?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     paystackId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     category?: EnumInvoiceCategoryWithAggregatesFilter<"Invoice"> | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -14140,6 +14178,7 @@ export namespace Prisma {
 
   export type TenantCreateInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -14162,6 +14201,7 @@ export namespace Prisma {
 
   export type TenantUncheckedCreateInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -14184,6 +14224,7 @@ export namespace Prisma {
 
   export type TenantUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14206,6 +14247,7 @@ export namespace Prisma {
 
   export type TenantUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14228,6 +14270,7 @@ export namespace Prisma {
 
   export type TenantCreateManyInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -14248,6 +14291,7 @@ export namespace Prisma {
 
   export type TenantUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14268,6 +14312,7 @@ export namespace Prisma {
 
   export type TenantUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14656,6 +14701,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -14671,6 +14717,7 @@ export namespace Prisma {
     leaseId: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -14684,6 +14731,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -14699,6 +14747,7 @@ export namespace Prisma {
     leaseId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -14713,6 +14762,7 @@ export namespace Prisma {
     leaseId: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -14724,6 +14774,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -14736,6 +14787,7 @@ export namespace Prisma {
     leaseId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -15053,17 +15105,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -15077,6 +15118,17 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -15148,6 +15200,7 @@ export namespace Prisma {
 
   export type TenantCountOrderByAggregateInput = {
     id?: SortOrder
+    paystackCustomerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     avatarUrl?: SortOrder
@@ -15168,6 +15221,7 @@ export namespace Prisma {
 
   export type TenantMaxOrderByAggregateInput = {
     id?: SortOrder
+    paystackCustomerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     avatarUrl?: SortOrder
@@ -15182,6 +15236,7 @@ export namespace Prisma {
 
   export type TenantMinOrderByAggregateInput = {
     id?: SortOrder
+    paystackCustomerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     avatarUrl?: SortOrder
@@ -15212,20 +15267,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -15242,6 +15283,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15686,6 +15741,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     description?: SortOrder
     dueAmount?: SortOrder
+    dueDate?: SortOrder
     paystackId?: SortOrder
     category?: SortOrder
     status?: SortOrder
@@ -15702,6 +15758,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     description?: SortOrder
     dueAmount?: SortOrder
+    dueDate?: SortOrder
     paystackId?: SortOrder
     category?: SortOrder
     status?: SortOrder
@@ -15714,6 +15771,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     description?: SortOrder
     dueAmount?: SortOrder
+    dueDate?: SortOrder
     paystackId?: SortOrder
     category?: SortOrder
     status?: SortOrder
@@ -16021,12 +16079,12 @@ export namespace Prisma {
     set?: string
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -16853,17 +16911,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -16876,6 +16923,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -16917,20 +16975,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -16957,6 +17001,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17701,6 +17759,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -17714,6 +17773,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -17884,6 +17944,7 @@ export namespace Prisma {
     leaseId?: StringFilter<"Invoice"> | string
     description?: StringFilter<"Invoice"> | string
     dueAmount?: FloatFilter<"Invoice"> | number
+    dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     paystackId?: StringNullableFilter<"Invoice"> | string | null
     category?: EnumInvoiceCategoryFilter<"Invoice"> | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
@@ -18205,6 +18266,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -18219,6 +18281,7 @@ export namespace Prisma {
     leaseId: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -18292,6 +18355,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -18306,6 +18370,7 @@ export namespace Prisma {
     leaseId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -18412,6 +18477,7 @@ export namespace Prisma {
 
   export type TenantCreateWithoutTenantLeaseInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -18433,6 +18499,7 @@ export namespace Prisma {
 
   export type TenantUncheckedCreateWithoutTenantLeaseInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -18521,6 +18588,7 @@ export namespace Prisma {
 
   export type TenantUpdateWithoutTenantLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18542,6 +18610,7 @@ export namespace Prisma {
 
   export type TenantUncheckedUpdateWithoutTenantLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18717,6 +18786,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -18731,6 +18801,7 @@ export namespace Prisma {
     leaseId: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -18861,6 +18932,7 @@ export namespace Prisma {
 
   export type TenantCreateWithoutFilesInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -18882,6 +18954,7 @@ export namespace Prisma {
 
   export type TenantUncheckedCreateWithoutFilesInput = {
     id?: string
+    paystackCustomerId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     avatarUrl?: string | null
@@ -18921,6 +18994,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -18935,6 +19009,7 @@ export namespace Prisma {
     leaseId?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -19089,6 +19164,7 @@ export namespace Prisma {
 
   export type TenantUpdateWithoutFilesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19110,6 +19186,7 @@ export namespace Prisma {
 
   export type TenantUncheckedUpdateWithoutFilesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19408,6 +19485,7 @@ export namespace Prisma {
     id?: string
     description: string
     dueAmount: number
+    dueDate?: Date | string | null
     paystackId?: string | null
     category: $Enums.InvoiceCategory
     status: $Enums.InvoiceStatus
@@ -19488,6 +19566,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -19501,6 +19580,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
@@ -19514,6 +19594,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     dueAmount?: FloatFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paystackId?: NullableStringFieldUpdateOperationsInput | string | null
     category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
     status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus

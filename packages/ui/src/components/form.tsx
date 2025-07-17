@@ -384,7 +384,10 @@ export const ComboboxField: FC<{
                         state.value === option.id ? 'opacity-100' : 'opacity-0'
                       )}
                     />
-                    {option.label}
+                    <div className='flex flex-row items-center gap-2 [&_svg]:size-2 [&_svg]:shrink-0 [&_svg]:stroke-1'>
+                      {option.icon}
+                      {option.label}
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>

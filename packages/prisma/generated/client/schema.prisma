@@ -11,6 +11,7 @@ datasource db {
 
 model Tenant {
   id                     String        @id @default(uuid())
+  paystackCustomerId     String?
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
   avatarUrl              String?
@@ -94,6 +95,7 @@ model Invoice {
   leaseId      String
   description  String
   dueAmount    Float
+  dueDate      DateTime?       @db.Date
   paystackId   String?
   category     InvoiceCategory
   status       InvoiceStatus

@@ -3,6 +3,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
@@ -21,13 +22,13 @@ import { useMemo } from "react";
 import { Separator } from "@leaseup/ui/components/separator";
 import { RadioGroup, RadioGroupItem } from "@leaseup/ui/components/radio-group";
 import { Label } from "@leaseup/ui/components/label";
-import { DollarSignIcon, Save, Star } from "lucide-react";
+import { Save, Star } from "lucide-react";
 import { Switch } from "@leaseup/ui/components/switch";
 import { Badge } from "@leaseup/ui/components/badge";
 import { Button } from "@leaseup/ui/components/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { startOfDay } from "date-fns";
+import { addMonths, format, startOfDay } from "date-fns";
 
 export default function CreateLease() {
   const createLease = api.lease.createLease.useMutation();
@@ -105,6 +106,9 @@ export default function CreateLease() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Create Lease</CardTitle>
+          <CardDescription>
+            Add a new lease for a tenant to start collecting rent.
+          </CardDescription>
         </CardHeader>
       </Card>
 
@@ -220,9 +224,9 @@ export default function CreateLease() {
                                     </Badge>
                                   </span>
                                   <span className="text-muted-foreground text-sm tracking-tight">
-                                    The system will automatically create a
-                                    recurring invoice for the tenant every
-                                    month.
+                                    The system will automatically create and
+                                    send invoices with payment links for the
+                                    tenant every month.
                                   </span>
                                 </Label>
                               </div>
@@ -237,7 +241,8 @@ export default function CreateLease() {
                                 <span>
                                   <p className="text-muted-foreground text-sm tracking-tight">
                                     The system will not create a recurring
-                                    invoice for the tenant.
+                                    invoice for the tenant. You have to manually
+                                    create and send invoices for the tenant.
                                   </p>
                                 </span>
                               </Label>
@@ -259,7 +264,11 @@ export default function CreateLease() {
                           <field.TextField
                             type="number"
                             label="Rent"
-                            icon={<DollarSignIcon />}
+                            icon={
+                              <span className="text-muted-foreground mt-1 flex items-center text-sm">
+                                R
+                              </span>
+                            }
                           />
                         )}
                       </form.AppField>
@@ -277,7 +286,12 @@ export default function CreateLease() {
                       </form.AppField>
                       <form.AppField name="startDate">
                         {(field) => (
-                          <field.DateField label="Start Date" mode="single" />
+                          <field.DateField
+                            label="Start Date"
+                            mode="single"
+                            endMonth={new Date("2099-12-31")}
+                            description={`The next invoice will be due on this day of every month. (i.e ${format(addMonths(field.state.value, 1), "dd MMM yyyy")}).`}
+                          />
                         )}
                       </form.AppField>
                       <form.AppField name="endDate">
@@ -366,7 +380,7 @@ export default function CreateLease() {
                             <field.TextField
                               type="number"
                               label="Deposit Amount"
-                              icon={<DollarSignIcon />}
+                              icon={<span className="mt-1 text-sm">R</span>}
                             />
                           )}
                         </form.AppField>

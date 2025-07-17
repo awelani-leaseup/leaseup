@@ -1,0 +1,20 @@
+{
+  "name": "@leaseup/novu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@leaseup/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@novu/api": "^1.4.0",
+    "@novu/framework": "^2.6.7"
+  }
+}

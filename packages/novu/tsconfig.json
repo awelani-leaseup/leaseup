@@ -1,0 +1,8 @@
+{
+  "extends": "@leaseup/typescript-config/base.json",
+  "include": ["src/**/*.ts"],
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "exclude": ["node_modules", "dist"]
+}
