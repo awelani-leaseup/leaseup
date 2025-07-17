@@ -14,7 +14,7 @@ export const checkUpcomingInvoicesTask = schedules.task({
   id: 'check-upcoming-invoices',
   maxDuration: 300, // 5 minutes
   cron: {
-    //7am every day Johannesburg time
+    //5m every day Johannesburg time
     pattern: '0 5 * * *',
     timezone: 'Africa/Johannesburg',
   },
