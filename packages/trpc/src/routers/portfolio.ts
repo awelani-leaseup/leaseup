@@ -40,7 +40,7 @@ export const portfolioRouter = createTRPCRouter({
         return tx.property.create({
           data: {
             id: nanoid(),
-            ownerId: ctx.auth.userId ?? '',
+            landlordId: ctx.auth?.session?.userId ?? '',
             name: input.name,
             addressLine1: input.addressLine1,
             addressLine2: input.addressLine2,
@@ -71,7 +71,7 @@ export const portfolioRouter = createTRPCRouter({
       };
     }),
 
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAllProperties: protectedProcedure.query(async ({ ctx }) => {
     const properties = await ctx.db.property.findMany({
       include: {
         unit: {
@@ -91,8 +91,37 @@ export const portfolioRouter = createTRPCRouter({
       orderBy: {
         createdAt: 'desc',
       },
+      where: {
+        landlordId: ctx.auth?.session?.userId ?? '',
+      },
     });
     return properties;
+  }),
+
+  getAllUnits: protectedProcedure.query(async ({ ctx }) => {
+    const units = await ctx.db.unit.findMany({
+      include: {
+        property: true,
+        lease: {
+          include: {
+            tenantLease: {
+              include: {
+                tenant: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      where: {
+        property: {
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+      },
+    });
+    return units;
   }),
   getPropertyFeatures: publicProcedure.query(async ({ ctx }) => {
     return FEATURE_OPTIONS;

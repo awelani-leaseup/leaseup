@@ -18,7 +18,7 @@ import { VLeaseSchema } from "./_types";
 import * as v from "valibot";
 import { api } from "@/trpc/react";
 import { useStore } from "@tanstack/react-form";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Separator } from "@leaseup/ui/components/separator";
 import { RadioGroup, RadioGroupItem } from "@leaseup/ui/components/radio-group";
 import { Label } from "@leaseup/ui/components/label";
@@ -100,6 +100,12 @@ export default function CreateLease() {
   const property = useMemo(() => {
     return properties?.find((property) => property.id === propertyId);
   }, [properties, propertyId]);
+
+  useEffect(() => {
+    if (property?.propertyType === "SINGLE_UNIT") {
+      form.setFieldValue("unitId", property?.unit[0]?.id || "");
+    }
+  }, [propertyId]);
 
   return (
     <div className="mx-auto my-10 flex max-w-3xl flex-col">

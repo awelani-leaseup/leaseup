@@ -240,6 +240,7 @@ export const createInvoiceTask = task({
         customer: customerId,
         amount: Math.round(invoiceData.rent * 100), // convert to cents
         currency: 'ZAR',
+        // @ts-ignore
         dueDate: invoiceData.nextInvoiceDate,
         description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
       });

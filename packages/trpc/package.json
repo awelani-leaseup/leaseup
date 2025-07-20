@@ -5,7 +5,8 @@
   "main": "index.js",
   "exports": {
     "./server": "./src/server/index.ts",
-    "./trpc": "./src/server/trpc.ts"
+    "./trpc": "./src/server/trpc.ts",
+    "./auth": "./src/server/auth/auth.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,15 +16,17 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/nextjs": "^6.22.0",
+    "@leaseup/novu": "workspace:*",
     "@leaseup/prisma": "workspace:*",
-    "@novu/api": "^1.4.0",
     "@supabase/supabase-js": "^2.50.4",
     "@tanstack/react-query": "^5.81.0",
     "@trpc/client": "^11.4.1",
     "@trpc/next": "^11.4.2",
     "@trpc/react-query": "^11.0.0",
     "@trpc/server": "^11.4.1",
+    "better-auth": "^1.2.12",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.0",
     "nanoid": "^5.1.5",
     "superjson": "^2.2.1",
     "valibot": "^1.1.0"

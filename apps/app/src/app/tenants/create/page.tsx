@@ -23,13 +23,14 @@ import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { TenantFilesSubForm } from "./_components/tenant-files-sub-form";
-import { useUser } from "@clerk/nextjs";
 import { nanoid } from "nanoid";
-import { useSupabase } from "@/hooks/useSupabase";
+import { useSupabase } from "@/hooks/use-supabase";
+import { authClient } from "@/utils/auth/client";
 
 export default function CreateTenantPage() {
   const supabase = useSupabase();
-  const { user } = useUser();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   const router = useRouter();
   const { mutateAsync: createTenant, isPending } =
     api.tenant.createTenant.useMutation();

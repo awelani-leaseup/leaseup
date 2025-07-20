@@ -13,10 +13,9 @@ import {
   Bath,
   Bed,
   Building,
-  CheckCheck,
   Plus,
   RulerDimensionLine,
-  X,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { PropertyStaticMap } from "./_components/PropertyStaticMap";
@@ -24,10 +23,10 @@ import { Badge } from "@leaseup/ui/components/badge";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { Avatar, AvatarFallback } from "@leaseup/ui/components/avataar";
 export default async function Properties() {
-  const properties = await api.portfolio.getAll();
+  const properties = await api.portfolio.getAllProperties();
 
   return (
-    <div className="mx-auto mt-10 max-w-7xl">
+    <div className="mx-auto my-10 max-w-7xl">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
@@ -56,16 +55,34 @@ export default async function Properties() {
                 <div className="w-full py-6 pl-6">
                   <div className="flex w-full justify-between">
                     <div className="w-full">
-                      <H5>{property.name}</H5>
+                      <div className="flex items-center gap-4">
+                        <H5>{property.name}</H5>
+                        {property.propertyType === "SINGLE_UNIT" && (
+                          <Badge
+                            variant="soft"
+                            size="sm"
+                            color={
+                              property.unit[0]?.lease &&
+                              property.unit[0]?.lease.length > 0
+                                ? "success"
+                                : "warning"
+                            }
+                          >
+                            {property.unit[0]?.lease &&
+                            property.unit[0]?.lease.length > 0
+                              ? "Occupied"
+                              : "Vacant"}
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-muted-foreground mt-2 flex max-w-md items-center gap-1 text-sm">
-                        {/* <Map className="size-4 shrink-0 stroke-1" /> */}
                         <span className="line-clamp-2">
                           {`${property.addressLine1}, ${property.city}, ${property.state}, ${property.zip} South Africa`}
                         </span>
                       </p>
                     </div>
                     <div className="shrink-0">
-                      <H6 className="text-primary items-end text-right italic tabular-nums">
+                      <H6 className="text-primary items-end text-right tabular-nums">
                         {new Intl.NumberFormat("en-ZA", {
                           style: "currency",
                           currency: "ZAR",
@@ -90,42 +107,73 @@ export default async function Properties() {
                         </Badge>
                       </div>
                     ) : (
-                      <div className="flex flex-wrap gap-2">
-                        {property.unit.map((unit) => (
-                          <div
-                            key={unit.id}
-                            className="flex w-52 flex-col gap-1 rounded-md border px-4 py-2"
+                      <>
+                        {property.unit.length > 4 && (
+                          <Link
+                            href={`/properties/${property.id}/units`}
+                            className="text-primary w-full justify-end text-right text-sm underline"
                           >
-                            <p className="text-muted-foreground flex items-center justify-between text-sm">
-                              #Unit {unit.name}{" "}
-                              <Avatar>
-                                <AvatarFallback
-                                  className="text-xs"
-                                  title={`${unit?.lease[0]?.tenantLease[0]?.tenant?.firstName} ${unit?.lease[0]?.tenantLease[0]?.tenant?.lastName}`}
-                                >
-                                  {unit?.lease[0]?.tenantLease[0]?.tenant?.firstName?.charAt(
-                                    0,
-                                  )}
-                                  {unit?.lease[0]?.tenantLease[0]?.tenant?.lastName?.charAt(
-                                    0,
-                                  )}
-                                </AvatarFallback>
-                              </Avatar>
-                            </p>
-                            {unit?.lease.length > 0 ? (
-                              <p className="flex items-center gap-2 text-sm">
-                                <CheckCheck className="size-4 shrink-0 text-green-600" />
-                                Occupied
-                              </p>
-                            ) : (
-                              <p className="flex items-center gap-2 text-sm">
-                                <X className="size-4 shrink-0 text-red-600" />
-                                Vacant
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                            View all units
+                          </Link>
+                        )}
+                        <div className="flex flex-wrap gap-2">
+                          {property.unit.slice(0, 4).map((unit) => (
+                            <Badge
+                              key={unit.id}
+                              className="mt-2 flex w-52 flex-col items-start gap-1 overflow-hidden rounded-md px-4"
+                              variant="outlined"
+                              color={
+                                unit?.lease.length > 0 ? "primary" : "warning"
+                              }
+                            >
+                              <span className="item-center flex w-full justify-between">
+                                #{unit.name}
+                                {unit?.lease.length > 0 ? (
+                                  <Badge
+                                    variant="soft"
+                                    size="sm"
+                                    color="success"
+                                  >
+                                    Occupied
+                                  </Badge>
+                                ) : (
+                                  <Badge
+                                    variant="soft"
+                                    size="sm"
+                                    color="warning"
+                                  >
+                                    Vacant
+                                  </Badge>
+                                )}
+                              </span>
+                              <div className="w-[100%] overflow-hidden">
+                                {unit?.lease.length > 0 ? (
+                                  <span className="flex items-center gap-2">
+                                    <Avatar className="shrink-0">
+                                      <AvatarFallback
+                                        className="text-primary text-xs"
+                                        title={`${unit?.lease[0]?.tenantLease[0]?.tenant?.firstName} ${unit?.lease[0]?.tenantLease[0]?.tenant?.lastName}`}
+                                      >
+                                        {unit?.lease[0]?.tenantLease[0]?.tenant?.firstName?.charAt(
+                                          0,
+                                        )}
+                                        {unit?.lease[0]?.tenantLease[0]?.tenant?.lastName?.charAt(
+                                          0,
+                                        )}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span>
+                                      {`${unit?.lease[0]?.tenantLease[0]?.tenant?.firstName} ${unit?.lease[0]?.tenantLease[0]?.tenant?.lastName}`}
+                                    </span>
+                                  </span>
+                                ) : (
+                                  <div className="flex items-center gap-2"></div>
+                                )}
+                              </div>
+                            </Badge>
+                          ))}
+                        </div>
+                      </>
                     )}
                     <div className="mt-4 flex flex-col gap-2">
                       {property.amenities.length > 0 ? (

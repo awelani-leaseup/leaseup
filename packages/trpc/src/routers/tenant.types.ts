@@ -50,3 +50,11 @@ export const VTenantSchema = v.object({
 export const VRemoveTenantSchema = v.object({
   id: v.string(),
 });
+
+export const VGetTenantByIdSchema = v.object({
+  id: v.string(),
+});
+
+export const VGetTenantTransactionsSchema = v.object({
+  id: v.string(),
+});

@@ -1,4 +1,8 @@
-import { Avatar, AvatarFallback } from "@leaseup/ui/components/avataar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@leaseup/ui/components/avataar";
 import { Badge } from "@leaseup/ui/components/badge";
 import { Button } from "@leaseup/ui/components/button";
 import {
@@ -32,11 +36,7 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@leaseup/ui/components/pagination";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { api } from "@/trpc/server";
@@ -87,14 +87,17 @@ export default async function Tenants() {
             <Card key={tenant.id}>
               <CardContent className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <Avatar className="size-10 shadow-sm">
-                    {/* <AvatarImage src={tenant?.avatar} /> */}
-                    <AvatarFallback className="size-10 shadow-sm">
-                      {tenant?.firstName[0]}
-                      {tenant?.lastName[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex w-full items-center justify-between gap-2">
+                  <Link
+                    href={`/tenants/${tenant.id}`}
+                    className="flex cursor-pointer items-center gap-2 transition-opacity hover:opacity-80"
+                  >
+                    <Avatar className="size-10 shadow-sm">
+                      <AvatarImage src={tenant?.avatarUrl ?? undefined} />
+                      <AvatarFallback className="size-10 shadow-sm">
+                        {tenant?.firstName[0]}
+                        {tenant?.lastName[0]}
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex flex-col">
                       <p className="text flex items-center gap-2 text-sm leading-none font-semibold">
                         {tenant?.firstName} {tenant?.lastName}
@@ -116,6 +119,9 @@ export default async function Tenants() {
                           : "Prospect"}
                       </p>
                     </div>
+                  </Link>
+                  <div className="flex w-full items-center justify-between gap-2">
+                    <div className="flex-1"></div>
                     <div className="shrink-0">
                       {tenant?.tenantLease[0]?.lease ? (
                         <Badge
@@ -261,34 +267,20 @@ export default async function Tenants() {
         )}
       </div>
 
-      <Card className="mt-10 pb-4">
-        <CardContent>
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </CardContent>
-      </Card>
+      <Pagination>
+        <PaginationContent className="mt-10 flex items-center gap-2">
+          <PaginationItem>
+            <Button variant="outlined" color="secondary">
+              Previous
+            </Button>
+          </PaginationItem>
+          <PaginationItem>
+            <Button variant="outlined" color="secondary">
+              Next
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

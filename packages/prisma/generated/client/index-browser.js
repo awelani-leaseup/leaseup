@@ -120,6 +120,62 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  idNumber: 'idNumber',
+  addressLine1: 'addressLine1',
+  addressLine2: 'addressLine2',
+  city: 'city',
+  state: 'state',
+  zip: 'zip',
+  country: 'country',
+  paystackSubscriptionId: 'paystackSubscriptionId',
+  paystackSubAccountId: 'paystackSubAccountId',
+  paystackSplitGroupId: 'paystackSplitGroupId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  expiresAt: 'expiresAt',
+  token: 'token',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  userId: 'userId'
+};
+
+exports.Prisma.AccountScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  userId: 'userId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.VerificationScalarFieldEnum = {
+  id: 'id',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.TenantScalarFieldEnum = {
   id: 'id',
   paystackCustomerId: 'paystackCustomerId',
@@ -149,7 +205,7 @@ exports.Prisma.PropertyScalarFieldEnum = {
   city: 'city',
   state: 'state',
   zip: 'zip',
-  ownerId: 'ownerId',
+  landlordId: 'landlordId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   imageUrl: 'imageUrl',
@@ -193,6 +249,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   id: 'id',
   leaseId: 'leaseId',
   description: 'description',
+  lineItems: 'lineItems',
   dueAmount: 'dueAmount',
   dueDate: 'dueDate',
   paystackId: 'paystackId',
@@ -260,15 +317,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
 };
 exports.PropertyStatus = exports.$Enums.PropertyStatus = {
   ACTIVE: 'ACTIVE',
@@ -330,6 +387,10 @@ exports.MaintenanceRequestPriority = exports.$Enums.MaintenanceRequestPriority =
 };
 
 exports.Prisma.ModelName = {
+  User: 'User',
+  Session: 'Session',
+  Account: 'Account',
+  Verification: 'Verification',
   Tenant: 'Tenant',
   Property: 'Property',
   Unit: 'Unit',

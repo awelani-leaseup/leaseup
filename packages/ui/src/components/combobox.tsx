@@ -38,7 +38,7 @@ const frameworks = [
   },
 ];
 
-export function ExampleCombobox() {
+export function Combobox() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
 
@@ -46,7 +46,7 @@ export function ExampleCombobox() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant='outline'
+          variant='outlined'
           role='combobox'
           aria-expanded={open}
           className='w-[200px] justify-between'

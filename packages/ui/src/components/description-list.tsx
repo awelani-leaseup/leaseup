@@ -29,7 +29,7 @@ export const DescriptionTerm = ({
       {...props}
       className={cn(
         className,
-        'col-start-1 border-t border-zinc-950/5 pt-3 font-semibold text-zinc-500 first:border-none sm:border-t sm:border-zinc-950/5 sm:py-3'
+        'col-start-1 border-t border-zinc-950/5 pt-3 font-medium text-zinc-500 first:border-none sm:border-t sm:border-zinc-950/5 sm:py-3'
       )}
     />
   );
@@ -44,7 +44,7 @@ export const DescriptionDetails = ({
       {...props}
       className={cn(
         className,
-        'pt-1 pb-3 font-semibold text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none'
+        'pt-1 pb-3 font-medium text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 sm:[&:nth-child(2)]:border-none'
       )}
     />
   );

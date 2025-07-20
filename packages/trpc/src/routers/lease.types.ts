@@ -1,5 +1,14 @@
 import * as v from 'valibot';
 
+export const VGetAllLeasesSchema = v.object({
+  page: v.pipe(v.number(), v.minValue(1, 'Page must be at least 1')),
+  limit: v.pipe(
+    v.number(),
+    v.minValue(1, 'Limit must be at least 1'),
+    v.maxValue(100, 'Limit cannot exceed 100')
+  ),
+});
+
 export const VCreateLeaseSchema = v.object({
   propertyId: v.pipe(v.string(), v.minLength(1, 'Property is required')),
   unitId: v.pipe(v.string(), v.minLength(1, 'Unit is required')),

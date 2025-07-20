@@ -1,19 +1,65 @@
-import { VCreateLeaseSchema } from './lease.types';
+import { VCreateLeaseSchema, VGetAllLeasesSchema } from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { nanoid } from 'nanoid';
 import { startOfDay } from 'date-fns';
 
-const leaseSelect = {
-  id: true,
-  name: true,
-  unit: true,
-  propertyType: true,
-};
 export const leaseRouter = createTRPCRouter({
+  getAll: protectedProcedure
+    .input(VGetAllLeasesSchema)
+    .query(async ({ ctx, input }) => {
+      const { page, limit } = input;
+      const skip = (page - 1) * limit;
+
+      const whereClause = {
+        unit: {
+          property: {
+            landlordId: ctx.auth?.session?.userId ?? '',
+          },
+        },
+      };
+
+      const [leases, countResult] = await Promise.all([
+        ctx.db.lease.findMany({
+          where: whereClause,
+          orderBy: {
+            createdAt: 'desc',
+          },
+          include: {
+            unit: {
+              include: {
+                property: true,
+              },
+            },
+            tenantLease: {
+              include: {
+                tenant: true,
+              },
+            },
+          },
+          skip,
+          take: limit,
+        }),
+        // Using explicit count with select for better type safety and clarity
+        ctx.db.lease.count({
+          where: whereClause,
+          select: {
+            _all: true,
+          },
+        }),
+      ]);
+
+      return {
+        leases,
+        total: countResult._all,
+        page,
+        limit,
+        totalPages: Math.ceil(countResult._all / limit),
+      };
+    }),
   getAllProperties: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.property.findMany({
       where: {
-        ownerId: ctx.auth.userId ?? '',
+        landlordId: ctx.auth?.session?.userId ?? '',
       },
       select: {
         id: true,
@@ -26,7 +72,7 @@ export const leaseRouter = createTRPCRouter({
   getAllTenants: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.tenant.findMany({
       where: {
-        landlordId: ctx.auth.userId ?? '',
+        landlordId: ctx.auth?.session?.userId ?? '',
       },
     });
   }),

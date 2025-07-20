@@ -9,10 +9,9 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ValiError } from 'valibot';
-import { auth } from '@clerk/nextjs/server';
 import { supabaseServer } from '../utils/supabase';
 import { db } from '@leaseup/prisma/db.ts';
-
+import { auth } from './auth/auth';
 /**
  * 1. CONTEXT
  *
@@ -22,6 +21,8 @@ import { db } from '@leaseup/prisma/db.ts';
  *
  * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
  * wrap this and provides the required context.
+    auth: Awaited<ReturnType<typeof auth>>;
+ * 
  *
  * @see https://trpc.io/docs/server/context
  */
@@ -29,13 +30,16 @@ export const createTRPCContext: (opts: { headers: Headers }) => Promise<
   {
     db: typeof db;
     supabaseServer: typeof supabaseServer;
-    auth: Awaited<ReturnType<typeof auth>>;
+    auth: Awaited<ReturnType<typeof auth.api.getSession>>;
   } & { headers: Headers }
 > = async (opts) => {
+  const authSession = await auth.api.getSession({
+    headers: opts.headers,
+  });
   return {
     db,
     supabaseServer,
-    auth: await auth(),
+    auth: authSession,
     ...opts,
   };
 };
@@ -105,9 +109,10 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth.userId) {
+  if (!ctx.auth?.user?.id) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
   }
+
   return next({
     ctx: {
       auth: ctx.auth,

@@ -448,9 +448,12 @@ export const FormMessage: FC<{
         if (errors.length === 0) {
           return null;
         }
-        console.log('Errors', errors);
         return (
-          <Alert variant='destructive' color='destructive' className='mt-4'>
+          <Alert
+            variant='destructive'
+            color='destructive'
+            className='mt-4 animate-in fade-in-0'
+          >
             <AlertDescription>
               Fix all the errors before submitting the form.
             </AlertDescription>

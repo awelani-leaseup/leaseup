@@ -15,7 +15,7 @@ export default async function Dashboard() {
               <div>
                 <h1 className="text-3xl font-bold text-[#2D3436]">Dashboard</h1>
                 <p className="mt-2 text-[#7F8C8D]">
-                  Welcome back, John! Let's start managing your properties.
+                  Welcome back, John! Let&apos;s start managing your properties.
                 </p>
               </div>
               <div className="mt-4 flex space-x-3 md:mt-0">

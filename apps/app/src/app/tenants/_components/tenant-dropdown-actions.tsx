@@ -28,7 +28,7 @@ export const TenantDropdownActions = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/tenants/${tenantId}`)}>
           <Eye className="size-4" />
           View
         </DropdownMenuItem>

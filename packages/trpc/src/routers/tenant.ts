@@ -1,6 +1,11 @@
 import { nanoid } from 'nanoid';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
-import { VRemoveTenantSchema, VTenantSchema } from './tenant.types';
+import {
+  VGetTenantByIdSchema,
+  VRemoveTenantSchema,
+  VTenantSchema,
+  VGetTenantTransactionsSchema,
+} from './tenant.types';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -18,7 +23,7 @@ export const tenantRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const tenants = await ctx.db.tenant.findMany({
       where: {
-        landlordId: ctx.auth.userId ?? '',
+        landlordId: ctx.auth?.session?.userId ?? '',
       },
       orderBy: {
         createdAt: 'desc',
@@ -57,7 +62,7 @@ export const tenantRouter = createTRPCRouter({
           lastName: input.lastName,
           email: input.primaryEmail,
           phone: input.primaryPhoneNumber,
-          landlordId: ctx.auth.userId ?? '',
+          landlordId: ctx.auth?.session?.userId ?? '',
           dateOfBirth: input.dateOfBirth,
           additionalEmails: input.additionalEmails,
           additionalPhones: input.additionalPhones,
@@ -71,9 +76,44 @@ export const tenantRouter = createTRPCRouter({
               url: file.url,
               type: file.type,
               size: file.size,
-              ownerId: ctx.auth.userId ?? '',
+              ownerId: ctx.auth?.session?.userId ?? '',
             })),
           },
+        },
+      });
+      return tenant;
+    }),
+  getTenantById: protectedProcedure
+    .input(VGetTenantByIdSchema)
+    .query(async ({ ctx, input }) => {
+      const tenant = await ctx.db.tenant.findFirst({
+        where: {
+          id: input.id,
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+        include: {
+          tenantLease: {
+            include: {
+              lease: {
+                include: {
+                  unit: {
+                    include: {
+                      property: true,
+                    },
+                  },
+                  transactions: {
+                    include: {
+                      invoice: true,
+                    },
+                    orderBy: {
+                      createdAt: 'desc',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          files: true,
         },
       });
       return tenant;
@@ -84,5 +124,41 @@ export const tenantRouter = createTRPCRouter({
       await ctx.db.tenant.delete({
         where: { id: input.id },
       });
+    }),
+  getTenantTransactions: protectedProcedure
+    .input(VGetTenantTransactionsSchema)
+    .query(async ({ ctx, input }) => {
+      // Get all transactions for this tenant through their leases
+      const transactions = await ctx.db.transactions.findMany({
+        where: {
+          lease: {
+            tenantLease: {
+              some: {
+                tenantId: input.id,
+                tenant: {
+                  landlordId: ctx.auth?.session?.userId ?? '',
+                },
+              },
+            },
+          },
+        },
+        include: {
+          invoice: true,
+          lease: {
+            include: {
+              unit: {
+                include: {
+                  property: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+
+      return transactions;
     }),
 });
