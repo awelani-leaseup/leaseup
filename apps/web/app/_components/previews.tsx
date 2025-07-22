@@ -25,9 +25,11 @@ import {
 } from '@leaseup/ui/components/dropdown-menu';
 import { Button } from '@leaseup/ui/components/button';
 import {
+  AlertCircle,
   Banknote,
   BookOpen,
   Building,
+  Calendar,
   DoorOpen,
   FileText,
   Folder,
@@ -35,11 +37,13 @@ import {
   LayoutDashboard,
   MessageSquare,
   Plus,
+  ReceiptText,
   Settings,
   SquareUserRound,
 } from 'lucide-react';
 import { FC } from 'react';
 import Link from 'next/link';
+import { AlertTitle } from '@leaseup/ui/components/alert';
 
 export const Previews: FC = () => {
   return (
@@ -59,13 +63,22 @@ export const Previews: FC = () => {
             <span className='hidden sm:inline'>Invoices</span>
           </TabsTrigger>
         </TabsList>
-        <TabsContent value='dashboard'>
+        <TabsContent
+          value='dashboard'
+          className='animate-in slide-in-from-bottom-5 duration-300'
+        >
           <DashboardPreview />
         </TabsContent>
-        <TabsContent value='properties'>
+        <TabsContent
+          value='properties'
+          className='animate-in slide-in-from-bottom-5 duration-300'
+        >
           <PropertiesPreview />
         </TabsContent>
-        <TabsContent value='accounting'>
+        <TabsContent
+          value='accounting'
+          className='animate-in slide-in-from-bottom-5 duration-300'
+        >
           <AccountingPreview />
         </TabsContent>
       </Tabs>
@@ -248,7 +261,7 @@ const PreviewSidebar = ({ activeItem }: { activeItem: string }) => {
 
 const DashboardPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='dashboard' />
@@ -471,7 +484,7 @@ const DashboardPreview = () => {
 
 const PropertiesPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='properties' />
@@ -769,7 +782,7 @@ const PropertiesPreview = () => {
 
 const AccountingPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='accounting' />
@@ -814,7 +827,7 @@ const AccountingPreview = () => {
                           R 37,500
                         </p>
                       </div>
-                      <i className='fa-solid fa-receipt text-lg sm:text-2xl text-green-600'></i>
+                      <ReceiptText className='w-6 h-6 text-green-600 stroke-1' />
                     </div>
                   </div>
                   <div className='h-auto rounded-md p-2 sm:p-4 bg-orange-50 border border-orange-200'>
@@ -827,7 +840,7 @@ const AccountingPreview = () => {
                           R 12,000
                         </p>
                       </div>
-                      <i className='fa-solid fa-clock text-lg sm:text-2xl text-orange-600'></i>
+                      <AlertCircle className='w-6 h-6 text-orange-600 stroke-1' />
                     </div>
                   </div>
                   <div className='h-auto rounded-md p-2 sm:p-4 bg-red-50 border border-red-200'>
@@ -840,7 +853,7 @@ const AccountingPreview = () => {
                           R 8,500
                         </p>
                       </div>
-                      <i className='fa-solid fa-triangle-exclamation text-lg sm:text-2xl text-red-600'></i>
+                      <AlertTitle className='w-6 h-6 text-red-600 stroke-1' />
                     </div>
                   </div>
                   <div className='h-auto rounded-md p-2 sm:p-4 bg-blue-50 border border-blue-200'>
@@ -853,7 +866,7 @@ const AccountingPreview = () => {
                           3
                         </p>
                       </div>
-                      <i className='fa-solid fa-calendar text-lg sm:text-2xl text-blue-600'></i>
+                      <Calendar className='w-6 h-6 text-blue-600 stroke-1' />
                     </div>
                   </div>
                 </div>

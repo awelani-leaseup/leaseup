@@ -170,7 +170,7 @@ export const Header: FC<ComponentProps<'header'>> = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden transition-all duration-300 ease-in-out ${
+          className={`md:hidden bg-white transition-all duration-300 ease-in-out ${
             isMobileMenuOpen
               ? 'max-h-96 opacity-100 pb-6'
               : 'max-h-0 opacity-0 overflow-hidden'
