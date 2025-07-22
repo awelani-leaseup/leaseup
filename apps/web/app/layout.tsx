@@ -1,7 +1,7 @@
 import './index.css';
 
 import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 import { Header } from './_components/header';
 import { Footer } from './_components/footer';
@@ -63,9 +63,9 @@ export const metadata: Metadata = {
   },
 };
 
-const onest = DM_Sans({
+const font = Inter({
   subsets: ['latin'],
-  weight: ['400'],
+  weight: ['400', '500', '600', '700', '900'],
 });
 
 export default function RootLayout({
@@ -82,7 +82,7 @@ export default function RootLayout({
           referrerPolicy='no-referrer'
         />
       </head>
-      <body className={onest.className + ' antialiased'}>
+      <body className={font.className + ' antialiased'}>
         <Header />
         {children}
         <Footer />

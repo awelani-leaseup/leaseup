@@ -6,11 +6,11 @@ import { H3 } from '@leaseup/ui/components/typography';
 export default function Home() {
   return (
     <main>
-      <section className='bg-[#fefefe] text-[#1E293B] pt-40 sm:pt-52 min-h-[700px] flex items-center'>
+      <section className='bg-[#fefefe] text-[#1E293B] pt-20 sm:pt-52 md:min-h-[700px] flex items-center'>
         <div className='max-w-[1392px] mx-auto px-4 md:px-8 w-full'>
           <div className='flex flex-col items-center text-center gap-0 w-full'>
             <div className='max-w-3xl w-full'>
-              <h1 className='text-3xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight font-black'>
+              <h1 className='text-3xl sm:text-5xl md:text-7xl  mb-6 tracking-tight leading-tight font-black'>
                 Simplify Your
                 <span className='text-[#1ABC9C]'> Rental </span>
                 Management
