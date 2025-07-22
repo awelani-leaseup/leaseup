@@ -1,19 +1,6 @@
 import { Button } from '@leaseup/ui/components/button';
 import { Previews } from './_components/previews';
-import {
-  ArrowRight,
-  Banknote,
-  Building,
-  Calendar,
-  ChartLine,
-  FolderCheck,
-  Play,
-  Rocket,
-  Users,
-  Wrench,
-} from 'lucide-react';
-import { cn } from '../../../packages/ui/src/utils/cn';
-import Link from 'next/link';
+import { Calendar, Play, Rocket } from 'lucide-react';
 import { H3 } from '@leaseup/ui/components/typography';
 
 export default function Home() {

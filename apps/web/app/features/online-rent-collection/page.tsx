@@ -86,7 +86,7 @@ export default function OnlineRentCollection() {
             <div>
               <div className='flex items-center gap-2 mb-6'>
                 <Badge
-                  variant='outline'
+                  variant='outlined'
                   className='text-[#34495E] font-bold border-[#34495E] text-base'
                 >
                   <Sparkles className='text-[#34495E] text-xl font-bold' />
@@ -395,7 +395,7 @@ export default function OnlineRentCollection() {
                 </div>
                 <div className='flex items-center gap-2'>
                   <Badge
-                    variant='secondary'
+                    variant='outlined'
                     className='text-[#2ECC71] bg-transparent border-[#2ECC71]'
                   >
                     Bank-Level Security
