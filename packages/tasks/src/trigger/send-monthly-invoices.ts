@@ -1,10 +1,22 @@
-import { logger, schedules, task } from '@trigger.dev/sdk/v3';
+import { logger, schedules } from '@trigger.dev/sdk/v3';
 import { db } from '@leaseup/prisma/db.ts';
-import { createInvoice, createCustomer } from '@leaseup/paystack/invoice';
-import { addDays, addMonths, isAfter, isBefore, startOfDay } from 'date-fns';
-import { nanoid } from 'nanoid';
+import { addDays, isAfter, isBefore, startOfDay } from 'date-fns';
+import * as v from 'valibot';
+import { createInvoiceTask } from './invoice-send';
+import { calculateNextInvoiceDate } from '../utils/calculate-next-invoice-date';
 
-// Configuration constants
+const CreateInvoiceTaskPayload = v.object({
+  customer: v.pipe(v.string(), v.nonEmpty('Customer is required')),
+  amount: v.number(),
+  dueDate: v.date(),
+  description: v.optional(
+    v.pipe(v.string(), v.nonEmpty('Description is required'))
+  ),
+  lineItems: v.any(),
+  split_code: v.pipe(v.string(), v.nonEmpty('Split code is required')),
+  leaseId: v.optional(v.string()),
+});
+
 const CONFIG = {
   CHECK_DAYS_AHEAD: 50,
   BATCH_SIZE: 10, // Process invoices in batches to avoid overwhelming the API
@@ -152,7 +164,6 @@ export const checkUpcomingInvoicesTask = schedules.task({
         `Found ${invoicesToCreate.length} invoices to create for the next ${CONFIG.CHECK_DAYS_AHEAD} days`
       );
 
-      // Process invoices in batches to avoid overwhelming the API
       for (let i = 0; i < invoicesToCreate.length; i += CONFIG.BATCH_SIZE) {
         const batch = invoicesToCreate.slice(i, i + CONFIG.BATCH_SIZE);
 
@@ -160,14 +171,19 @@ export const checkUpcomingInvoicesTask = schedules.task({
           `Processing batch ${Math.floor(i / CONFIG.BATCH_SIZE) + 1} of ${Math.ceil(invoicesToCreate.length / CONFIG.BATCH_SIZE)}`
         );
 
-        // Trigger individual invoice creation tasks for each invoice in the batch
         const batchPromises = batch.map(async (invoiceData) => {
           return await createInvoiceTask.trigger({
-            invoiceData,
+            customer: invoiceData.tenants?.[0]?.paystackCustomerId ?? '',
+            amount: invoiceData.rent,
+            dueDate: invoiceData.nextInvoiceDate,
+            description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
+            lineItems: [],
+            split_code: '',
+            leaseId: invoiceData.leaseId,
           });
         });
 
-        const batchResults = await Promise.allSettled(batchPromises);
+        await Promise.allSettled(batchPromises);
 
         // Add delay between batches to be respectful to the API
         if (i + CONFIG.BATCH_SIZE < invoicesToCreate.length) {
@@ -189,136 +205,3 @@ export const checkUpcomingInvoicesTask = schedules.task({
     }
   },
 });
-
-// Separate task for creating individual invoices with built-in retry logic
-export const createInvoiceTask = task({
-  id: 'create-invoice',
-  maxDuration: 60, // 1 minute
-  retry: {
-    maxAttempts: 3,
-    factor: 2,
-    minTimeoutInMs: 1000,
-    maxTimeoutInMs: 10000,
-    randomize: true,
-  },
-  run: async (payload: { invoiceData: any }, { ctx }: { ctx: any }) => {
-    const { invoiceData } = payload;
-
-    logger.log('Creating invoice with built-in retry logic', {
-      leaseId: invoiceData.leaseId,
-      ctx,
-    });
-
-    try {
-      // Use the first tenant's Paystack customer ID, or create one if it doesn't exist
-      const primaryTenant = invoiceData.tenants[0];
-      if (!primaryTenant) {
-        logger.warn('No tenants found for lease', {
-          leaseId: invoiceData.leaseId,
-        });
-        throw new Error('No tenants found for lease');
-      }
-
-      let customerId = primaryTenant.paystackCustomerId;
-
-      if (!customerId) {
-        logger.warn('No Paystack customer ID found for tenant', {
-          tenantId: primaryTenant.id,
-          tenantName: primaryTenant.name,
-        });
-
-        const customer = await createCustomer({
-          email: primaryTenant.email,
-          firstName: primaryTenant.firstName,
-          lastName: primaryTenant.lastName,
-        });
-
-        customerId = 'CUS_8jb0ozhu6wpknbk';
-      }
-
-      const resp: any = await createInvoice({
-        customer: customerId,
-        amount: Math.round(invoiceData.rent * 100), // convert to cents
-        currency: 'ZAR',
-        // @ts-ignore
-        dueDate: invoiceData.nextInvoiceDate,
-        description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
-      });
-
-      logger.log('Created invoice via Paystack', { resp });
-
-      // Check if Paystack request was successful
-      if (!resp.status || resp.status !== 'success') {
-        throw new Error(
-          `Paystack API error: ${resp.message || 'Unknown error'}`
-        );
-      }
-
-      const newInvoice = await db.invoice.create({
-        data: {
-          id: nanoid(),
-          leaseId: invoiceData.leaseId,
-          description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
-          dueAmount: invoiceData.rent,
-          dueDate: invoiceData.nextInvoiceDate,
-          category: 'RENT',
-          status: 'PENDING',
-          paystackId: resp?.data?.request_code,
-        },
-      });
-
-      logger.log('Successfully created invoice', {
-        invoiceId: newInvoice.id,
-        leaseId: invoiceData.leaseId,
-        amount: newInvoice.dueAmount,
-        currency: invoiceData.currency,
-        unit: invoiceData.unitName,
-        property: invoiceData.propertyName,
-        tenants: invoiceData.tenants,
-      });
-
-      return {
-        id: newInvoice.id,
-        leaseId: invoiceData.leaseId,
-        amount: newInvoice.dueAmount,
-        currency: invoiceData.currency,
-      };
-    } catch (error) {
-      logger.error('Failed to create invoice', {
-        leaseId: invoiceData.leaseId,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      throw error; // Re-throw to trigger retry
-    } finally {
-      await db.$disconnect();
-    }
-  },
-});
-
-/**
- * Calculate the next invoice due date based on lease start date and cycle
- */
-function calculateNextInvoiceDate(
-  startDate: Date,
-  invoiceCycle: string,
-  leaseType: string
-): Date {
-  const now = startOfDay(new Date());
-  const start = startOfDay(new Date(startDate));
-
-  // For monthly cycles
-  if (invoiceCycle === 'MONTHLY') {
-    let nextDate = new Date(start);
-
-    // Keep adding months until we find a date that's in the future
-    while (isBefore(nextDate, now) || nextDate.getTime() === now.getTime()) {
-      nextDate = addMonths(nextDate, 1);
-    }
-
-    return nextDate;
-  }
-
-  // For other cycles, you can add more logic here
-  // For now, return the start date if it's in the future, otherwise return today
-  return isAfter(start, now) ? start : now;
-}

@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { PrismaClient } from '@leaseup/prisma/client/index.js';
+import { db } from '@leaseup/prisma/db.ts';
 import { createAuthMiddleware } from 'better-auth/api';
 import { novu } from '@leaseup/novu/client.ts';
 
@@ -47,7 +48,11 @@ export const auth = betterAuth({
     },
   },
   hooks: {
-    after: createAuthMiddleware(async (ctx) => {}),
+    after: createAuthMiddleware(async (ctx) => {
+      // if (ctx.context.session?.user.onboardingCompleted) {
+      //   ctx.redirect('/onboarding');
+      // }
+    }),
   },
   databaseHooks: {
     user: {

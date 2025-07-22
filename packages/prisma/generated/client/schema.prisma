@@ -14,6 +14,7 @@ model User {
   name                   String
   email                  String
   emailVerified          Boolean
+  onboardingCompleted    Boolean    @default(false)
   image                  String?
   idNumber               String?
   addressLine1           String?
@@ -160,24 +161,24 @@ model Lease {
 
 model Invoice {
   id           String          @id @default(uuid())
-  leaseId      String
+  leaseId      String?
   description  String
   lineItems    Json?
   dueAmount    Float
   dueDate      DateTime?       @db.Date
-  paystackId   String?
+  paystackId   String
   category     InvoiceCategory
   status       InvoiceStatus
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   File         File[]
-  lease        Lease           @relation(fields: [leaseId], references: [id])
+  lease        Lease?          @relation(fields: [leaseId], references: [id])
   transactions Transactions[]
 }
 
 model Transactions {
   id          String   @id @default(uuid())
-  leaseId     String
+  leaseId     String?
   description String
   amountPaid  Float
   referenceId String?
@@ -185,7 +186,7 @@ model Transactions {
   updatedAt   DateTime @updatedAt
   invoiceId   String?
   invoice     Invoice? @relation(fields: [invoiceId], references: [id])
-  lease       Lease    @relation(fields: [leaseId], references: [id])
+  lease       Lease?   @relation(fields: [leaseId], references: [id])
 }
 
 model TenantLease {
@@ -249,8 +250,10 @@ enum PropertyStatus {
 }
 
 enum InvoiceStatus {
+  DRAFT
   PENDING
   PAID
+  PARTIALLY_PAID
   CANCELLED
   OVERDUE
 }

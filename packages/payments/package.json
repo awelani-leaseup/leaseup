@@ -1,7 +1,7 @@
 {
   "name": "@leaseup/paystack",
   "version": "1.0.0",
-  "description": "",
+  "type": "module",
   "exports": {
     "./*": "./src/*.ts"
   },
@@ -13,9 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "@paystack/paystack-sdk": "1.2.1-beta.1",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "openapi-fetch": "^0.14.0"
   },
   "devDependencies": {
-    "@leaseup/typescript-config": "workspace:*"
+    "@leaseup/typescript-config": "workspace:*",
+    "openapi-typescript": "^7.8.0"
   }
 }

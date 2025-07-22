@@ -27,6 +27,8 @@ import { nanoid } from "nanoid";
 import { useSupabase } from "@/hooks/use-supabase";
 import { authClient } from "@/utils/auth/client";
 
+const BUCKET_NAME = "file-storage";
+
 export default function CreateTenantPage() {
   const supabase = useSupabase();
   const { data: session } = authClient.useSession();
@@ -57,7 +59,7 @@ export default function CreateTenantPage() {
         const uploadedFiles = await Promise.all(
           value.files.map((file) => {
             return supabase.storage
-              .from("file-storage")
+              .from(BUCKET_NAME)
               .upload(`${user?.id}/${nanoid(21)}`, file)
               .then((res) => {
                 if (res.error) return;
@@ -85,7 +87,7 @@ export default function CreateTenantPage() {
             onError: async () => {
               if (files.length > 0) {
                 await supabase.storage
-                  .from("file-storage")
+                  .from(BUCKET_NAME)
                   .remove(
                     files
                       .filter((file) => file !== undefined)

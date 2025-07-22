@@ -6,6 +6,8 @@ import {
   VTenantSchema,
   VGetTenantTransactionsSchema,
 } from './tenant.types';
+import { tasks } from '@trigger.dev/sdk/v3';
+import { TASK_EVENTS } from '@leaseup/tasks/tasks';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -125,6 +127,11 @@ export const tenantRouter = createTRPCRouter({
         where: { id: input.id },
       });
     }),
+  completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+    await tasks.trigger('landlord-onboard-successful', {
+      userId: ctx.auth?.session?.userId ?? '',
+    });
+  }),
   getTenantTransactions: protectedProcedure
     .input(VGetTenantTransactionsSchema)
     .query(async ({ ctx, input }) => {

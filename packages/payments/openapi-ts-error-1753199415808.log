@@ -1,0 +1,29 @@
+[2025-07-22T15:50:15.808Z] Error: Error parsing https://github.com/PaystackOSS/openapi/blob/main/sdk/paystack.yaml: end of the stream or a document separator is expected (213:75)
+
+ 210 |  ... 
+ 211 |  ... 
+ 212 |  ... 
+ 213 |  ... e-responsive" style="word-wrap: break-word;">
+------------------------------------------^
+ 214 |  ... nv-production page-responsive" style="word-wrap: break-word;">
+ 215 |  ... 
+Stack:
+ParserError: Error parsing https://github.com/PaystackOSS/openapi/blob/main/sdk/paystack.yaml: end of the stream or a document separator is expected (213:75)
+
+ 210 |  ... 
+ 211 |  ... 
+ 212 |  ... 
+ 213 |  ... e-responsive" style="word-wrap: break-word;">
+------------------------------------------^
+ 214 |  ... nv-production page-responsive" style="word-wrap: break-word;">
+ 215 |  ... 
+    at Object.handler (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/parsers/yaml.js:24:19)
+    at runNextPlugin (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/util/plugins.js:24:45)
+    at /Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/util/plugins.js:43:9
+    at new Promise (<anonymous>)
+    at Object.run (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/util/plugins.js:16:12)
+    at parseFile (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/parse.js:72:30)
+    at $RefParser.parse (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/index.js:200:68)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async $RefParser.bundle (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/json-schema-ref-parser/dist/lib/index.js:122:9)
+    at async rm (/Users/awelanimurovhib1sa/.npm/_npx/a3521d5d8f143c4a/node_modules/@hey-api/openapi-ts/dist/index.cjs:42:1892)

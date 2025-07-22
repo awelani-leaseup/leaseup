@@ -125,6 +125,7 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
+  onboardingCompleted: 'onboardingCompleted',
   image: 'image',
   idNumber: 'idNumber',
   addressLine1: 'addressLine1',
@@ -366,8 +367,10 @@ exports.InvoiceCategory = exports.$Enums.InvoiceCategory = {
 };
 
 exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
+  DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   PAID: 'PAID',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
   CANCELLED: 'CANCELLED',
   OVERDUE: 'OVERDUE'
 };

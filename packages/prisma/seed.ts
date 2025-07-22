@@ -336,11 +336,14 @@ async function main() {
         let status: InvoiceStatus;
 
         if (dueDate < now) {
-          // Past due invoices - 80% chance of being paid, 20% overdue
-          if (faker.datatype.boolean(0.8)) {
-            status = InvoiceStatus.PAID;
+          // Past due invoices - distribute across different statuses
+          const randomValue = faker.number.float({ min: 0, max: 1 });
+          if (randomValue < 0.6) {
+            status = InvoiceStatus.PAID; // 60% chance of being paid
+          } else if (randomValue < 0.8) {
+            status = InvoiceStatus.OVERDUE; // 20% chance of being overdue
           } else {
-            status = InvoiceStatus.OVERDUE;
+            status = InvoiceStatus.PENDING; // 20% chance of still being pending
           }
         } else {
           // Future invoices are pending
@@ -356,6 +359,7 @@ async function main() {
             createdAt: invoiceDate,
             updatedAt: invoiceDate,
             description: `Monthly rent for ${invoiceDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
+            paystackId: faker.string.uuid(),
             category: InvoiceCategory.RENT,
           },
         });
@@ -389,7 +393,7 @@ async function main() {
     // Create a transaction for each paid invoice
     const transactionPromise = db.transactions.create({
       data: {
-        leaseId: invoice.leaseId,
+        leaseId: invoice.leaseId ?? undefined,
         invoiceId: invoice.id,
         description: `Payment for ${invoice.description}`,
         amountPaid: invoice.dueAmount,

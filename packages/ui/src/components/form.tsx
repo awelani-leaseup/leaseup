@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Command,
   CommandEmpty,
@@ -38,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
+import { Switch } from './switch';
 import { Textarea } from './text-area';
 import { format } from 'date-fns';
 import { useAutocompleteSuggestions } from '../hooks';
@@ -54,6 +57,33 @@ export const CheckboxField: FC<{ label: string }> = ({ label }) => {
       <Checkbox name={name} checked={state.value} onBlur={handleBlur} />
       <Label>{label}</Label>
     </label>
+  );
+};
+
+export const SwitchField: FC<{
+  label: string;
+  description?: string;
+  asterisk?: boolean;
+}> = ({ label, description, asterisk }) => {
+  const { handleChange, handleBlur, state, name } = useFieldContext<boolean>();
+
+  return (
+    <div className='flex flex-col gap-1'>
+      <div className='flex items-center justify-between'>
+        <FieldLabel>
+          {asterisk && <span className='text-danger ml-1'>*</span>}
+          {label}
+        </FieldLabel>
+        <Switch
+          name={name}
+          checked={state.value}
+          onCheckedChange={handleChange}
+          onBlur={handleBlur}
+        />
+      </div>
+      <FieldMessage />
+      {description ? <FieldDescription>{description}</FieldDescription> : null}
+    </div>
   );
 };
 
@@ -81,10 +111,8 @@ export const TextField: FC<
   return (
     <label className='relative flex w-full flex-col gap-1'>
       <FieldLabel>
-        {asterisk ? (
-          <Asterisk className='text-rose-600 absolute -top-0 -left-3 size-3 stroke-2' />
-        ) : null}
         {label}
+        {asterisk && <span className='text-danger ml-1'>*</span>}
       </FieldLabel>
       {props.type === 'tel' ? (
         <PhoneInput
@@ -141,9 +169,7 @@ export const TextAreaField: FC<
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
-        {asterisk ? (
-          <Asterisk className='text-rose-600 absolute -top-0 -left-3 size-2 stroke-2' />
-        ) : null}
+        {asterisk && <span className='text-danger ml-1'>*</span>}
         {label}
       </FieldLabel>
       <Textarea
@@ -190,9 +216,7 @@ export const SelectField: FC<{
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
-        {asterisk ? (
-          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
-        ) : null}
+        {asterisk && <span className='text-danger ml-1'>*</span>}
         {label}
       </FieldLabel>
       <Select
@@ -752,6 +776,7 @@ export const { useAppForm, withForm } = createFormHook({
     TextAreaField,
     ComboboxField,
     AddressField,
+    SwitchField,
   },
   formComponents: {
     SubmitFormButton,

@@ -447,10 +447,12 @@ export default function Invoices() {
                 formatCurrency={formatCurrency}
                 getStatusBadge={getStatusBadge}
               />
-              <Button>
-                <Plus className="size-4" />
-                Create Invoice
-              </Button>
+              <Link href="/invoices/create">
+                <Button>
+                  <Plus className="size-4" />
+                  Create Invoice
+                </Button>
+              </Link>
             </div>
           </div>
         </CardHeader>
@@ -645,19 +647,6 @@ export default function Invoices() {
 
               {/* Pagination */}
               <div className="flex items-center justify-between px-6 py-4">
-                <div className="text-sm text-[#7F8C8D]">
-                  Showing{" "}
-                  {table.getState().pagination.pageIndex *
-                    table.getState().pagination.pageSize +
-                    1}{" "}
-                  to{" "}
-                  {Math.min(
-                    (table.getState().pagination.pageIndex + 1) *
-                      table.getState().pagination.pageSize,
-                    invoicesData.total,
-                  )}{" "}
-                  of {invoicesData.total} invoices
-                </div>
                 <Pagination>
                   <PaginationContent className="flex items-center gap-2">
                     <PaginationItem>

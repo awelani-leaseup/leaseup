@@ -102,65 +102,7 @@ export const sendLatePaymentRemindersTask = schedules.task({
       // Send notifications for each overdue invoice
       for (const invoice of overdueInvoices) {
         const lease = invoice.lease;
-        const tenants = lease.tenantLease;
-
-        for (const tenantLease of tenants) {
-          const tenant = tenantLease.tenant;
-          const propertyName = lease.unit?.property?.name || 'Unknown Property';
-          const unitName = lease.unit?.name || 'Unknown Unit';
-
-          try {
-            const smsSent = await sendSmsToTenant(
-              tenant.phone,
-              `${tenant.firstName} ${tenant.lastName}`,
-              {
-                amount: invoice.dueAmount,
-                dueDate: invoice.createdAt,
-                propertyName,
-                unitName,
-              }
-            );
-
-            notificationsSent.push({
-              invoiceId: invoice.id,
-              tenantId: tenant.id,
-              tenantName: `${tenant.firstName} ${tenant.lastName}`,
-              phoneNumber: tenant.phone,
-              amount: invoice.dueAmount,
-              dueDate: invoice.createdAt,
-              propertyName,
-              unitName,
-              smsSent,
-            });
-
-            logger.log('Processed overdue invoice notification', {
-              invoiceId: invoice.id,
-              tenantId: tenant.id,
-              tenantName: `${tenant.firstName} ${tenant.lastName}`,
-              phoneNumber: tenant.phone,
-              amount: invoice.dueAmount,
-              smsSent,
-            });
-          } catch (error) {
-            logger.error('Failed to process overdue invoice notification', {
-              invoiceId: invoice.id,
-              tenantId: tenant.id,
-              error: error instanceof Error ? error.message : 'Unknown error',
-            });
-
-            notificationsSent.push({
-              invoiceId: invoice.id,
-              tenantId: tenant.id,
-              tenantName: `${tenant.firstName} ${tenant.lastName}`,
-              phoneNumber: tenant.phone,
-              amount: invoice.dueAmount,
-              dueDate: invoice.createdAt,
-              propertyName,
-              unitName,
-              smsSent: false,
-            });
-          }
-        }
+        const tenants = lease?.tenantLease;
       }
 
       // Update invoice status to OVERDUE for invoices that are overdue

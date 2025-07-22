@@ -1,7 +1,11 @@
 {
-  "name": "tasks",
+  "name": "@leaseup/tasks",
   "version": "1.0.0",
   "description": "",
+  "exports": {
+    "./tasks": "./src/tasks.ts",
+    "./trigger": "./src/trigger/index.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "trigger dev",
@@ -16,7 +20,8 @@
     "@prisma/client": "^5.0.0",
     "@trigger.dev/sdk": "^3.3.17",
     "date-fns": "^4.1.0",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.5",
+    "valibot": "^1.1.0"
   },
   "devDependencies": {
     "@leaseup/typescript-config": "workspace:*",

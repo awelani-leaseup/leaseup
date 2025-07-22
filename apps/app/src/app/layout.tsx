@@ -1,7 +1,7 @@
 "use client";
 
 import "@leaseup/ui/global.css";
-
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Inter } from "next/font/google";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Toaster } from "react-hot-toast";
@@ -35,6 +35,7 @@ import {
   Folder,
   KeyRound,
   LayoutDashboard,
+  Loader2,
   MessageSquare,
   Plus,
   Settings,
@@ -87,10 +88,10 @@ export default function RootLayout({
           }}
           className={`${font.className} antialiased`}
         >
-          <div className="flex min-h-screen items-center justify-center">
-            <div className="text-center">
-              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-              <p className="text-gray-600">Loading...</p>
+          <div className="bg grid h-screen place-content-center">
+            <div className="flex flex-col items-center justify-center">
+              <Loader2 className="size-6 animate-spin" />
+              <p className="tracking-tight">Loading</p>
             </div>
           </div>
         </body>
@@ -161,6 +162,9 @@ export default function RootLayout({
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                               <Link href="/tenants/create">Tenant</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Link href="/invoices/create">Invoice</Link>
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -297,7 +301,7 @@ export default function RootLayout({
                 libraries={["places"]}
               >
                 <Toaster position="top-right" />
-                {children}
+                <NuqsAdapter>{children}</NuqsAdapter>
               </APIProvider>
             </TRPCReactProvider>
           </main>
