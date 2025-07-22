@@ -21,7 +21,10 @@ const VLoginSchema = v.object({
 });
 
 export default function SignIn() {
-  const [errors, setErrors] = useState<string | undefined>(undefined);
+  const [status, setStatus] = useState<"loading" | "error" | "success">(
+    "loading",
+  );
+  const [error, setError] = useState<string | undefined>(undefined);
   const { data: session } = authClient.useSession();
   const router = useRouter();
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function SignIn() {
   }, [session]);
 
   const handleGoogleSignIn = async () => {
-    setErrors(undefined);
+    setStatus("loading");
     await authClient.signIn.social(
       {
         provider: "google",
@@ -39,7 +42,10 @@ export default function SignIn() {
       },
       {
         onError: (error) => {
-          setErrors(error.error.message);
+          setStatus("error");
+        },
+        onRequest: () => {
+          setStatus("loading");
         },
       },
     );
@@ -54,7 +60,7 @@ export default function SignIn() {
       onSubmit: VLoginSchema,
     },
     onSubmit: async ({ value }) => {
-      setErrors(undefined);
+      setStatus("loading");
       await authClient.signIn.email(
         {
           email: value.email,
@@ -62,7 +68,14 @@ export default function SignIn() {
         },
         {
           onError: (error) => {
-            setErrors(error.error.message);
+            setStatus("error");
+            setError(error.error.message);
+          },
+          onRequest: () => {
+            setStatus("loading");
+          },
+          onSuccess: () => {
+            setStatus("success");
           },
         },
       );
@@ -108,6 +121,7 @@ export default function SignIn() {
                       type="button"
                       className="w-full"
                       onClick={() => form.handleSubmit()}
+                      isLoading={status === "loading"}
                     >
                       Login
                     </Button>
@@ -122,7 +136,7 @@ export default function SignIn() {
                     </Button>
                   </div>
                 </div>
-                <form.FormMessage>{errors}</form.FormMessage>
+                <form.FormMessage>{error}</form.FormMessage>
                 <div className="mt-4 text-center text-sm">
                   Don&apos;t have an account?{" "}
                   <Link
