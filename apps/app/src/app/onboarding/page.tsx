@@ -30,23 +30,30 @@ import {
 import { Button } from "@leaseup/ui/components/button";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const router = useRouter();
 
+  // tRPC mutation for completing onboarding
+  const completeOnboardingMutation =
+    api.onboarding.completeOnboarding.useMutation({
+      onSuccess: (data) => {
+        console.log("Onboarding completed successfully:", data);
+        router.push("/dashboard");
+      },
+      onError: (error) => {
+        console.error("Error completing onboarding:", error);
+        // You could show a toast notification here
+      },
+    });
+
   const form = useAppForm({
     ...onboardingFormOptions,
     onSubmit: async ({ value }: { value: OnboardingFormData }) => {
       try {
-        // Here you would submit the form data to your API
-        console.log("Submitting onboarding data:", value);
-
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // Redirect to dashboard or success page
-        router.push("/dashboard");
+        await completeOnboardingMutation.mutateAsync(value);
       } catch (error) {
         console.error("Error submitting form:", error);
       }
@@ -54,7 +61,9 @@ export default function OnboardingPage() {
   });
 
   // Get form submission state
-  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
+  const isSubmitting =
+    useStore(form.store, (state) => state.isSubmitting) ||
+    completeOnboardingMutation.isPending;
 
   // Navigation handlers
   const handleNext = () => {

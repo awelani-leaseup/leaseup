@@ -10,19 +10,26 @@ datasource db {
 }
 
 model User {
-  id                     String     @id
-  name                   String
-  email                  String
-  emailVerified          Boolean
-  onboardingCompleted    Boolean    @default(false)
-  image                  String?
-  idNumber               String?
-  addressLine1           String?
-  addressLine2           String?
-  city                   String?
-  state                  String?
-  zip                    String?
-  country                String?
+  id                  String  @id
+  name                String
+  email               String
+  emailVerified       Boolean
+  onboardingCompleted Boolean @default(false)
+  image               String?
+  idNumber            String?
+
+  businessName       String?
+  numberOfProperties Int?
+  numberOfUnits      Int?
+  phone              String?
+
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  zip          String?
+  countryCode  String? @default("ZA")
+
   paystackSubscriptionId String?
   paystackSubAccountId   String?
   paystackSplitGroupId   String?

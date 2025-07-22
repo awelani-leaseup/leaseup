@@ -595,8 +595,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.9.0
-   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+   * Prisma Client JS version: 6.12.0
+   * Query Engine version: 8047c96bbd92db98a2abc7c9323ce77c02c89dbc
    */
   export type PrismaVersion = {
     client: string
@@ -2477,8 +2477,20 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    numberOfProperties: number | null
+    numberOfUnits: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    numberOfProperties: number | null
+    numberOfUnits: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2489,12 +2501,16 @@ export namespace Prisma {
     onboardingCompleted: boolean | null
     image: string | null
     idNumber: string | null
+    businessName: string | null
+    numberOfProperties: number | null
+    numberOfUnits: number | null
+    phone: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
     state: string | null
     zip: string | null
-    country: string | null
+    countryCode: string | null
     paystackSubscriptionId: string | null
     paystackSubAccountId: string | null
     paystackSplitGroupId: string | null
@@ -2510,12 +2526,16 @@ export namespace Prisma {
     onboardingCompleted: boolean | null
     image: string | null
     idNumber: string | null
+    businessName: string | null
+    numberOfProperties: number | null
+    numberOfUnits: number | null
+    phone: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
     state: string | null
     zip: string | null
-    country: string | null
+    countryCode: string | null
     paystackSubscriptionId: string | null
     paystackSubAccountId: string | null
     paystackSplitGroupId: string | null
@@ -2531,12 +2551,16 @@ export namespace Prisma {
     onboardingCompleted: number
     image: number
     idNumber: number
+    businessName: number
+    numberOfProperties: number
+    numberOfUnits: number
+    phone: number
     addressLine1: number
     addressLine2: number
     city: number
     state: number
     zip: number
-    country: number
+    countryCode: number
     paystackSubscriptionId: number
     paystackSubAccountId: number
     paystackSplitGroupId: number
@@ -2546,6 +2570,16 @@ export namespace Prisma {
   }
 
 
+  export type UserAvgAggregateInputType = {
+    numberOfProperties?: true
+    numberOfUnits?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    numberOfProperties?: true
+    numberOfUnits?: true
+  }
+
   export type UserMinAggregateInputType = {
     id?: true
     name?: true
@@ -2554,12 +2588,16 @@ export namespace Prisma {
     onboardingCompleted?: true
     image?: true
     idNumber?: true
+    businessName?: true
+    numberOfProperties?: true
+    numberOfUnits?: true
+    phone?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
     state?: true
     zip?: true
-    country?: true
+    countryCode?: true
     paystackSubscriptionId?: true
     paystackSubAccountId?: true
     paystackSplitGroupId?: true
@@ -2575,12 +2613,16 @@ export namespace Prisma {
     onboardingCompleted?: true
     image?: true
     idNumber?: true
+    businessName?: true
+    numberOfProperties?: true
+    numberOfUnits?: true
+    phone?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
     state?: true
     zip?: true
-    country?: true
+    countryCode?: true
     paystackSubscriptionId?: true
     paystackSubAccountId?: true
     paystackSplitGroupId?: true
@@ -2596,12 +2638,16 @@ export namespace Prisma {
     onboardingCompleted?: true
     image?: true
     idNumber?: true
+    businessName?: true
+    numberOfProperties?: true
+    numberOfUnits?: true
+    phone?: true
     addressLine1?: true
     addressLine2?: true
     city?: true
     state?: true
     zip?: true
-    country?: true
+    countryCode?: true
     paystackSubscriptionId?: true
     paystackSubAccountId?: true
     paystackSplitGroupId?: true
@@ -2648,6 +2694,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -2678,6 +2736,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -2690,18 +2750,24 @@ export namespace Prisma {
     onboardingCompleted: boolean
     image: string | null
     idNumber: string | null
+    businessName: string | null
+    numberOfProperties: number | null
+    numberOfUnits: number | null
+    phone: string | null
     addressLine1: string | null
     addressLine2: string | null
     city: string | null
     state: string | null
     zip: string | null
-    country: string | null
+    countryCode: string | null
     paystackSubscriptionId: string | null
     paystackSubAccountId: string | null
     paystackSplitGroupId: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -2728,12 +2794,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: boolean
     idNumber?: boolean
+    businessName?: boolean
+    numberOfProperties?: boolean
+    numberOfUnits?: boolean
+    phone?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
     state?: boolean
     zip?: boolean
-    country?: boolean
+    countryCode?: boolean
     paystackSubscriptionId?: boolean
     paystackSubAccountId?: boolean
     paystackSplitGroupId?: boolean
@@ -2754,12 +2824,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: boolean
     idNumber?: boolean
+    businessName?: boolean
+    numberOfProperties?: boolean
+    numberOfUnits?: boolean
+    phone?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
     state?: boolean
     zip?: boolean
-    country?: boolean
+    countryCode?: boolean
     paystackSubscriptionId?: boolean
     paystackSubAccountId?: boolean
     paystackSplitGroupId?: boolean
@@ -2775,12 +2849,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: boolean
     idNumber?: boolean
+    businessName?: boolean
+    numberOfProperties?: boolean
+    numberOfUnits?: boolean
+    phone?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
     state?: boolean
     zip?: boolean
-    country?: boolean
+    countryCode?: boolean
     paystackSubscriptionId?: boolean
     paystackSubAccountId?: boolean
     paystackSplitGroupId?: boolean
@@ -2796,12 +2874,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: boolean
     idNumber?: boolean
+    businessName?: boolean
+    numberOfProperties?: boolean
+    numberOfUnits?: boolean
+    phone?: boolean
     addressLine1?: boolean
     addressLine2?: boolean
     city?: boolean
     state?: boolean
     zip?: boolean
-    country?: boolean
+    countryCode?: boolean
     paystackSubscriptionId?: boolean
     paystackSubAccountId?: boolean
     paystackSplitGroupId?: boolean
@@ -2809,7 +2891,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "onboardingCompleted" | "image" | "idNumber" | "addressLine1" | "addressLine2" | "city" | "state" | "zip" | "country" | "paystackSubscriptionId" | "paystackSubAccountId" | "paystackSplitGroupId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "onboardingCompleted" | "image" | "idNumber" | "businessName" | "numberOfProperties" | "numberOfUnits" | "phone" | "addressLine1" | "addressLine2" | "city" | "state" | "zip" | "countryCode" | "paystackSubscriptionId" | "paystackSubAccountId" | "paystackSplitGroupId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     accounts?: boolean | User$accountsArgs<ExtArgs>
@@ -2836,12 +2918,16 @@ export namespace Prisma {
       onboardingCompleted: boolean
       image: string | null
       idNumber: string | null
+      businessName: string | null
+      numberOfProperties: number | null
+      numberOfUnits: number | null
+      phone: string | null
       addressLine1: string | null
       addressLine2: string | null
       city: string | null
       state: string | null
       zip: string | null
-      country: string | null
+      countryCode: string | null
       paystackSubscriptionId: string | null
       paystackSubAccountId: string | null
       paystackSplitGroupId: string | null
@@ -3281,12 +3367,16 @@ export namespace Prisma {
     readonly onboardingCompleted: FieldRef<"User", 'Boolean'>
     readonly image: FieldRef<"User", 'String'>
     readonly idNumber: FieldRef<"User", 'String'>
+    readonly businessName: FieldRef<"User", 'String'>
+    readonly numberOfProperties: FieldRef<"User", 'Int'>
+    readonly numberOfUnits: FieldRef<"User", 'Int'>
+    readonly phone: FieldRef<"User", 'String'>
     readonly addressLine1: FieldRef<"User", 'String'>
     readonly addressLine2: FieldRef<"User", 'String'>
     readonly city: FieldRef<"User", 'String'>
     readonly state: FieldRef<"User", 'String'>
     readonly zip: FieldRef<"User", 'String'>
-    readonly country: FieldRef<"User", 'String'>
+    readonly countryCode: FieldRef<"User", 'String'>
     readonly paystackSubscriptionId: FieldRef<"User", 'String'>
     readonly paystackSubAccountId: FieldRef<"User", 'String'>
     readonly paystackSplitGroupId: FieldRef<"User", 'String'>
@@ -18056,12 +18146,16 @@ export namespace Prisma {
     onboardingCompleted: 'onboardingCompleted',
     image: 'image',
     idNumber: 'idNumber',
+    businessName: 'businessName',
+    numberOfProperties: 'numberOfProperties',
+    numberOfUnits: 'numberOfUnits',
+    phone: 'phone',
     addressLine1: 'addressLine1',
     addressLine2: 'addressLine2',
     city: 'city',
     state: 'state',
     zip: 'zip',
-    country: 'country',
+    countryCode: 'countryCode',
     paystackSubscriptionId: 'paystackSubscriptionId',
     paystackSubAccountId: 'paystackSubAccountId',
     paystackSplitGroupId: 'paystackSplitGroupId',
@@ -18338,6 +18432,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -18404,20 +18512,6 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -18533,12 +18627,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     idNumber?: StringNullableFilter<"User"> | string | null
+    businessName?: StringNullableFilter<"User"> | string | null
+    numberOfProperties?: IntNullableFilter<"User"> | number | null
+    numberOfUnits?: IntNullableFilter<"User"> | number | null
+    phone?: StringNullableFilter<"User"> | string | null
     addressLine1?: StringNullableFilter<"User"> | string | null
     addressLine2?: StringNullableFilter<"User"> | string | null
     city?: StringNullableFilter<"User"> | string | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
-    country?: StringNullableFilter<"User"> | string | null
+    countryCode?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
@@ -18558,12 +18656,16 @@ export namespace Prisma {
     onboardingCompleted?: SortOrder
     image?: SortOrderInput | SortOrder
     idNumber?: SortOrderInput | SortOrder
+    businessName?: SortOrderInput | SortOrder
+    numberOfProperties?: SortOrderInput | SortOrder
+    numberOfUnits?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
     addressLine1?: SortOrderInput | SortOrder
     addressLine2?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
+    countryCode?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
     paystackSplitGroupId?: SortOrderInput | SortOrder
@@ -18586,12 +18688,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     idNumber?: StringNullableFilter<"User"> | string | null
+    businessName?: StringNullableFilter<"User"> | string | null
+    numberOfProperties?: IntNullableFilter<"User"> | number | null
+    numberOfUnits?: IntNullableFilter<"User"> | number | null
+    phone?: StringNullableFilter<"User"> | string | null
     addressLine1?: StringNullableFilter<"User"> | string | null
     addressLine2?: StringNullableFilter<"User"> | string | null
     city?: StringNullableFilter<"User"> | string | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
-    country?: StringNullableFilter<"User"> | string | null
+    countryCode?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
@@ -18611,20 +18717,26 @@ export namespace Prisma {
     onboardingCompleted?: SortOrder
     image?: SortOrderInput | SortOrder
     idNumber?: SortOrderInput | SortOrder
+    businessName?: SortOrderInput | SortOrder
+    numberOfProperties?: SortOrderInput | SortOrder
+    numberOfUnits?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
     addressLine1?: SortOrderInput | SortOrder
     addressLine2?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
+    countryCode?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
     paystackSplitGroupId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -18638,12 +18750,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolWithAggregatesFilter<"User"> | boolean
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     idNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
+    businessName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    numberOfProperties?: IntNullableWithAggregatesFilter<"User"> | number | null
+    numberOfUnits?: IntNullableWithAggregatesFilter<"User"> | number | null
+    phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     addressLine1?: StringNullableWithAggregatesFilter<"User"> | string | null
     addressLine2?: StringNullableWithAggregatesFilter<"User"> | string | null
     city?: StringNullableWithAggregatesFilter<"User"> | string | null
     state?: StringNullableWithAggregatesFilter<"User"> | string | null
     zip?: StringNullableWithAggregatesFilter<"User"> | string | null
-    country?: StringNullableWithAggregatesFilter<"User"> | string | null
+    countryCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -19713,12 +19829,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -19738,12 +19858,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -19763,12 +19887,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19788,12 +19916,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19813,12 +19945,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -19834,12 +19970,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19855,12 +19995,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21072,6 +21216,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -21136,17 +21291,26 @@ export namespace Prisma {
     onboardingCompleted?: SortOrder
     image?: SortOrder
     idNumber?: SortOrder
+    businessName?: SortOrder
+    numberOfProperties?: SortOrder
+    numberOfUnits?: SortOrder
+    phone?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
-    country?: SortOrder
+    countryCode?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSplitGroupId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    numberOfProperties?: SortOrder
+    numberOfUnits?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -21157,12 +21321,16 @@ export namespace Prisma {
     onboardingCompleted?: SortOrder
     image?: SortOrder
     idNumber?: SortOrder
+    businessName?: SortOrder
+    numberOfProperties?: SortOrder
+    numberOfUnits?: SortOrder
+    phone?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
-    country?: SortOrder
+    countryCode?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSplitGroupId?: SortOrder
@@ -21178,17 +21346,26 @@ export namespace Prisma {
     onboardingCompleted?: SortOrder
     image?: SortOrder
     idNumber?: SortOrder
+    businessName?: SortOrder
+    numberOfProperties?: SortOrder
+    numberOfUnits?: SortOrder
+    phone?: SortOrder
     addressLine1?: SortOrder
     addressLine2?: SortOrder
     city?: SortOrder
     state?: SortOrder
     zip?: SortOrder
-    country?: SortOrder
+    countryCode?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSplitGroupId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    numberOfProperties?: SortOrder
+    numberOfUnits?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -21233,6 +21410,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -22105,17 +22298,6 @@ export namespace Prisma {
     _max?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type MaintenanceRequestNullableScalarRelationFilter = {
     is?: MaintenanceRequestWhereInput | null
     isNot?: MaintenanceRequestWhereInput | null
@@ -22187,22 +22369,6 @@ export namespace Prisma {
     size?: SortOrder
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -22269,6 +22435,14 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -23231,14 +23405,6 @@ export namespace Prisma {
     connect?: TenantWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type InvoiceUpdateOneWithoutFileNestedInput = {
     create?: XOR<InvoiceCreateWithoutFileInput, InvoiceUncheckedCreateWithoutFileInput>
     connectOrCreate?: InvoiceCreateOrConnectWithoutFileInput
@@ -23322,6 +23488,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -23386,7 +23563,7 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -23394,7 +23571,23 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -23653,33 +23846,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
     _max?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -24007,12 +24173,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24031,12 +24201,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24071,12 +24245,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24095,12 +24273,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24119,12 +24301,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24143,12 +24329,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24183,12 +24373,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24207,12 +24401,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24231,12 +24429,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24255,12 +24457,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24355,12 +24561,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24379,12 +24589,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24463,12 +24677,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24487,12 +24705,16 @@ export namespace Prisma {
     onboardingCompleted?: boolean
     image?: string | null
     idNumber?: string | null
+    businessName?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
     addressLine1?: string | null
     addressLine2?: string | null
     city?: string | null
     state?: string | null
     zip?: string | null
-    country?: string | null
+    countryCode?: string | null
     paystackSubscriptionId?: string | null
     paystackSubAccountId?: string | null
     paystackSplitGroupId?: string | null
@@ -24603,12 +24825,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24627,12 +24853,16 @@ export namespace Prisma {
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
     addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
