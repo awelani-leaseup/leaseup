@@ -10,51 +10,44 @@ datasource db {
 }
 
 model User {
-  id                  String  @id
-  name                String
-  email               String
-  emailVerified       Boolean
-  onboardingCompleted Boolean @default(false)
-  image               String?
-  idNumber            String?
-
-  businessName       String?
-  numberOfProperties Int?
-  numberOfUnits      Int?
-  phone              String?
-
-  addressLine1 String?
-  addressLine2 String?
-  city         String?
-  state        String?
-  zip          String?
-  countryCode  String? @default("ZA")
-
-  paystackSubscriptionId String?
-  paystackSubAccountId   String?
-  paystackSplitGroupId   String?
+  id                     String     @id
+  name                   String
+  email                  String     @unique
+  emailVerified          Boolean
+  image                  String?
   createdAt              DateTime   @default(now())
   updatedAt              DateTime   @updatedAt
-  sessions               Session[]
+  addressLine1           String?
+  addressLine2           String?
+  city                   String?
+  idNumber               String?
+  paystackSplitGroupId   String?
+  paystackSubAccountId   String?
+  paystackSubscriptionId String?
+  state                  String?
+  zip                    String?
+  onboardingCompleted    Boolean    @default(false)
+  businessName           String?
+  countryCode            String?    @default("ZA")
+  numberOfProperties     Int?
+  numberOfUnits          Int?
+  phone                  String?
   accounts               Account[]
-  tenant                 Tenant[]
   property               Property[]
-
-  @@unique([email])
+  sessions               Session[]
+  tenant                 Tenant[]
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([token])
 }
 
 model Account {
@@ -62,7 +55,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -72,6 +64,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Verification {
@@ -85,16 +78,13 @@ model Verification {
 
 model Tenant {
   id                     String        @id @default(uuid())
-  paystackCustomerId     String?
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
-  avatarUrl              String?
   email                  String
   firstName              String
   lastName               String
   phone                  String
   landlordId             String
-  landlord               User          @relation(fields: [landlordId], references: [id])
   dateOfBirth            DateTime?
   tenantEmergencyContact Json?
   tenantIncome           Json?
@@ -102,8 +92,12 @@ model Tenant {
   additionalPhones       String[]
   emergencyContacts      Json?
   vehicles               Json?
+  avatarUrl              String?
   fullName               String?
+  paystackCustomerId     String?
   files                  File[]
+  Invoice                Invoice[]
+  landlord               User          @relation(fields: [landlordId], references: [id])
   tenantLease            TenantLease[]
 }
 
@@ -115,8 +109,6 @@ model Property {
   city           String
   state          String
   zip            String
-  landlordId     String
-  landlord       User           @relation(fields: [landlordId], references: [id])
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   imageUrl       String?
@@ -125,7 +117,9 @@ model Property {
   amenities      String[]
   countryCode    String         @default("ZA")
   features       String[]
+  landlordId     String
   files          File[]
+  landlord       User           @relation(fields: [landlordId], references: [id])
   unit           Unit[]
 }
 
@@ -155,11 +149,11 @@ model Lease {
   updatedAt          DateTime             @updatedAt
   rentDueCurrency    String
   unitId             String?
+  automaticInvoice   Boolean              @default(false)
+  invoiceCycle       InvoiceCycle         @default(MONTHLY)
+  leaseType          LeaseTermType
   File               File[]
   invoice            Invoice[]
-  leaseType          LeaseTermType
-  invoiceCycle       InvoiceCycle         @default(MONTHLY)
-  automaticInvoice   Boolean              @default(false)
   unit               Unit?                @relation(fields: [unitId], references: [id])
   maintenanceRequest MaintenanceRequest[]
   tenantLease        TenantLease[]
@@ -170,16 +164,18 @@ model Invoice {
   id           String          @id @default(uuid())
   leaseId      String?
   description  String
-  lineItems    Json?
   dueAmount    Float
-  dueDate      DateTime?       @db.Date
-  paystackId   String
   category     InvoiceCategory
   status       InvoiceStatus
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
+  paystackId   String
+  dueDate      DateTime?       @db.Date
+  lineItems    Json?
+  tenantId     String?
   File         File[]
   lease        Lease?          @relation(fields: [leaseId], references: [id])
+  tenant       Tenant?         @relation(fields: [tenantId], references: [id])
   transactions Transactions[]
 }
 
@@ -220,8 +216,6 @@ model File {
   id                   String              @id @default(uuid())
   name                 String
   url                  String
-  type                 String?
-  size                 Int?
   ownerId              String
   tenantId             String?
   propertyId           String?
@@ -230,6 +224,8 @@ model File {
   maintenanceRequestId String?
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @updatedAt
+  size                 Int?
+  type                 String?
   invoice              Invoice?            @relation(fields: [invoiceId], references: [id])
   lease                Lease?              @relation(fields: [leaseId], references: [id])
   maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
@@ -257,12 +253,12 @@ enum PropertyStatus {
 }
 
 enum InvoiceStatus {
-  DRAFT
   PENDING
   PAID
-  PARTIALLY_PAID
   CANCELLED
   OVERDUE
+  PARTIALLY_PAID
+  DRAFT
 }
 
 enum LeaseStatus {
