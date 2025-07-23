@@ -35,16 +35,17 @@ import { api } from "@/trpc/server";
 import { format } from "date-fns";
 import { LeaseDropdownActions } from "./_components/lease-dropdown-actions";
 
-interface LeasesPageProps {
-  searchParams?: {
+export default async function Leases({
+  searchParams,
+}: {
+  searchParams: Promise<{
     page?: string;
     limit?: string;
-  };
-}
-
-export default async function Leases({ searchParams }: LeasesPageProps) {
-  const page = Number(searchParams?.page) || 1;
-  const limit = Number(searchParams?.limit) || 10;
+  }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const page = Number(resolvedSearchParams?.page) || 1;
+  const limit = Number(resolvedSearchParams?.limit) || 10;
 
   const { leases, total, totalPages } = await api.lease.getAll({
     page,
@@ -55,7 +56,9 @@ export default async function Leases({ searchParams }: LeasesPageProps) {
     <div className="mx-auto mt-10 flex max-w-7xl flex-col">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Leases</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Leases {total > 0 ? `(${total})` : ""}
+          </CardTitle>
           <CardDescription>Manage your leases here.</CardDescription>
           <CardAction>
             <Link href="/leases/create">

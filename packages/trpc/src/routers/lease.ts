@@ -79,36 +79,67 @@ export const leaseRouter = createTRPCRouter({
   createLease: protectedProcedure
     .input(VCreateLeaseSchema)
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.lease.create({
-        data: {
-          id: nanoid(),
-          unitId: input.unitId,
-          // Ensure startDate and endDate are set in Africa/Johannesburg timezone
-          startDate: startOfDay(
-            new Date(input.leaseStartDate).toLocaleString('en-US', {
-              timeZone: 'Africa/Johannesburg',
-            })
-          ),
-          endDate: input.leaseEndDate
-            ? startOfDay(
-                new Date(input.leaseEndDate).toLocaleString('en-US', {
-                  timeZone: 'Africa/Johannesburg',
-                })
-              )
-            : null,
-          deposit: input.deposit,
-          rent: input.rent,
-          status: 'ACTIVE',
-          rentDueCurrency: 'ZAR',
-          leaseType: 'MONTHLY',
-          invoiceCycle: 'MONTHLY',
-          automaticInvoice: input.automaticInvoice,
-          tenantLease: {
-            create: {
-              tenantId: input.tenantId,
+      return await ctx.db.$transaction(async (tx) => {
+        const lease = await tx.lease.create({
+          data: {
+            id: nanoid(),
+            unitId: input.unitId,
+            // Ensure startDate and endDate are set in Africa/Johannesburg timezone
+            startDate: startOfDay(
+              new Date(input.leaseStartDate).toLocaleString('en-US', {
+                timeZone: 'Africa/Johannesburg',
+              })
+            ),
+            endDate: input.leaseEndDate
+              ? startOfDay(
+                  new Date(input.leaseEndDate).toLocaleString('en-US', {
+                    timeZone: 'Africa/Johannesburg',
+                  })
+                )
+              : null,
+            deposit: input.deposit,
+            rent: input.rent,
+            status: 'ACTIVE',
+            rentDueCurrency: 'ZAR',
+            leaseType: 'MONTHLY',
+            invoiceCycle: 'MONTHLY',
+            automaticInvoice: input.automaticInvoice,
+            tenantLease: {
+              create: {
+                tenantId: input.tenantId,
+              },
             },
           },
-        },
+        });
+
+        if (!input.automaticInvoice) {
+          return lease;
+        }
+
+        await tx.recurringBillable.create({
+          data: {
+            id: nanoid(),
+            description: 'Rent',
+            amount: input.rent,
+            category: 'RENT',
+            startDate: startOfDay(
+              new Date(input.leaseStartDate).toLocaleString('en-US', {
+                timeZone: 'Africa/Johannesburg',
+              })
+            ),
+            nextInvoiceAt: startOfDay(
+              new Date(input.leaseStartDate).toLocaleString('en-US', {
+                timeZone: 'Africa/Johannesburg',
+              })
+            ),
+            isActive: true,
+            cycle: 'MONTHLY',
+            tenantId: input.tenantId,
+            leaseId: lease.id,
+          },
+        });
+
+        return lease;
       });
     }),
 });

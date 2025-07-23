@@ -4,7 +4,6 @@ import { auth } from './seed/auth.ts';
 import {
   InvoiceCategory,
   InvoiceStatus,
-  LeaseStatus,
   LeaseTermType,
   PropertyAmenity,
   PropertyFeature,
@@ -49,18 +48,18 @@ async function main() {
   console.log('🌱 Starting database seed...');
 
   // Delete in correct order respecting foreign key constraints
-  await db.$executeRawUnsafe(`DELETE FROM "Transactions";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Invoice";`);
-  await db.$executeRawUnsafe(`DELETE FROM "MaintenanceRequest";`);
-  await db.$executeRawUnsafe(`DELETE FROM "File";`);
-  await db.$executeRawUnsafe(`DELETE FROM "TenantLease";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Lease";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Unit";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Tenant";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Property";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Account";`);
-  await db.$executeRawUnsafe(`DELETE FROM "Session";`);
-  await db.$executeRawUnsafe(`DELETE FROM "User";`);
+  await db.$executeRawUnsafe(`DELETE FROM "transaction";`);
+  await db.$executeRawUnsafe(`DELETE FROM "invoice";`);
+  await db.$executeRawUnsafe(`DELETE FROM "maintenance_request";`);
+  await db.$executeRawUnsafe(`DELETE FROM "file";`);
+  await db.$executeRawUnsafe(`DELETE FROM "tenant_lease";`);
+  await db.$executeRawUnsafe(`DELETE FROM "lease";`);
+  await db.$executeRawUnsafe(`DELETE FROM "unit";`);
+  await db.$executeRawUnsafe(`DELETE FROM "tenant";`);
+  await db.$executeRawUnsafe(`DELETE FROM "property";`);
+  await db.$executeRawUnsafe(`DELETE FROM "account";`);
+  await db.$executeRawUnsafe(`DELETE FROM "session";`);
+  await db.$executeRawUnsafe(`DELETE FROM "user";`);
 
   const USER_COUNT = faker.number.int({ min: 10, max: 20 });
 
@@ -93,7 +92,7 @@ async function main() {
         city: faker.location.city(),
         state: faker.location.state(),
         zip: faker.location.zipCode(),
-        country: faker.location.country(),
+        countryCode: 'ZA',
       },
     });
   });
@@ -313,17 +312,37 @@ async function main() {
   // Get current date for calculations
   const now = new Date();
 
+  // Get leases with their associated tenants
+  const leasesWithTenants = await db.lease.findMany({
+    where: {
+      id: { in: allLeases.map((lease) => lease.id) },
+    },
+    include: {
+      tenantLease: {
+        include: {
+          tenant: true,
+        },
+      },
+    },
+  });
+
   // Create invoices for leases that have been active for at least 1 month
   const invoicePromises: Promise<any>[] = [];
 
-  allLeases.forEach((lease) => {
+  leasesWithTenants.forEach((lease) => {
     const leaseStartDate = new Date(lease.startDate);
     const monthsSinceStart = Math.floor(
       (now.getTime() - leaseStartDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
     );
 
-    // Only create invoices for leases that have been active for at least 1 month
-    if (monthsSinceStart >= 1 && lease.status === 'ACTIVE') {
+    // Only create invoices for leases that have been active for at least 1 month and have a tenant
+    if (
+      monthsSinceStart >= 1 &&
+      lease.status === 'ACTIVE' &&
+      lease.tenantLease.length > 0
+    ) {
+      const tenant = lease.tenantLease[0].tenant;
+
       // Generate monthly invoices from start date to current date
       for (let monthOffset = 0; monthOffset < monthsSinceStart; monthOffset++) {
         const invoiceDate = new Date(leaseStartDate);
@@ -352,11 +371,16 @@ async function main() {
 
         const invoicePromise = db.invoice.create({
           data: {
-            leaseId: lease.id,
             dueAmount: lease.rent,
             dueDate: dueDate,
             status: status,
             createdAt: invoiceDate,
+            tenant: {
+              connect: { id: tenant.id },
+            },
+            lease: {
+              connect: { id: lease.id },
+            },
             updatedAt: invoiceDate,
             description: `Monthly rent for ${invoiceDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
             paystackId: faker.string.uuid(),

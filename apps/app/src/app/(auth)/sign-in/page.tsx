@@ -21,16 +21,18 @@ const VLoginSchema = v.object({
 });
 
 export default function SignIn() {
-  const [status, setStatus] = useState<"loading" | "error" | "success">(
-    "loading",
+  const [status, setStatus] = useState<"loading" | "error" | "success" | null>(
+    null,
   );
   const [error, setError] = useState<string | undefined>(undefined);
   const { data: session } = authClient.useSession();
   const router = useRouter();
+
   useEffect(() => {
     if (session?.user?.id) {
       router.push("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const handleGoogleSignIn = async () => {
@@ -42,6 +44,7 @@ export default function SignIn() {
       },
       {
         onError: (error) => {
+          setError(error.error.message);
           setStatus("error");
         },
         onRequest: () => {

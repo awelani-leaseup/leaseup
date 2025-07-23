@@ -1,5 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
-import { VOnboardingInput } from './onboarding.types';
+import { landlordOnboardSuccessfulTask } from '@leaseup/tasks/trigger';
+import { type Bank, VOnboardingInput } from './onboarding.types';
+import { paystack } from '@leaseup/paystack/open-api/client';
 
 export const onboardingRouter = createTRPCRouter({
   completeOnboarding: protectedProcedure
@@ -38,6 +40,15 @@ export const onboardingRouter = createTRPCRouter({
         // - Validate the bank account with Paystack
         // - Create the subaccount
         // - Store the subaccount ID
+
+        await landlordOnboardSuccessfulTask.trigger({
+          userId,
+          businessName: input.businessName,
+          settlementBank: input.bankCode,
+          accountNumber: input.accountNumber,
+          primaryContactEmail: input.email,
+          primaryContactName: input.fullName,
+        });
 
         return {
           success: true,
@@ -85,5 +96,24 @@ export const onboardingRouter = createTRPCRouter({
       onboardingCompleted: user.onboardingCompleted,
       user,
     };
+  }),
+
+  getAllBanks: protectedProcedure.query(async ({ ctx }) => {
+    const BANKS_COUNTRY = 'south africa';
+    const { data, error } = await paystack.GET('/bank', {
+      params: {
+        query: {
+          country: BANKS_COUNTRY,
+        },
+      },
+    });
+
+    if (error) {
+      throw new Error('Failed to get banks');
+    }
+
+    const banks: Bank[] = data?.data as unknown as Bank[];
+
+    return banks;
   }),
 });

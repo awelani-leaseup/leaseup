@@ -125,24 +125,24 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   emailVerified: 'emailVerified',
-  onboardingCompleted: 'onboardingCompleted',
   image: 'image',
-  idNumber: 'idNumber',
-  businessName: 'businessName',
-  numberOfProperties: 'numberOfProperties',
-  numberOfUnits: 'numberOfUnits',
-  phone: 'phone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
   addressLine1: 'addressLine1',
   addressLine2: 'addressLine2',
   city: 'city',
+  idNumber: 'idNumber',
+  paystackSplitGroupId: 'paystackSplitGroupId',
+  paystackSubAccountId: 'paystackSubAccountId',
+  paystackSubscriptionId: 'paystackSubscriptionId',
   state: 'state',
   zip: 'zip',
+  onboardingCompleted: 'onboardingCompleted',
+  businessName: 'businessName',
   countryCode: 'countryCode',
-  paystackSubscriptionId: 'paystackSubscriptionId',
-  paystackSubAccountId: 'paystackSubAccountId',
-  paystackSplitGroupId: 'paystackSplitGroupId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  numberOfProperties: 'numberOfProperties',
+  numberOfUnits: 'numberOfUnits',
+  phone: 'phone'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -183,10 +183,8 @@ exports.Prisma.VerificationScalarFieldEnum = {
 
 exports.Prisma.TenantScalarFieldEnum = {
   id: 'id',
-  paystackCustomerId: 'paystackCustomerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  avatarUrl: 'avatarUrl',
   email: 'email',
   firstName: 'firstName',
   lastName: 'lastName',
@@ -199,7 +197,9 @@ exports.Prisma.TenantScalarFieldEnum = {
   additionalPhones: 'additionalPhones',
   emergencyContacts: 'emergencyContacts',
   vehicles: 'vehicles',
-  fullName: 'fullName'
+  avatarUrl: 'avatarUrl',
+  fullName: 'fullName',
+  paystackCustomerId: 'paystackCustomerId'
 };
 
 exports.Prisma.PropertyScalarFieldEnum = {
@@ -210,7 +210,6 @@ exports.Prisma.PropertyScalarFieldEnum = {
   city: 'city',
   state: 'state',
   zip: 'zip',
-  landlordId: 'landlordId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   imageUrl: 'imageUrl',
@@ -218,7 +217,8 @@ exports.Prisma.PropertyScalarFieldEnum = {
   propertyType: 'propertyType',
   amenities: 'amenities',
   countryCode: 'countryCode',
-  features: 'features'
+  features: 'features',
+  landlordId: 'landlordId'
 };
 
 exports.Prisma.UnitScalarFieldEnum = {
@@ -245,23 +245,42 @@ exports.Prisma.LeaseScalarFieldEnum = {
   updatedAt: 'updatedAt',
   rentDueCurrency: 'rentDueCurrency',
   unitId: 'unitId',
-  leaseType: 'leaseType',
+  automaticInvoice: 'automaticInvoice',
   invoiceCycle: 'invoiceCycle',
-  automaticInvoice: 'automaticInvoice'
+  leaseType: 'leaseType'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
   id: 'id',
   leaseId: 'leaseId',
   description: 'description',
-  lineItems: 'lineItems',
   dueAmount: 'dueAmount',
-  dueDate: 'dueDate',
-  paystackId: 'paystackId',
   category: 'category',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  paystackId: 'paystackId',
+  dueDate: 'dueDate',
+  lineItems: 'lineItems',
+  tenantId: 'tenantId',
+  recurringBillableId: 'recurringBillableId'
+};
+
+exports.Prisma.RecurringBillableScalarFieldEnum = {
+  id: 'id',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  description: 'description',
+  amount: 'amount',
+  category: 'category',
+  cycle: 'cycle',
+  nextInvoiceAt: 'nextInvoiceAt',
+  isActive: 'isActive',
+  leaseId: 'leaseId',
+  tenantId: 'tenantId',
+  propertyId: 'propertyId'
 };
 
 exports.Prisma.TransactionsScalarFieldEnum = {
@@ -295,8 +314,6 @@ exports.Prisma.FileScalarFieldEnum = {
   id: 'id',
   name: 'name',
   url: 'url',
-  type: 'type',
-  size: 'size',
   ownerId: 'ownerId',
   tenantId: 'tenantId',
   propertyId: 'propertyId',
@@ -304,7 +321,9 @@ exports.Prisma.FileScalarFieldEnum = {
   invoiceId: 'invoiceId',
   maintenanceRequestId: 'maintenanceRequestId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  size: 'size',
+  type: 'type'
 };
 
 exports.Prisma.SortOrder = {
@@ -349,13 +368,13 @@ exports.LeaseStatus = exports.$Enums.LeaseStatus = {
   EXPIRED: 'EXPIRED'
 };
 
+exports.InvoiceCycle = exports.$Enums.InvoiceCycle = {
+  MONTHLY: 'MONTHLY'
+};
+
 exports.LeaseTermType = exports.$Enums.LeaseTermType = {
   MONTHLY: 'MONTHLY',
   FIXED_TERM: 'FIXED_TERM'
-};
-
-exports.InvoiceCycle = exports.$Enums.InvoiceCycle = {
-  MONTHLY: 'MONTHLY'
 };
 
 exports.InvoiceCategory = exports.$Enums.InvoiceCategory = {
@@ -371,12 +390,12 @@ exports.InvoiceCategory = exports.$Enums.InvoiceCategory = {
 };
 
 exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
-  DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   PAID: 'PAID',
-  PARTIALLY_PAID: 'PARTIALLY_PAID',
   CANCELLED: 'CANCELLED',
-  OVERDUE: 'OVERDUE'
+  OVERDUE: 'OVERDUE',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  DRAFT: 'DRAFT'
 };
 
 exports.MaintenanceRequestStatus = exports.$Enums.MaintenanceRequestStatus = {
@@ -403,6 +422,7 @@ exports.Prisma.ModelName = {
   Unit: 'Unit',
   Lease: 'Lease',
   Invoice: 'Invoice',
+  RecurringBillable: 'RecurringBillable',
   Transactions: 'Transactions',
   TenantLease: 'TenantLease',
   MaintenanceRequest: 'MaintenanceRequest',

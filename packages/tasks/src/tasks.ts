@@ -7,4 +7,5 @@ export const TASK_EVENTS = {
   SUBSCRIPTION_DISABLED: 'subscription-disabled',
   SUBSCRIPTION_NOT_RENEWING: 'subscription-not-renewing',
   SUBSCRIPTION_EXPIRING_CARDS: 'subscription-expiring-cards',
+  TENANT_CREATE: 'tenant-create',
 } as const;

@@ -8,5 +8,5 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "prisma.fileWatcher": true,
-  "cSpell.words": ["avataar", "paystack"]
+  "cSpell.words": ["avataar", "paymentrequest", "paystack"]
 }

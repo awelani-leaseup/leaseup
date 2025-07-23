@@ -3,11 +3,8 @@
 import { H5 } from "@leaseup/ui/components/typography";
 import { Separator } from "@leaseup/ui/components/separator";
 import { CheckCircle } from "lucide-react";
-import {
-  bankOptions,
-  countryOptions,
-  documentTypeOptions,
-} from "../_constants";
+import { countryOptions, documentTypeOptions } from "../_constants";
+import { api } from "@/trpc/react";
 
 // Business Information Review Sub-Component
 function BusinessInformationReview({ form }: { form: any }) {
@@ -150,6 +147,7 @@ function AddressInformationReview({ form }: { form: any }) {
 
 // Banking and Document Information Review Sub-Component
 function BankingDocumentInformationReview({ form }: { form: any }) {
+  const { data: banks } = api.onboarding.getAllBanks.useQuery();
   const formData = {
     documentType: form.getFieldValue("documentType") || "",
     idNumber: form.getFieldValue("idNumber") || "",
@@ -158,8 +156,8 @@ function BankingDocumentInformationReview({ form }: { form: any }) {
   };
 
   const getBankName = (bankCode: string) => {
-    const bank = bankOptions.find((bank) => bank.id === bankCode);
-    return bank ? bank.label : bankCode;
+    const bank = banks?.find((bank) => bank.code === bankCode);
+    return bank ? bank.name : bankCode;
   };
 
   const getDocumentTypeName = (documentType: string) => {

@@ -7,7 +7,7 @@ import {
   VGetTenantTransactionsSchema,
 } from './tenant.types';
 import { tasks } from '@trigger.dev/sdk/v3';
-import { TASK_EVENTS } from '@leaseup/tasks/tasks';
+import { tenantCreateTask } from '@leaseup/tasks/trigger';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -83,6 +83,11 @@ export const tenantRouter = createTRPCRouter({
           },
         },
       });
+
+      await tenantCreateTask.trigger({
+        tenantId: tenant.id,
+      });
+
       return tenant;
     }),
   getTenantById: protectedProcedure

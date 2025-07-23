@@ -2,16 +2,17 @@
 
 import { H5 } from "@leaseup/ui/components/typography";
 import { Separator } from "@leaseup/ui/components/separator";
-import { FileText, Info } from "lucide-react";
-import { bankOptions, documentTypeOptions } from "../_constants";
+import { FileText, IdCard, Info } from "lucide-react";
+import { documentTypeOptions } from "../_constants";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@leaseup/ui/components/alert";
+import { api } from "@/trpc/react";
 
-// Banking Information Sub-Component
 function BankingInformationForm({ form }: { form: any }) {
+  const { data: banks } = api.onboarding.getAllBanks.useQuery();
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       <div className="col-span-full">
@@ -24,11 +25,18 @@ function BankingInformationForm({ form }: { form: any }) {
 
       <form.AppField name="bankCode">
         {(field: any) => (
-          <field.SelectField
+          <field.ComboboxField
             asterisk
             label="Bank"
             placeholder="Select your bank"
-            options={bankOptions}
+            options={
+              banks
+                ? banks?.map((bank) => ({
+                    id: bank.code,
+                    label: bank.name,
+                  }))
+                : []
+            }
             description="Select your bank from the list"
           />
         )}
@@ -50,12 +58,11 @@ function BankingInformationForm({ form }: { form: any }) {
   );
 }
 
-// Document Verification Sub-Component
 function DocumentVerificationForm({ form }: { form: any }) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       <div className="col-span-full">
-        <H5>Document Verification</H5>
+        <H5>Identity Verification</H5>
         <p className="text-muted-foreground mt-1 text-sm">
           Provide your identification document for account verification.
         </p>
@@ -75,7 +82,7 @@ function DocumentVerificationForm({ form }: { form: any }) {
       <form.AppField name="idNumber">
         {(field: any) => (
           <field.TextField
-            icon={<FileText />}
+            icon={<IdCard />}
             asterisk
             label="ID Number"
             description="Enter the ID number from your selected document"

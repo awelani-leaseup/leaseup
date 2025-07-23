@@ -1,21 +1,10 @@
 import { logger, schedules } from '@trigger.dev/sdk/v3';
 import { db } from '@leaseup/prisma/db.ts';
 import { addDays, isAfter, isBefore, startOfDay } from 'date-fns';
-import * as v from 'valibot';
 import { createInvoiceTask } from './invoice-send';
 import { calculateNextInvoiceDate } from '../utils/calculate-next-invoice-date';
-
-const CreateInvoiceTaskPayload = v.object({
-  customer: v.pipe(v.string(), v.nonEmpty('Customer is required')),
-  amount: v.number(),
-  dueDate: v.date(),
-  description: v.optional(
-    v.pipe(v.string(), v.nonEmpty('Description is required'))
-  ),
-  lineItems: v.any(),
-  split_code: v.pipe(v.string(), v.nonEmpty('Split code is required')),
-  leaseId: v.optional(v.string()),
-});
+import type { Invoice } from '@leaseup/prisma/client/index.js';
+import { nanoid } from 'nanoid';
 
 const CONFIG = {
   CHECK_DAYS_AHEAD: 50,
@@ -34,62 +23,47 @@ export const checkUpcomingInvoicesTask = schedules.task({
     logger.log('Starting check for upcoming invoices', { payload, ctx });
 
     try {
-      // Get all leases with automatic invoices enabled
-      const leasesWithAutoInvoices = await db.lease.findMany({
+      const recurringBillables = await db.recurringBillable.findMany({
         where: {
-          automaticInvoice: true,
-          status: 'ACTIVE',
+          isActive: true,
+          cycle: 'MONTHLY',
         },
         include: {
-          invoice: true,
-          unit: {
+          tenant: true,
+          lease: {
             include: {
-              property: true,
-            },
-          },
-          tenantLease: {
-            include: {
-              tenant: true,
+              unit: {
+                include: {
+                  property: true,
+                },
+              },
             },
           },
         },
       });
 
-      logger.log(
-        `Found ${leasesWithAutoInvoices.length} leases with automatic invoices enabled`
-      );
+      logger.log(`Found ${recurringBillables.length} recurring billables`);
 
       const today = startOfDay(new Date());
       const checkUntilDate = addDays(today, CONFIG.CHECK_DAYS_AHEAD);
 
-      const invoicesToCreate: Array<{
-        leaseId: string;
-        nextInvoiceDate: Date;
-        rent: number;
-        currency: string;
-        unitName: string;
-        propertyName: string;
-        tenants: Array<{
-          id: string;
-          name: string;
-          email: string;
-          paystackCustomerId?: string;
-        }>;
-      }> = [];
+      const invoicesToCreate: Array<
+        Invoice & {
+          tenantPaystackCustomerId: string;
+        }
+      > = [];
+      const skippedInvoices: {
+        billableId: string;
+        description: string;
+        error: string;
+      }[] = [];
 
-      const skippedInvoices: Array<{
-        leaseId: string;
-        reason: string;
-        details?: any;
-      }> = [];
-
-      for (const lease of leasesWithAutoInvoices) {
+      for (const billable of recurringBillables) {
         try {
           // Calculate next invoice due date based on lease start date and cycle
           const nextInvoiceDate = calculateNextInvoiceDate(
-            lease.startDate,
-            lease.invoiceCycle,
-            lease.leaseType
+            billable.startDate,
+            billable.cycle
           );
 
           // Check if the next invoice is due within the configured period
@@ -100,48 +74,37 @@ export const checkUpcomingInvoicesTask = schedules.task({
             // Check if an invoice already exists for this cycle
             const existingInvoice = await db.invoice.findFirst({
               where: {
-                leaseId: lease.id,
+                recurringBillableId: billable.id,
                 status: {
                   in: ['PENDING', 'OVERDUE'],
+                },
+                dueDate: {
+                  equals: nextInvoiceDate,
                 },
               },
             });
 
             if (!existingInvoice) {
-              // Validate lease has required data
-              if (!lease.unit) {
-                skippedInvoices.push({
-                  leaseId: lease.id,
-                  reason: 'No unit associated with lease',
-                });
-                continue;
-              }
-
-              if (lease.tenantLease.length === 0) {
-                skippedInvoices.push({
-                  leaseId: lease.id,
-                  reason: 'No tenants associated with lease',
-                });
-                continue;
-              }
-
               invoicesToCreate.push({
-                leaseId: lease.id,
-                nextInvoiceDate,
-                rent: lease.rent,
-                currency: 'ZAR',
-                unitName: lease.unit?.name || 'Unknown',
-                propertyName: lease.unit?.property?.name || 'Unknown',
-                tenants: lease.tenantLease.map((tl) => ({
-                  id: tl.tenant.id,
-                  name: `${tl.tenant.firstName} ${tl.tenant.lastName}`,
-                  email: tl.tenant.email,
-                  paystackCustomerId: tl.tenant.paystackCustomerId || undefined,
-                })),
+                id: nanoid(),
+                leaseId: billable.leaseId ?? null,
+                dueDate: nextInvoiceDate,
+                dueAmount: billable.amount,
+                category: billable.category,
+                description: billable.description,
+                tenantId: billable.tenant?.id ?? null,
+                tenantPaystackCustomerId:
+                  billable.tenant?.paystackCustomerId ?? '',
+                recurringBillableId: billable.id,
+                status: 'PENDING',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                paystackId: '',
+                lineItems: [],
               });
             } else {
               logger.log('Invoice already exists for this cycle', {
-                leaseId: lease.id,
+                billableId: billable.id,
                 dueDate: nextInvoiceDate,
                 existingInvoiceId: existingInvoice.id,
               });
@@ -149,13 +112,13 @@ export const checkUpcomingInvoicesTask = schedules.task({
           }
         } catch (error) {
           logger.error('Error processing lease for invoice creation', {
-            leaseId: lease.id,
+            billableId: billable.id,
             error: error instanceof Error ? error.message : 'Unknown error',
           });
           skippedInvoices.push({
-            leaseId: lease.id,
-            reason: 'Error processing lease',
-            details: error instanceof Error ? error.message : 'Unknown error',
+            billableId: billable.id,
+            description: 'Error processing billable',
+            error: error instanceof Error ? error.message : 'Unknown error',
           });
         }
       }
@@ -172,15 +135,20 @@ export const checkUpcomingInvoicesTask = schedules.task({
         );
 
         const batchPromises = batch.map(async (invoiceData) => {
-          return await createInvoiceTask.trigger({
-            customer: invoiceData.tenants?.[0]?.paystackCustomerId ?? '',
-            amount: invoiceData.rent,
-            dueDate: invoiceData.nextInvoiceDate,
-            description: `Rent for ${invoiceData.unitName} - ${invoiceData.propertyName}`,
-            lineItems: [],
-            split_code: '',
-            leaseId: invoiceData.leaseId,
-          });
+          return createInvoiceTask.trigger(
+            {
+              customer: invoiceData.tenantPaystackCustomerId,
+              amount: invoiceData.dueAmount,
+              dueDate: invoiceData.dueDate,
+              description: invoiceData.description,
+              lineItems: [],
+              split_code: '',
+              leaseId: invoiceData.leaseId,
+            },
+            {
+              idempotencyKey: `create-invoice-${invoiceData.leaseId}-${invoiceData.dueDate}`,
+            }
+          );
         });
 
         await Promise.allSettled(batchPromises);
@@ -193,7 +161,7 @@ export const checkUpcomingInvoicesTask = schedules.task({
 
       return {
         message: `Triggered ${invoicesToCreate.length} invoice creation tasks`,
-        totalLeasesChecked: leasesWithAutoInvoices.length,
+        totalLeasesChecked: recurringBillables.length,
         invoicesToCreate: invoicesToCreate.length,
         invoicesSkipped: skippedInvoices.length,
       };

@@ -19,4 +19,19 @@ export const VOnboardingInput = v.object({
   accountNumber: v.pipe(v.string(), v.nonEmpty('Account Number is required')),
 });
 
+export type Bank = {
+  id: number;
+  name: string;
+  slug: string;
+  code: string;
+  longcode: string;
+  gateway: string;
+  pay_with_bank: boolean;
+  active: boolean;
+  country: string;
+  currency: string;
+  type: string;
+  is_deleted: boolean;
+};
+
 export type OnboardingInput = v.InferInput<typeof VOnboardingInput>;

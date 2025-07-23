@@ -216,8 +216,8 @@ export const SelectField: FC<{
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
-        {asterisk && <span className='text-danger ml-1'>*</span>}
         {label}
+        {asterisk && <span className='text-danger ml-1'>*</span>}
       </FieldLabel>
       <Select
         onValueChange={handleChange}
@@ -364,10 +364,8 @@ export const ComboboxField: FC<{
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
-        {asterisk ? (
-          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
-        ) : null}
         {label}
+        {asterisk ? <span className='text-danger ml-1'>*</span> : null}
       </FieldLabel>
       <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -578,10 +576,7 @@ export const AddressField: FC<{
   return (
     <label className='flex w-full flex-col gap-1'>
       <FieldLabel>
-        {label}{' '}
-        {asterisk ? (
-          <Asterisk className='text-rose-600 absolute -top-1 -left-3 size-3 stroke-2' />
-        ) : null}
+        {label} {asterisk ? <span className='text-danger ml-1'>*</span> : null}
       </FieldLabel>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

@@ -22,7 +22,7 @@ export const VCreateInvoiceFormSchema = v.object({
     v.minLength(1, "At least one invoice item is required"),
   ),
   totalAmount: v.number(),
-  notes: v.optional(v.string()),
+  notes: v.pipe(v.string(), v.nonEmpty("Notes are required")),
   markAsPaid: v.boolean(),
 });
 

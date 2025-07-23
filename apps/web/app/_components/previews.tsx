@@ -47,7 +47,7 @@ import { AlertTitle } from '@leaseup/ui/components/alert';
 
 export const Previews: FC = () => {
   return (
-    <div className='flex-col gap-4 w-full mt-10 hidden lg:flex'>
+    <div className='flex-col gap-4 w-full my-10 hidden lg:flex'>
       <Tabs defaultValue='dashboard'>
         <TabsList className='self-center w-full max-w-md bg-transparent'>
           <TabsTrigger value='dashboard' className='text-xs sm:text-sm'>

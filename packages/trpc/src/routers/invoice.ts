@@ -3,9 +3,8 @@ import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { nanoid } from 'nanoid';
 import { TRPCError } from '@trpc/server';
 import * as v from 'valibot';
-import { tasks } from '@trigger.dev/sdk/v3';
 import { createInvoiceTask } from '@leaseup/tasks/trigger';
-import { TASK_EVENTS } from '@leaseup/tasks/tasks';
+import { Prisma, InvoiceStatus } from '@leaseup/prisma/client/index.js';
 
 export const invoiceRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -16,66 +15,171 @@ export const invoiceRouter = createTRPCRouter({
       const skip = (page - 1) * limit;
 
       // Build where clause for filtering invoices by landlord
-      const whereClause: any = {
-        lease: {
-          unit: {
-            property: {
-              landlordId: ctx.auth?.session?.userId ?? '',
-            },
-          },
-        },
-      };
-
-      // Add status filter if provided
-      if (status && status !== 'All Status') {
-        whereClause.status = status.toUpperCase();
-      }
-
-      // Add property filter if provided
-      if (propertyId && propertyId !== 'All Properties') {
-        whereClause.lease.unit.property.id = propertyId;
-      }
-
-      // Add search filter if provided (search in tenant name or invoice description)
-      if (search) {
-        whereClause.OR = [
-          {
-            description: {
-              contains: search,
-              mode: 'insensitive',
-            },
-          },
+      // Include invoices with leases belonging to landlord's properties
+      // AND invoices without leases but belonging to landlord's tenants
+      const whereClause: Prisma.InvoiceWhereInput = {
+        OR: [
+          // Invoices with leases
           {
             lease: {
-              tenantLease: {
-                some: {
-                  tenant: {
-                    OR: [
-                      {
-                        firstName: {
-                          contains: search,
-                          mode: 'insensitive',
-                        },
-                      },
-                      {
-                        lastName: {
-                          contains: search,
-                          mode: 'insensitive',
-                        },
-                      },
-                      {
-                        email: {
-                          contains: search,
-                          mode: 'insensitive',
-                        },
-                      },
-                    ],
-                  },
+              unit: {
+                property: {
+                  landlordId: ctx.auth?.session?.userId ?? '',
                 },
               },
             },
           },
+          // Invoices without leases but with tenants belonging to landlord
+          {
+            AND: [
+              { leaseId: null },
+              {
+                tenant: {
+                  landlordId: ctx.auth?.session?.userId ?? '',
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      // Add status filter if provided
+      if (status && status !== 'All Status') {
+        whereClause.status = status.toUpperCase() as InvoiceStatus;
+      }
+
+      // Add property filter if provided
+      if (propertyId && propertyId !== 'All Properties') {
+        // If we already have search filters with AND structure
+        if (whereClause.AND) {
+          // Ensure AND is an array
+          const andConditions = Array.isArray(whereClause.AND)
+            ? whereClause.AND
+            : [whereClause.AND];
+
+          // Find and modify the landlord filter part
+          const landlordFilterIndex = andConditions.findIndex(
+            (condition: any) => condition.OR
+          );
+          if (landlordFilterIndex !== -1) {
+            // Modify the lease part of the landlord filter to include property filter
+            const landlordCondition = andConditions[landlordFilterIndex] as any;
+            const landlordFilter = landlordCondition.OR;
+            if (Array.isArray(landlordFilter)) {
+              const leaseFilterIndex = landlordFilter.findIndex(
+                (condition: any) => condition.lease
+              );
+              if (
+                leaseFilterIndex !== -1 &&
+                landlordFilter[leaseFilterIndex]?.lease?.unit?.property
+              ) {
+                landlordFilter[leaseFilterIndex].lease.unit.property.id =
+                  propertyId;
+              }
+              // Remove the non-lease part since property filter only applies to leases
+              landlordCondition.OR = landlordFilter.filter(
+                (condition: any) => condition.lease
+              );
+            }
+          }
+          whereClause.AND = andConditions;
+        } else {
+          // No search filters, modify the original OR structure
+          if (whereClause.OR && Array.isArray(whereClause.OR)) {
+            const leaseFilterIndex = whereClause.OR.findIndex(
+              (condition: any) => condition.lease
+            );
+            if (leaseFilterIndex !== -1) {
+              const leaseCondition = whereClause.OR[leaseFilterIndex] as any;
+              if (leaseCondition?.lease?.unit?.property) {
+                leaseCondition.lease.unit.property.id = propertyId;
+              }
+            }
+            // Remove the non-lease part since property filter only applies to leases
+            whereClause.OR = whereClause.OR.filter(
+              (condition: any) => condition.lease
+            );
+          }
+        }
+      }
+
+      // Add search filter if provided (search in tenant name or invoice description)
+      if (search) {
+        // Need to combine the landlord filter with search using AND
+        const landlordFilter = whereClause.OR;
+        whereClause.AND = [
+          // Landlord filter
+          { OR: landlordFilter },
+          // Search filter
+          {
+            OR: [
+              {
+                description: {
+                  contains: search,
+                  mode: 'insensitive',
+                },
+              },
+              // Search in lease tenants
+              {
+                lease: {
+                  tenantLease: {
+                    some: {
+                      tenant: {
+                        OR: [
+                          {
+                            firstName: {
+                              contains: search,
+                              mode: 'insensitive',
+                            },
+                          },
+                          {
+                            lastName: {
+                              contains: search,
+                              mode: 'insensitive',
+                            },
+                          },
+                          {
+                            email: {
+                              contains: search,
+                              mode: 'insensitive',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+              // Search in direct tenant (for invoices without leases)
+              {
+                tenant: {
+                  OR: [
+                    {
+                      firstName: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      lastName: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                    {
+                      email: {
+                        contains: search,
+                        mode: 'insensitive',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
         ];
+        // Remove the original OR since we moved it to AND
+        delete whereClause.OR;
       }
 
       // Build orderBy clause for sorting
@@ -134,6 +238,7 @@ export const invoiceRouter = createTRPCRouter({
                 },
               },
             },
+            tenant: true, // Include direct tenant for invoices without leases
             transactions: true,
           },
           skip,
@@ -162,13 +267,29 @@ export const invoiceRouter = createTRPCRouter({
     // Get all invoices for the landlord to calculate stats
     const invoices = await ctx.db.invoice.findMany({
       where: {
-        lease: {
-          unit: {
-            property: {
-              landlordId,
+        OR: [
+          // Invoices with leases
+          {
+            lease: {
+              unit: {
+                property: {
+                  landlordId,
+                },
+              },
             },
           },
-        },
+          // Invoices without leases but with tenants belonging to landlord
+          {
+            AND: [
+              { leaseId: null },
+              {
+                tenant: {
+                  landlordId,
+                },
+              },
+            ],
+          },
+        ],
       },
       include: {
         transactions: true,
@@ -210,7 +331,13 @@ export const invoiceRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       let lease = null;
 
-      // If leaseId is provided, verify that the lease belongs to the landlord
+      const tenant = await ctx.db.tenant.findFirst({
+        where: {
+          id: input.tenantId,
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
       if (input.leaseId) {
         lease = await ctx.db.lease.findFirst({
           where: {
@@ -249,14 +376,6 @@ export const invoiceRouter = createTRPCRouter({
           });
         }
       } else {
-        // If no leaseId provided, just verify the tenant belongs to the landlord
-        const tenant = await ctx.db.tenant.findFirst({
-          where: {
-            id: input.tenantId,
-            landlordId: ctx.auth?.session?.userId ?? '',
-          },
-        });
-
         if (!tenant) {
           throw new TRPCError({
             code: 'FORBIDDEN',
@@ -266,12 +385,17 @@ export const invoiceRouter = createTRPCRouter({
         }
       }
 
+      const totalAmountDue = input.invoiceItems.reduce(
+        (acc, item) => acc + item.amount,
+        0
+      );
+
       // Create the invoice
       const invoiceData: any = {
         id: nanoid(),
         notes: input.notes,
         lineItems: input.invoiceItems,
-        dueAmount: input.totalAmount,
+        dueAmount: totalAmountDue,
         dueDate: input.dueDate,
         paystackId: nanoid(), // Generate a temporary ID for manual invoices
         category: 'RENT', // Default to RENT category
@@ -294,17 +418,23 @@ export const invoiceRouter = createTRPCRouter({
       });
 
       await createInvoiceTask.trigger({
-        customer: input.tenantId,
-        amount: input.totalAmount,
+        tenantId: input.tenantId,
+        customer: tenant?.paystackCustomerId,
+        amount: totalAmountDue,
         dueDate: input.dueDate,
         description: input.notes,
-        lineItems: input.invoiceItems,
+        lineItems: input.invoiceItems.map((item) => ({
+          name: item.description,
+          quantity: item.quantity,
+          rate: item.rate,
+          amount: item.amount * 100,
+        })),
         split_code: landlordSplitCode?.paystackSplitGroupId,
-        leaseId: input.leaseId,
+        leaseId: input.leaseId ?? '',
       });
 
       return {
-        message: 'Invoice created',
+        message: `Invoice created for ${input.tenantId}`,
       };
     }),
 

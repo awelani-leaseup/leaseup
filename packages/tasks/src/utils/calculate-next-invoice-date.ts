@@ -3,7 +3,7 @@ import { addMonths, isAfter, isBefore, startOfDay } from 'date-fns';
 export function calculateNextInvoiceDate(
   startDate: Date,
   invoiceCycle: string,
-  leaseType: string
+  endDate?: Date
 ): Date {
   const now = startOfDay(new Date());
   const start = startOfDay(new Date(startDate));

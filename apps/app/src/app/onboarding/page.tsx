@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppForm } from "@leaseup/ui/components/form";
 import { useStore } from "@tanstack/react-form";
 import { onboardingFormOptions } from "./_utils";
-import { VOnboardingSchema } from "./_types";
 import type { OnboardingFormData } from "./_types";
 import {
   BasicInfoStep,
@@ -31,21 +30,32 @@ import { Button } from "@leaseup/ui/components/button";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import toast from "react-hot-toast";
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(1);
+  const { data: onboardingStatus } =
+    api.onboarding.getOnboardingStatus.useQuery();
   const router = useRouter();
+
+  useEffect(() => {
+    if (onboardingStatus?.onboardingCompleted) {
+      router.push("/dashboard");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onboardingStatus]);
 
   // tRPC mutation for completing onboarding
   const completeOnboardingMutation =
     api.onboarding.completeOnboarding.useMutation({
       onSuccess: (data) => {
         console.log("Onboarding completed successfully:", data);
+
         router.push("/dashboard");
       },
       onError: (error) => {
         console.error("Error completing onboarding:", error);
-        // You could show a toast notification here
+        toast.error("Error completing onboarding");
       },
     });
 

@@ -5,3 +5,4 @@ export * from './payment-request-pending';
 export * from './payment-request-successful';
 export * from './invoice-send';
 export * from './landlord-onboard-successful';
+export * from './tenant-create';

@@ -1,10 +1,11 @@
 import { schemaTask, logger } from '@trigger.dev/sdk/v3';
-import { createInvoice } from '@leaseup/paystack/invoice';
+import { paystack } from '@leaseup/paystack/open-api/client';
 import { nanoid } from 'nanoid';
 import { db } from '@leaseup/prisma/db.ts';
 import * as v from 'valibot';
 
 const CreateInvoiceTaskPayload = v.object({
+  tenantId: v.optional(v.string()),
   customer: v.pipe(v.string(), v.nonEmpty('Customer is required')),
   amount: v.number(),
   dueDate: v.date(),
@@ -34,35 +35,37 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
     logger.log('Creating invoice with built-in retry logic');
 
     try {
-      const resp = await createInvoice({
-        customer: invoiceData.customer,
-        amount: Math.round(invoiceData.amount * 100), // convert to cents
-        currency: 'ZAR',
-        // @ts-ignore
-        dueDate: invoiceData.dueDate,
-        description: invoiceData.description,
-        lineItems: invoiceData.lineItems,
-        splitCode: invoiceData.split_code,
+      const { data, error } = await paystack.POST('/paymentrequest', {
+        body: {
+          customer: invoiceData.customer,
+          amount: Math.round(invoiceData.amount * 100), // convert to cents
+          currency: 'ZAR',
+          description: invoiceData.description,
+          lineItems: invoiceData.lineItems ?? [],
+          split_code: invoiceData.split_code ?? null,
+        },
       });
 
-      logger.log('Created invoice via Paystack', { resp });
+      logger.log('Created invoice via Paystack', { data });
 
-      if (!resp.status || resp.status !== true) {
+      if (error) {
         throw new Error(
-          `Paystack API error: ${resp.message || 'Unknown error'}`
+          `Paystack API error: ${error.message || 'Unknown error'}`
         );
       }
 
       const newInvoice = await db.invoice.create({
         data: {
           id: nanoid(),
+          tenantId: invoiceData.tenantId ?? '',
           leaseId: invoiceData.leaseId ?? null, // ensure this is string | null, not undefined
           description: invoiceData.description ?? '',
           dueAmount: invoiceData.amount,
           dueDate: invoiceData.dueDate,
           category: 'RENT',
           status: 'PENDING',
-          paystackId: resp?.data?.request_code,
+          lineItems: invoiceData.lineItems ?? [],
+          paystackId: data?.data?.request_code ?? '',
         },
       });
 

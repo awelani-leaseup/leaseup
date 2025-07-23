@@ -80,7 +80,14 @@ type Invoice = {
   status: string;
   description: string;
   createdAt: Date;
-  lease: {
+  tenant?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatarUrl?: string | null;
+  } | null;
+  lease?: {
     tenantLease: Array<{
       tenant: {
         id: string;
@@ -97,7 +104,7 @@ type Invoice = {
         name: string;
       };
     };
-  };
+  } | null;
 };
 
 // Column helper for type safety
@@ -195,7 +202,10 @@ export default function Invoices() {
           </Button>
         ),
         cell: ({ row }: { row: Row<Invoice> }) => {
-          const tenant = row.original.lease.tenantLease[0]?.tenant;
+          // Check for tenant in lease first, then check direct tenant (for invoices without leases)
+          const tenant =
+            row.original?.lease?.tenantLease?.[0]?.tenant ||
+            row.original?.tenant;
           return (
             <div className="flex items-center">
               <Avatar className="mr-3 h-8 w-8">
@@ -234,8 +244,19 @@ export default function Invoices() {
           </Button>
         ),
         cell: ({ row }: { row: Row<Invoice> }) => {
-          const property = row.original.lease.unit?.property;
-          const unit = row.original.lease.unit;
+          const property = row.original?.lease?.unit?.property;
+          const unit = row.original?.lease?.unit;
+
+          // Handle invoices without leases
+          if (!property || !unit) {
+            return (
+              <div>
+                <p className="text-[#2D3436]">-</p>
+                <p className="text-sm text-[#7F8C8D]">No property</p>
+              </div>
+            );
+          }
+
           return (
             <div>
               <p className="text-[#2D3436]">{property?.name}</p>

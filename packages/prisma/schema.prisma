@@ -36,6 +36,8 @@ model User {
   property               Property[]
   sessions               Session[]
   tenant                 Tenant[]
+
+  @@map("user")
 }
 
 model Session {
@@ -48,6 +50,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
 }
 
 model Account {
@@ -65,6 +69,8 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
 }
 
 model Verification {
@@ -74,12 +80,14 @@ model Verification {
   expiresAt  DateTime
   createdAt  DateTime?
   updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 model Tenant {
-  id                     String        @id @default(uuid())
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
+  id                     String              @id @default(uuid())
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
   email                  String
   firstName              String
   lastName               String
@@ -97,30 +105,36 @@ model Tenant {
   paystackCustomerId     String?
   files                  File[]
   Invoice                Invoice[]
-  landlord               User          @relation(fields: [landlordId], references: [id])
+  landlord               User                @relation(fields: [landlordId], references: [id])
   tenantLease            TenantLease[]
+  recurringBillable      RecurringBillable[]
+
+  @@map("tenant")
 }
 
 model Property {
-  id             String         @id @default(uuid())
-  name           String
-  addressLine1   String
-  addressLine2   String?
-  city           String
-  state          String
-  zip            String
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  imageUrl       String?
-  propertyStatus PropertyStatus @default(ACTIVE)
-  propertyType   PropertyType   @default(MULTI_UNIT)
-  amenities      String[]
-  countryCode    String         @default("ZA")
-  features       String[]
-  landlordId     String
-  files          File[]
-  landlord       User           @relation(fields: [landlordId], references: [id])
-  unit           Unit[]
+  id                String              @id @default(uuid())
+  name              String
+  addressLine1      String
+  addressLine2      String?
+  city              String
+  state             String
+  zip               String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  imageUrl          String?
+  propertyStatus    PropertyStatus      @default(ACTIVE)
+  propertyType      PropertyType        @default(MULTI_UNIT)
+  amenities         String[]
+  countryCode       String              @default("ZA")
+  features          String[]
+  landlordId        String
+  files             File[]
+  landlord          User                @relation(fields: [landlordId], references: [id])
+  unit              Unit[]
+  recurringBillable RecurringBillable[]
+
+  @@map("property")
 }
 
 model Unit {
@@ -136,6 +150,8 @@ model Unit {
   sqmt       Float    @default(0)
   lease      Lease[]
   property   Property @relation(fields: [propertyId], references: [id])
+
+  @@map("unit")
 }
 
 model Lease {
@@ -158,25 +174,55 @@ model Lease {
   maintenanceRequest MaintenanceRequest[]
   tenantLease        TenantLease[]
   transactions       Transactions[]
+  recurringBillable  RecurringBillable[]
+
+  @@map("lease")
 }
 
 model Invoice {
-  id           String          @id @default(uuid())
-  leaseId      String?
-  description  String
-  dueAmount    Float
-  category     InvoiceCategory
-  status       InvoiceStatus
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  paystackId   String
-  dueDate      DateTime?       @db.Date
-  lineItems    Json?
-  tenantId     String?
-  File         File[]
-  lease        Lease?          @relation(fields: [leaseId], references: [id])
-  tenant       Tenant?         @relation(fields: [tenantId], references: [id])
-  transactions Transactions[]
+  id                  String             @id @default(uuid())
+  leaseId             String?
+  description         String
+  dueAmount           Float
+  category            InvoiceCategory
+  status              InvoiceStatus
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  paystackId          String
+  dueDate             DateTime?          @db.Date
+  lineItems           Json?
+  tenantId            String
+  File                File[]
+  lease               Lease?             @relation(fields: [leaseId], references: [id])
+  tenant              Tenant             @relation(fields: [tenantId], references: [id])
+  transactions        Transactions[]
+  recurringBillable   RecurringBillable? @relation(fields: [recurringBillableId], references: [id])
+  recurringBillableId String?
+
+  @@map("invoice")
+}
+
+model RecurringBillable {
+  id            String          @id @default(uuid())
+  startDate     DateTime        @db.Date
+  endDate       DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  description   String
+  amount        Float
+  category      InvoiceCategory
+  cycle         InvoiceCycle    @default(MONTHLY)
+  nextInvoiceAt DateTime
+  isActive      Boolean         @default(true)
+  leaseId       String?
+  tenantId      String
+  lease         Lease?          @relation(fields: [leaseId], references: [id])
+  tenant        Tenant          @relation(fields: [tenantId], references: [id])
+  invoice       Invoice[] // Invoices generated from this recurring rule
+  property      Property?       @relation(fields: [propertyId], references: [id])
+  propertyId    String?
+
+  @@map("recurring_billable")
 }
 
 model Transactions {
@@ -190,6 +236,8 @@ model Transactions {
   invoiceId   String?
   invoice     Invoice? @relation(fields: [invoiceId], references: [id])
   lease       Lease?   @relation(fields: [leaseId], references: [id])
+
+  @@map("transaction")
 }
 
 model TenantLease {
@@ -198,6 +246,8 @@ model TenantLease {
   leaseId  String
   lease    Lease  @relation(fields: [leaseId], references: [id])
   tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  @@map("tenant_lease")
 }
 
 model MaintenanceRequest {
@@ -210,6 +260,8 @@ model MaintenanceRequest {
   updatedAt   DateTime                   @updatedAt
   File        File[]
   lease       Lease                      @relation(fields: [leaseId], references: [id])
+
+  @@map("maintenance_request")
 }
 
 model File {
@@ -231,6 +283,8 @@ model File {
   maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
   property             Property?           @relation(fields: [propertyId], references: [id])
   tenant               Tenant?             @relation(fields: [tenantId], references: [id])
+
+  @@map("file")
 }
 
 enum InvoiceCycle {

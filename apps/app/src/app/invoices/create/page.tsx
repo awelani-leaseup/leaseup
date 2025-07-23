@@ -43,7 +43,7 @@ export default function CreateInvoice() {
         const totalAmount = subtotal;
 
         await createInvoice({
-          leaseId: value.leaseId || undefined, // Only include if selected
+          leaseId: value.leaseId || "",
           tenantId: value.tenantId,
           notes: value.notes,
           dueDate: value.dueDate,
