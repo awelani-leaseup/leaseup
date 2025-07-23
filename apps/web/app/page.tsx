@@ -10,7 +10,7 @@ export default function Home() {
         <div className='max-w-[1392px] mx-auto px-4 md:px-8 w-full'>
           <div className='flex flex-col items-center text-center gap-0 w-full'>
             <div className='max-w-3xl w-full'>
-              <h1 className='text-3xl sm:text-5xl md:text-7xl  mb-6 tracking-tight leading-tight font-black'>
+              <h1 className='text-4xl sm:text-5xl md:text-7xl  mb-6 tracking-tight leading-tight font-black'>
                 Simplify Your
                 <span className='text-[#1ABC9C]'> Rental </span>
                 Management
