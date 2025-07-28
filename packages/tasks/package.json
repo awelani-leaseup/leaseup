@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "trigger dev",
-    "deploy": "trigger deploy"
+    "deploy": "trigger deploy",
+    "cron": "node --loader ts-node/esm src/cron-runner.ts",
+    "cron:dev": "tsx src/cron-runner.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +22,9 @@
     "@prisma/client": "^5.0.0",
     "@trigger.dev/sdk": "^3.3.17",
     "date-fns": "^4.1.0",
+    "effect": "^3.17.2",
     "nanoid": "^5.1.5",
+    "tsx": "^4.20.3",
     "valibot": "^1.1.0"
   },
   "devDependencies": {

@@ -93,6 +93,7 @@ export default function Home() {
                     Compliant, built on Paystack—trusted by thousands of African
                     businesses.. */}
                   </li>
+                  xq
                 </ul>
                 <a
                   href='/features/accounting'

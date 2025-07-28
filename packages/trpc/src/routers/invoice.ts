@@ -496,4 +496,118 @@ export const invoiceRouter = createTRPCRouter({
         },
       });
     }),
+
+  getById: protectedProcedure
+    .input(v.string())
+    .query(async ({ ctx, input }) => {
+      const invoice = await ctx.db.invoice.findFirst({
+        where: {
+          id: input,
+          OR: [
+            // Invoices with leases belonging to landlord's properties
+            {
+              lease: {
+                unit: {
+                  property: {
+                    landlordId: ctx.auth?.session?.userId ?? '',
+                  },
+                },
+              },
+            },
+            // Invoices without leases but with tenants belonging to landlord
+            {
+              AND: [
+                { leaseId: null },
+                {
+                  tenant: {
+                    landlordId: ctx.auth?.session?.userId ?? '',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        include: {
+          lease: {
+            include: {
+              unit: {
+                include: {
+                  property: {
+                    include: {
+                      landlord: {
+                        select: {
+                          id: true,
+                          name: true,
+                          businessName: true,
+                          email: true,
+                          phone: true,
+                          addressLine1: true,
+                          addressLine2: true,
+                          city: true,
+                          state: true,
+                          zip: true,
+                          countryCode: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              tenantLease: {
+                include: {
+                  tenant: {
+                    include: {
+                      landlord: {
+                        select: {
+                          id: true,
+                          name: true,
+                          businessName: true,
+                          email: true,
+                          phone: true,
+                          addressLine1: true,
+                          addressLine2: true,
+                          city: true,
+                          state: true,
+                          zip: true,
+                          countryCode: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          tenant: {
+            include: {
+              landlord: {
+                select: {
+                  id: true,
+                  name: true,
+                  businessName: true,
+                  email: true,
+                  phone: true,
+                  addressLine1: true,
+                  addressLine2: true,
+                  city: true,
+                  state: true,
+                  zip: true,
+                  countryCode: true,
+                },
+              },
+            },
+          }, // Include direct tenant for invoices without leases
+          transactions: true,
+        },
+      });
+
+      if (!invoice) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Invoice not found or you do not have permission to view it',
+        });
+      }
+
+      return invoice;
+    }),
 });
