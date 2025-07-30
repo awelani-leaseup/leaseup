@@ -50,7 +50,7 @@ export const metadata: Metadata = {
       'The all-in-one platform for landlords to manage properties, tenants, rent collection, and maintenance requests effortlessly.',
     site: '@leaseup',
     creator: '@leaseup',
-    images: ['https://leaseup.com/leaseup-logo.svg'],
+    images: ['https://leaseup.co.za/leaseup-logo.svg'],
   },
   robots: {
     index: true,
@@ -75,13 +75,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <head>
-        <script
-          src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js'
-          crossOrigin='anonymous'
-          referrerPolicy='no-referrer'
-        />
-      </head>
       <body className={font.className + ' antialiased'}>
         <Header />
         {children}
