@@ -8,6 +8,6 @@ const BASE_URL =
       : "http://localhost:3001";
 
 export const authClient = createAuthClient({
-  baseURL: BASE_URL,
+  baseURL: "http://leaseup.co.za",
   productionUrl: `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "leaseup.co.za"}`,
 });
