@@ -4,6 +4,13 @@ import { PrismaClient } from '@leaseup/prisma/client/index.js';
 import { createAuthMiddleware } from 'better-auth/api';
 import { novu } from '@leaseup/novu/client.ts';
 
+const BASE_URL =
+  process.env.VERCEL_ENV === 'production'
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_ENV === 'preview'
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3001';
+
 const prisma = new PrismaClient();
 
 const NOVU_PASSWORD_FORGOT_WORKFLOW_ID = 'landlord-password-forgot';
@@ -21,6 +28,9 @@ if (!NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID || !GOOGLE_OATH_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
+  secret: process.env.BETTER_AUTH_SECRET_KEY,
+  baseURL: BASE_URL,
+  productionUrl: BASE_URL,
   socialProviders: {
     google: {
       clientId: NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID,
