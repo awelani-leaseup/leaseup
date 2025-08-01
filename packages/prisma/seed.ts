@@ -4,11 +4,13 @@ import { auth } from './seed/auth.ts';
 import {
   InvoiceCategory,
   InvoiceStatus,
+  InvoiceCycle,
   LeaseTermType,
   PropertyAmenity,
   PropertyFeature,
   PropertyType,
   TenantIncomeType,
+  LeaseStatus,
 } from './generated/client';
 
 function generateSouthAfricanIntlNumber() {
@@ -50,6 +52,7 @@ async function main() {
   // Delete in correct order respecting foreign key constraints
   await db.$executeRawUnsafe(`DELETE FROM "transaction";`);
   await db.$executeRawUnsafe(`DELETE FROM "invoice";`);
+  await db.$executeRawUnsafe(`DELETE FROM "recurring_billable";`);
   await db.$executeRawUnsafe(`DELETE FROM "maintenance_request";`);
   await db.$executeRawUnsafe(`DELETE FROM "file";`);
   await db.$executeRawUnsafe(`DELETE FROM "tenant_lease";`);
@@ -177,7 +180,7 @@ async function main() {
           lastName: faker.person.lastName(),
           phone: generateSouthAfricanIntlNumber(),
           landlordId: user.user.id,
-          paystackCustomerId: faker.string.uuid(),
+          paystackCustomerId: 'CUS_8jb0ozhu6wpknbk',
           dateOfBirth: faker.date.birthdate(),
           tenantEmergencyContact: {
             name: faker.person.fullName(),
@@ -262,10 +265,10 @@ async function main() {
               : undefined,
           rent: faker.number.int({ min: 1000, max: 10000 }),
           deposit: faker.number.int({ min: 1000, max: 10000 }),
-          status: 'ACTIVE',
+          status: LeaseStatus.ACTIVE,
           rentDueCurrency: 'ZAR',
           leaseType: leaseTermType,
-          invoiceCycle: 'MONTHLY',
+          invoiceCycle: InvoiceCycle.MONTHLY,
           automaticInvoice: true,
         };
       }),
@@ -326,6 +329,45 @@ async function main() {
     },
   });
 
+  console.log(
+    '🔄 Creating recurring billables for leases with automatic billing...'
+  );
+
+  // Create recurring billables for all leases with automaticInvoice: true
+  const recurringBillablePromises: Promise<any>[] = [];
+
+  leasesWithTenants.forEach((lease) => {
+    if (lease.automaticInvoice && lease.tenantLease.length > 0) {
+      const tenant = lease.tenantLease[0].tenant;
+
+      // Create a recurring billable for rent payments
+      const recurringBillablePromise = db.recurringBillable.create({
+        data: {
+          startDate: lease.startDate,
+          endDate: lease.endDate,
+          description: `Monthly rent for lease ${lease.id}`,
+          amount: lease.rent,
+          category: InvoiceCategory.RENT,
+          cycle: InvoiceCycle.MONTHLY,
+          nextInvoiceAt: new Date(
+            lease.startDate.getTime() + 30 * 24 * 60 * 60 * 1000
+          ), // Next month
+          isActive: lease.status === LeaseStatus.ACTIVE,
+          leaseId: lease.id,
+          tenantId: tenant.id,
+        },
+      });
+
+      recurringBillablePromises.push(recurringBillablePromise);
+    }
+  });
+
+  const recurringBillables = await Promise.all(recurringBillablePromises);
+
+  console.log(
+    `✅ Successfully created ${recurringBillables.length} recurring billables for automatic billing!`
+  );
+
   // Create invoices for leases that have been active for at least 1 month
   const invoicePromises: Promise<any>[] = [];
 
@@ -342,6 +384,11 @@ async function main() {
       lease.tenantLease.length > 0
     ) {
       const tenant = lease.tenantLease[0].tenant;
+
+      // Find the corresponding recurring billable for this lease (if it has automatic billing)
+      const correspondingRecurringBillable = recurringBillables.find(
+        (rb) => rb.leaseId === lease.id
+      );
 
       // Generate monthly invoices from start date to current date
       for (let monthOffset = 0; monthOffset < monthsSinceStart; monthOffset++) {
@@ -369,22 +416,44 @@ async function main() {
           status = InvoiceStatus.PENDING;
         }
 
+        const invoiceData: any = {
+          dueAmount: lease.rent,
+          dueDate: dueDate,
+          status: status,
+          createdAt: invoiceDate,
+          tenant: {
+            connect: { id: tenant.id },
+          },
+          lease: {
+            connect: { id: lease.id },
+          },
+          landlord: {
+            connect: { id: tenant.landlordId },
+          },
+          updatedAt: invoiceDate,
+          description: `Monthly rent for ${invoiceDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
+          paystackId: faker.string.uuid(),
+          category: InvoiceCategory.RENT,
+        };
+
+        // If this lease has automatic billing, link the invoice to the recurring billable
+        if (correspondingRecurringBillable) {
+          invoiceData.recurringBillable = {
+            connect: { id: correspondingRecurringBillable.id },
+          };
+        }
+
         const invoicePromise = db.invoice.create({
           data: {
-            dueAmount: lease.rent,
-            dueDate: dueDate,
-            status: status,
-            createdAt: invoiceDate,
-            tenant: {
-              connect: { id: tenant.id },
-            },
-            lease: {
-              connect: { id: lease.id },
-            },
-            updatedAt: invoiceDate,
-            description: `Monthly rent for ${invoiceDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
-            paystackId: faker.string.uuid(),
-            category: InvoiceCategory.RENT,
+            ...invoiceData,
+            lineItems: [
+              {
+                description: 'Rent',
+                amount: lease.rent,
+                quantity: 1,
+                rate: lease.rent,
+              },
+            ],
           },
         });
 

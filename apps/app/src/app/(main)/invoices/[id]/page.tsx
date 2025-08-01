@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@leaseup/ui/components/button";
 import {
   Card,
@@ -40,21 +40,17 @@ import {
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
+import { toast } from "react-hot-toast";
 
-interface InvoiceViewPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
+export default function InvoiceViewPage() {
   const router = useRouter();
-  const { id } = params;
+  const { id } = useParams<{ id: string }>();
+  const utils = api.useUtils();
 
-  // Fetch single invoice data
   const { data: invoice, isLoading } = api.invoice.getById.useQuery(id);
+  const { mutate: voidInvoice, isPending: isVoiding } =
+    api.invoice.voidInvoice.useMutation();
 
-  // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-ZA", {
       style: "currency",
@@ -62,7 +58,6 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
     }).format(amount);
   };
 
-  // Get status color
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PAID":
@@ -78,7 +73,6 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
     }
   };
 
-  // Get status badge text
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PAID":
@@ -128,8 +122,18 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
   };
 
   const handleVoidInvoice = () => {
-    // TODO: Implement void invoice functionality
-    console.log("Void invoice");
+    voidInvoice(
+      { invoiceId: id },
+      {
+        onSuccess: () => {
+          toast.success("Invoice voided successfully");
+          utils.invoice.getById.invalidate();
+        },
+        onError: () => {
+          toast.error("Failed to void invoice");
+        },
+      },
+    );
   };
 
   const handleDuplicateInvoice = () => {
@@ -377,7 +381,7 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
                           {item.quantity}
                         </TableCell>
                         <TableCell className="p-4 text-right text-[#7F8C8D]">
-                          {formatCurrency(item.rate / 100)}
+                          {formatCurrency(item.rate)}
                         </TableCell>
                         <TableCell className="p-4 text-right font-medium text-[#2D3436]">
                           {formatCurrency(item.amount / 100)}
@@ -522,7 +526,9 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
             <Button
               className="flex-1"
               onClick={handleSendReminder}
-              disabled={invoice.status === "PAID"}
+              disabled={
+                invoice.status === "PAID" || invoice.status === "CANCELLED"
+              }
             >
               <Send className="mr-2 h-4 w-4" />
               Send Reminder
@@ -541,8 +547,9 @@ export default function InvoiceViewPage({ params }: InvoiceViewPageProps) {
             </Button>
             <Button
               variant="outlined"
-              className="flex-1 border-[#E74C3C] text-[#E74C3C]"
+              color="danger"
               onClick={handleVoidInvoice}
+              isLoading={isVoiding}
               disabled={invoice.status === "PAID"}
             >
               <Ban className="mr-2 h-4 w-4" />

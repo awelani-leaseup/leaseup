@@ -36,6 +36,7 @@ model User {
   property               Property[]
   sessions               Session[]
   tenant                 Tenant[]
+  Invoice                Invoice[]
 
   @@map("user")
 }
@@ -191,6 +192,7 @@ model Invoice {
   paystackId          String
   dueDate             DateTime?          @db.Date
   lineItems           Json?
+  landlordId          String
   tenantId            String
   File                File[]
   lease               Lease?             @relation(fields: [leaseId], references: [id])
@@ -198,6 +200,7 @@ model Invoice {
   transactions        Transactions[]
   recurringBillable   RecurringBillable? @relation(fields: [recurringBillableId], references: [id])
   recurringBillableId String?
+  landlord            User               @relation(fields: [landlordId], references: [id])
 
   @@map("invoice")
 }

@@ -7,7 +7,7 @@ import {
   VGetTenantTransactionsSchema,
 } from './tenant.types';
 import { tasks } from '@trigger.dev/sdk/v3';
-import { tenantCreateTask } from '@leaseup/tasks/trigger';
+import { runCreateTenantCustomerEffect } from '@leaseup/tasks/effect';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -84,7 +84,7 @@ export const tenantRouter = createTRPCRouter({
         },
       });
 
-      await tenantCreateTask.trigger({
+      await runCreateTenantCustomerEffect({
         tenantId: tenant.id,
       });
 
@@ -143,15 +143,8 @@ export const tenantRouter = createTRPCRouter({
       // Get all transactions for this tenant through their leases
       const transactions = await ctx.db.transactions.findMany({
         where: {
-          lease: {
-            tenantLease: {
-              some: {
-                tenantId: input.id,
-                tenant: {
-                  landlordId: ctx.auth?.session?.userId ?? '',
-                },
-              },
-            },
+          invoice: {
+            tenantId: input.id,
           },
         },
         include: {

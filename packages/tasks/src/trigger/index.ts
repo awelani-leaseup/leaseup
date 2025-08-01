@@ -7,4 +7,3 @@ export * from './payment-request-successful';
 export * from './invoice-send';
 export * from './landlord-onboard-successful';
 export * from './tenant-create';
-export * from './send-monthly-invoices-effect';

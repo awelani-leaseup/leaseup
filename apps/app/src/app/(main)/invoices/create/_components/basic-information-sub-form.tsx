@@ -20,6 +20,9 @@ export const BasicInformationSubForm = withForm({
         { enabled: !!selectedTenantId },
       );
 
+    const { data: invoiceCategories } =
+      api.invoice.getInvoiceCategory.useQuery();
+
     return (
       <>
         {/* Tenant Selection */}
@@ -77,6 +80,23 @@ export const BasicInformationSubForm = withForm({
             <field.SelectField
               label="Billing Period"
               options={billingPeriodOptions()}
+            />
+          )}
+        </form.AppField>
+
+        <form.AppField name="invoiceCategory">
+          {(field) => (
+            <field.SelectField
+              label="Invoice Category"
+              options={
+                invoiceCategories?.map((category) => ({
+                  id: category,
+                  label: category
+                    .replace(/_/g, " ")
+                    .toLowerCase()
+                    .replace(/\b\w/g, (l) => l.toUpperCase()),
+                })) || []
+              }
             />
           )}
         </form.AppField>

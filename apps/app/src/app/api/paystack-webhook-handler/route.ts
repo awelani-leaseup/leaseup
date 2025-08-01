@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { paymentRequestSuccessfulTask } from "@leaseup/tasks/trigger";
+import { runProcessPaymentRequestSuccessfulEffect } from "@leaseup/tasks/effect";
 
 const ALLOWED_IPS = ["52.31.139.75", "52.49.173.169", "52.214.14.220"];
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
   switch (payload.event) {
     case "paymentrequest.success":
-      await paymentRequestSuccessfulTask.trigger(payload);
+      await runProcessPaymentRequestSuccessfulEffect(payload);
       break;
     case "paymentrequest.pending":
       break;

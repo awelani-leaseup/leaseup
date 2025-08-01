@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
-import { landlordOnboardSuccessfulTask } from '@leaseup/tasks/trigger';
+import { runLandlordOnboardSuccessfulEffect } from '@leaseup/tasks/effect';
 import { type Bank, VOnboardingInput } from './onboarding.types';
-import { paystack } from '@leaseup/paystack/open-api/client';
+import { paystack } from '@leaseup/payments/open-api/client';
 
 export const onboardingRouter = createTRPCRouter({
   completeOnboarding: protectedProcedure
@@ -29,19 +29,7 @@ export const onboardingRouter = createTRPCRouter({
           },
         });
 
-        // TODO: Create Paystack subaccount with banking details
-        // This would typically involve:
-        // 1. Creating a Paystack subaccount
-        // 2. Storing the subaccount ID in the user record
-        // 3. Setting up split payments
-
-        // For now, we'll just store the banking details as metadata
-        // In a real implementation, you'd want to:
-        // - Validate the bank account with Paystack
-        // - Create the subaccount
-        // - Store the subaccount ID
-
-        await landlordOnboardSuccessfulTask.trigger({
+        await runLandlordOnboardSuccessfulEffect({
           userId,
           businessName: input.businessName,
           settlementBank: input.bankCode,

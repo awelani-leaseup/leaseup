@@ -4,20 +4,22 @@
   "description": "",
   "exports": {
     "./tasks": "./src/tasks.ts",
-    "./trigger": "./src/trigger/index.ts"
+    "./trigger": "./src/trigger/index.ts",
+    "./effect": "./src/effect/index.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "trigger dev",
     "deploy": "trigger deploy",
     "cron": "node --loader ts-node/esm src/cron-runner.ts",
-    "cron:dev": "tsx src/cron-runner.ts"
+    "cron:dev": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx src/cron-runner.ts",
+    "test:cron": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx test-cron.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@leaseup/paystack": "workspace:*",
+    "@leaseup/payments": "workspace:*",
     "@leaseup/prisma": "workspace:*",
     "@prisma/client": "^5.0.0",
     "@trigger.dev/sdk": "^3.3.17",

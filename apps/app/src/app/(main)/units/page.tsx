@@ -53,7 +53,7 @@ const UnitCard = async () => {
   const units = await api.portfolio.getAllUnits();
 
   return (
-    <div id="main-content" className="mt-6 bg-[#ECF0F1] py-8">
+    <div id="main-content" className="mt-6 py-8">
       <div className="mx-auto max-w-7xl">
         <div
           id="units-grid"

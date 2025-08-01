@@ -1,7 +1,8 @@
 import { schemaTask, logger } from '@trigger.dev/sdk/v3';
-import { paystack } from '@leaseup/paystack/open-api/client';
+import { paystack } from '@leaseup/payments/open-api/client';
 import { nanoid } from 'nanoid';
 import { db } from '@leaseup/prisma/db.ts';
+import { InvoiceCategory } from '@leaseup/prisma/client/index.js';
 import * as v from 'valibot';
 
 const CreateInvoiceTaskPayload = v.object({
@@ -15,6 +16,7 @@ const CreateInvoiceTaskPayload = v.object({
   lineItems: v.any(),
   split_code: v.pipe(v.string(), v.nonEmpty('Split code is required')),
   leaseId: v.optional(v.string()),
+  category: v.pipe(v.string(), v.nonEmpty('Category is required')),
 });
 
 const valibotParser = v.parser(CreateInvoiceTaskPayload);
@@ -62,7 +64,7 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
           description: invoiceData.description ?? '',
           dueAmount: invoiceData.amount,
           dueDate: invoiceData.dueDate,
-          category: 'RENT',
+          category: invoiceData.category as InvoiceCategory,
           status: 'PENDING',
           lineItems: invoiceData.lineItems ?? [],
           paystackId: data?.data?.request_code ?? '',

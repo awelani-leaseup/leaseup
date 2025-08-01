@@ -1,6 +1,5 @@
 import "@leaseup/ui/global.css";
 
-import { Toaster } from "react-hot-toast";
 import { Inter } from "next/font/google";
 import { AuthWrapper } from "./_components/auth-wrapper";
 

@@ -20,6 +20,7 @@ export const createInvoiceFormOptions = formOptions({
         year: "numeric",
       });
     })(),
+    invoiceCategory: "",
     invoiceItems: [
       {
         description: "",

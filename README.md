@@ -1,84 +1,215 @@
-# Turborepo starter
+# LeaseUp
 
-This Turborepo starter is maintained by the Turborepo core team.
+A comprehensive property management platform that simplifies rental management for landlords. LeaseUp automates rent collection, tenant management, lease tracking, and property administration through an intuitive web interface.
 
-## Using this example
+## 🏠 Features
 
-Run the following command:
+### Core Functionality
 
-```sh
-npx create-turbo@latest
-```
+- **Property Management**: Manage single and multi-unit properties with detailed information and documentation
+- **Tenant Management**: Complete tenant profiles, contact information, and relationship tracking
+- **Lease Management**: Digital lease agreements with automated renewals and tracking
+- **Online Rent Collection**: Automated invoicing, payment processing, and rent reminders
+- **Document Management**: Secure storage and organization of property documents
+- **Financial Reporting**: Track payments, generate reports, and monitor property performance
 
-## What's inside?
+### Automation & Notifications
 
-This Turborepo includes the following packages/apps:
+- **Automated Rent Reminders**: Email/SMS notifications for upcoming rent payments
+- **Invoice Generation**: Automatic monthly invoice creation and distribution
+- **Payment Notifications**: Instant alerts when rent is received
+- **Maintenance Tracking**: Request and track property maintenance issues
 
-### Apps and Packages
+## 🛠 Technology Stack
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Frontend
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- **Next.js 15** with React 19
+- **Tailwind CSS** for styling
+- **TypeScript** for type safety
+- **tRPC** for type-safe API communication
+- **Tanstack Query** for data fetching and caching
 
-### Utilities
+### Backend
 
-This Turborepo has some additional tools already setup for you:
+- **PostgreSQL** database
+- **Prisma ORM** for database management
+- **Better Auth** for authentication
+- **tRPC** for API layer
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Infrastructure & Services
 
-### Build
+- **Paystack** for payment processing
+- **AWS S3** for file storage
+- **Novu** for notification workflows
+- **Trigger.dev** for background task processing
+- **Effect-TS** for functional programming patterns
 
-To build all apps and packages, run the following command:
+### Development Tools
+
+- **Turborepo** for monorepo management
+- **ESLint** & **Prettier** for code quality
+- **Uppy** for file uploads
+
+## 📁 Project Structure
+
+This is a Turborepo monorepo containing the following apps and packages:
+
+### Apps
+
+- **`apps/app`**: Main LeaseUp application (Next.js)
+- **`apps/web`**: Marketing website and landing pages
+- **`apps/docs`**: Documentation site
+
+### Packages
+
+- **`packages/prisma`**: Database schema and ORM configuration
+- **`packages/trpc`**: tRPC routers and API definitions
+- **`packages/ui`**: Shared React component library
+- **`packages/tasks`**: Background task processing and cron jobs
+- **`packages/payments`**: Payment processing and Paystack integration
+- **`packages/novu`**: Notification workflows and templates
+- **`packages/supabase`**: Supabase configuration
+- **`packages/eslint-config`**: Shared ESLint configurations
+- **`packages/typescript-config`**: Shared TypeScript configurations
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 9.0.0+
+- PostgreSQL database
+
+### Installation
+
+1. Clone the repository:
 
 ```bash
-cd my-turborepo
+git clone <repository-url>
+cd leaseup
+```
+
+2. Install dependencies:
+
+```bash
+pnpm install
+```
+
+3. Set up environment variables:
+
+```bash
+# Copy environment example files and configure
+cp .env.example .env.local
+```
+
+4. Set up the database:
+
+```bash
+# Generate Prisma client
+pnpm run db:generate
+
+# Run database migrations
+pnpm run db:migrate
+
+# Seed the database (optional)
+pnpm run db:seed
+```
+
+### Development
+
+Start the development servers:
+
+```bash
+# Start all apps and services
+pnpm dev
+
+# Or start specific apps
+pnpm dev --filter=app          # Main application (port 3001)
+pnpm dev --filter=web          # Marketing site
+pnpm dev --filter=docs         # Documentation
+```
+
+### Building
+
+Build all apps and packages:
+
+```bash
 pnpm build
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
+Build specific packages:
 
 ```bash
-cd my-turborepo
-pnpm dev
+pnpm build --filter=app
+pnpm build --filter=web
 ```
 
-### Remote Caching
+## 📝 Available Scripts
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Root Level
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- `pnpm dev` - Start all applications in development mode
+- `pnpm build` - Build all applications and packages
+- `pnpm lint` - Run linting across all packages
+- `pnpm format` - Format code with Prettier
+- `pnpm check-types` - Run TypeScript type checking
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+### Database (from packages/prisma)
 
-```bash
-cd my-turborepo
-npx turbo login
+- `pnpm run db:generate` - Generate Prisma client
+- `pnpm run db:migrate` - Run database migrations
+- `pnpm run db:push` - Push schema changes without migrations
+- `pnpm run db:seed` - Seed database with sample data
+- `pnpm run db:studio` - Open Prisma Studio
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Key environment variables to configure:
+
+```env
+# Database
+DATABASE_URL="postgresql://..."
+
+# Authentication
+BETTER_AUTH_SECRET="..."
+BETTER_AUTH_URL="..."
+
+# Payments
+PAYSTACK_SECRET_KEY="..."
+PAYSTACK_PUBLIC_KEY="..."
+
+# AWS S3
+AWS_ACCESS_KEY_ID="..."
+AWS_SECRET_ACCESS_KEY="..."
+AWS_S3_BUCKET_NAME="..."
+
+# Notifications
+NOVU_API_KEY="..."
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 🤝 Contributing
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-```bash
-npx turbo link
-```
+## 📄 License
 
-## Useful Links
+This project is proprietary software. All rights reserved.
 
-Learn more about the power of Turborepo:
+## 🆘 Support
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+For support and questions:
+
+- Check the [documentation](./apps/docs)
+- Create an issue in the repository
+- Contact the development team
+
+---
+
+Built with ❤️ using [Turborepo](https://turbo.build/repo)

@@ -1,12 +1,20 @@
 import { VGetAllInvoicesSchema, VCreateInvoiceSchema } from './invoice.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
-import { nanoid } from 'nanoid';
 import { TRPCError } from '@trpc/server';
 import * as v from 'valibot';
-import { createInvoiceTask } from '@leaseup/tasks/trigger';
-import { Prisma, InvoiceStatus } from '@leaseup/prisma/client/index.js';
+import { runCreateInvoiceEffect } from '@leaseup/tasks/effect';
+import { paystack } from '@leaseup/payments/open-api/client';
+import {
+  Prisma,
+  InvoiceStatus,
+  InvoiceCategory,
+} from '@leaseup/prisma/client/index.js';
 
 export const invoiceRouter = createTRPCRouter({
+  getInvoiceCategory: protectedProcedure.query(async ({ ctx }) => {
+    return Object.values(InvoiceCategory);
+  }),
+
   getAll: protectedProcedure
     .input(VGetAllInvoicesSchema)
     .query(async ({ ctx, input }) => {
@@ -365,7 +373,6 @@ export const invoiceRouter = createTRPCRouter({
           });
         }
 
-        // Verify the tenant is associated with this lease
         const tenantLease = lease.tenantLease.find(
           (tl) => tl.tenantId === input.tenantId
         );
@@ -375,7 +382,7 @@ export const invoiceRouter = createTRPCRouter({
             message: 'Tenant is not associated with this lease',
           });
         }
-      } else {
+      } else if (tenant) {
         if (!tenant) {
           throw new TRPCError({
             code: 'FORBIDDEN',
@@ -385,28 +392,8 @@ export const invoiceRouter = createTRPCRouter({
         }
       }
 
-      const totalAmountDue = input.invoiceItems.reduce(
-        (acc, item) => acc + item.amount,
-        0
-      );
-
-      // Create the invoice
-      const invoiceData: any = {
-        id: nanoid(),
-        notes: input.notes,
-        lineItems: input.invoiceItems,
-        dueAmount: totalAmountDue,
-        dueDate: input.dueDate,
-        paystackId: nanoid(), // Generate a temporary ID for manual invoices
-        category: 'RENT', // Default to RENT category
-        status: 'PENDING',
-        createdAt: input.invoiceDate,
-      };
-
-      // Only include leaseId if it's provided
-      if (input.leaseId) {
-        invoiceData.leaseId = input.leaseId;
-      }
+      const totalAmountDue =
+        input.invoiceItems.reduce((acc, item) => acc + item.amount, 0) * 100;
 
       const landlordSplitCode = await ctx.db.user.findUnique({
         where: {
@@ -417,9 +404,10 @@ export const invoiceRouter = createTRPCRouter({
         },
       });
 
-      await createInvoiceTask.trigger({
+      await runCreateInvoiceEffect({
+        landlordId: ctx.auth?.session?.userId ?? '',
         tenantId: input.tenantId,
-        customer: tenant?.paystackCustomerId,
+        customer: tenant?.paystackCustomerId ?? '',
         amount: totalAmountDue,
         dueDate: input.dueDate,
         description: input.notes,
@@ -429,8 +417,9 @@ export const invoiceRouter = createTRPCRouter({
           rate: item.rate,
           amount: item.amount * 100,
         })),
-        split_code: landlordSplitCode?.paystackSplitGroupId,
+        split_code: landlordSplitCode?.paystackSplitGroupId ?? '',
         leaseId: input.leaseId ?? '',
+        category: input.category,
       });
 
       return {
@@ -462,6 +451,39 @@ export const invoiceRouter = createTRPCRouter({
       },
     });
   }),
+
+  voidInvoice: protectedProcedure
+    .input(v.object({ invoiceId: v.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const invoice = await ctx.db.invoice.findFirst({
+        where: {
+          id: input.invoiceId,
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
+      if (!invoice) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Invoice not found',
+        });
+      }
+
+      await paystack.POST('/paymentrequest/archive/{id}', {
+        params: {
+          path: {
+            id: invoice.paystackId,
+          },
+        },
+      });
+
+      return ctx.db.invoice.update({
+        where: { id: input.invoiceId },
+        data: {
+          status: InvoiceStatus.CANCELLED,
+        },
+      });
+    }),
 
   getAllTenants: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.tenant.findMany({

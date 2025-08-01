@@ -391,7 +391,7 @@ importers:
 
   packages/tasks:
     dependencies:
-      '@leaseup/paystack':
+      '@leaseup/payments':
         specifier: workspace:*
         version: link:../payments
       '@leaseup/prisma':
@@ -434,7 +434,7 @@ importers:
       '@leaseup/novu':
         specifier: workspace:*
         version: link:../novu
-      '@leaseup/paystack':
+      '@leaseup/payments':
         specifier: workspace:*
         version: link:../payments
       '@leaseup/prisma':
@@ -473,6 +473,9 @@ importers:
       dotenv:
         specifier: ^17.2.0
         version: 17.2.0
+      effect:
+        specifier: ^3.17.2
+        version: 3.17.2
       nanoid:
         specifier: ^5.1.5
         version: 5.1.5

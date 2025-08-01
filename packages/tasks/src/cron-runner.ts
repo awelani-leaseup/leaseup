@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { runStandaloneCron } from './trigger/send-monthly-invoices-effect.js';
+import { runStandaloneTestCron } from './effect/send-monthly-invoices';
 
 // Standalone cron runner using Effect's built-in scheduling
 // This replaces the need for trigger.dev for this specific task
@@ -12,7 +12,13 @@ async function main() {
   );
 
   try {
-    await runStandaloneCron();
+    await runStandaloneTestCron();
+
+    // 🚨 Add this to keep the process alive
+    console.log('🟡 runStandaloneTestCron completed — entering idle loop...');
+    setInterval(() => {
+      console.log(`🕰️ Still running at ${new Date().toISOString()}`);
+    }, 60_000); // every minute
   } catch (error) {
     console.error('❌ Cron runner failed:', error);
     process.exit(1);

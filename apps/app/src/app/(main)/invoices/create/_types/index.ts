@@ -17,6 +17,10 @@ export const VCreateInvoiceFormSchema = v.object({
     v.string(),
     v.minLength(1, "Billing period is required"),
   ),
+  invoiceCategory: v.pipe(
+    v.string(),
+    v.minLength(1, "Invoice category is required"),
+  ),
   invoiceItems: v.pipe(
     v.array(VInvoiceItemSchema),
     v.minLength(1, "At least one invoice item is required"),

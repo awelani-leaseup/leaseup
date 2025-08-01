@@ -311,21 +311,23 @@ export default function Invoices() {
             row.original?.lease?.tenantLease?.[0]?.tenant ||
             row.original?.tenant;
           return (
-            <div className="flex items-center">
-              <Avatar className="mr-3 h-8 w-8">
-                <AvatarImage src={tenant?.avatarUrl || undefined} />
-                <AvatarFallback>
-                  {tenant?.firstName?.[0]}
-                  {tenant?.lastName?.[0]}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium text-[#2D3436]">
-                  {tenant?.firstName} {tenant?.lastName}
-                </p>
-                <p className="text-sm text-[#7F8C8D]">{tenant?.email}</p>
+            <Link href={`/tenants/${tenant?.id}`} className="group">
+              <div className="flex items-center">
+                <Avatar className="mr-3 h-8 w-8">
+                  <AvatarImage src={tenant?.avatarUrl || undefined} />
+                  <AvatarFallback>
+                    {tenant?.firstName?.[0]}
+                    {tenant?.lastName?.[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium text-[#2D3436] group-hover:underline">
+                    {tenant?.firstName} {tenant?.lastName}
+                  </p>
+                  <p className="text-sm text-[#7F8C8D]">{tenant?.email}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           );
         },
       }),

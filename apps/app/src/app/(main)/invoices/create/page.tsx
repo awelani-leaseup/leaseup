@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import { createInvoiceFormOptions } from "./_utils";
 import { BasicInformationSubForm } from "./_components/basic-information-sub-form";
 import { InvoiceItemsSubForm } from "./_components/invoice-items-sub-form";
+
 import { Switch } from "@leaseup/ui/components/switch";
 
 export default function CreateInvoice() {
@@ -51,6 +52,7 @@ export default function CreateInvoice() {
           invoiceItems: value.invoiceItems,
           totalAmount,
           markAsPaid: value.markAsPaid,
+          category: value.invoiceCategory,
         });
 
         toast.success("Invoice created successfully");

@@ -21,6 +21,7 @@ export const VCreateInvoiceSchema = v.object({
   dueDate: v.date('Due date is required'),
   invoiceDate: v.date('Invoice date is required'),
   markAsPaid: v.boolean(),
+  category: v.pipe(v.string(), v.minLength(1, 'Invoice category is required')),
   invoiceItems: v.pipe(
     v.array(
       v.object({

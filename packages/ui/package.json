@@ -5,7 +5,8 @@
   "exports": {
     "./global.css": "./src/styles/global.css",
     "./postcss.config": "./postcss.config.mjs",
-    "./components/*": "./src/components/*.tsx"
+    "./components/*": "./src/components/*.tsx",
+    "./utils/*": "./src/utils/*.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

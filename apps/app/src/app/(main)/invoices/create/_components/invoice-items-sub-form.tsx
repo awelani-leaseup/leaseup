@@ -57,18 +57,34 @@ export const InvoiceItemsSubForm = withForm({
       <>
         {/* Invoice Items */}
         <div className="mb-8">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Invoice Items</h3>
-          </div>
-
           <form.AppField name="invoiceItems" mode="array">
             {(field) => (
               <>
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Invoice Items</h3>
+                  <Button
+                    color="secondary"
+                    type="button"
+                    size="sm"
+                    onClick={() =>
+                      field.pushValue({
+                        description: "",
+                        quantity: 1,
+                        rate: 0,
+                        amount: 0,
+                      })
+                    }
+                    className="mt-4"
+                  >
+                    <Plus className="mr-1 h-4 w-4" />
+                    Add Item
+                  </Button>
+                </div>
                 <div className="space-y-4">
                   {field.state.value.map((item, index) => (
                     <div
                       key={index}
-                      className="grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4 md:grid-cols-4"
+                      className="animate-in fade-in-0 grid grid-cols-1 gap-4 rounded-lg border border-gray-200 p-4 duration-200 md:grid-cols-4"
                     >
                       <div>
                         <Label>Description</Label>
@@ -155,23 +171,6 @@ export const InvoiceItemsSubForm = withForm({
                     </div>
                   ))}
                 </div>
-                <Button
-                  color="secondary"
-                  type="button"
-                  size="sm"
-                  onClick={() =>
-                    field.pushValue({
-                      description: "",
-                      quantity: 1,
-                      rate: 0,
-                      amount: 0,
-                    })
-                  }
-                  className="mt-4"
-                >
-                  <Plus className="mr-1 h-4 w-4" />
-                  Add Item
-                </Button>
               </>
             )}
           </form.AppField>

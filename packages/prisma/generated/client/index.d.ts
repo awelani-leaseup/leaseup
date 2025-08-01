@@ -2260,6 +2260,7 @@ export namespace Prisma {
     property: number
     sessions: number
     tenant: number
+    Invoice: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2267,6 +2268,7 @@ export namespace Prisma {
     property?: boolean | UserCountOutputTypeCountPropertyArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     tenant?: boolean | UserCountOutputTypeCountTenantArgs
+    Invoice?: boolean | UserCountOutputTypeCountInvoiceArgs
   }
 
   // Custom InputTypes
@@ -2306,6 +2308,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTenantArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TenantWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountInvoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InvoiceWhereInput
   }
 
 
@@ -2971,6 +2980,7 @@ export namespace Prisma {
     property?: boolean | User$propertyArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     tenant?: boolean | User$tenantArgs<ExtArgs>
+    Invoice?: boolean | User$InvoiceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3055,6 +3065,7 @@ export namespace Prisma {
     property?: boolean | User$propertyArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     tenant?: boolean | User$tenantArgs<ExtArgs>
+    Invoice?: boolean | User$InvoiceArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3067,6 +3078,7 @@ export namespace Prisma {
       property: Prisma.$PropertyPayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       tenant: Prisma.$TenantPayload<ExtArgs>[]
+      Invoice: Prisma.$InvoicePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3489,6 +3501,7 @@ export namespace Prisma {
     property<T extends User$propertyArgs<ExtArgs> = {}>(args?: Subset<T, User$propertyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tenant<T extends User$tenantArgs<ExtArgs> = {}>(args?: Subset<T, User$tenantArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Invoice<T extends User$InvoiceArgs<ExtArgs> = {}>(args?: Subset<T, User$InvoiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4021,6 +4034,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TenantScalarFieldEnum | TenantScalarFieldEnum[]
+  }
+
+  /**
+   * User.Invoice
+   */
+  export type User$InvoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Invoice
+     */
+    omit?: InvoiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
+    orderBy?: InvoiceOrderByWithRelationInput | InvoiceOrderByWithRelationInput[]
+    cursor?: InvoiceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InvoiceScalarFieldEnum | InvoiceScalarFieldEnum[]
   }
 
   /**
@@ -12528,6 +12565,7 @@ export namespace Prisma {
     updatedAt: Date | null
     paystackId: string | null
     dueDate: Date | null
+    landlordId: string | null
     tenantId: string | null
     recurringBillableId: string | null
   }
@@ -12543,6 +12581,7 @@ export namespace Prisma {
     updatedAt: Date | null
     paystackId: string | null
     dueDate: Date | null
+    landlordId: string | null
     tenantId: string | null
     recurringBillableId: string | null
   }
@@ -12559,6 +12598,7 @@ export namespace Prisma {
     paystackId: number
     dueDate: number
     lineItems: number
+    landlordId: number
     tenantId: number
     recurringBillableId: number
     _all: number
@@ -12584,6 +12624,7 @@ export namespace Prisma {
     updatedAt?: true
     paystackId?: true
     dueDate?: true
+    landlordId?: true
     tenantId?: true
     recurringBillableId?: true
   }
@@ -12599,6 +12640,7 @@ export namespace Prisma {
     updatedAt?: true
     paystackId?: true
     dueDate?: true
+    landlordId?: true
     tenantId?: true
     recurringBillableId?: true
   }
@@ -12615,6 +12657,7 @@ export namespace Prisma {
     paystackId?: true
     dueDate?: true
     lineItems?: true
+    landlordId?: true
     tenantId?: true
     recurringBillableId?: true
     _all?: true
@@ -12718,6 +12761,7 @@ export namespace Prisma {
     paystackId: string
     dueDate: Date | null
     lineItems: JsonValue | null
+    landlordId: string
     tenantId: string
     recurringBillableId: string | null
     _count: InvoiceCountAggregateOutputType | null
@@ -12753,6 +12797,7 @@ export namespace Prisma {
     paystackId?: boolean
     dueDate?: boolean
     lineItems?: boolean
+    landlordId?: boolean
     tenantId?: boolean
     recurringBillableId?: boolean
     File?: boolean | Invoice$FileArgs<ExtArgs>
@@ -12760,6 +12805,7 @@ export namespace Prisma {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     transactions?: boolean | Invoice$transactionsArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -12775,11 +12821,13 @@ export namespace Prisma {
     paystackId?: boolean
     dueDate?: boolean
     lineItems?: boolean
+    landlordId?: boolean
     tenantId?: boolean
     recurringBillableId?: boolean
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12794,11 +12842,13 @@ export namespace Prisma {
     paystackId?: boolean
     dueDate?: boolean
     lineItems?: boolean
+    landlordId?: boolean
     tenantId?: boolean
     recurringBillableId?: boolean
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
   export type InvoiceSelectScalar = {
@@ -12813,28 +12863,32 @@ export namespace Prisma {
     paystackId?: boolean
     dueDate?: boolean
     lineItems?: boolean
+    landlordId?: boolean
     tenantId?: boolean
     recurringBillableId?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "category" | "status" | "createdAt" | "updatedAt" | "paystackId" | "dueDate" | "lineItems" | "tenantId" | "recurringBillableId", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "category" | "status" | "createdAt" | "updatedAt" | "paystackId" | "dueDate" | "lineItems" | "landlordId" | "tenantId" | "recurringBillableId", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     File?: boolean | Invoice$FileArgs<ExtArgs>
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     transactions?: boolean | Invoice$transactionsArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     recurringBillable?: boolean | Invoice$recurringBillableArgs<ExtArgs>
+    landlord?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $InvoicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12845,6 +12899,7 @@ export namespace Prisma {
       tenant: Prisma.$TenantPayload<ExtArgs>
       transactions: Prisma.$TransactionsPayload<ExtArgs>[]
       recurringBillable: Prisma.$RecurringBillablePayload<ExtArgs> | null
+      landlord: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12858,6 +12913,7 @@ export namespace Prisma {
       paystackId: string
       dueDate: Date | null
       lineItems: Prisma.JsonValue | null
+      landlordId: string
       tenantId: string
       recurringBillableId: string | null
     }, ExtArgs["result"]["invoice"]>
@@ -13259,6 +13315,7 @@ export namespace Prisma {
     tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     transactions<T extends Invoice$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     recurringBillable<T extends Invoice$recurringBillableArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$recurringBillableArgs<ExtArgs>>): Prisma__RecurringBillableClient<$Result.GetResult<Prisma.$RecurringBillablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    landlord<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13299,6 +13356,7 @@ export namespace Prisma {
     readonly paystackId: FieldRef<"Invoice", 'String'>
     readonly dueDate: FieldRef<"Invoice", 'DateTime'>
     readonly lineItems: FieldRef<"Invoice", 'Json'>
+    readonly landlordId: FieldRef<"Invoice", 'String'>
     readonly tenantId: FieldRef<"Invoice", 'String'>
     readonly recurringBillableId: FieldRef<"Invoice", 'String'>
   }
@@ -19928,6 +19986,7 @@ export namespace Prisma {
     paystackId: 'paystackId',
     dueDate: 'dueDate',
     lineItems: 'lineItems',
+    landlordId: 'landlordId',
     tenantId: 'tenantId',
     recurringBillableId: 'recurringBillableId'
   };
@@ -20292,6 +20351,7 @@ export namespace Prisma {
     property?: PropertyListRelationFilter
     sessions?: SessionListRelationFilter
     tenant?: TenantListRelationFilter
+    Invoice?: InvoiceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -20321,6 +20381,7 @@ export namespace Prisma {
     property?: PropertyOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     tenant?: TenantOrderByRelationAggregateInput
+    Invoice?: InvoiceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -20353,6 +20414,7 @@ export namespace Prisma {
     property?: PropertyListRelationFilter
     sessions?: SessionListRelationFilter
     tenant?: TenantListRelationFilter
+    Invoice?: InvoiceListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -21101,6 +21163,7 @@ export namespace Prisma {
     paystackId?: StringFilter<"Invoice"> | string
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     lineItems?: JsonNullableFilter<"Invoice">
+    landlordId?: StringFilter<"Invoice"> | string
     tenantId?: StringFilter<"Invoice"> | string
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
     File?: FileListRelationFilter
@@ -21108,6 +21171,7 @@ export namespace Prisma {
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     transactions?: TransactionsListRelationFilter
     recurringBillable?: XOR<RecurringBillableNullableScalarRelationFilter, RecurringBillableWhereInput> | null
+    landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -21122,6 +21186,7 @@ export namespace Prisma {
     paystackId?: SortOrder
     dueDate?: SortOrderInput | SortOrder
     lineItems?: SortOrderInput | SortOrder
+    landlordId?: SortOrder
     tenantId?: SortOrder
     recurringBillableId?: SortOrderInput | SortOrder
     File?: FileOrderByRelationAggregateInput
@@ -21129,6 +21194,7 @@ export namespace Prisma {
     tenant?: TenantOrderByWithRelationInput
     transactions?: TransactionsOrderByRelationAggregateInput
     recurringBillable?: RecurringBillableOrderByWithRelationInput
+    landlord?: UserOrderByWithRelationInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -21146,6 +21212,7 @@ export namespace Prisma {
     paystackId?: StringFilter<"Invoice"> | string
     dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     lineItems?: JsonNullableFilter<"Invoice">
+    landlordId?: StringFilter<"Invoice"> | string
     tenantId?: StringFilter<"Invoice"> | string
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
     File?: FileListRelationFilter
@@ -21153,6 +21220,7 @@ export namespace Prisma {
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
     transactions?: TransactionsListRelationFilter
     recurringBillable?: XOR<RecurringBillableNullableScalarRelationFilter, RecurringBillableWhereInput> | null
+    landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type InvoiceOrderByWithAggregationInput = {
@@ -21167,6 +21235,7 @@ export namespace Prisma {
     paystackId?: SortOrder
     dueDate?: SortOrderInput | SortOrder
     lineItems?: SortOrderInput | SortOrder
+    landlordId?: SortOrder
     tenantId?: SortOrder
     recurringBillableId?: SortOrderInput | SortOrder
     _count?: InvoiceCountOrderByAggregateInput
@@ -21191,6 +21260,7 @@ export namespace Prisma {
     paystackId?: StringWithAggregatesFilter<"Invoice"> | string
     dueDate?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     lineItems?: JsonNullableWithAggregatesFilter<"Invoice">
+    landlordId?: StringWithAggregatesFilter<"Invoice"> | string
     tenantId?: StringWithAggregatesFilter<"Invoice"> | string
     recurringBillableId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
   }
@@ -21633,6 +21703,7 @@ export namespace Prisma {
     property?: PropertyCreateNestedManyWithoutLandlordInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     tenant?: TenantCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -21662,6 +21733,7 @@ export namespace Prisma {
     property?: PropertyUncheckedCreateNestedManyWithoutLandlordInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     tenant?: TenantUncheckedCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUpdateInput = {
@@ -21691,6 +21763,7 @@ export namespace Prisma {
     property?: PropertyUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     tenant?: TenantUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -21720,6 +21793,7 @@ export namespace Prisma {
     property?: PropertyUncheckedUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     tenant?: TenantUncheckedUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUncheckedUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -22598,6 +22672,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
     recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -22612,6 +22687,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
@@ -22634,6 +22710,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
     recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -22648,6 +22725,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -22666,6 +22744,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
   }
@@ -22695,6 +22774,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23195,6 +23275,12 @@ export namespace Prisma {
     none?: TenantWhereInput
   }
 
+  export type InvoiceListRelationFilter = {
+    every?: InvoiceWhereInput
+    some?: InvoiceWhereInput
+    none?: InvoiceWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -23213,6 +23299,10 @@ export namespace Prisma {
   }
 
   export type TenantOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InvoiceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23550,12 +23640,6 @@ export namespace Prisma {
     none?: FileWhereInput
   }
 
-  export type InvoiceListRelationFilter = {
-    every?: InvoiceWhereInput
-    some?: InvoiceWhereInput
-    none?: InvoiceWhereInput
-  }
-
   export type TenantLeaseListRelationFilter = {
     every?: TenantLeaseWhereInput
     some?: TenantLeaseWhereInput
@@ -23569,10 +23653,6 @@ export namespace Prisma {
   }
 
   export type FileOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type InvoiceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24057,6 +24137,7 @@ export namespace Prisma {
     paystackId?: SortOrder
     dueDate?: SortOrder
     lineItems?: SortOrder
+    landlordId?: SortOrder
     tenantId?: SortOrder
     recurringBillableId?: SortOrder
   }
@@ -24076,6 +24157,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paystackId?: SortOrder
     dueDate?: SortOrder
+    landlordId?: SortOrder
     tenantId?: SortOrder
     recurringBillableId?: SortOrder
   }
@@ -24091,6 +24173,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     paystackId?: SortOrder
     dueDate?: SortOrder
+    landlordId?: SortOrder
     tenantId?: SortOrder
     recurringBillableId?: SortOrder
   }
@@ -24410,6 +24493,13 @@ export namespace Prisma {
     connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
   }
 
+  export type InvoiceCreateNestedManyWithoutLandlordInput = {
+    create?: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput> | InvoiceCreateWithoutLandlordInput[] | InvoiceUncheckedCreateWithoutLandlordInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutLandlordInput | InvoiceCreateOrConnectWithoutLandlordInput[]
+    createMany?: InvoiceCreateManyLandlordInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -24436,6 +24526,13 @@ export namespace Prisma {
     connectOrCreate?: TenantCreateOrConnectWithoutLandlordInput | TenantCreateOrConnectWithoutLandlordInput[]
     createMany?: TenantCreateManyLandlordInputEnvelope
     connect?: TenantWhereUniqueInput | TenantWhereUniqueInput[]
+  }
+
+  export type InvoiceUncheckedCreateNestedManyWithoutLandlordInput = {
+    create?: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput> | InvoiceCreateWithoutLandlordInput[] | InvoiceUncheckedCreateWithoutLandlordInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutLandlordInput | InvoiceCreateOrConnectWithoutLandlordInput[]
+    createMany?: InvoiceCreateManyLandlordInputEnvelope
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -24518,6 +24615,20 @@ export namespace Prisma {
     deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
   }
 
+  export type InvoiceUpdateManyWithoutLandlordNestedInput = {
+    create?: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput> | InvoiceCreateWithoutLandlordInput[] | InvoiceUncheckedCreateWithoutLandlordInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutLandlordInput | InvoiceCreateOrConnectWithoutLandlordInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutLandlordInput | InvoiceUpsertWithWhereUniqueWithoutLandlordInput[]
+    createMany?: InvoiceCreateManyLandlordInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutLandlordInput | InvoiceUpdateWithWhereUniqueWithoutLandlordInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutLandlordInput | InvoiceUpdateManyWithWhereWithoutLandlordInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -24572,6 +24683,20 @@ export namespace Prisma {
     update?: TenantUpdateWithWhereUniqueWithoutLandlordInput | TenantUpdateWithWhereUniqueWithoutLandlordInput[]
     updateMany?: TenantUpdateManyWithWhereWithoutLandlordInput | TenantUpdateManyWithWhereWithoutLandlordInput[]
     deleteMany?: TenantScalarWhereInput | TenantScalarWhereInput[]
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutLandlordNestedInput = {
+    create?: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput> | InvoiceCreateWithoutLandlordInput[] | InvoiceUncheckedCreateWithoutLandlordInput[]
+    connectOrCreate?: InvoiceCreateOrConnectWithoutLandlordInput | InvoiceCreateOrConnectWithoutLandlordInput[]
+    upsert?: InvoiceUpsertWithWhereUniqueWithoutLandlordInput | InvoiceUpsertWithWhereUniqueWithoutLandlordInput[]
+    createMany?: InvoiceCreateManyLandlordInputEnvelope
+    set?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    disconnect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    delete?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    connect?: InvoiceWhereUniqueInput | InvoiceWhereUniqueInput[]
+    update?: InvoiceUpdateWithWhereUniqueWithoutLandlordInput | InvoiceUpdateWithWhereUniqueWithoutLandlordInput[]
+    updateMany?: InvoiceUpdateManyWithWhereWithoutLandlordInput | InvoiceUpdateManyWithWhereWithoutLandlordInput[]
+    deleteMany?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -25356,6 +25481,12 @@ export namespace Prisma {
     connect?: RecurringBillableWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutInvoiceInput = {
+    create?: XOR<UserCreateWithoutInvoiceInput, UserUncheckedCreateWithoutInvoiceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInvoiceInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type FileUncheckedCreateNestedManyWithoutInvoiceInput = {
     create?: XOR<FileCreateWithoutInvoiceInput, FileUncheckedCreateWithoutInvoiceInput> | FileCreateWithoutInvoiceInput[] | FileUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: FileCreateOrConnectWithoutInvoiceInput | FileCreateOrConnectWithoutInvoiceInput[]
@@ -25432,6 +25563,14 @@ export namespace Prisma {
     delete?: RecurringBillableWhereInput | boolean
     connect?: RecurringBillableWhereUniqueInput
     update?: XOR<XOR<RecurringBillableUpdateToOneWithWhereWithoutInvoiceInput, RecurringBillableUpdateWithoutInvoiceInput>, RecurringBillableUncheckedUpdateWithoutInvoiceInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutInvoiceNestedInput = {
+    create?: XOR<UserCreateWithoutInvoiceInput, UserUncheckedCreateWithoutInvoiceInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInvoiceInput
+    upsert?: UserUpsertWithoutInvoiceInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInvoiceInput, UserUpdateWithoutInvoiceInput>, UserUncheckedUpdateWithoutInvoiceInput>
   }
 
   export type FileUncheckedUpdateManyWithoutInvoiceNestedInput = {
@@ -26327,6 +26466,52 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type InvoiceCreateWithoutLandlordInput = {
+    id?: string
+    description: string
+    dueAmount: number
+    category: $Enums.InvoiceCategory
+    status: $Enums.InvoiceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paystackId: string
+    dueDate?: Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    File?: FileCreateNestedManyWithoutInvoiceInput
+    lease?: LeaseCreateNestedOneWithoutInvoiceInput
+    tenant: TenantCreateNestedOneWithoutInvoiceInput
+    transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
+    recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutLandlordInput = {
+    id?: string
+    leaseId?: string | null
+    description: string
+    dueAmount: number
+    category: $Enums.InvoiceCategory
+    status: $Enums.InvoiceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paystackId: string
+    dueDate?: Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    tenantId: string
+    recurringBillableId?: string | null
+    File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutLandlordInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput>
+  }
+
+  export type InvoiceCreateManyLandlordInputEnvelope = {
+    data: InvoiceCreateManyLandlordInput | InvoiceCreateManyLandlordInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -26470,6 +26655,42 @@ export namespace Prisma {
     paystackCustomerId?: StringNullableFilter<"Tenant"> | string | null
   }
 
+  export type InvoiceUpsertWithWhereUniqueWithoutLandlordInput = {
+    where: InvoiceWhereUniqueInput
+    update: XOR<InvoiceUpdateWithoutLandlordInput, InvoiceUncheckedUpdateWithoutLandlordInput>
+    create: XOR<InvoiceCreateWithoutLandlordInput, InvoiceUncheckedCreateWithoutLandlordInput>
+  }
+
+  export type InvoiceUpdateWithWhereUniqueWithoutLandlordInput = {
+    where: InvoiceWhereUniqueInput
+    data: XOR<InvoiceUpdateWithoutLandlordInput, InvoiceUncheckedUpdateWithoutLandlordInput>
+  }
+
+  export type InvoiceUpdateManyWithWhereWithoutLandlordInput = {
+    where: InvoiceScalarWhereInput
+    data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutLandlordInput>
+  }
+
+  export type InvoiceScalarWhereInput = {
+    AND?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+    OR?: InvoiceScalarWhereInput[]
+    NOT?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
+    id?: StringFilter<"Invoice"> | string
+    leaseId?: StringNullableFilter<"Invoice"> | string | null
+    description?: StringFilter<"Invoice"> | string
+    dueAmount?: FloatFilter<"Invoice"> | number
+    category?: EnumInvoiceCategoryFilter<"Invoice"> | $Enums.InvoiceCategory
+    status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+    createdAt?: DateTimeFilter<"Invoice"> | Date | string
+    updatedAt?: DateTimeFilter<"Invoice"> | Date | string
+    paystackId?: StringFilter<"Invoice"> | string
+    dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
+    lineItems?: JsonNullableFilter<"Invoice">
+    landlordId?: StringFilter<"Invoice"> | string
+    tenantId?: StringFilter<"Invoice"> | string
+    recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -26496,6 +26717,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     property?: PropertyCreateNestedManyWithoutLandlordInput
     tenant?: TenantCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -26524,6 +26746,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     property?: PropertyUncheckedCreateNestedManyWithoutLandlordInput
     tenant?: TenantUncheckedCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLandlordInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -26568,6 +26791,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     property?: PropertyUpdateManyWithoutLandlordNestedInput
     tenant?: TenantUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -26596,6 +26820,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     property?: PropertyUncheckedUpdateManyWithoutLandlordNestedInput
     tenant?: TenantUncheckedUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUncheckedUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -26624,6 +26849,7 @@ export namespace Prisma {
     property?: PropertyCreateNestedManyWithoutLandlordInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     tenant?: TenantCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -26652,6 +26878,7 @@ export namespace Prisma {
     property?: PropertyUncheckedCreateNestedManyWithoutLandlordInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     tenant?: TenantUncheckedCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLandlordInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -26696,6 +26923,7 @@ export namespace Prisma {
     property?: PropertyUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     tenant?: TenantUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -26724,6 +26952,7 @@ export namespace Prisma {
     property?: PropertyUncheckedUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     tenant?: TenantUncheckedUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUncheckedUpdateManyWithoutLandlordNestedInput
   }
 
   export type FileCreateWithoutTenantInput = {
@@ -26781,6 +27010,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
     recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutTenantInput = {
@@ -26795,6 +27025,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -26836,6 +27067,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     property?: PropertyCreateNestedManyWithoutLandlordInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    Invoice?: InvoiceCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUncheckedCreateWithoutTenantInput = {
@@ -26864,6 +27096,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     property?: PropertyUncheckedCreateNestedManyWithoutLandlordInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLandlordInput
   }
 
   export type UserCreateOrConnectWithoutTenantInput = {
@@ -26986,25 +27219,6 @@ export namespace Prisma {
     data: XOR<InvoiceUpdateManyMutationInput, InvoiceUncheckedUpdateManyWithoutTenantInput>
   }
 
-  export type InvoiceScalarWhereInput = {
-    AND?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
-    OR?: InvoiceScalarWhereInput[]
-    NOT?: InvoiceScalarWhereInput | InvoiceScalarWhereInput[]
-    id?: StringFilter<"Invoice"> | string
-    leaseId?: StringNullableFilter<"Invoice"> | string | null
-    description?: StringFilter<"Invoice"> | string
-    dueAmount?: FloatFilter<"Invoice"> | number
-    category?: EnumInvoiceCategoryFilter<"Invoice"> | $Enums.InvoiceCategory
-    status?: EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
-    createdAt?: DateTimeFilter<"Invoice"> | Date | string
-    updatedAt?: DateTimeFilter<"Invoice"> | Date | string
-    paystackId?: StringFilter<"Invoice"> | string
-    dueDate?: DateTimeNullableFilter<"Invoice"> | Date | string | null
-    lineItems?: JsonNullableFilter<"Invoice">
-    tenantId?: StringFilter<"Invoice"> | string
-    recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
-  }
-
   export type UserUpsertWithoutTenantInput = {
     update: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
     create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
@@ -27042,6 +27256,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     property?: PropertyUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    Invoice?: InvoiceUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTenantInput = {
@@ -27070,6 +27285,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     property?: PropertyUncheckedUpdateManyWithoutLandlordNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    Invoice?: InvoiceUncheckedUpdateManyWithoutLandlordNestedInput
   }
 
   export type TenantLeaseUpsertWithWhereUniqueWithoutTenantInput = {
@@ -27199,6 +27415,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     tenant?: TenantCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceCreateNestedManyWithoutLandlordInput
   }
 
   export type UserUncheckedCreateWithoutPropertyInput = {
@@ -27227,6 +27444,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     tenant?: TenantUncheckedCreateNestedManyWithoutLandlordInput
+    Invoice?: InvoiceUncheckedCreateNestedManyWithoutLandlordInput
   }
 
   export type UserCreateOrConnectWithoutPropertyInput = {
@@ -27367,6 +27585,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     tenant?: TenantUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUpdateManyWithoutLandlordNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPropertyInput = {
@@ -27395,6 +27614,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     tenant?: TenantUncheckedUpdateManyWithoutLandlordNestedInput
+    Invoice?: InvoiceUncheckedUpdateManyWithoutLandlordNestedInput
   }
 
   export type UnitUpsertWithWhereUniqueWithoutPropertyInput = {
@@ -27687,6 +27907,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
     recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutLeaseInput = {
@@ -27700,6 +27921,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
@@ -28240,6 +28462,69 @@ export namespace Prisma {
     create: XOR<RecurringBillableCreateWithoutInvoiceInput, RecurringBillableUncheckedCreateWithoutInvoiceInput>
   }
 
+  export type UserCreateWithoutInvoiceInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    idNumber?: string | null
+    paystackSplitGroupId?: string | null
+    paystackSubAccountId?: string | null
+    paystackSubscriptionId?: string | null
+    state?: string | null
+    zip?: string | null
+    onboardingCompleted?: boolean
+    businessName?: string | null
+    countryCode?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    property?: PropertyCreateNestedManyWithoutLandlordInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    tenant?: TenantCreateNestedManyWithoutLandlordInput
+  }
+
+  export type UserUncheckedCreateWithoutInvoiceInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addressLine1?: string | null
+    addressLine2?: string | null
+    city?: string | null
+    idNumber?: string | null
+    paystackSplitGroupId?: string | null
+    paystackSubAccountId?: string | null
+    paystackSubscriptionId?: string | null
+    state?: string | null
+    zip?: string | null
+    onboardingCompleted?: boolean
+    businessName?: string | null
+    countryCode?: string | null
+    numberOfProperties?: number | null
+    numberOfUnits?: number | null
+    phone?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    property?: PropertyUncheckedCreateNestedManyWithoutLandlordInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tenant?: TenantUncheckedCreateNestedManyWithoutLandlordInput
+  }
+
+  export type UserCreateOrConnectWithoutInvoiceInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutInvoiceInput, UserUncheckedCreateWithoutInvoiceInput>
+  }
+
   export type FileUpsertWithWhereUniqueWithoutInvoiceInput = {
     where: FileWhereUniqueInput
     update: XOR<FileUpdateWithoutInvoiceInput, FileUncheckedUpdateWithoutInvoiceInput>
@@ -28429,6 +28714,75 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type UserUpsertWithoutInvoiceInput = {
+    update: XOR<UserUpdateWithoutInvoiceInput, UserUncheckedUpdateWithoutInvoiceInput>
+    create: XOR<UserCreateWithoutInvoiceInput, UserUncheckedCreateWithoutInvoiceInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutInvoiceInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutInvoiceInput, UserUncheckedUpdateWithoutInvoiceInput>
+  }
+
+  export type UserUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zip?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    property?: PropertyUpdateManyWithoutLandlordNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    tenant?: TenantUpdateManyWithoutLandlordNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutInvoiceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addressLine1?: NullableStringFieldUpdateOperationsInput | string | null
+    addressLine2?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    state?: NullableStringFieldUpdateOperationsInput | string | null
+    zip?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    businessName?: NullableStringFieldUpdateOperationsInput | string | null
+    countryCode?: NullableStringFieldUpdateOperationsInput | string | null
+    numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
+    numberOfUnits?: NullableIntFieldUpdateOperationsInput | number | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    property?: PropertyUncheckedUpdateManyWithoutLandlordNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tenant?: TenantUncheckedUpdateManyWithoutLandlordNestedInput
+  }
+
   export type LeaseCreateWithoutRecurringBillableInput = {
     id?: string
     startDate: Date | string
@@ -28544,6 +28898,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutRecurringBillableInput = {
@@ -28558,6 +28913,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -28816,6 +29172,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutTransactionsInput = {
@@ -28830,6 +29187,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
@@ -28913,6 +29271,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutTransactionsInput = {
@@ -28927,6 +29286,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -29368,6 +29728,7 @@ export namespace Prisma {
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
     recurringBillable?: RecurringBillableCreateNestedOneWithoutInvoiceInput
+    landlord: UserCreateNestedOneWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutFileInput = {
@@ -29382,6 +29743,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -29590,6 +29952,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
     recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutFileInput = {
@@ -29604,6 +29967,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -29868,6 +30232,22 @@ export namespace Prisma {
     paystackCustomerId?: string | null
   }
 
+  export type InvoiceCreateManyLandlordInput = {
+    id?: string
+    leaseId?: string | null
+    description: string
+    dueAmount: number
+    category: $Enums.InvoiceCategory
+    status: $Enums.InvoiceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paystackId: string
+    dueDate?: Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    tenantId: string
+    recurringBillableId?: string | null
+  }
+
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
@@ -30071,6 +30451,58 @@ export namespace Prisma {
     paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type InvoiceUpdateWithoutLandlordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    dueAmount?: FloatFieldUpdateOperationsInput | number
+    category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paystackId?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    File?: FileUpdateManyWithoutInvoiceNestedInput
+    lease?: LeaseUpdateOneWithoutInvoiceNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
+    transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
+    recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutLandlordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    leaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    dueAmount?: FloatFieldUpdateOperationsInput | number
+    category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paystackId?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    tenantId?: StringFieldUpdateOperationsInput | string
+    recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
+    File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateManyWithoutLandlordInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    leaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    dueAmount?: FloatFieldUpdateOperationsInput | number
+    category?: EnumInvoiceCategoryFieldUpdateOperationsInput | $Enums.InvoiceCategory
+    status?: EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paystackId?: StringFieldUpdateOperationsInput | string
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lineItems?: NullableJsonNullValueInput | InputJsonValue
+    tenantId?: StringFieldUpdateOperationsInput | string
+    recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type FileCreateManyTenantInput = {
     id?: string
     name: string
@@ -30098,6 +30530,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     recurringBillableId?: string | null
   }
 
@@ -30182,6 +30615,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
     recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutTenantInput = {
@@ -30196,6 +30630,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -30213,6 +30648,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -30555,6 +30991,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
     recurringBillableId?: string | null
   }
@@ -30659,6 +31096,7 @@ export namespace Prisma {
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
     recurringBillable?: RecurringBillableUpdateOneWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutLeaseInput = {
@@ -30672,6 +31110,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -30689,6 +31128,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -30929,6 +31369,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId: string
     tenantId: string
   }
 
@@ -30947,6 +31388,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
+    landlord?: UserUpdateOneRequiredWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutRecurringBillableInput = {
@@ -30961,6 +31403,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -30978,6 +31421,7 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
+    landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
   }
 

@@ -1,5 +1,5 @@
 import { schemaTask, logger, type Task } from '@trigger.dev/sdk/v3';
-import { paystack } from '@leaseup/paystack/open-api/client';
+import { paystack } from '@leaseup/payments/open-api/client';
 import { TASK_EVENTS } from '../tasks';
 import { db } from '@leaseup/prisma/db.ts';
 import * as v from 'valibot';
