@@ -42,4 +42,5 @@ jobs:
       - name: Apply pending migrations to database
         run: pnpm --filter @leaseup/prisma run db:migrate
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
