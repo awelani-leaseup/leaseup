@@ -8,9 +8,17 @@
 -- AlterTable
 ALTER TABLE "Invoice" ADD COLUMN     "lineItems" JSONB;
 
--- AlterTable
-ALTER TABLE "Property" DROP COLUMN "ownerId",
-ADD COLUMN     "landlordId" TEXT NOT NULL;
+-- AlterTable: Add landlordId as nullable first
+ALTER TABLE "Property" ADD COLUMN "landlordId" TEXT;
+
+-- Copy data from ownerId to landlordId
+UPDATE "Property" SET "landlordId" = "ownerId" WHERE "ownerId" IS NOT NULL;
+
+-- Make landlordId NOT NULL now that data is copied
+ALTER TABLE "Property" ALTER COLUMN "landlordId" SET NOT NULL;
+
+-- Now safe to drop ownerId
+ALTER TABLE "Property" DROP COLUMN "ownerId";
 
 -- AlterTable
 ALTER TABLE "User" ADD COLUMN     "addressLine1" TEXT,

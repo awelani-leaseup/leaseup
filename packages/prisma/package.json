@@ -24,12 +24,12 @@
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "better-auth": "^1.2.12",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.5",
+    "prisma": "^6.5.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
     "@leaseup/typescript-config": "workspace:*",
-    "prisma": "^6.5.0",
     "ts-node": "^10.9.2"
   }
 }

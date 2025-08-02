@@ -373,6 +373,9 @@ importers:
       nanoid:
         specifier: ^5.1.5
         version: 5.1.5
+      prisma:
+        specifier: ^6.5.0
+        version: 6.9.0(typescript@5.8.2)
     devDependencies:
       '@faker-js/faker':
         specifier: ^9.9.0
@@ -380,9 +383,6 @@ importers:
       '@leaseup/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
-      prisma:
-        specifier: ^6.5.0
-        version: 6.9.0(typescript@5.8.2)
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@24.1.0)(typescript@5.8.2)
