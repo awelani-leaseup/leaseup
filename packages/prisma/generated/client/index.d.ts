@@ -17530,9 +17530,9 @@ export namespace Prisma {
   export type MaintenanceRequestGroupByOutputType = {
     id: string
     leaseId: string
-    description: string | null
-    status: $Enums.MaintenanceRequestStatus | null
-    priority: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt: Date
     updatedAt: Date
     _count: MaintenanceRequestCountAggregateOutputType | null
@@ -17621,9 +17621,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       leaseId: string
-      description: string | null
-      status: $Enums.MaintenanceRequestStatus | null
-      priority: $Enums.MaintenanceRequestPriority | null
+      description: string
+      status: $Enums.MaintenanceRequestStatus
+      priority: $Enums.MaintenanceRequestPriority
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["maintenanceRequest"]>
@@ -21518,9 +21518,9 @@ export namespace Prisma {
     NOT?: MaintenanceRequestWhereInput | MaintenanceRequestWhereInput[]
     id?: StringFilter<"MaintenanceRequest"> | string
     leaseId?: StringFilter<"MaintenanceRequest"> | string
-    description?: StringNullableFilter<"MaintenanceRequest"> | string | null
-    status?: EnumMaintenanceRequestStatusNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus | null
-    priority?: EnumMaintenanceRequestPriorityNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority | null
+    description?: StringFilter<"MaintenanceRequest"> | string
+    status?: EnumMaintenanceRequestStatusFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
     updatedAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
     File?: FileListRelationFilter
@@ -21530,9 +21530,9 @@ export namespace Prisma {
   export type MaintenanceRequestOrderByWithRelationInput = {
     id?: SortOrder
     leaseId?: SortOrder
-    description?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
-    priority?: SortOrderInput | SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     File?: FileOrderByRelationAggregateInput
@@ -21545,9 +21545,9 @@ export namespace Prisma {
     OR?: MaintenanceRequestWhereInput[]
     NOT?: MaintenanceRequestWhereInput | MaintenanceRequestWhereInput[]
     leaseId?: StringFilter<"MaintenanceRequest"> | string
-    description?: StringNullableFilter<"MaintenanceRequest"> | string | null
-    status?: EnumMaintenanceRequestStatusNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus | null
-    priority?: EnumMaintenanceRequestPriorityNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority | null
+    description?: StringFilter<"MaintenanceRequest"> | string
+    status?: EnumMaintenanceRequestStatusFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
     updatedAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
     File?: FileListRelationFilter
@@ -21557,9 +21557,9 @@ export namespace Prisma {
   export type MaintenanceRequestOrderByWithAggregationInput = {
     id?: SortOrder
     leaseId?: SortOrder
-    description?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
-    priority?: SortOrderInput | SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MaintenanceRequestCountOrderByAggregateInput
@@ -21573,9 +21573,9 @@ export namespace Prisma {
     NOT?: MaintenanceRequestScalarWhereWithAggregatesInput | MaintenanceRequestScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MaintenanceRequest"> | string
     leaseId?: StringWithAggregatesFilter<"MaintenanceRequest"> | string
-    description?: StringNullableWithAggregatesFilter<"MaintenanceRequest"> | string | null
-    status?: EnumMaintenanceRequestStatusNullableWithAggregatesFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus | null
-    priority?: EnumMaintenanceRequestPriorityNullableWithAggregatesFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority | null
+    description?: StringWithAggregatesFilter<"MaintenanceRequest"> | string
+    status?: EnumMaintenanceRequestStatusWithAggregatesFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityWithAggregatesFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeWithAggregatesFilter<"MaintenanceRequest"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MaintenanceRequest"> | Date | string
   }
@@ -23029,9 +23029,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestCreateInput = {
     id?: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
     File?: FileCreateNestedManyWithoutMaintenanceRequestInput
@@ -23041,9 +23041,9 @@ export namespace Prisma {
   export type MaintenanceRequestUncheckedCreateInput = {
     id?: string
     leaseId: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
     File?: FileUncheckedCreateNestedManyWithoutMaintenanceRequestInput
@@ -23051,9 +23051,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     File?: FileUpdateManyWithoutMaintenanceRequestNestedInput
@@ -23063,9 +23063,9 @@ export namespace Prisma {
   export type MaintenanceRequestUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     leaseId?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     File?: FileUncheckedUpdateManyWithoutMaintenanceRequestNestedInput
@@ -23074,18 +23074,18 @@ export namespace Prisma {
   export type MaintenanceRequestCreateManyInput = {
     id?: string
     leaseId: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MaintenanceRequestUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23093,9 +23093,9 @@ export namespace Prisma {
   export type MaintenanceRequestUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     leaseId?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24348,18 +24348,18 @@ export namespace Prisma {
     leaseId?: SortOrder
   }
 
-  export type EnumMaintenanceRequestStatusNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus | null
+  export type EnumMaintenanceRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus
   }
 
-  export type EnumMaintenanceRequestPriorityNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority | null
+  export type EnumMaintenanceRequestPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority
   }
 
   export type MaintenanceRequestCountOrderByAggregateInput = {
@@ -24392,24 +24392,24 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type EnumMaintenanceRequestStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel>
-    _max?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel>
+  export type EnumMaintenanceRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel>
   }
 
-  export type EnumMaintenanceRequestPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel>
-    _max?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel>
+  export type EnumMaintenanceRequestPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestPriorityWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
+    _max?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
   }
 
   export type MaintenanceRequestNullableScalarRelationFilter = {
@@ -25782,12 +25782,12 @@ export namespace Prisma {
     connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
-  export type NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput = {
-    set?: $Enums.MaintenanceRequestStatus | null
+  export type EnumMaintenanceRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.MaintenanceRequestStatus
   }
 
-  export type NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput = {
-    set?: $Enums.MaintenanceRequestPriority | null
+  export type EnumMaintenanceRequestPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.MaintenanceRequestPriority
   }
 
   export type FileUpdateManyWithoutMaintenanceRequestNestedInput = {
@@ -26265,38 +26265,38 @@ export namespace Prisma {
     _max?: NestedEnumInvoiceStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus | null
+  export type NestedEnumMaintenanceRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus
   }
 
-  export type NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority | null
+  export type NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority
   }
 
-  export type NestedEnumMaintenanceRequestStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel>
-    _max?: NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel>
+  export type NestedEnumMaintenanceRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestStatus | EnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestStatus[] | ListEnumMaintenanceRequestStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumMaintenanceRequestStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumMaintenanceRequestPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumMaintenanceRequestPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel>
-    _max?: NestedEnumMaintenanceRequestPriorityNullableFilter<$PrismaModel>
+  export type NestedEnumMaintenanceRequestPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MaintenanceRequestPriority | EnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MaintenanceRequestPriority[] | ListEnumMaintenanceRequestPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumMaintenanceRequestPriorityWithAggregatesFilter<$PrismaModel> | $Enums.MaintenanceRequestPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
+    _max?: NestedEnumMaintenanceRequestPriorityFilter<$PrismaModel>
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -27984,9 +27984,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestCreateWithoutLeaseInput = {
     id?: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
     File?: FileCreateNestedManyWithoutMaintenanceRequestInput
@@ -27994,9 +27994,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUncheckedCreateWithoutLeaseInput = {
     id?: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
     File?: FileUncheckedCreateNestedManyWithoutMaintenanceRequestInput
@@ -28197,9 +28197,9 @@ export namespace Prisma {
     NOT?: MaintenanceRequestScalarWhereInput | MaintenanceRequestScalarWhereInput[]
     id?: StringFilter<"MaintenanceRequest"> | string
     leaseId?: StringFilter<"MaintenanceRequest"> | string
-    description?: StringNullableFilter<"MaintenanceRequest"> | string | null
-    status?: EnumMaintenanceRequestStatusNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus | null
-    priority?: EnumMaintenanceRequestPriorityNullableFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority | null
+    description?: StringFilter<"MaintenanceRequest"> | string
+    status?: EnumMaintenanceRequestStatusFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFilter<"MaintenanceRequest"> | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
     updatedAt?: DateTimeFilter<"MaintenanceRequest"> | Date | string
   }
@@ -29816,9 +29816,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestCreateWithoutFileInput = {
     id?: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
     lease: LeaseCreateNestedOneWithoutMaintenanceRequestInput
@@ -29827,9 +29827,9 @@ export namespace Prisma {
   export type MaintenanceRequestUncheckedCreateWithoutFileInput = {
     id?: string
     leaseId: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30052,9 +30052,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUpdateWithoutFileInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lease?: LeaseUpdateOneRequiredWithoutMaintenanceRequestNestedInput
@@ -30063,9 +30063,9 @@ export namespace Prisma {
   export type MaintenanceRequestUncheckedUpdateWithoutFileInput = {
     id?: StringFieldUpdateOperationsInput | string
     leaseId?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31011,9 +31011,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestCreateManyLeaseInput = {
     id?: string
-    description?: string | null
-    status?: $Enums.MaintenanceRequestStatus | null
-    priority?: $Enums.MaintenanceRequestPriority | null
+    description: string
+    status: $Enums.MaintenanceRequestStatus
+    priority: $Enums.MaintenanceRequestPriority
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31148,9 +31148,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUpdateWithoutLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     File?: FileUpdateManyWithoutMaintenanceRequestNestedInput
@@ -31158,9 +31158,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUncheckedUpdateWithoutLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     File?: FileUncheckedUpdateManyWithoutMaintenanceRequestNestedInput
@@ -31168,9 +31168,9 @@ export namespace Prisma {
 
   export type MaintenanceRequestUncheckedUpdateManyWithoutLeaseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableEnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus | null
-    priority?: NullableEnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority | null
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumMaintenanceRequestStatusFieldUpdateOperationsInput | $Enums.MaintenanceRequestStatus
+    priority?: EnumMaintenanceRequestPriorityFieldUpdateOperationsInput | $Enums.MaintenanceRequestPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
