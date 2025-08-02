@@ -28,7 +28,7 @@ if (!NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID || !GOOGLE_OATH_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET_KEY,
+  secret: process.env.BETTER_AUTH_SECRET,
   baseURL: BASE_URL,
   productionUrl: BASE_URL,
   socialProviders: {
