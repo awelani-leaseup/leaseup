@@ -257,7 +257,7 @@ model MaintenanceRequest {
   id          String                     @id @default(uuid())
   leaseId     String
   description String?
-  status      MaintenanceRequestStatus
+  status      MaintenanceRequestStatus?
   priority    MaintenanceRequestPriority
   createdAt   DateTime                   @default(now())
   updatedAt   DateTime                   @updatedAt
