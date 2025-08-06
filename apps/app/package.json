@@ -13,8 +13,7 @@
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "../app/"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@leaseup/tasks": "workspace:*",
