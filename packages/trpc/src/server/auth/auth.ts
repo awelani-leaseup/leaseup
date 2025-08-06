@@ -1,8 +1,8 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { PrismaClient } from '@leaseup/prisma/client/index.js';
 import { createAuthMiddleware } from 'better-auth/api';
 import { novu } from '@leaseup/novu/client.ts';
+import { db as prisma } from '@leaseup/prisma/db.ts';
 
 const BASE_URL =
   process.env.VERCEL_ENV === 'production'
@@ -10,8 +10,6 @@ const BASE_URL =
     : process.env.VERCEL_ENV === 'preview'
       ? `https://${process.env.VERCEL_URL}`
       : 'http://localhost:3001';
-
-const prisma = new PrismaClient();
 
 const NOVU_PASSWORD_FORGOT_WORKFLOW_ID = 'landlord-password-forgot';
 const NOVU_USER_CREATED_WORKFLOW_ID = 'landlord-welcome-copy';
