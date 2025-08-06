@@ -3,9 +3,6 @@
   "ui": "tui",
   "globalDependencies": ["**/.env"],
   "tasks": {
-    "generate": {
-      "outputs": ["packages/prisma/generated/**"]
-    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
@@ -21,6 +18,10 @@
       "cache": false,
       "persistent": true,
       "inputs": ["$TURBO_DEFAULT$", "**/.env*"]
+    },
+    "generate": {
+      "dependsOn": ["^generate"],
+      "outputs": ["generated/**"]
     }
   },
   "globalEnv": [

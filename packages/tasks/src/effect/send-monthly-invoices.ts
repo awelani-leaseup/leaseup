@@ -136,7 +136,7 @@ const processBillable = (billable: any) =>
 
     return createInvoicePayload(billable, nextInvoiceDate);
   }).pipe(
-    Effect.catchAll((error) =>
+    Effect.catchAll((error: unknown) =>
       Effect.gen(function* () {
         yield* Effect.logError('Error processing billable', {
           billableId: billable.id,
@@ -159,7 +159,9 @@ const processBillablesIntoInvoices = Effect.gen(function* () {
   });
 
   const invoicesToCreate = invoiceResults.filter(
-    (invoice): invoice is NonNullable<typeof invoice> => invoice !== null
+    (
+      invoice: CreateInvoicePayload | null
+    ): invoice is NonNullable<typeof invoice> => invoice !== null
   );
 
   yield* Effect.logInfo(`Found ${invoicesToCreate.length} invoices to create`);
@@ -196,7 +198,7 @@ const processInvoiceWithRateLimit = (
     // Create the invoice with enhanced retry logic for rate limiting
     yield* Effect.tryPromise({
       try: () => runCreateInvoiceEffect(invoicePayload),
-      catch: (error) =>
+      catch: (error: unknown) =>
         error instanceof Error ? error : new Error(String(error)),
     }).pipe(
       Effect.retry(
@@ -205,7 +207,7 @@ const processInvoiceWithRateLimit = (
           Schedule.whileInput(isRateLimitError)
         )
       ),
-      Effect.catchAll((error) =>
+      Effect.catchAll((error: unknown) =>
         Effect.gen(function* () {
           yield* Effect.logError('Failed to create invoice after retries', {
             leaseId: invoicePayload.leaseId,
@@ -255,7 +257,7 @@ const createInvoicesInBatches = (invoices: Array<CreateInvoicePayload>) =>
       // Process invoices in the batch sequentially to avoid rate limits
       const batchResults = yield* Effect.forEach(
         batch,
-        (invoicePayload, invoiceIndex) =>
+        (invoicePayload: CreateInvoicePayload, invoiceIndex: number) =>
           processInvoiceWithRateLimit(
             invoicePayload,
             invoiceIndex,
@@ -324,7 +326,7 @@ const checkUpcomingInvoicesEffect = Effect.gen(function* () {
       yield* Effect.logInfo('Database connection closed');
     })
   ),
-  Effect.catchAll((error) =>
+  Effect.catchAll((error: unknown) =>
     Effect.gen(function* () {
       yield* Effect.logError('Fatal error in invoice processing', {
         error: error instanceof Error ? error.message : String(error),
@@ -376,7 +378,7 @@ export const runMonthlyInvoicesAsPromise = () =>
 // Example usage with custom logger
 export const runWithCustomLogger = (logger: any) =>
   runMonthlyInvoicesOnce.pipe(
-    Effect.tapErrorCause((cause) =>
+    Effect.tapErrorCause((cause: unknown) =>
       Effect.sync(() => logger.error('Monthly invoices failed', cause))
     ),
     Effect.tap((result) =>
@@ -420,9 +422,12 @@ export const runStandaloneCron = () => {
         )
       )
     )
-  ).catch((error) => {
-    console.error('Cron runner failed:', error);
-    process.exit(1);
+  ).catch((error: unknown) => {
+    console.error(
+      'Cron runner failed:',
+      error instanceof Error ? error.message : String(error)
+    );
+    if (typeof process !== 'undefined') process.exit(1);
   });
 };
 
@@ -468,12 +473,14 @@ export const runStandaloneTestCron = () => {
       );
 
       // Small real-time delay to make output readable
-      yield* Effect.async<void>((resume) => {
-        setTimeout(() => {
-          console.log(`Completed iteration ${i + 1} of 5`);
-          resume(Effect.succeed(undefined));
-        }, 1000);
-      });
+      yield* Effect.async<void>(
+        (resume: (effect: Effect.Effect<void, never, never>) => void) => {
+          setTimeout(() => {
+            console.log(`Completed iteration ${i + 1} of 5`);
+            resume(Effect.succeed(undefined));
+          }, 1000);
+        }
+      );
     }
 
     yield* Effect.logInfo(
@@ -492,8 +499,11 @@ export const runStandaloneTestCron = () => {
     })
   );
 
-  return Effect.runPromise(testRunner).catch((error) => {
-    console.error('TestClock runner failed:', error);
+  return Effect.runPromise(testRunner).catch((error: unknown) => {
+    console.error(
+      'TestClock runner failed:',
+      error instanceof Error ? error.message : String(error)
+    );
     return 'promise-failed';
   });
 };
