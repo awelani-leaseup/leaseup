@@ -13,6 +13,7 @@
     "deploy": "trigger deploy",
     "cron": "node --loader ts-node/esm src/cron-runner.ts",
     "cron:dev": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx src/cron-runner.ts",
+    "cron:test": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx src/test-cron-runner.ts",
     "test:cron": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx test-cron.ts"
   },
   "keywords": [],

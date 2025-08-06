@@ -33,9 +33,9 @@ const InvoiceConfig = Context.GenericTag<InvoiceConfig>('InvoiceConfig');
 
 const InvoiceConfigLive = Layer.succeed(InvoiceConfig, {
   checkDaysAhead: 30,
-  batchSize: 5, // Reduced batch size to be more conservative
-  batchDelayMs: 3000, // Increased delay between batches to 3 seconds
-  apiCallDelayMs: 500, // 500ms delay between individual API calls
+  batchSize: 3, // Further reduced batch size to be more conservative
+  batchDelayMs: 15000, // 15-second delay between batches to handle rate limits
+  apiCallDelayMs: 3000, // 3-second delay between individual API calls within a batch
 });
 
 // Test configuration with no delays to avoid TestClock issues
@@ -200,7 +200,7 @@ const processInvoiceWithRateLimit = (
         error instanceof Error ? error : new Error(String(error)),
     }).pipe(
       Effect.retry(
-        Schedule.exponential('1 second').pipe(
+        Schedule.exponential('3 seconds').pipe(
           Schedule.compose(Schedule.recurs(5)),
           Schedule.whileInput(isRateLimitError)
         )
