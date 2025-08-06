@@ -25,6 +25,7 @@
     }
   },
   "globalEnv": [
+    "CRON_SECRET",
     "POSTGRES_URL",
     "POSTGRES_PRISMA_URL",
     "NOVU_SECRET_KEY",

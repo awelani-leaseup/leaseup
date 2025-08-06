@@ -234,7 +234,7 @@ export default function Layout({
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
-      <main className="w-full">
+      <main className="min-w-0 flex-1">
         <div className="sticky top-0 z-10 bg-white">
           <NavHeader />
         </div>

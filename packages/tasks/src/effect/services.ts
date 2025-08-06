@@ -526,8 +526,8 @@ export const PaystackServiceLive = Layer.succeed(PaystackServiceTag, {
             first_name: customerData.first_name,
             last_name: customerData.last_name,
             phone: customerData.phone ?? undefined,
-            // @ts-expect-error - Paystack expects an object for metadata, passing a string will throw an error.
-            metadata: customerData.metadata,
+            // @ts-ignore
+            metadata: customerData?.metadata,
           },
         });
 

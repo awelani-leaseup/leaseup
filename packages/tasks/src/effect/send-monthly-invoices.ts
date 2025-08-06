@@ -20,6 +20,7 @@ import {
   PaystackServiceLive,
 } from './services';
 import type { RecurringBillable } from '@leaseup/prisma/client/index.js';
+import { MockPaystackServiceFastLive } from './mock-paystack-service';
 
 // Configuration as a service
 interface InvoiceConfig {
@@ -491,7 +492,7 @@ export const runStandaloneTestCron = () => {
     // Use test configuration with no delays to avoid TestClock timing issues
     Effect.provide(InvoiceConfigTestLive),
     Effect.provide(DatabaseServiceLive),
-    Effect.provide(PaystackServiceLive),
+    Effect.provide(MockPaystackServiceFastLive),
     Effect.provide(TestContext.TestContext),
     Effect.catchAll((error: unknown) => {
       console.error('TestClock runner error:', error);
