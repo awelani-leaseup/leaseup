@@ -18,7 +18,7 @@ import { Metadata } from 'next/types';
 export const metadata: Metadata = {
   title: 'Online Rent Collection | LeaseUp - Get Paid On Time, Every Time',
   description:
-    "Simplify your rent collection with LeaseUp's automated online payment system. Secure payments, automatic invoicing, payment reminders, and real-time tracking. Stop chasing rent payments.",
+    "Simplify your rent collection with LeaseUp's automated online payment system. Secure payments, automatic invoicing, payment reminders, and real-time tracking. Stop chasing rent payments",
   keywords: [
     'online rent collection',
     'rent payment software',
