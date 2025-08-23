@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@leaseup/ui/components/card";
+import { Card, CardContent } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
@@ -180,44 +175,46 @@ export default function BankingPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Add New Bank Account</h2>
             <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="bankName">Bank Name</Label>
-                <Input id="bankName" placeholder="Chase Bank" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="bankName">Bank Name</Label>
+                  <Input id="bankName" placeholder="Chase Bank" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="accountType">Account Type</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select account type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="checking">
+                        Business Checking
+                      </SelectItem>
+                      <SelectItem value="savings">Business Savings</SelectItem>
+                      <SelectItem value="personal-checking">
+                        Personal Checking
+                      </SelectItem>
+                      <SelectItem value="personal-savings">
+                        Personal Savings
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="routingNumber">Routing Number</Label>
+                  <Input id="routingNumber" placeholder="021000021" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="accountNumber">Account Number</Label>
+                  <Input id="accountNumber" placeholder="1234567890" />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="accountType">Account Type</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="checking">Business Checking</SelectItem>
-                    <SelectItem value="savings">Business Savings</SelectItem>
-                    <SelectItem value="personal-checking">
-                      Personal Checking
-                    </SelectItem>
-                    <SelectItem value="personal-savings">
-                      Personal Savings
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="accountHolder">Account Holder Name</Label>
+                <Input id="accountHolder" placeholder="Acme Properties LLC" />
               </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="routingNumber">Routing Number</Label>
-                <Input id="routingNumber" placeholder="021000021" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="accountNumber">Account Number</Label>
-                <Input id="accountNumber" placeholder="1234567890" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="accountHolder">Account Holder Name</Label>
-              <Input id="accountHolder" placeholder="Acme Properties LLC" />
-            </div>
               <Button>Add Bank Account</Button>
             </div>
           </div>
@@ -270,28 +267,32 @@ export default function BankingPage() {
 
           {/* Direct Deposit Settings */}
           <div>
-            <h2 className="mb-4 text-lg font-semibold">Direct Deposit Settings</h2>
+            <h2 className="mb-4 text-lg font-semibold">
+              Direct Deposit Settings
+            </h2>
             <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="depositSchedule">Deposit Schedule</Label>
-              <Select defaultValue="weekly">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly (Fridays)</SelectItem>
-                  <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumAmount">Minimum Deposit Amount</Label>
-              <Input id="minimumAmount" type="number" placeholder="100.00" />
-              <p className="text-sm text-gray-500">
-                Funds will only be deposited if the balance exceeds this amount
-              </p>
+              <div className="space-y-2">
+                <Label htmlFor="depositSchedule">Deposit Schedule</Label>
+                <Select defaultValue="weekly">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="weekly">Weekly (Fridays)</SelectItem>
+                    <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="minimumAmount">Minimum Deposit Amount</Label>
+                <Input id="minimumAmount" type="number" placeholder="100.00" />
+                <p className="text-sm text-gray-500">
+                  Funds will only be deposited if the balance exceeds this
+                  amount
+                </p>
+              </div>
             </div>
           </div>
 
@@ -300,7 +301,9 @@ export default function BankingPage() {
 
           {/* Bank Verification */}
           <div>
-            <h2 className="mb-4 text-lg font-semibold">Bank Account Verification</h2>
+            <h2 className="mb-4 text-lg font-semibold">
+              Bank Account Verification
+            </h2>
             <div className="space-y-4">
               <div className="rounded-lg bg-blue-50 p-4">
                 <div className="flex items-start gap-3">

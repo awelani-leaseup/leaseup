@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@leaseup/ui/components/card";
+import { Card, CardContent } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";

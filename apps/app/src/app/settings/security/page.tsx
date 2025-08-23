@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@leaseup/ui/components/card";
+import { Card, CardContent } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
@@ -89,30 +84,30 @@ export default function SecurityPage() {
               Change Password
             </h2>
             <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <Input
-                id="currentPassword"
-                type="password"
-                placeholder="Enter current password"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                placeholder="Enter new password"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm new password"
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  placeholder="Enter current password"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  placeholder="Enter new password"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm new password"
+                />
+              </div>
               <Button>Update Password</Button>
             </div>
           </div>
@@ -127,40 +122,41 @@ export default function SecurityPage() {
               Two-Factor Authentication
             </h2>
             <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">SMS Authentication</p>
-                <p className="text-sm text-gray-600">+1 (555) ***-**67</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">SMS Authentication</p>
+                  <p className="text-sm text-gray-600">+1 (555) ***-**67</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge variant="outlined">Enabled</Badge>
+                  <Switch defaultChecked />
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Badge variant="outlined">Enabled</Badge>
-                <Switch defaultChecked />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Authenticator App</p>
+                  <p className="text-sm text-gray-600">
+                    Use an app like Google Authenticator
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge>Not Setup</Badge>
+                  <Button variant="outlined" size="sm">
+                    Setup
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Authenticator App</p>
-                <p className="text-sm text-gray-600">
-                  Use an app like Google Authenticator
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Badge>Not Setup</Badge>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Backup Codes</p>
+                  <p className="text-sm text-gray-600">
+                    Download backup codes for account recovery
+                  </p>
+                </div>
                 <Button variant="outlined" size="sm">
-                  Setup
+                  Generate
                 </Button>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Backup Codes</p>
-                <p className="text-sm text-gray-600">
-                  Download backup codes for account recovery
-                </p>
-              </div>
-              <Button variant="outlined" size="sm">
-                Generate
-              </Button>
             </div>
           </div>
 
@@ -210,32 +206,33 @@ export default function SecurityPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Security Preferences</h2>
             <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Login Notifications</p>
-                <p className="text-sm text-gray-600">
-                  Get notified of new login attempts
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Login Notifications</p>
+                  <p className="text-sm text-gray-600">
+                    Get notified of new login attempts
+                  </p>
+                </div>
+                <Switch defaultChecked />
               </div>
-              <Switch defaultChecked />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Suspicious Activity Alerts</p>
-                <p className="text-sm text-gray-600">
-                  Alert me of unusual account activity
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Suspicious Activity Alerts</p>
+                  <p className="text-sm text-gray-600">
+                    Alert me of unusual account activity
+                  </p>
+                </div>
+                <Switch defaultChecked />
               </div>
-              <Switch defaultChecked />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Session Timeout</p>
-                <p className="text-sm text-gray-600">
-                  Automatically sign out after inactivity
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Session Timeout</p>
+                  <p className="text-sm text-gray-600">
+                    Automatically sign out after inactivity
+                  </p>
+                </div>
+                <Switch />
               </div>
-              <Switch />
             </div>
           </div>
         </CardContent>

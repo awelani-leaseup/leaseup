@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@leaseup/ui/components/card";
+import { Card, CardContent } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
@@ -70,59 +65,60 @@ export default function CompanyPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Basic Information</h2>
             <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input id="companyName" placeholder="Acme Properties Inc." />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="industry">Industry</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select industry" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="real-estate">Real Estate</SelectItem>
-                    <SelectItem value="property-management">
-                      Property Management
-                    </SelectItem>
-                    <SelectItem value="construction">Construction</SelectItem>
-                    <SelectItem value="hospitality">Hospitality</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="companyName">Company Name</Label>
+                <Input id="companyName" placeholder="Acme Properties Inc." />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="industry">Industry</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select industry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="real-estate">Real Estate</SelectItem>
+                      <SelectItem value="property-management">
+                        Property Management
+                      </SelectItem>
+                      <SelectItem value="construction">Construction</SelectItem>
+                      <SelectItem value="hospitality">Hospitality</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="employeeCount">Number of Employees</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1-10">1-10</SelectItem>
+                      <SelectItem value="11-50">11-50</SelectItem>
+                      <SelectItem value="51-200">51-200</SelectItem>
+                      <SelectItem value="201-500">201-500</SelectItem>
+                      <SelectItem value="500+">500+</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="employeeCount">Number of Employees</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select size" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1-10">1-10</SelectItem>
-                    <SelectItem value="11-50">11-50</SelectItem>
-                    <SelectItem value="51-200">51-200</SelectItem>
-                    <SelectItem value="201-500">201-500</SelectItem>
-                    <SelectItem value="500+">500+</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="website">Website</Label>
+                <Input
+                  id="website"
+                  type="url"
+                  placeholder="https://www.acmeproperties.com"
+                />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
-              <Input
-                id="website"
-                type="url"
-                placeholder="https://www.acmeproperties.com"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Company Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Tell us about your company..."
-                className="min-h-[100px]"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="description">Company Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Tell us about your company..."
+                  className="min-h-[100px]"
+                />
+              </div>
             </div>
           </div>
 
@@ -133,27 +129,28 @@ export default function CompanyPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Business Address</h2>
             <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="businessAddress">Street Address</Label>
-              <Input id="businessAddress" placeholder="123 Business Ave" />
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
-                <Label htmlFor="businessCity">City</Label>
-                <Input id="businessCity" placeholder="New York" />
+                <Label htmlFor="businessAddress">Street Address</Label>
+                <Input id="businessAddress" placeholder="123 Business Ave" />
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="businessCity">City</Label>
+                  <Input id="businessCity" placeholder="New York" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessState">State/Province</Label>
+                  <Input id="businessState" placeholder="NY" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessZip">ZIP/Postal Code</Label>
+                  <Input id="businessZip" placeholder="10001" />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="businessState">State/Province</Label>
-                <Input id="businessState" placeholder="NY" />
+                <Label htmlFor="businessCountry">Country</Label>
+                <Input id="businessCountry" placeholder="United States" />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="businessZip">ZIP/Postal Code</Label>
-                <Input id="businessZip" placeholder="10001" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="businessCountry">Country</Label>
-              <Input id="businessCountry" placeholder="United States" />
             </div>
           </div>
 
@@ -164,32 +161,35 @@ export default function CompanyPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Legal Information</h2>
             <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="taxId">Tax ID / EIN</Label>
-                <Input id="taxId" placeholder="12-3456789" />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="taxId">Tax ID / EIN</Label>
+                  <Input id="taxId" placeholder="12-3456789" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessLicense">
+                    Business License Number
+                  </Label>
+                  <Input id="businessLicense" placeholder="BL-123456789" />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="businessLicense">Business License Number</Label>
-                <Input id="businessLicense" placeholder="BL-123456789" />
+                <Label htmlFor="businessType">Business Type</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select business type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="llc">LLC</SelectItem>
+                    <SelectItem value="corporation">Corporation</SelectItem>
+                    <SelectItem value="partnership">Partnership</SelectItem>
+                    <SelectItem value="sole-proprietorship">
+                      Sole Proprietorship
+                    </SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="businessType">Business Type</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select business type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="llc">LLC</SelectItem>
-                  <SelectItem value="corporation">Corporation</SelectItem>
-                  <SelectItem value="partnership">Partnership</SelectItem>
-                  <SelectItem value="sole-proprietorship">
-                    Sole Proprietorship
-                  </SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
           </div>
 
@@ -200,31 +200,32 @@ export default function CompanyPage() {
           <div>
             <h2 className="mb-4 text-lg font-semibold">Contact Information</h2>
             <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="businessPhone">Business Phone</Label>
-                <Input
-                  id="businessPhone"
-                  type="tel"
-                  placeholder="+1 (555) 123-4567"
-                />
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="businessPhone">Business Phone</Label>
+                  <Input
+                    id="businessPhone"
+                    type="tel"
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessEmail">Business Email</Label>
+                  <Input
+                    id="businessEmail"
+                    type="email"
+                    placeholder="contact@acmeproperties.com"
+                  />
+                </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="businessEmail">Business Email</Label>
+                <Label htmlFor="supportEmail">Support Email</Label>
                 <Input
-                  id="businessEmail"
+                  id="supportEmail"
                   type="email"
-                  placeholder="contact@acmeproperties.com"
+                  placeholder="support@acmeproperties.com"
                 />
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="supportEmail">Support Email</Label>
-              <Input
-                id="supportEmail"
-                type="email"
-                placeholder="support@acmeproperties.com"
-              />
             </div>
           </div>
 
@@ -238,28 +239,29 @@ export default function CompanyPage() {
               Business Documents
             </h2>
             <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Business License</Label>
-                <Button variant="outlined" className="w-full justify-start">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload License
-                </Button>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Business License</Label>
+                  <Button variant="outlined" className="w-full justify-start">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload License
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <Label>Insurance Certificate</Label>
+                  <Button variant="outlined" className="w-full justify-start">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Certificate
+                  </Button>
+                </div>
               </div>
               <div className="space-y-2">
-                <Label>Insurance Certificate</Label>
+                <Label>Articles of Incorporation</Label>
                 <Button variant="outlined" className="w-full justify-start">
                   <Upload className="mr-2 h-4 w-4" />
-                  Upload Certificate
+                  Upload Document
                 </Button>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label>Articles of Incorporation</Label>
-              <Button variant="outlined" className="w-full justify-start">
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Document
-              </Button>
             </div>
           </div>
 
