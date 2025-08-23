@@ -95,7 +95,7 @@ model Tenant {
   lastName               String
   phone                  String
   landlordId             String
-  dateOfBirth            DateTime?
+  dateOfBirth            DateTime?           @db.Date
   tenantEmergencyContact Json?
   tenantIncome           Json?
   additionalEmails       String[]
