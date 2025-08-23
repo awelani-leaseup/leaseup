@@ -3,7 +3,7 @@
 import { type PutBlobResult } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 import { useState, useRef } from "react";
-import { Button } from "@leaseup/ui";
+import { Button } from "@leaseup/ui/components/button";
 
 // ✅ No tRPC needed - direct upload to API route
 export default function SimplifiedFileUpload() {
@@ -92,7 +92,6 @@ export default function SimplifiedFileUpload() {
               {blob.url}
             </a>
           </p>
-          <p className="text-sm text-green-700">File size: {blob.size} bytes</p>
         </div>
       )}
     </div>

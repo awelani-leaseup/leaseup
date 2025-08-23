@@ -24,37 +24,22 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { TenantFilesSubForm } from "./_components/tenant-files-sub-form";
 import { nanoid } from "nanoid";
-import { useSupabase } from "@/hooks/use-supabase";
 import { authClient } from "@/utils/auth/client";
 import { upload } from "@vercel/blob/client";
 
-const BUCKET_NAME = "file-storage";
-
 export default function CreateTenantPage() {
-  const supabase = useSupabase();
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const router = useRouter();
   const { mutateAsync: createTenant, isPending } =
     api.tenant.createTenant.useMutation();
+
   const form = useAppForm({
     ...createTenantFormOptions,
     onSubmit: async ({ value }) => {
       let avatarUrl = null;
-      if (value.avataar) {
-        const newBlob = await upload(
-          `${user?.id}/${nanoid(21)}`,
-          value.avataar,
-          {
-            access: "public",
-            handleUploadUrl: "/api/file/upload",
-            onUploadProgress: (progress) => {
-              console.log("Avatar upload progress", progress);
-            },
-          },
-        );
-
-        avatarUrl = newBlob.url;
+      if (value.avataarUrl) {
+        avatarUrl = value.avataarUrl;
       }
 
       let files: { url: string; name: string; type: string; size: number }[] =
@@ -62,24 +47,36 @@ export default function CreateTenantPage() {
 
       if (value.files && value.files.length > 0) {
         const uploadedFiles = await Promise.all(
-          value.files.map((file) => {
-            return supabase.storage
-              .from(BUCKET_NAME)
-              .upload(`${user?.id}/${nanoid(21)}`, file)
-              .then((res) => {
-                if (res.error) return;
-
-                return {
-                  url: res.data?.path,
-                  name: file.name,
-                  type: file.type,
-                  size: file.size,
-                };
+          value.files.map(async (file) => {
+            try {
+              const blob = await upload(`${user?.id}/${nanoid(21)}`, file, {
+                access: "public",
+                handleUploadUrl: "/api/file/upload",
               });
+
+              return {
+                url: blob.url,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+              };
+            } catch (error) {
+              console.error("File upload failed:", error);
+              return undefined;
+            }
           }),
         );
 
-        files = uploadedFiles.filter((file) => file !== undefined);
+        files = uploadedFiles.filter(
+          (
+            file,
+          ): file is {
+            url: string;
+            name: string;
+            type: string;
+            size: number;
+          } => file !== undefined,
+        );
       }
 
       toast.promise(
@@ -89,16 +86,9 @@ export default function CreateTenantPage() {
             onSuccess: () => {
               router.replace("/tenants");
             },
-            onError: async () => {
-              if (files.length > 0) {
-                await supabase.storage
-                  .from(BUCKET_NAME)
-                  .remove(
-                    files
-                      .filter((file) => file !== undefined)
-                      .map((file) => file.url),
-                  );
-              }
+            onError: (error) => {
+              console.error("Failed to create tenant:", error);
+              // Note: Vercel Blob files are automatically cleaned up if not referenced
             },
           },
         ),

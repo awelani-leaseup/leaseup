@@ -90,10 +90,10 @@ model Tenant {
   id                     String              @id @default(uuid())
   createdAt              DateTime            @default(now())
   updatedAt              DateTime            @updatedAt
-  email                  String              @unique
+  email                  String
   firstName              String
   lastName               String
-  phone                  String              @unique
+  phone                  String
   landlordId             String
   dateOfBirth            DateTime?
   tenantEmergencyContact Json?
@@ -111,6 +111,8 @@ model Tenant {
   tenantLease            TenantLease[]
   recurringBillable      RecurringBillable[]
 
+  @@unique([landlordId, email])
+  @@unique([landlordId, phone])
   @@map("tenant")
 }
 

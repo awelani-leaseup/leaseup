@@ -24,17 +24,29 @@ export const PersonalInformation = withForm({
 
           if (!avatar) return;
 
-          const newBlob = await upload(`${nanoid(21)}/${nanoid(21)}`, avatar, {
-            access: "public",
-            handleUploadUrl: "/api/file/upload",
-            onUploadProgress: (progress) => {
-              console.log("Avatar upload progress", progress);
-            },
-          });
+          try {
+            const newBlob = await upload(
+              `${nanoid(21)}/${nanoid(21)}`,
+              avatar,
+              {
+                access: "public",
+                handleUploadUrl: "/api/file/upload",
+                onUploadProgress: (progress) => {
+                  console.log("Avatar upload progress", progress);
+                },
+              },
+            );
+
+            // Update the form field with the uploaded URL
+            form.setFieldValue("avataarUrl", newBlob.url);
+          } catch (error) {
+            console.error("Avatar upload failed:", error);
+          }
         },
       });
 
-    const previewUrl = files[0]?.preview || null;
+    const previewUrl =
+      files[0]?.preview || form.getFieldValue("avataarUrl") || null;
 
     return (
       <>
@@ -65,9 +77,12 @@ export const PersonalInformation = withForm({
                     size="sm"
                     variant="soft"
                     color="destructive"
-                    disabled={!files[0]}
+                    disabled={!files[0] && !form.getFieldValue("avataarUrl")}
                     onClick={() => {
-                      removeFile(files[0]?.id || "");
+                      if (files[0]) {
+                        removeFile(files[0].id);
+                      }
+                      form.setFieldValue("avataarUrl", null);
                     }}
                   >
                     <X />
