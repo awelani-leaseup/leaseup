@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 
+export { useDebounce } from "./use-debounce";
+
 export type UseAutocompleteSuggestionsReturn = {
   suggestions: google.maps.places.AutocompleteSuggestion[];
   isLoading: boolean;

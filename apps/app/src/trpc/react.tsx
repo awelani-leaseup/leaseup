@@ -6,6 +6,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { useState } from "react";
 import SuperJSON from "superjson";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { type AppRouter } from "@leaseup/trpc/server";
 import { createQueryClient } from "./query-client";
@@ -64,6 +65,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <api.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
       </api.Provider>

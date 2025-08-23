@@ -86,16 +86,15 @@ export default function BillingPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Current Plan */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Current Plan
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Current Plan */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Current Plan</h2>
               <Badge>Active</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </div>
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
@@ -139,21 +138,20 @@ export default function BillingPage() {
                 </Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Payment Methods */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Payment Methods
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Payment Methods */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Payment Methods</h2>
               <Button size="sm" className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Add Method
               </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </div>
             <div className="space-y-3">
               {paymentMethods.map((method) => (
                 <div
@@ -198,48 +196,48 @@ export default function BillingPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Billing Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Billing Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <p className="mb-1 text-sm font-medium">Billing Address</p>
-                <p className="text-sm text-gray-600">
-                  123 Business Street
-                  <br />
-                  New York, NY 10001
-                  <br />
-                  United States
-                </p>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Billing Information */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Billing Information</h2>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <p className="mb-1 text-sm font-medium">Billing Address</p>
+                  <p className="text-sm text-gray-600">
+                    123 Business Street
+                    <br />
+                    New York, NY 10001
+                    <br />
+                    United States
+                  </p>
+                </div>
+                <div>
+                  <p className="mb-1 text-sm font-medium">Tax Information</p>
+                  <p className="text-sm text-gray-600">
+                    Tax ID: 12-3456789
+                    <br />
+                    VAT: Not applicable
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="mb-1 text-sm font-medium">Tax Information</p>
-                <p className="text-sm text-gray-600">
-                  Tax ID: 12-3456789
-                  <br />
-                  VAT: Not applicable
-                </p>
-              </div>
+              <Button variant="outlined">Update Billing Information</Button>
             </div>
-            <Button variant="outlined">Update Billing Information</Button>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Billing History */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Billing History */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Calendar className="h-5 w-5" />
               Billing History
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="space-y-3">
               {billingHistory.map((invoice) => (
                 <div
@@ -277,49 +275,50 @@ export default function BillingPage() {
             <Button variant="outlined" className="mt-4 w-full">
               View All Invoices
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Usage & Limits */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Usage & Limits</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>Properties</span>
-                  <span>45 / Unlimited</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-gray-200">
-                  <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
-                </div>
-              </div>
+          {/* Divider */}
+          <hr className="border-gray-200" />
 
-              <div>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>API Calls</span>
-                  <span>2,340 / 10,000</span>
+          {/* Usage & Limits */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Usage & Limits</h2>
+            <div className="space-y-4">
+              <div className="space-y-3">
+                <div>
+                  <div className="mb-1 flex justify-between text-sm">
+                    <span>Properties</span>
+                    <span>45 / Unlimited</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-gray-200">
+                    <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
+                  </div>
                 </div>
-                <div className="h-2 w-full rounded-full bg-gray-200">
-                  <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
-                </div>
-              </div>
 
-              <div>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>Storage</span>
-                  <span>1.2 GB / 100 GB</span>
+                <div>
+                  <div className="mb-1 flex justify-between text-sm">
+                    <span>API Calls</span>
+                    <span>2,340 / 10,000</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-gray-200">
+                    <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
+                  </div>
                 </div>
-                <div className="h-2 w-full rounded-full bg-gray-200">
-                  <div className="h-2 w-[2%] rounded-full bg-blue-600"></div>
+
+                <div>
+                  <div className="mb-1 flex justify-between text-sm">
+                    <span>Storage</span>
+                    <span>1.2 GB / 100 GB</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full bg-gray-200">
+                    <div className="h-2 w-[2%] rounded-full bg-blue-600"></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

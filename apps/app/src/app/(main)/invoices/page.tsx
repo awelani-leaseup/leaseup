@@ -35,6 +35,12 @@ import Link from "next/link";
 import { api } from "@/trpc/react";
 import { InvoiceDropdownActions } from "./_components/invoice-dropdown-actions";
 import { InvoiceExportButton } from "./_components/invoice-export-button";
+import {
+  InvoiceStatsSkeleton,
+  InvoiceTableSkeleton,
+  InvoiceFiltersSkeleton,
+  InvoicePageSkeleton,
+} from "./_components/invoice-skeletons";
 import { format } from "date-fns";
 import {
   useReactTable,
@@ -50,6 +56,7 @@ import {
 import { DataTable } from "@leaseup/ui/components/data-table/data-table";
 import { DataTableFilter } from "@leaseup/ui/components/data-table/data-table-filter";
 import { DataTablePagination } from "@leaseup/ui/components/data-table/data-table-pagination";
+import { formatCurrency, getStatusColor, getStatusBadge } from "./_utils";
 
 // Invoice type definition that matches the actual API response
 type Invoice = {
@@ -121,16 +128,6 @@ type Invoice = {
   }>;
 };
 
-// API response type
-type InvoicesResponse = {
-  invoices: Invoice[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-};
-
-// Transformed response type for frontend
 type TransformedInvoicesResponse = {
   invoices: Invoice[];
   totalCount: number;
@@ -138,7 +135,6 @@ type TransformedInvoicesResponse = {
   totalPages: number;
 };
 
-// Type for InvoiceExportButton
 type ExportableInvoice = {
   id: string;
   description: string;
@@ -162,11 +158,9 @@ type ExportableInvoice = {
   };
 };
 
-// Column helper for type safety
 const columnHelper = createColumnHelper<Invoice>();
 
 export default function Invoices() {
-  // Table state
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -175,23 +169,19 @@ export default function Invoices() {
     pageSize: 20,
   });
 
-  // Fetch invoice stats
   const { data: stats, isLoading: statsLoading } =
     api.invoice.getInvoiceStats.useQuery();
 
-  // Build query parameters for backend
   const queryParams = useMemo(() => {
     const params: any = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
     };
 
-    // Add search filter
     if (globalFilter) {
       params.search = globalFilter;
     }
 
-    // Add sorting
     if (sorting.length > 0) {
       const sort = sorting[0];
       if (sort) {
@@ -200,7 +190,6 @@ export default function Invoices() {
       }
     }
 
-    // Add column filters
     columnFilters.forEach((filter) => {
       if (filter.id === "status" && filter.value && filter.value !== "all") {
         params.status = filter.value;
@@ -213,11 +202,9 @@ export default function Invoices() {
     return params;
   }, [pagination, globalFilter, sorting, columnFilters]);
 
-  // Fetch invoices with filters and sorting
   const { data: rawInvoicesData, isLoading: invoicesLoading } =
     api.invoice.getAll.useQuery(queryParams);
 
-  // Transform the API response to match frontend expectations
   const invoicesData: TransformedInvoicesResponse | undefined = useMemo(() => {
     if (!rawInvoicesData) return undefined;
 
@@ -229,7 +216,6 @@ export default function Invoices() {
     };
   }, [rawInvoicesData]);
 
-  // Transform invoices for export component
   const exportInvoicesData = useMemo(() => {
     if (!invoicesData) return undefined;
 
@@ -265,10 +251,8 @@ export default function Invoices() {
     };
   }, [invoicesData]);
 
-  // Fetch properties for filter dropdown
   const { data: properties } = api.portfolio.getAllProperties.useQuery();
 
-  // Table column definitions
   const columns = useMemo<ColumnDef<Invoice, any>[]>(
     () => [
       columnHelper.accessor("id", {
@@ -476,7 +460,6 @@ export default function Invoices() {
     [],
   );
 
-  // Initialize table with manual pagination
   const table = useReactTable({
     data: invoicesData?.invoices ?? [],
     columns,
@@ -497,52 +480,20 @@ export default function Invoices() {
     manualPagination: true,
   });
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-ZA", {
-      style: "currency",
-      currency: "ZAR",
-    }).format(amount);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "PAID":
-        return "success";
-      case "PENDING":
-        return "warning";
-      case "OVERDUE":
-        return "danger";
-      case "CANCELLED":
-        return "secondary";
-      default:
-        return "secondary";
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PAID":
-        return "Paid";
-      case "PENDING":
-        return "Pending";
-      case "OVERDUE":
-        return "Overdue";
-      case "CANCELLED":
-        return "Cancelled";
-      default:
-        return status;
-    }
-  };
-
-  // Get filter columns
   const statusColumn = table.getColumn("status");
   const propertyColumn = table.getColumn("property");
 
+  // Show full page skeleton while initial data is loading
+  if (statsLoading && invoicesLoading) {
+    return <InvoicePageSkeleton />;
+  }
+
   return (
-    <div className="mx-auto my-10 flex max-w-7xl flex-col space-y-8">
-      {/* Page Header */}
+    <div className="mx-auto my-10 flex max-w-7xl flex-col">
+      {/* Single Card for Page Header and Main Content */}
       <Card>
-        <CardHeader>
+        {/* Page Header */}
+        <CardHeader className="border-b border-gray-200">
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
               <CardTitle className="text-2xl font-bold text-[#2D3436]">
@@ -566,183 +517,164 @@ export default function Invoices() {
               </Link>
             </div>
           </div>
-        </CardHeader>
 
-        {/* Summary Cards */}
-        <CardContent>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            {[
-              {
-                label: "Total Invoiced",
-                value: stats
-                  ? formatCurrency(stats.totalInvoiced)
-                  : formatCurrency(0),
-                color: "success" as const,
-                icon: Receipt,
-                textColor: "text-green-700",
-                valueColor: "text-green-800",
-                iconColor: "text-green-600",
-              },
-              {
-                label: "Pending Payment",
-                value: stats
-                  ? formatCurrency(stats.pendingPayment)
-                  : formatCurrency(0),
-                color: "warning" as const,
-                icon: Clock,
-                textColor: "text-orange-700",
-                valueColor: "text-orange-800",
-                iconColor: "text-orange-600",
-              },
-              {
-                label: "Overdue",
-                value: stats
-                  ? formatCurrency(stats.overdue)
-                  : formatCurrency(0),
-                color: "danger" as const,
-                icon: AlertTriangle,
-                textColor: "text-red-700",
-                valueColor: "text-red-800",
-                iconColor: "text-red-600",
-              },
-              {
-                label: "This Month",
-                value: stats?.thisMonthInvoices || 0,
-                color: "info" as const,
-                icon: Calendar,
-                textColor: "text-blue-700",
-                valueColor: "text-blue-800",
-                iconColor: "text-blue-600",
-              },
-            ].map((stat, index) => (
-              <Badge
-                key={stat.label + index}
-                variant="soft"
-                color={stat.color}
-                className="h-auto rounded-md p-4 [&_svg]:size-6 [&_svg]:stroke-1"
-              >
-                <div className="flex w-full items-center justify-between">
-                  <div>
-                    <p className={`mb-2 text-sm ${stat.textColor}`}>
-                      {stat.label}
-                    </p>
-                    <p className={`text-2xl font-bold ${stat.valueColor}`}>
-                      {stat.value}
-                    </p>
-                  </div>
-                  <stat.icon className={stat.iconColor} />
-                </div>
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Main Content */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-xl font-semibold text-[#2D3436]">
-                All Invoices
-              </CardTitle>
-              <CardDescription>
-                {invoicesData?.totalCount
-                  ? `${invoicesData.totalCount} total invoices`
-                  : "Loading..."}
-              </CardDescription>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            {/* Search */}
-            <div className="relative mt-6 flex-1">
-              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                placeholder="Search invoices, tenants, or properties..."
-                value={globalFilter}
-                onChange={(e) => setGlobalFilter(e.target.value)}
-                className="max-w-md pl-10"
-              />
-              {globalFilter && (
-                <button
-                  onClick={() => setGlobalFilter("")}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
-            {/* Status Filter */}
-            <DataTableFilter
-              column={statusColumn}
-              title="Status"
-              options={[
-                { label: "All Status", value: "all" },
-                { label: "Paid", value: "PAID" },
-                { label: "Pending", value: "PENDING" },
-                { label: "Overdue", value: "OVERDUE" },
-                { label: "Cancelled", value: "CANCELLED" },
-              ]}
-              type="select"
-            />
-
-            {/* Property Filter */}
-            <DataTableFilter
-              column={propertyColumn}
-              title="Property"
-              options={[
-                { label: "All Properties", value: "all" },
-                ...(properties?.map((property) => ({
-                  label: property.name,
-                  value: property.id,
-                })) || []),
-              ]}
-              type="select"
-            />
+          <div className="mt-6">
+            {statsLoading ? (
+              <InvoiceStatsSkeleton />
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                {[
+                  {
+                    label: "Total Invoiced",
+                    value: stats
+                      ? formatCurrency(stats.totalInvoiced)
+                      : formatCurrency(0),
+                    color: "success" as const,
+                    icon: Receipt,
+                    textColor: "text-green-700",
+                    valueColor: "text-green-800",
+                    iconColor: "text-green-600",
+                  },
+                  {
+                    label: "Pending Payment",
+                    value: stats
+                      ? formatCurrency(stats.pendingPayment)
+                      : formatCurrency(0),
+                    color: "warning" as const,
+                    icon: Clock,
+                    textColor: "text-orange-700",
+                    valueColor: "text-orange-800",
+                    iconColor: "text-orange-600",
+                  },
+                  {
+                    label: "Overdue",
+                    value: stats
+                      ? formatCurrency(stats.overdue)
+                      : formatCurrency(0),
+                    color: "danger" as const,
+                    icon: AlertTriangle,
+                    textColor: "text-red-700",
+                    valueColor: "text-red-800",
+                    iconColor: "text-red-600",
+                  },
+                  {
+                    label: "This Month",
+                    value: stats?.thisMonthInvoices || 0,
+                    color: "info" as const,
+                    icon: Calendar,
+                    textColor: "text-blue-700",
+                    valueColor: "text-blue-800",
+                    iconColor: "text-blue-600",
+                  },
+                ].map((stat, index) => (
+                  <Badge
+                    key={stat.label + index}
+                    variant="soft"
+                    color={stat.color}
+                    className="h-auto rounded-md p-4 [&_svg]:size-6 [&_svg]:stroke-1"
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <div>
+                        <p className={`mb-2 text-sm ${stat.textColor}`}>
+                          {stat.label}
+                        </p>
+                        <p className={`text-2xl font-bold ${stat.valueColor}`}>
+                          {stat.value}
+                        </p>
+                      </div>
+                      <stat.icon className={stat.iconColor} />
+                    </div>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
         </CardHeader>
 
-        <CardContent>
-          {invoicesLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <div className="text-center">
-                <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-                <p className="text-gray-600">Loading invoices...</p>
+        <CardContent className="p-0">
+          <div className="p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl font-semibold text-[#2D3436]">
+                  All Invoices
+                </CardTitle>
+                <CardDescription>
+                  {invoicesData?.totalCount
+                    ? `${invoicesData.totalCount} total invoices`
+                    : "Loading..."}
+                </CardDescription>
               </div>
             </div>
-          ) : invoicesData?.invoices && invoicesData.invoices.length > 0 ? (
-            <div className="space-y-4">
-              <DataTable
-                columns={columns}
-                data={invoicesData.invoices}
-                table={table}
-              />
-              <DataTablePagination
-                table={table}
-                pageSize={pagination.pageSize}
-                totalCount={invoicesData.totalCount}
-                totalPages={invoicesData.totalPages}
-                currentPage={invoicesData.currentPage}
-              />
-            </div>
-          ) : (
-            <EmptyState
-              title="No invoices found"
-              description="Create your first invoice to get started."
-              buttons={
-                <Link href="/invoices/create">
-                  <Button>
-                    <Plus className="size-4" />
-                    Create Invoice
-                  </Button>
-                </Link>
-              }
-              icon={<FileText />}
-            />
-          )}
+
+            {!properties ? (
+              <InvoiceFiltersSkeleton />
+            ) : (
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="relative flex-1">
+                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    placeholder="Search invoices, tenants, or properties..."
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    className="max-w-md pl-10"
+                  />
+                  {globalFilter && (
+                    <button
+                      onClick={() => setGlobalFilter("")}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                <DataTableFilter
+                  column={statusColumn}
+                  title="Status"
+                  options={[
+                    { label: "All Status", value: "all" },
+                    { label: "Paid", value: "PAID" },
+                    { label: "Pending", value: "PENDING" },
+                    { label: "Overdue", value: "OVERDUE" },
+                    { label: "Cancelled", value: "CANCELLED" },
+                  ]}
+                  type="select"
+                />
+
+                <DataTableFilter
+                  column={propertyColumn}
+                  title="Property"
+                  options={[
+                    { label: "All Properties", value: "all" },
+                    ...(properties?.map((property) => ({
+                      label: property.name,
+                      value: property.id,
+                    })) || []),
+                  ]}
+                  type="select"
+                />
+              </div>
+            )}
+
+            {invoicesLoading ? (
+              <InvoiceTableSkeleton />
+            ) : (
+              <div className="space-y-4">
+                <DataTable
+                  columns={columns}
+                  data={invoicesData?.invoices ?? []}
+                  table={table}
+                />
+                <DataTablePagination
+                  table={table}
+                  pageSize={pagination.pageSize}
+                  totalCount={invoicesData?.totalCount}
+                  totalPages={invoicesData?.totalPages}
+                  currentPage={invoicesData?.currentPage}
+                />
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -21,6 +21,7 @@ import {
   Settings as SettingsIcon,
   FileText,
   Wallet,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -97,13 +98,18 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-full">
         <Sidebar variant="sidebar">
           <SidebarContent>
             <div className="p-4">
-              <div className="mb-6 flex items-center gap-2">
-                <SettingsIcon className="h-6 w-6 text-blue-600" />
-                <h2 className="text-lg font-semibold">Settings</h2>
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 text-sm font-semibold"
+                >
+                  <X className="h-4 w-4" />
+                  Exit Settings
+                </Link>
               </div>
             </div>
 
@@ -131,10 +137,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             ))}
           </SidebarContent>
         </Sidebar>
-
-        {/* <SidebarInset> */}
-        <div className="flex-1 p-6">{children}</div>
-        {/* </SidebarInset> */}
+        <div className="flex-1 p-6">
+          <div className="mx-auto max-w-4xl">{children}</div>
+        </div>
       </div>
     </SidebarProvider>
   );

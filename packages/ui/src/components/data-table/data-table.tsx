@@ -10,8 +10,22 @@ import {
 } from '../table';
 import { cn } from '../../utils/cn';
 import * as React from 'react';
+import { Database } from 'lucide-react';
 
 import { DataTablePagination } from './data-table-pagination';
+import { EmptyState, NoSearchResults } from '../state';
+
+// Default empty state components using EmptyState
+const DefaultNoDataComponent = () => (
+  <EmptyState
+    title='No data available'
+    description='There is no data to display at the moment.'
+    icon={<Database />}
+    size='sm'
+  />
+);
+
+const DefaultNoResultsComponent = () => <NoSearchResults />;
 
 import {
   flexRender,
@@ -28,6 +42,10 @@ interface DataTableProps<TData> {
   data: TData[];
   table?: TableType<TData>; // Optional external table instance for manual pagination
   onRowClick?: (row: Row<TData>) => void;
+  emptyStateProps?: {
+    noDataComponent?: React.ComponentType;
+    noResultsComponent?: React.ComponentType;
+  };
 }
 
 export function DataTable<TData>({
@@ -35,6 +53,7 @@ export function DataTable<TData>({
   data,
   table: externalTable,
   onRowClick,
+  emptyStateProps = {},
 }: DataTableProps<TData>) {
   const pageSize = 20;
   const [rowSelection, setRowSelection] = React.useState({});
@@ -61,6 +80,35 @@ export function DataTable<TData>({
   });
 
   const table = externalTable || internalTable;
+
+  // Check if any filters are active
+  const hasActiveFilters = React.useMemo(() => {
+    const columnFilters = table.getState().columnFilters;
+    const globalFilter = table.getState().globalFilter;
+    const sorting = table.getState().sorting;
+
+    return (
+      columnFilters.length > 0 ||
+      (globalFilter && globalFilter.length > 0) ||
+      sorting.length > 0
+    );
+  }, [table]);
+
+  // Determine which empty state component to show
+  const getEmptyStateComponent = () => {
+    const {
+      noDataComponent: NoDataComponent = DefaultNoDataComponent,
+      noResultsComponent: NoResultsComponent = DefaultNoResultsComponent,
+    } = emptyStateProps;
+
+    if (hasActiveFilters) {
+      return NoResultsComponent;
+    }
+
+    return NoDataComponent;
+  };
+
+  const EmptyStateComponent = getEmptyStateComponent();
 
   return (
     <div className='space-y-3'>
@@ -120,9 +168,9 @@ export function DataTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center'
+                  className='h-32 text-center'
                 >
-                  No results.
+                  <EmptyStateComponent />
                 </TableCell>
               </TableRow>
             )}

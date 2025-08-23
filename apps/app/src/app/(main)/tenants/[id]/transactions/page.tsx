@@ -20,6 +20,7 @@ import { Badge } from "@leaseup/ui/components/badge";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { FileText } from "lucide-react";
 import Link from "next/link";
+import { TenantTransactionsSkeleton } from "../../_components/tenant-skeletons";
 
 export default function TenantTransactionsPage() {
   const params = useParams();
@@ -34,14 +35,7 @@ export default function TenantTransactionsPage() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-          <p className="text-gray-600">Loading tenant transactions...</p>
-        </div>
-      </div>
-    );
+    return <TenantTransactionsSkeleton />;
   }
 
   if (error || !transactions) {

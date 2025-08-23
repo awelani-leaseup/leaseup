@@ -37,13 +37,12 @@ export default function CompanyPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Company Logo */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Company Logo</CardTitle>
-          </CardHeader>
-          <CardContent>
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Company Logo */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Company Logo</h2>
             <div className="flex items-center gap-6">
               <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-200">
                 <Building className="h-8 w-8 text-gray-400" />
@@ -62,15 +61,15 @@ export default function CompanyPage() {
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Basic Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Basic Information */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Basic Information</h2>
+            <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Input id="companyName" placeholder="Acme Properties Inc." />
@@ -125,15 +124,15 @@ export default function CompanyPage() {
                 className="min-h-[100px]"
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Business Address */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Business Address</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Business Address */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Business Address</h2>
+            <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="businessAddress">Street Address</Label>
               <Input id="businessAddress" placeholder="123 Business Ave" />
@@ -156,15 +155,15 @@ export default function CompanyPage() {
               <Label htmlFor="businessCountry">Country</Label>
               <Input id="businessCountry" placeholder="United States" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Legal Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Legal Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Legal Information */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Legal Information</h2>
+            <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="taxId">Tax ID / EIN</Label>
@@ -192,15 +191,15 @@ export default function CompanyPage() {
                 </SelectContent>
               </Select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Contact Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Contact Information */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Contact Information</h2>
+            <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="businessPhone">Business Phone</Label>
@@ -227,18 +226,18 @@ export default function CompanyPage() {
                 placeholder="support@acmeproperties.com"
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Documents */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Documents */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <FileText className="h-5 w-5" />
               Business Documents
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </h2>
+            <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Business License</Label>
@@ -262,14 +261,17 @@ export default function CompanyPage() {
                 Upload Document
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button>Save Company Information</Button>
-        </div>
-      </div>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button>Save Company Information</Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

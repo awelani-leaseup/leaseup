@@ -96,19 +96,18 @@ export default function BankingPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Connected Bank Accounts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Connected Bank Accounts
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Connected Bank Accounts */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Connected Bank Accounts</h2>
               <Button size="sm" className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Add Account
               </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </div>
             <div className="space-y-4">
               {bankAccounts.map((account) => (
                 <div
@@ -172,15 +171,15 @@ export default function BankingPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Add New Bank Account */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Add New Bank Account</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Add New Bank Account */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Add New Bank Account</h2>
+            <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="bankName">Bank Name</Label>
@@ -219,16 +218,16 @@ export default function BankingPage() {
               <Label htmlFor="accountHolder">Account Holder Name</Label>
               <Input id="accountHolder" placeholder="Acme Properties LLC" />
             </div>
-            <Button>Add Bank Account</Button>
-          </CardContent>
-        </Card>
+              <Button>Add Bank Account</Button>
+            </div>
+          </div>
 
-        {/* Payment Methods */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Methods</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Payment Methods */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Payment Methods</h2>
             <div className="space-y-4">
               {paymentMethods.map((method) => (
                 <div
@@ -264,15 +263,15 @@ export default function BankingPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Direct Deposit Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Direct Deposit Settings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Direct Deposit Settings */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Direct Deposit Settings</h2>
+            <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="depositSchedule">Deposit Schedule</Label>
               <Select defaultValue="weekly">
@@ -294,15 +293,14 @@ export default function BankingPage() {
                 Funds will only be deposited if the balance exceeds this amount
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Bank Verification */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Bank Account Verification</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Bank Verification */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Bank Account Verification</h2>
             <div className="space-y-4">
               <div className="rounded-lg bg-blue-50 p-4">
                 <div className="flex items-start gap-3">
@@ -335,14 +333,17 @@ export default function BankingPage() {
                 <Button variant="outlined">Resend Deposits</Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button>Save Banking Settings</Button>
-        </div>
-      </div>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button>Save Banking Settings</Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

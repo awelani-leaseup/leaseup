@@ -12,7 +12,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ fontSize: "15px" }}>
       <body className={`${font.className} bg-gray-50 antialiased`}>
         <AuthWrapper>{children}</AuthWrapper>
       </body>

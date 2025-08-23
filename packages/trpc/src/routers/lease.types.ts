@@ -7,6 +7,11 @@ export const VGetAllLeasesSchema = v.object({
     v.minValue(1, 'Limit must be at least 1'),
     v.maxValue(100, 'Limit cannot exceed 100')
   ),
+  search: v.optional(v.string()),
+  status: v.optional(v.string()),
+  propertyId: v.optional(v.string()),
+  sortBy: v.optional(v.string()),
+  sortOrder: v.optional(v.union([v.literal('asc'), v.literal('desc')])),
 });
 
 export const VCreateLeaseSchema = v.object({

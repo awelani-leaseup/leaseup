@@ -10,6 +10,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@leaseup/ui/components/avataar";
+import { Skeleton } from "@leaseup/ui/components/skeleton";
 import { MessageSquare, FileText, User, CreditCard } from "lucide-react";
 import { format } from "date-fns";
 
@@ -34,11 +35,55 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
     return (
       <div className="min-h-screen bg-[#ECF0F1] px-4 py-8 md:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="flex h-64 items-center justify-center">
-            <div className="text-center">
-              <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-              <p className="text-gray-600">Loading tenant details...</p>
-            </div>
+          {/* Tenant Header Skeleton */}
+          <Card className="mb-8">
+            <CardContent className="flex flex-col items-start justify-between md:flex-row md:items-center">
+              <div className="mb-4 flex items-center md:mb-0">
+                <Skeleton className="mr-4 h-16 w-16 rounded-full" />
+                <div>
+                  <Skeleton className="mb-2 h-6 w-48" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Skeleton className="h-10 w-24" />
+                <Skeleton className="h-10 w-28" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tabs Navigation Skeleton */}
+          <Card className="mb-8">
+            <CardContent>
+              <nav className="flex space-x-8">
+                {Array.from({ length: 3 }, (_, i) => (
+                  <div
+                    key={`tab-skeleton-${i}`}
+                    className="flex items-center px-1 pb-2"
+                  >
+                    <Skeleton className="mr-2 h-4 w-4" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                ))}
+              </nav>
+            </CardContent>
+          </Card>
+
+          {/* Page Content Skeleton */}
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-32" />
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

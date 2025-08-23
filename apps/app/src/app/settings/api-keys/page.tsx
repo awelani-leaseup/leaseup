@@ -99,16 +99,15 @@ export default function ApiKeysPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* API Usage Overview */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* API Usage Overview */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Activity className="h-5 w-5" />
               API Usage Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-lg bg-blue-50 p-4 text-center">
                 <p className="text-2xl font-bold text-blue-600">2,612</p>
@@ -126,21 +125,20 @@ export default function ApiKeysPage() {
                 <p className="text-xs text-gray-500">Last 30 days</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Existing API Keys */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Your API Keys
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Existing API Keys */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Your API Keys</h2>
               <Button size="sm" className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create New Key
               </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </div>
             <div className="space-y-4">
               {apiKeys.map((apiKey) => (
                 <div key={apiKey.id} className="rounded-lg border p-4">
@@ -245,65 +243,65 @@ export default function ApiKeysPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Create New API Key */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Create New API Key</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="keyName">Key Name</Label>
-              <Input id="keyName" placeholder="My Integration Key" />
-              <p className="text-sm text-gray-500">
-                Choose a descriptive name to help you identify this key
-              </p>
-            </div>
+          {/* Divider */}
+          <hr className="border-gray-200" />
 
-            <div className="space-y-2">
-              <Label htmlFor="keyDescription">Description (Optional)</Label>
-              <Textarea
-                id="keyDescription"
-                placeholder="Describe what this API key will be used for..."
-                className="min-h-[80px]"
-              />
-            </div>
+          {/* Create New API Key */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Create New API Key</h2>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="keyName">Key Name</Label>
+                <Input id="keyName" placeholder="My Integration Key" />
+                <p className="text-sm text-gray-500">
+                  Choose a descriptive name to help you identify this key
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <Label>Permissions</Label>
-              {permissions.map((permission) => (
-                <div
-                  key={permission.id}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
-                  <div>
-                    <p className="font-medium">{permission.name}</p>
-                    <p className="text-sm text-gray-600">
-                      {permission.description}
-                    </p>
+              <div className="space-y-2">
+                <Label htmlFor="keyDescription">Description (Optional)</Label>
+                <Textarea
+                  id="keyDescription"
+                  placeholder="Describe what this API key will be used for..."
+                  className="min-h-[80px]"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label>Permissions</Label>
+                {permissions.map((permission) => (
+                  <div
+                    key={permission.id}
+                    className="flex items-center justify-between rounded-lg border p-3"
+                  >
+                    <div>
+                      <p className="font-medium">{permission.name}</p>
+                      <p className="text-sm text-gray-600">
+                        {permission.description}
+                      </p>
+                    </div>
+                    <Switch />
                   </div>
-                  <Switch />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="pt-4">
-              <Button>Create API Key</Button>
+              <div className="pt-4">
+                <Button>Create API Key</Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Security Notice */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-orange-600">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Security Notice */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-orange-600">
               <AlertTriangle className="h-5 w-5" />
               Security Best Practices
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-2">
                 <div className="mt-2 h-1.5 w-1.5 rounded-full bg-orange-500"></div>
@@ -337,15 +335,14 @@ export default function ApiKeysPage() {
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Documentation */}
-        <Card>
-          <CardHeader>
-            <CardTitle>API Documentation</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Documentation */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">API Documentation</h2>
             <p className="mb-4 text-sm text-gray-600">
               Need help getting started with our API? Check out our
               comprehensive documentation and code examples.
@@ -355,9 +352,9 @@ export default function ApiKeysPage() {
               <Button variant="outlined">Code Examples</Button>
               <Button variant="outlined">Postman Collection</Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

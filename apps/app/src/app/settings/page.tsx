@@ -46,13 +46,12 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Recent Activity */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Recent Activity</h2>
             <div className="space-y-4">
               {recentActivity.map((activity) => (
                 <div
@@ -69,35 +68,36 @@ export default function SettingsPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Account Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Account Summary</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Plan</span>
-              <Badge>Pro Plan</Badge>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Security Score</span>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-16 rounded-full bg-gray-200">
-                  <div className="h-2 w-12 rounded-full bg-green-500" />
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Account Summary */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Account Summary</h2>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Plan</span>
+                <Badge>Pro Plan</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Security Score</span>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-16 rounded-full bg-gray-200">
+                    <div className="h-2 w-12 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-sm font-medium">75%</span>
                 </div>
-                <span className="text-sm font-medium">75%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Two-factor auth</span>
+                <Badge variant="outlined">Enabled</Badge>
               </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Two-factor auth</span>
-              <Badge variant="outlined">Enabled</Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

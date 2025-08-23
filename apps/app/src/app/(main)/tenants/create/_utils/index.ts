@@ -4,7 +4,7 @@ import { VTenantSchema } from "../_types";
 
 export const createTenantFormOptions = formOptions({
   defaultValues: {
-    avataar: null as v.InferInput<typeof VTenantSchema>["avataar"],
+    avataarUrl: "",
     firstName: "",
     lastName: "",
     dateOfBirth: new Date(),

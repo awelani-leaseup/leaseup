@@ -3,8 +3,6 @@
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Switch } from "@leaseup/ui/components/switch";
@@ -175,138 +173,150 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Notification Preferences */}
-        <Card>
-          <CardHeader>
-            <CardTitle>General Preferences</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="emailFrequency">Email Frequency</Label>
-                <Select defaultValue="instant">
-                  <SelectTrigger id="emailFrequency">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="instant">Instant</SelectItem>
-                    <SelectItem value="daily">Daily Digest</SelectItem>
-                    <SelectItem value="weekly">Weekly Summary</SelectItem>
-                    <SelectItem value="never">Never</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="quietHours">Quiet Hours</Label>
-                <Select defaultValue="10pm-8am">
-                  <SelectTrigger id="quietHours">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="disabled">Disabled</SelectItem>
-                    <SelectItem value="10pm-8am">10 PM - 8 AM</SelectItem>
-                    <SelectItem value="11pm-7am">11 PM - 7 AM</SelectItem>
-                    <SelectItem value="9pm-9am">9 PM - 9 AM</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <div>
-                <p className="font-medium">Do Not Disturb</p>
-                <p className="text-sm text-gray-600">
-                  Pause all notifications temporarily
-                </p>
-              </div>
-              <Switch />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Notification Categories */}
-        {notificationCategories.map((category) => (
-          <Card key={category.title}>
-            <CardHeader>
-              <CardTitle>{category.title}</CardTitle>
-              <p className="text-sm text-gray-600">{category.description}</p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Header Row */}
-                <div className="grid grid-cols-4 gap-4 border-b pb-2 text-sm font-medium text-gray-600">
-                  <div>Notification</div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Mail className="h-4 w-4" />
-                    Email
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Smartphone className="h-4 w-4" />
-                    Push
-                  </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <Volume2 className="h-4 w-4" />
-                    SMS
-                  </div>
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Notification Preferences */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">General Preferences</h2>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="emailFrequency">Email Frequency</Label>
+                  <Select defaultValue="instant">
+                    <SelectTrigger id="emailFrequency">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="instant">Instant</SelectItem>
+                      <SelectItem value="daily">Daily Digest</SelectItem>
+                      <SelectItem value="weekly">Weekly Summary</SelectItem>
+                      <SelectItem value="never">Never</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-
-                {/* Notification Settings */}
-                {category.settings.map((setting) => (
-                  <div key={setting.id} className="grid grid-cols-4 gap-4 py-2">
-                    <div>
-                      <p className="font-medium">{setting.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {setting.description}
-                      </p>
-                    </div>
-                    <div className="flex justify-center">
-                      <Switch defaultChecked={setting.email} />
-                    </div>
-                    <div className="flex justify-center">
-                      <Switch defaultChecked={setting.push} />
-                    </div>
-                    <div className="flex justify-center">
-                      <Switch defaultChecked={setting.sms} />
-                    </div>
-                  </div>
-                ))}
+                <div className="space-y-2">
+                  <Label htmlFor="quietHours">Quiet Hours</Label>
+                  <Select defaultValue="10pm-8am">
+                    <SelectTrigger id="quietHours">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="disabled">Disabled</SelectItem>
+                      <SelectItem value="10pm-8am">10 PM - 8 AM</SelectItem>
+                      <SelectItem value="11pm-7am">11 PM - 7 AM</SelectItem>
+                      <SelectItem value="9pm-9am">9 PM - 9 AM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
 
-        {/* Contact Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <p className="mb-1 text-sm font-medium">Email Address</p>
-                <p className="text-sm text-gray-600">john.doe@example.com</p>
-                <Button variant="outlined" size="sm" className="mt-2">
-                  Change Email
-                </Button>
-              </div>
-              <div>
-                <p className="mb-1 text-sm font-medium">Phone Number</p>
-                <p className="text-sm text-gray-600">+1 (555) 123-4567</p>
-                <Button variant="outlined" size="sm" className="mt-2">
-                  Change Phone
-                </Button>
+              <div className="flex items-center justify-between pt-2">
+                <div>
+                  <p className="font-medium">Do Not Disturb</p>
+                  <p className="text-sm text-gray-600">
+                    Pause all notifications temporarily
+                  </p>
+                </div>
+                <Switch />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Test Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Test Notifications</CardTitle>
-          </CardHeader>
-          <CardContent>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Notification Categories */}
+          {notificationCategories.map((category, index) => (
+            <div key={category.title}>
+              {index > 0 && <hr className="border-gray-200" />}
+              <div className="space-y-4">
+                <div>
+                  <h2 className="mb-2 text-lg font-semibold">
+                    {category.title}
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    {category.description}
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  {/* Header Row */}
+                  <div className="grid grid-cols-4 gap-4 border-b pb-2 text-sm font-medium text-gray-600">
+                    <div>Notification</div>
+                    <div className="flex items-center justify-center gap-1">
+                      <Mail className="h-4 w-4" />
+                      Email
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                      <Smartphone className="h-4 w-4" />
+                      Push
+                    </div>
+                    <div className="flex items-center justify-center gap-1">
+                      <Volume2 className="h-4 w-4" />
+                      SMS
+                    </div>
+                  </div>
+
+                  {/* Notification Settings */}
+                  {category.settings.map((setting) => (
+                    <div
+                      key={setting.id}
+                      className="grid grid-cols-4 gap-4 py-2"
+                    >
+                      <div>
+                        <p className="font-medium">{setting.name}</p>
+                        <p className="text-sm text-gray-600">
+                          {setting.description}
+                        </p>
+                      </div>
+                      <div className="flex justify-center">
+                        <Switch defaultChecked={setting.email} />
+                      </div>
+                      <div className="flex justify-center">
+                        <Switch defaultChecked={setting.push} />
+                      </div>
+                      <div className="flex justify-center">
+                        <Switch defaultChecked={setting.sms} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Contact Information */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Contact Information</h2>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <p className="mb-1 text-sm font-medium">Email Address</p>
+                  <p className="text-sm text-gray-600">john.doe@example.com</p>
+                  <Button variant="outlined" size="sm" className="mt-2">
+                    Change Email
+                  </Button>
+                </div>
+                <div>
+                  <p className="mb-1 text-sm font-medium">Phone Number</p>
+                  <p className="text-sm text-gray-600">+1 (555) 123-4567</p>
+                  <Button variant="outlined" size="sm" className="mt-2">
+                    Change Phone
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Test Notifications */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Test Notifications</h2>
             <p className="mb-4 text-sm text-gray-600">
               Send test notifications to verify your settings are working
               correctly.
@@ -322,14 +332,17 @@ export default function NotificationsPage() {
                 Send Test SMS
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button>Save Notification Settings</Button>
-        </div>
-      </div>
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button>Save Notification Settings</Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

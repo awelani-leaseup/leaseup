@@ -53,16 +53,15 @@ export default function SecurityPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Security Score */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Security Score */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Shield className="h-5 w-5" />
               Security Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="flex items-center justify-between">
               <div>
                 <div className="mb-2 flex items-center gap-2">
@@ -78,18 +77,18 @@ export default function SecurityPage() {
               </div>
               <AlertTriangle className="h-8 w-8 text-yellow-500" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Change Password */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Change Password */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Key className="h-5 w-5" />
               Change Password
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </h2>
+            <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="currentPassword">Current Password</Label>
               <Input
@@ -114,19 +113,20 @@ export default function SecurityPage() {
                 placeholder="Confirm new password"
               />
             </div>
-            <Button>Update Password</Button>
-          </CardContent>
-        </Card>
+              <Button>Update Password</Button>
+            </div>
+          </div>
 
-        {/* Two-Factor Authentication */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Two-Factor Authentication */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Smartphone className="h-5 w-5" />
               Two-Factor Authentication
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </h2>
+            <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">SMS Authentication</p>
@@ -162,18 +162,17 @@ export default function SecurityPage() {
                 Generate
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Login Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Login Activity */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Clock className="h-5 w-5" />
               Recent Login Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="space-y-4">
               {loginSessions.map((session) => (
                 <div
@@ -202,15 +201,15 @@ export default function SecurityPage() {
             <Button variant="outlined" className="mt-4 w-full">
               Sign Out All Other Sessions
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Security Preferences */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Security Preferences</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Security Preferences */}
+          <div>
+            <h2 className="mb-4 text-lg font-semibold">Security Preferences</h2>
+            <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Login Notifications</p>
@@ -238,9 +237,9 @@ export default function SecurityPage() {
               </div>
               <Switch />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

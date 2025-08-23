@@ -7,40 +7,45 @@ import {
   AvatarImage,
 } from "@leaseup/ui/components/avataar";
 import { Label } from "@leaseup/ui/components/label";
-import { useRef } from "react";
 import { Button } from "@leaseup/ui/components/button";
+import { useFileUpload } from "@/hooks/use-file-upload";
+import { upload } from "@vercel/blob/client";
+import { nanoid } from "nanoid";
 
 export const PersonalInformation = withForm({
   ...createTenantFormOptions,
   render: ({ form }) => {
-    const avataarInputRef = useRef<HTMLInputElement>(null);
+    const [{ files }, { removeFile, openFileDialog, getInputProps }] =
+      useFileUpload({
+        accept: "image/*",
+        maxSize: 10 * 1024 * 1024,
+        onFilesAdded: async (addedFiles) => {
+          const avatar = addedFiles[0]?.file as File;
+
+          if (!avatar) return;
+
+          const newBlob = await upload(`${nanoid(21)}/${nanoid(21)}`, avatar, {
+            access: "public",
+            handleUploadUrl: "/api/file/upload",
+            onUploadProgress: (progress) => {
+              console.log("Avatar upload progress", progress);
+            },
+          });
+        },
+      });
+
+    const previewUrl = files[0]?.preview || null;
+
     return (
       <>
-        <form.AppField name="avataar">
+        <form.AppField name="avataarUrl">
           {(field) => (
             <div className="col-span-full">
-              <input
-                accept="image/*"
-                className="hidden"
-                type="file"
-                ref={avataarInputRef}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    field.handleChange(file);
-                  }
-                }}
-              />
+              <input {...getInputProps()} className="sr-only" type="file" />
               <Label>Tenant Image</Label>
               <div className="flex items-center gap-4">
                 <Avatar className="mt-2 size-20 rounded">
-                  <AvatarImage
-                    src={
-                      field.state.value
-                        ? URL?.createObjectURL(field.state.value)
-                        : undefined
-                    }
-                  />
+                  <AvatarImage src={previewUrl || undefined} />
                   <AvatarFallback className="size-20 rounded">
                     <User />
                   </AvatarFallback>
@@ -50,7 +55,7 @@ export const PersonalInformation = withForm({
                     size="sm"
                     variant="outlined"
                     onClick={() => {
-                      avataarInputRef.current?.click();
+                      openFileDialog();
                     }}
                   >
                     <Upload />
@@ -60,9 +65,9 @@ export const PersonalInformation = withForm({
                     size="sm"
                     variant="soft"
                     color="destructive"
-                    disabled={!field.state.value}
+                    disabled={!files[0]}
                     onClick={() => {
-                      field.handleChange(null);
+                      removeFile(files[0]?.id || "");
                     }}
                   >
                     <X />

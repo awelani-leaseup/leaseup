@@ -20387,6 +20387,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    phone?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -20409,13 +20410,12 @@ export namespace Prisma {
     countryCode?: StringNullableFilter<"User"> | string | null
     numberOfProperties?: IntNullableFilter<"User"> | number | null
     numberOfUnits?: IntNullableFilter<"User"> | number | null
-    phone?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
     property?: PropertyListRelationFilter
     sessions?: SessionListRelationFilter
     tenant?: TenantListRelationFilter
     Invoice?: InvoiceListRelationFilter
-  }, "id" | "email">
+  }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -20754,15 +20754,15 @@ export namespace Prisma {
 
   export type TenantWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    email?: string
+    phone?: string
     AND?: TenantWhereInput | TenantWhereInput[]
     OR?: TenantWhereInput[]
     NOT?: TenantWhereInput | TenantWhereInput[]
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
-    email?: StringFilter<"Tenant"> | string
     firstName?: StringFilter<"Tenant"> | string
     lastName?: StringFilter<"Tenant"> | string
-    phone?: StringFilter<"Tenant"> | string
     landlordId?: StringFilter<"Tenant"> | string
     dateOfBirth?: DateTimeNullableFilter<"Tenant"> | Date | string | null
     tenantEmergencyContact?: JsonNullableFilter<"Tenant">
@@ -20779,7 +20779,7 @@ export namespace Prisma {
     landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
     tenantLease?: TenantLeaseListRelationFilter
     recurringBillable?: RecurringBillableListRelationFilter
-  }, "id">
+  }, "id" | "email" | "phone">
 
   export type TenantOrderByWithAggregationInput = {
     id?: SortOrder

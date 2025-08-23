@@ -59,6 +59,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.69.0
         version: 5.80.7(react@19.1.0)
+      '@tanstack/react-query-devtools':
+        specifier: '4'
+        version: 4.40.1(@tanstack/react-query@5.80.7(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -95,6 +98,9 @@ importers:
       '@uppy/tus':
         specifier: ^4.2.2
         version: 4.2.2(@uppy/core@4.4.7)
+      '@vercel/blob':
+        specifier: ^1.1.1
+        version: 1.1.1
       '@vis.gl/react-google-maps':
         specifier: ^1.5.3
         version: 1.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -430,6 +436,9 @@ importers:
       '@trpc/server':
         specifier: ^11.4.4
         version: 11.4.4(typescript@5.8.2)
+      '@vercel/blob':
+        specifier: ^1.1.1
+        version: 1.1.1
       better-auth:
         specifier: ^1.2.12
         version: 1.2.12
@@ -1086,6 +1095,10 @@ packages:
   '@faker-js/faker@9.9.0':
     resolution: {integrity: sha512-OEl393iCOoo/z8bMezRlJu+GlRGlsKbUAN7jKB6LhnKoqKve5DXRpalbItIIcwnCjs1k/FOPjFzcA6Qn+H+YbA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+
+  '@fastify/busboy@2.1.1':
+    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
+    engines: {node: '>=14'}
 
   '@floating-ui/core@1.7.1':
     resolution: {integrity: sha512-azI0DrjMMfIug/ExbBaeDVJXcY0a7EPvPjb2xAJPa4HeimBX+Z18HK8QQR3jb6356SnDDdxx+hinMLcJEDdOjw==}
@@ -3076,6 +3089,10 @@ packages:
   '@tanstack/form-core@1.12.3':
     resolution: {integrity: sha512-H59XYP8Jxg8vT4IYIZa1BHkYiyiZqFcLSD2HpxefHP/vlG06/spCySVe/vGAP7IJgHHSAlEqBhQoy1Mg2ruTRA==}
 
+  '@tanstack/match-sorter-utils@8.19.4':
+    resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
+    engines: {node: '>=12'}
+
   '@tanstack/query-core@5.80.7':
     resolution: {integrity: sha512-s09l5zeUKC8q7DCCCIkVSns8zZrK4ZDT6ryEjxNBFi68G4z2EBobBS7rdOY3r6W1WbUDpc1fe5oY+YO/+2UVUg==}
 
@@ -3093,6 +3110,13 @@ packages:
         optional: true
       vinxi:
         optional: true
+
+  '@tanstack/react-query-devtools@4.40.1':
+    resolution: {integrity: sha512-g8g2CCDt91CNhkLsKLVXVBVQSUubExnBdprwwjY5FFM+ZBjv1WfCpGiX1UOezgjVhNxqoi1Is+iMYShdOMoI8Q==}
+    peerDependencies:
+      '@tanstack/react-query': ^4.40.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   '@tanstack/react-query@5.80.7':
     resolution: {integrity: sha512-u2F0VK6+anItoEvB3+rfvTO9GEh2vb00Je05OwlUe/A0lkJBgW1HckiY3f9YZa+jx6IOe4dHPh10dyp9aY3iRQ==}
@@ -3458,6 +3482,10 @@ packages:
   '@uppy/utils@6.1.5':
     resolution: {integrity: sha512-R+3l4ir01I6MzZ80t5CSBoOGvV9mCqLZC9FoNYVTp/lsanQ3yMAZFGLN/x7JVGO7oi/m/ykmNR1jAH+JTtXdFg==}
 
+  '@vercel/blob@1.1.1':
+    resolution: {integrity: sha512-heiJGj2qt5qTv6yiShH9f6KRAoZGj+lz61GQ+lBRL4lhvUmKI9A51KYlQTnsUd9ymdFlKHBlvmPeG+yGz2Qsbg==}
+    engines: {node: '>=16.14'}
+
   '@vis.gl/react-google-maps@1.5.3':
     resolution: {integrity: sha512-3EX3fXuEnNneuYlg5E3w6G5/o24H5vp/gH068q6tkdWss0M3/dSPVhRCnhUBagT14M8lqvPShjayWOLsLBkLiw==}
     peerDependencies:
@@ -3597,6 +3625,9 @@ packages:
   async-function@1.0.0:
     resolution: {integrity: sha512-hsU18Ae8CDTR6Kgu9DYf0EbCr/a5iGL0rytQDobUcdpYOKokk8LEjVphnXkDkgpi0wYVsqrXuP0bZxJaTqdgoA==}
     engines: {node: '>= 0.4'}
+
+  async-retry@1.3.3:
+    resolution: {integrity: sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==}
 
   autoprefixer@10.4.21:
     resolution: {integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==}
@@ -4668,6 +4699,10 @@ packages:
     resolution: {integrity: sha512-wa56o2/ElJMYqjCjGkXri7it5FbebW5usLw/nPmCMs5DeZ7eziSYZhSmPRn0txqeW4LnAmQQU7FgqLpsEFKM4A==}
     engines: {node: '>= 0.4'}
 
+  is-buffer@2.0.5:
+    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
+    engines: {node: '>=4'}
+
   is-callable@1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
     engines: {node: '>= 0.4'}
@@ -4726,6 +4761,9 @@ packages:
   is-network-error@1.1.0:
     resolution: {integrity: sha512-tUdRRAnhT+OtCZR/LxZelH/C7QtjtFrTu5tXCA8pl55eTUElUHT+GPYV8MBMBvea/j+NxQqVt3LbWMRir7Gx9g==}
     engines: {node: '>=16'}
+
+  is-node-process@1.2.0:
+    resolution: {integrity: sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw==}
 
   is-number-object@1.1.1:
     resolution: {integrity: sha512-lZhclumE1G6VYD8VHe35wFaIif+CTy5SJIi5+3y4psDgWu4wPDoBhF8NxUOinEc7pHgiTsT6MaBb92rKhhD+Xw==}
@@ -5848,6 +5886,9 @@ packages:
     resolution: {integrity: sha512-ZbgR5aZEdf4UKZVBPYIgaglBmSF2Hi94s2PcIHhRGFjKYu+chjJdYfHn4rt3hB6eCKLJ8giVIIfgMa1ehDfZKA==}
     engines: {node: '>=0.10.0'}
 
+  remove-accents@0.5.0:
+    resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
+
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
@@ -6203,6 +6244,10 @@ packages:
       babel-plugin-macros:
         optional: true
 
+  superjson@1.13.3:
+    resolution: {integrity: sha512-mJiVjfd2vokfDxsQPOwJ/PtanO87LhpYY88ubI5dUB1Ab58Txbyje3+jpm+/83R/fevaq/107NNhtYBLuoTrFg==}
+    engines: {node: '>=10'}
+
   superjson@2.2.2:
     resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
     engines: {node: '>=16'}
@@ -6267,6 +6312,10 @@ packages:
   terminal-link@3.0.0:
     resolution: {integrity: sha512-flFL3m4wuixmf6IfhFJd1YPiLiMuxEc8uHRM1buzIeZPm22Au2pDqBJQgdo7n1WfPU1ONFGv7YDwpFBmHGF6lg==}
     engines: {node: '>=12'}
+
+  throttleit@2.1.0:
+    resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
+    engines: {node: '>=18'}
 
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
@@ -6455,6 +6504,10 @@ packages:
 
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
+
+  undici@5.29.0:
+    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
+    engines: {node: '>=14.0'}
 
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
@@ -7427,6 +7480,8 @@ snapshots:
       levn: 0.4.1
 
   '@faker-js/faker@9.9.0': {}
+
+  '@fastify/busboy@2.1.1': {}
 
   '@floating-ui/core@1.7.1':
     dependencies:
@@ -9520,6 +9575,10 @@ snapshots:
     dependencies:
       '@tanstack/store': 0.7.1
 
+  '@tanstack/match-sorter-utils@8.19.4':
+    dependencies:
+      remove-accents: 0.5.0
+
   '@tanstack/query-core@5.80.7': {}
 
   '@tanstack/query-core@5.81.0': {}
@@ -9533,6 +9592,15 @@ snapshots:
       react: 19.1.0
     transitivePeerDependencies:
       - react-dom
+
+  '@tanstack/react-query-devtools@4.40.1(@tanstack/react-query@5.80.7(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@tanstack/match-sorter-utils': 8.19.4
+      '@tanstack/react-query': 5.80.7(react@19.1.0)
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      superjson: 1.13.3
+      use-sync-external-store: 1.5.0(react@19.1.0)
 
   '@tanstack/react-query@5.80.7(react@19.1.0)':
     dependencies:
@@ -10042,6 +10110,14 @@ snapshots:
       lodash: 4.17.21
       preact: 10.26.9
 
+  '@vercel/blob@1.1.1':
+    dependencies:
+      async-retry: 1.3.3
+      is-buffer: 2.0.5
+      is-node-process: 1.2.0
+      throttleit: 2.1.0
+      undici: 5.29.0
+
   '@vis.gl/react-google-maps@1.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@types/google.maps': 3.58.1
@@ -10197,6 +10273,10 @@ snapshots:
       tslib: 2.8.1
 
   async-function@1.0.0: {}
+
+  async-retry@1.3.3:
+    dependencies:
+      retry: 0.13.1
 
   autoprefixer@10.4.21(postcss@8.5.5):
     dependencies:
@@ -11496,6 +11576,8 @@ snapshots:
       call-bound: 1.0.4
       has-tostringtag: 1.0.2
 
+  is-buffer@2.0.5: {}
+
   is-callable@1.2.7: {}
 
   is-core-module@2.16.1:
@@ -11545,6 +11627,8 @@ snapshots:
   is-negative-zero@2.0.3: {}
 
   is-network-error@1.1.0: {}
+
+  is-node-process@1.2.0: {}
 
   is-number-object@1.1.1:
     dependencies:
@@ -12598,6 +12682,8 @@ snapshots:
     dependencies:
       rc: 1.2.8
 
+  remove-accents@0.5.0: {}
+
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
@@ -13042,6 +13128,10 @@ snapshots:
       client-only: 0.0.1
       react: 19.1.0
 
+  superjson@1.13.3:
+    dependencies:
+      copy-anything: 3.0.5
+
   superjson@2.2.2:
     dependencies:
       copy-anything: 3.0.5
@@ -13104,6 +13194,8 @@ snapshots:
     dependencies:
       ansi-escapes: 5.0.0
       supports-hyperlinks: 2.3.0
+
+  throttleit@2.1.0: {}
 
   through@2.3.8: {}
 
@@ -13310,6 +13402,10 @@ snapshots:
   undici-types@7.10.0: {}
 
   undici-types@7.8.0: {}
+
+  undici@5.29.0:
+    dependencies:
+      '@fastify/busboy': 2.1.1
 
   universalify@2.0.1: {}
 

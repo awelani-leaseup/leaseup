@@ -12,16 +12,7 @@ const FileSchema = v.pipe(
 );
 
 export const VTenantSchema = v.object({
-  avataar: v.nullable(
-    v.pipe(
-      v.file(),
-      v.mimeType(
-        ["image/jpeg", "image/png", "image/jpg", "image/webp"],
-        "Please select an image file.",
-      ),
-      v.maxSize(MAX_SIZE, "Please select an image smaller than 5 MB."),
-    ),
-  ),
+  avataarUrl: v.nullable(v.string()),
   firstName: v.pipe(v.string(), v.minLength(1, "First name is required")),
   lastName: v.pipe(v.string(), v.minLength(1, "Last name is required")),
   dateOfBirth: v.pipe(

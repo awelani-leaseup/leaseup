@@ -7,10 +7,12 @@ export const leaseRouter = createTRPCRouter({
   getAll: protectedProcedure
     .input(VGetAllLeasesSchema)
     .query(async ({ ctx, input }) => {
-      const { page, limit } = input;
+      const { page, limit, search, status, propertyId, sortBy, sortOrder } =
+        input;
       const skip = (page - 1) * limit;
 
-      const whereClause = {
+      // Build base where clause
+      const whereClause: any = {
         unit: {
           property: {
             landlordId: ctx.auth?.session?.userId ?? '',
@@ -18,12 +20,92 @@ export const leaseRouter = createTRPCRouter({
         },
       };
 
+      // Add search functionality
+      if (search && search.trim()) {
+        whereClause.OR = [
+          // Search in tenant names and email
+          {
+            tenantLease: {
+              some: {
+                tenant: {
+                  OR: [
+                    { firstName: { contains: search, mode: 'insensitive' } },
+                    { lastName: { contains: search, mode: 'insensitive' } },
+                    { email: { contains: search, mode: 'insensitive' } },
+                  ],
+                },
+              },
+            },
+          },
+          // Search in property name
+          {
+            unit: {
+              property: {
+                name: { contains: search, mode: 'insensitive' },
+              },
+            },
+          },
+          // Search in unit name
+          {
+            unit: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        ];
+      }
+
+      // Add status filter
+      if (status && status !== 'all') {
+        whereClause.status = status;
+      }
+
+      // Add property filter
+      if (propertyId && propertyId !== 'all') {
+        whereClause.unit.property.id = propertyId;
+      }
+
+      // Build order by clause
+      let orderBy: any = { createdAt: 'desc' }; // default sorting
+
+      if (sortBy && sortOrder) {
+        switch (sortBy) {
+          case 'tenant':
+            orderBy = {
+              tenantLease: {
+                _count: sortOrder,
+              },
+            };
+            break;
+          case 'property':
+            orderBy = {
+              unit: {
+                property: {
+                  name: sortOrder,
+                },
+              },
+            };
+            break;
+          case 'rent':
+            orderBy = { rent: sortOrder };
+            break;
+          case 'startDate':
+            orderBy = { startDate: sortOrder };
+            break;
+          case 'endDate':
+            orderBy = { endDate: sortOrder };
+            break;
+          case 'status':
+            orderBy = { status: sortOrder };
+            break;
+          default:
+            orderBy = { createdAt: 'desc' };
+        }
+      }
+
       const [leases, countResult] = await Promise.all([
         ctx.db.lease.findMany({
           where: whereClause,
-          orderBy: {
-            createdAt: 'desc',
-          },
+          orderBy,
           include: {
             unit: {
               include: {
@@ -75,6 +157,58 @@ export const leaseRouter = createTRPCRouter({
         landlordId: ctx.auth?.session?.userId ?? '',
       },
     });
+  }),
+
+  getLeaseStats: protectedProcedure.query(async ({ ctx }) => {
+    const landlordId = ctx.auth?.session?.userId ?? '';
+
+    // Get all leases for the landlord to calculate stats
+    const leases = await ctx.db.lease.findMany({
+      where: {
+        unit: {
+          property: {
+            landlordId,
+          },
+        },
+      },
+      include: {
+        unit: {
+          include: {
+            property: true,
+          },
+        },
+      },
+    });
+
+    // Calculate totals
+    const totalLeases = leases.length;
+    const activeLeases = leases.filter(
+      (lease) => lease.status === 'ACTIVE'
+    ).length;
+    const expiredLeases = leases.filter(
+      (lease) => lease.status === 'EXPIRED'
+    ).length;
+    const totalRentValue = leases
+      .filter((lease) => lease.status === 'ACTIVE')
+      .reduce((sum, lease) => sum + lease.rent, 0);
+
+    // Count leases created this month
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    const thisMonthLeases = leases.filter((lease) => {
+      const leaseDate = new Date(lease.createdAt);
+      return leaseDate >= startOfMonth && leaseDate <= endOfMonth;
+    }).length;
+
+    return {
+      totalLeases,
+      activeLeases,
+      expiredLeases,
+      totalRentValue,
+      thisMonthLeases,
+    };
   }),
   createLease: protectedProcedure
     .input(VCreateLeaseSchema)

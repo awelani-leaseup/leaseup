@@ -26,6 +26,7 @@ import { TenantFilesSubForm } from "./_components/tenant-files-sub-form";
 import { nanoid } from "nanoid";
 import { useSupabase } from "@/hooks/use-supabase";
 import { authClient } from "@/utils/auth/client";
+import { upload } from "@vercel/blob/client";
 
 const BUCKET_NAME = "file-storage";
 
@@ -41,15 +42,19 @@ export default function CreateTenantPage() {
     onSubmit: async ({ value }) => {
       let avatarUrl = null;
       if (value.avataar) {
-        const { data, error } = await supabase.storage
-          .from("file-storage")
-          .upload(`${user?.id}/${nanoid(21)}`, value.avataar);
+        const newBlob = await upload(
+          `${user?.id}/${nanoid(21)}`,
+          value.avataar,
+          {
+            access: "public",
+            handleUploadUrl: "/api/file/upload",
+            onUploadProgress: (progress) => {
+              console.log("Avatar upload progress", progress);
+            },
+          },
+        );
 
-        if (error) {
-          toast.error(error.message);
-          return;
-        }
-        avatarUrl = data.path;
+        avatarUrl = newBlob.url;
       }
 
       let files: { url: string; name: string; type: string; size: number }[] =

@@ -113,16 +113,15 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        {/* Recent Invoices */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+      {/* Single Card Container */}
+      <Card>
+        <CardContent className="space-y-8 p-6">
+          {/* Recent Invoices */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Calendar className="h-5 w-5" />
               Recent Invoices
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h2>
             <div className="space-y-3">
               {recentInvoices.map((invoice) => (
                 <div
@@ -161,18 +160,17 @@ export default function InvoicesPage() {
             <Button variant="outlined" className="mt-4 w-full">
               View All Invoices
             </Button>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Invoice Templates */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Invoice Templates
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Invoice Templates */}
+          <div>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Invoice Templates</h2>
               <Button size="sm">Create Template</Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </div>
             <div className="space-y-3">
               {invoiceTemplates.map((template) => (
                 <div
@@ -207,211 +205,230 @@ export default function InvoicesPage() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Invoice Branding */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          {/* Divider */}
+          <hr className="border-gray-200" />
+
+          {/* Invoice Branding */}
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <Palette className="h-5 w-5" />
               Invoice Branding
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Company Logo</Label>
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-gray-200">
-                      <FileText className="h-6 w-6 text-gray-400" />
+            </h2>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Company Logo</Label>
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-gray-200">
+                        <FileText className="h-6 w-6 text-gray-400" />
+                      </div>
+                      <Button
+                        variant="outlined"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <Upload className="h-4 w-4" />
+                        Upload Logo
+                      </Button>
                     </div>
-                    <Button
-                      variant="outlined"
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <Upload className="h-4 w-4" />
-                      Upload Logo
-                    </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="primaryColor">Primary Color</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="primaryColor"
+                        type="color"
+                        defaultValue="#3B82F6"
+                        className="h-10 w-20 p-1"
+                      />
+                      <Input defaultValue="#3B82F6" className="flex-1" />
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="primaryColor">Primary Color</Label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="companyName">Company Name</Label>
                     <Input
-                      id="primaryColor"
-                      type="color"
-                      defaultValue="#3B82F6"
-                      className="h-10 w-20 p-1"
+                      id="companyName"
+                      defaultValue="Acme Properties LLC"
                     />
-                    <Input defaultValue="#3B82F6" className="flex-1" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="companyAddress">Company Address</Label>
+                    <Textarea
+                      id="companyAddress"
+                      defaultValue="123 Business Street&#10;New York, NY 10001&#10;United States"
+                      className="min-h-[80px]"
+                    />
                   </div>
                 </div>
               </div>
+            </div>
 
+            {/* Divider */}
+            <hr className="border-gray-200" />
+
+            {/* Invoice Settings */}
+            <div>
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                <SettingsIcon className="h-5 w-5" />
+                Invoice Settings
+              </h2>
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="companyName">Company Name</Label>
-                  <Input id="companyName" defaultValue="Acme Properties LLC" />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="invoicePrefix">Invoice Number Prefix</Label>
+                    <Input id="invoicePrefix" defaultValue="INV-" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="paymentTerms">Default Payment Terms</Label>
+                    <Select defaultValue="30">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="15">15 days</SelectItem>
+                        <SelectItem value="30">30 days</SelectItem>
+                        <SelectItem value="45">45 days</SelectItem>
+                        <SelectItem value="60">60 days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="currency">Default Currency</Label>
+                    <Select defaultValue="USD">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="USD">USD ($)</SelectItem>
+                        <SelectItem value="EUR">EUR (€)</SelectItem>
+                        <SelectItem value="GBP">GBP (£)</SelectItem>
+                        <SelectItem value="CAD">CAD (C$)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="taxRate">Default Tax Rate (%)</Label>
+                    <Input id="taxRate" type="number" placeholder="0.00" />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="companyAddress">Company Address</Label>
+                  <Label htmlFor="footerText">Invoice Footer Text</Label>
                   <Textarea
-                    id="companyAddress"
-                    defaultValue="123 Business Street&#10;New York, NY 10001&#10;United States"
-                    className="min-h-[80px]"
+                    id="footerText"
+                    placeholder="Thank you for your business!"
+                    className="min-h-[60px]"
                   />
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Invoice Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <SettingsIcon className="h-5 w-5" />
-              Invoice Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="invoicePrefix">Invoice Number Prefix</Label>
-                <Input id="invoicePrefix" defaultValue="INV-" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="paymentTerms">Default Payment Terms</Label>
-                <Select defaultValue="30">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="15">15 days</SelectItem>
-                    <SelectItem value="30">30 days</SelectItem>
-                    <SelectItem value="45">45 days</SelectItem>
-                    <SelectItem value="60">60 days</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+              {/* Divider */}
+              <hr className="border-gray-200" />
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="currency">Default Currency</Label>
-                <Select defaultValue="USD">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD">USD ($)</SelectItem>
-                    <SelectItem value="EUR">EUR (€)</SelectItem>
-                    <SelectItem value="GBP">GBP (£)</SelectItem>
-                    <SelectItem value="CAD">CAD (C$)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="taxRate">Default Tax Rate (%)</Label>
-                <Input id="taxRate" type="number" placeholder="0.00" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="footerText">Invoice Footer Text</Label>
-              <Textarea
-                id="footerText"
-                placeholder="Thank you for your business!"
-                className="min-h-[60px]"
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Automation Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Automation Settings</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+              {/* Automation Settings */}
               <div>
-                <p className="font-medium">Auto-generate Monthly Invoices</p>
-                <p className="text-sm text-gray-600">
-                  Automatically create rent invoices each month
-                </p>
-              </div>
-              <Switch defaultChecked />
-            </div>
+                <h2 className="mb-4 text-lg font-semibold">
+                  Automation Settings
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">
+                        Auto-generate Monthly Invoices
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Automatically create rent invoices each month
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
 
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Send Invoice Reminders</p>
-                <p className="text-sm text-gray-600">
-                  Email reminders for overdue invoices
-                </p>
-              </div>
-              <Switch defaultChecked />
-            </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Send Invoice Reminders</p>
+                      <p className="text-sm text-gray-600">
+                        Email reminders for overdue invoices
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
 
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">Late Fee Automation</p>
-                <p className="text-sm text-gray-600">
-                  Automatically add late fees to overdue invoices
-                </p>
-              </div>
-              <Switch />
-            </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Late Fee Automation</p>
+                      <p className="text-sm text-gray-600">
+                        Automatically add late fees to overdue invoices
+                      </p>
+                    </div>
+                    <Switch />
+                  </div>
 
-            <div className="grid gap-4 pt-2 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="invoiceDate">Invoice Generation Date</Label>
-                <Select defaultValue="1">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">1st of the month</SelectItem>
-                    <SelectItem value="15">15th of the month</SelectItem>
-                    <SelectItem value="last">
-                      Last day of previous month
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="reminderDays">Reminder Schedule</Label>
-                <Select defaultValue="3,7,14">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="3,7,14">
-                      3, 7, 14 days overdue
-                    </SelectItem>
-                    <SelectItem value="5,10">5, 10 days overdue</SelectItem>
-                    <SelectItem value="7,14,30">
-                      7, 14, 30 days overdue
-                    </SelectItem>
-                    <SelectItem value="custom">Custom schedule</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <div className="grid gap-4 pt-2 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="invoiceDate">
+                        Invoice Generation Date
+                      </Label>
+                      <Select defaultValue="1">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1st of the month</SelectItem>
+                          <SelectItem value="15">15th of the month</SelectItem>
+                          <SelectItem value="last">
+                            Last day of previous month
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="reminderDays">Reminder Schedule</Label>
+                      <Select defaultValue="3,7,14">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="3,7,14">
+                            3, 7, 14 days overdue
+                          </SelectItem>
+                          <SelectItem value="5,10">
+                            5, 10 days overdue
+                          </SelectItem>
+                          <SelectItem value="7,14,30">
+                            7, 14, 30 days overdue
+                          </SelectItem>
+                          <SelectItem value="custom">
+                            Custom schedule
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <hr className="border-gray-200" />
+
+                {/* Save Button */}
+                <div className="flex justify-end">
+                  <Button>Save Invoice Settings</Button>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button>Save Invoice Settings</Button>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

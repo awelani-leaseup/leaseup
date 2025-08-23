@@ -21,8 +21,8 @@ export const transactionRouter = createTRPCRouter({
 
       const offset = (page - 1) * limit;
 
-      // Build where conditions
-      const whereConditions: any = {
+      // Build where conditions with landlord filter
+      const landlordFilter = {
         lease: {
           tenantLease: {
             some: {
@@ -34,78 +34,92 @@ export const transactionRouter = createTRPCRouter({
         },
       };
 
+      // Build base where conditions
+      const whereConditions: any = {
+        AND: [landlordFilter],
+      };
+
       // Add search filter
       if (search) {
-        whereConditions.OR = [
-          { description: { contains: search, mode: 'insensitive' } },
-          { referenceId: { contains: search, mode: 'insensitive' } },
-          {
-            invoice: {
-              id: { contains: search, mode: 'insensitive' },
+        whereConditions.AND.push({
+          OR: [
+            { description: { contains: search, mode: 'insensitive' } },
+            { referenceId: { contains: search, mode: 'insensitive' } },
+            {
+              invoice: {
+                id: { contains: search, mode: 'insensitive' },
+              },
             },
-          },
-          {
-            lease: {
-              tenantLease: {
-                some: {
-                  tenant: {
-                    OR: [
-                      { firstName: { contains: search, mode: 'insensitive' } },
-                      { lastName: { contains: search, mode: 'insensitive' } },
-                    ],
+            {
+              lease: {
+                tenantLease: {
+                  some: {
+                    tenant: {
+                      OR: [
+                        {
+                          firstName: { contains: search, mode: 'insensitive' },
+                        },
+                        { lastName: { contains: search, mode: 'insensitive' } },
+                      ],
+                    },
                   },
                 },
               },
             },
-          },
-        ];
+          ],
+        });
       }
 
       // Property filter
       if (propertyId) {
-        whereConditions.lease = {
-          ...whereConditions.lease,
-          unit: {
-            propertyId: propertyId,
+        whereConditions.AND.push({
+          lease: {
+            unit: {
+              propertyId: propertyId,
+            },
           },
-        };
+        });
       }
 
       // Tenant filter
       if (tenantId) {
-        whereConditions.lease = {
-          ...whereConditions.lease,
-          tenantLease: {
-            some: {
-              tenantId: tenantId,
-              tenant: {
-                landlordId: ctx.auth?.session?.userId ?? '',
+        whereConditions.AND.push({
+          lease: {
+            tenantLease: {
+              some: {
+                tenantId: tenantId,
               },
             },
           },
-        };
+        });
       }
 
       // Amount range filter
       if (amountMin !== undefined || amountMax !== undefined) {
-        whereConditions.amountPaid = {};
+        const amountFilter: any = {};
         if (amountMin !== undefined) {
-          whereConditions.amountPaid.gte = amountMin;
+          amountFilter.gte = amountMin;
         }
         if (amountMax !== undefined) {
-          whereConditions.amountPaid.lte = amountMax;
+          amountFilter.lte = amountMax;
         }
+        whereConditions.AND.push({
+          amountPaid: amountFilter,
+        });
       }
 
       // Date range filter
       if (dateFrom || dateTo) {
-        whereConditions.createdAt = {};
+        const dateFilter: any = {};
         if (dateFrom) {
-          whereConditions.createdAt.gte = new Date(dateFrom);
+          dateFilter.gte = new Date(dateFrom);
         }
         if (dateTo) {
-          whereConditions.createdAt.lte = new Date(dateTo);
+          dateFilter.lte = new Date(dateTo);
         }
+        whereConditions.AND.push({
+          createdAt: dateFilter,
+        });
       }
 
       // Build order by
