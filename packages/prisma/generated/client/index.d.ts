@@ -21669,7 +21669,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21699,7 +21699,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21789,7 +21789,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26694,7 +26694,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26723,7 +26723,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26826,7 +26826,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26855,7 +26855,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27044,7 +27044,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27073,7 +27073,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27392,7 +27392,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -27421,7 +27421,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28465,7 +28465,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28494,7 +28494,7 @@ export namespace Prisma {
     id: string
     name: string
     email: string
-    emailVerified: boolean
+    emailVerified?: boolean
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string

@@ -39,8 +39,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # ✅ Step 1: Fail fast if DB is unreachable
+      - name: Verify DB connection
+        run: npx prisma db pull --url "$POSTGRES_PRISMA_URL"
+        env:
+          POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
+
+      # ✅ Step 2: Run migrations with timeout
       - name: Apply pending migrations to database
         run: pnpm --filter @leaseup/prisma run db:migrate
         env:
           POSTGRES_PRISMA_URL: ${{ secrets.POSTGRES_PRISMA_URL }}
-          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+        timeout-minutes: 5
