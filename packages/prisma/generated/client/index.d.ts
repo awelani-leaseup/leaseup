@@ -20741,6 +20741,7 @@ export namespace Prisma {
 
   export type TenantWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    email?: string
     landlordId_email?: TenantLandlordIdEmailCompoundUniqueInput
     landlordId_phone?: TenantLandlordIdPhoneCompoundUniqueInput
     AND?: TenantWhereInput | TenantWhereInput[]
@@ -20748,7 +20749,6 @@ export namespace Prisma {
     NOT?: TenantWhereInput | TenantWhereInput[]
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
-    email?: StringFilter<"Tenant"> | string
     firstName?: StringFilter<"Tenant"> | string
     lastName?: StringFilter<"Tenant"> | string
     phone?: StringFilter<"Tenant"> | string
@@ -20768,7 +20768,7 @@ export namespace Prisma {
     landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
     tenantLease?: TenantLeaseListRelationFilter
     recurringBillable?: RecurringBillableListRelationFilter
-  }, "id" | "landlordId_email" | "landlordId_phone">
+  }, "id" | "email" | "landlordId_email" | "landlordId_phone">
 
   export type TenantOrderByWithAggregationInput = {
     id?: SortOrder
