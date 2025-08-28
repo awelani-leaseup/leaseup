@@ -46,7 +46,7 @@ export default function TenantLeasesPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">Lease History</CardTitle>
+        <CardTitle>Lease History</CardTitle>
       </CardHeader>
       <CardContent>
         {tenant.tenantLease && tenant.tenantLease.length > 0 ? (

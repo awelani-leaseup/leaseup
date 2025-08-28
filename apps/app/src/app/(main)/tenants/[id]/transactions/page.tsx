@@ -54,7 +54,7 @@ export default function TenantTransactionsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">All Transactions</CardTitle>
+        <CardTitle>All Transactions</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">

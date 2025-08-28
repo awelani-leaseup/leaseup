@@ -39,5 +39,12 @@ export const VCreatePropertySchema = v.object({
   ),
   features: v.array(v.string()),
   amenities: v.array(v.string()),
-  files: v.pipe(v.array(ImageSchema)),
+  files: v.array(
+    v.object({
+      url: v.string(),
+      name: v.string(),
+      type: v.string(),
+      size: v.number(),
+    })
+  ),
 });

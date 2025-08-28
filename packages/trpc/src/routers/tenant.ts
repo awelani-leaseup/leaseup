@@ -5,9 +5,12 @@ import {
   VRemoveTenantSchema,
   VTenantSchema,
   VGetTenantTransactionsSchema,
+  VDeleteTenantFileSchema,
 } from './tenant.types';
 import { tasks } from '@trigger.dev/sdk/v3';
 import { runCreateTenantCustomerEffect } from '@leaseup/tasks/effect';
+import { del } from '@vercel/blob';
+import { TRPCError } from '@trpc/server';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -47,48 +50,94 @@ export const tenantRouter = createTRPCRouter({
       },
     });
 
-    console.log(tenants);
     return tenants;
   }),
   getTenantRelationShips: protectedProcedure.query(async ({ ctx }) => {
     return TENANT_RELATIONSHIPS;
   }),
+  deleteTenantFile: protectedProcedure
+    .input(VDeleteTenantFileSchema)
+    .mutation(async ({ ctx, input }) => {
+      const file = await ctx.db.file.findFirst({
+        where: {
+          id: input.id,
+          ownerId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
+      if (!file) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'File not found',
+        });
+      }
+
+      await ctx.db.file.delete({
+        where: {
+          id: file.id,
+          ownerId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
+      await del(file.url);
+
+      return {
+        success: true,
+      };
+    }),
   createTenant: protectedProcedure
     .input(VTenantSchema)
     .mutation(async ({ ctx, input }) => {
       const id = nanoid(18);
-      const tenant = await ctx.db.tenant.create({
-        data: {
-          id: id,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          email: input.primaryEmail,
-          phone: input.primaryPhoneNumber,
-          landlordId: ctx.auth?.session?.userId ?? '',
-          dateOfBirth: input.dateOfBirth,
-          additionalEmails: input.additionalEmails,
-          additionalPhones: input.additionalPhones,
-          emergencyContacts: input.emergencyContacts,
-          vehicles: input.vehicles,
-          // @ts-ignore
-          avatarUrl: input.avatarUrl,
-          files: {
-            create: input.files?.map((file) => ({
-              name: file.name,
-              url: file.url,
-              type: file.type,
-              size: file.size,
-              ownerId: ctx.auth?.session?.userId ?? '',
-            })),
+
+      try {
+        const tenant = await ctx.db.tenant.create({
+          data: {
+            id: id,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.primaryEmail,
+            phone: input.primaryPhoneNumber,
+            landlordId: ctx.auth?.session?.userId ?? '',
+            dateOfBirth: input.dateOfBirth,
+            additionalEmails: input.additionalEmails,
+            additionalPhones: input.additionalPhones,
+            emergencyContacts: input.emergencyContacts,
+            vehicles: input.vehicles,
+            // @ts-ignore
+            avatarUrl: input.avatarUrl,
+            files: {
+              create: input.files?.map((file) => ({
+                id: nanoid(),
+                name: file.name,
+                url: file.url,
+                type: file.type,
+                size: file.size,
+                ownerId: ctx.auth?.session?.userId ?? '',
+              })),
+            },
           },
-        },
-      });
+        });
 
-      await runCreateTenantCustomerEffect({
-        tenantId: tenant.id,
-      });
+        await runCreateTenantCustomerEffect({
+          tenantId: tenant.id,
+        });
 
-      return tenant;
+        return tenant;
+      } catch {
+        if (input.avatarUrl) {
+          await del(input.avatarUrl);
+        }
+
+        if (input.files && input.files.length > 0) {
+          await del(input.files.map((file) => file.url));
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create tenant',
+        });
+      }
     }),
   getTenantById: protectedProcedure
     .input(VGetTenantByIdSchema)

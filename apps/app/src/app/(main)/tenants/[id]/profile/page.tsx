@@ -14,6 +14,7 @@ import { FileText, Download } from "lucide-react";
 import { format } from "date-fns";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { TenantProfileSkeleton } from "../../_components/tenant-skeletons";
+import { ConfirmDeleteTenantFile } from "../../_components/confirm-delete-tenant-file";
 
 export default function TenantProfilePage() {
   const params = useParams();
@@ -23,6 +24,7 @@ export default function TenantProfilePage() {
     data: tenant,
     isLoading,
     error,
+    refetch,
   } = api.tenant.getTenantById.useQuery({
     id: tenantId,
   });
@@ -55,7 +57,7 @@ export default function TenantProfilePage() {
         {currentLease && currentProperty && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl">Current Lease</CardTitle>
+              <CardTitle>Current Lease</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -113,7 +115,7 @@ export default function TenantProfilePage() {
         {/* Documents */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">Documents</CardTitle>
+            <CardTitle>Documents</CardTitle>
           </CardHeader>
           <CardContent>
             {tenant.files && tenant.files.length > 0 ? (
@@ -121,23 +123,38 @@ export default function TenantProfilePage() {
                 {tenant.files.map((file) => (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4"
+                    className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-2"
                   >
                     <div className="flex items-center">
-                      <FileText className="mr-3 text-2xl text-[#E74C3C]" />
+                      <FileText className="mr-3 size-4 stroke-1" />
                       <div>
-                        <p className="font-medium text-[#2D3436]">
+                        <p className="text-sm font-medium tracking-tight text-[#2D3436]">
                           {file.name}
                         </p>
-                        <p className="text-sm text-[#7F8C8D]">
+                        <p className="text-muted-foreground text-sm tracking-tight">
                           Uploaded{" "}
                           {format(new Date(file.createdAt), "MMM d, yyyy")}
                         </p>
                       </div>
                     </div>
-                    <Button variant="text" className="text-[#3498DB]">
-                      <Download className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <ConfirmDeleteTenantFile
+                        fileId={file.id}
+                        fileName={file.name}
+                        onSuccess={() => {
+                          refetch();
+                        }}
+                      />
+                      <Button
+                        variant="icon"
+                        color="info"
+                        onClick={() => {
+                          window.open(file.url, "_blank");
+                        }}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -156,7 +173,7 @@ export default function TenantProfilePage() {
         {/* Contact Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">Contact Information</CardTitle>
+            <CardTitle>Contact Information</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -192,7 +209,7 @@ export default function TenantProfilePage() {
         {/* Additional Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl">Additional Information</CardTitle>
+            <CardTitle>Additional Information</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

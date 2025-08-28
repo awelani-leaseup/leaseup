@@ -62,6 +62,16 @@ export const portfolioRouter = createTRPCRouter({
                   deposit: 0,
                 })) ?? [],
             },
+            files: {
+              create: input.files?.map((file) => ({
+                id: nanoid(),
+                name: file.name,
+                url: file.url,
+                type: file.type,
+                size: file.size,
+                ownerId: ctx.auth?.session?.userId ?? '',
+              })),
+            },
           },
         });
       });

@@ -13,7 +13,7 @@ import {
 
 export const createTenantFormOptions = formOptions({
   defaultValues: {
-    avataarUrl: null as string | null,
+    avatarUrl: null as string | null,
     firstName: "",
     lastName: "",
     dateOfBirth: new Date(),

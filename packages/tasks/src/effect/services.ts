@@ -35,14 +35,14 @@ export type RecurringBillable = Prisma.RecurringBillableGetPayload<{
   };
 }>;
 
-class PaystackApiError extends Schema.TaggedError<PaystackApiError>()(
+export class PaystackApiError extends Schema.TaggedError<PaystackApiError>()(
   'PaystackApiError',
   {
     message: Schema.String,
   }
 ) {}
 
-class DatabaseError extends Schema.TaggedError<DatabaseError>()(
+export class DatabaseError extends Schema.TaggedError<DatabaseError>()(
   'DatabaseError',
   {
     message: Schema.String,
@@ -66,27 +66,24 @@ export interface DatabaseService {
     dueDate: Date
   ) => Effect.Effect<Invoice | null, DatabaseError, never>;
   readonly findInvoiceByPaystackId: (paystackId: string) => Effect.Effect<
-    {
-      id: string;
-      status: InvoiceStatus;
-      dueAmount: number;
-      description: string;
-      leaseId: string | null;
-      lease?: {
-        unit?: {
-          name?: string | null;
-          property?: {
-            name?: string | null;
-          } | null;
-        } | null;
-        tenantLease: Array<{
-          tenant?: {
-            firstName: string;
-            lastName: string;
-          } | null;
-        }>;
-      } | null;
-    } | null,
+    Prisma.InvoiceGetPayload<{
+      include: {
+        lease: {
+          include: {
+            unit: {
+              include: {
+                property: true;
+              };
+            };
+            tenantLease: {
+              include: {
+                tenant: true;
+              };
+            };
+          };
+        };
+      };
+    }> | null,
     DatabaseError,
     never
   >;
@@ -96,27 +93,22 @@ export interface DatabaseService {
     updatedAt: Date
   ) => Effect.Effect<void, DatabaseError, never>;
   readonly createTransaction: (
-    data: Omit<Transactions, 'updatedAt' | 'createdAt'> & {
+    data: Prisma.TransactionsCreateInput & {
       createdAt: Date;
       updatedAt: Date;
     }
-  ) => Effect.Effect<
-    Omit<Transactions, 'updatedAt' | 'createdAt'> & {
-      createdAt: Date;
-      updatedAt: Date;
-    },
-    DatabaseError,
-    never
-  >;
+  ) => Effect.Effect<Transactions, DatabaseError, never>;
   readonly findTenant: (tenantId: string) => Effect.Effect<
-    {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      phone: string | null;
-      paystackCustomerId: string | null;
-    } | null,
+    Prisma.TenantGetPayload<{
+      select: {
+        id: true;
+        email: true;
+        firstName: true;
+        lastName: true;
+        phone: true;
+        paystackCustomerId: true;
+      };
+    }> | null,
     DatabaseError,
     never
   >;
@@ -125,13 +117,15 @@ export interface DatabaseService {
     paystackCustomerId: string
   ) => Effect.Effect<void, DatabaseError, never>;
   readonly findLandlord: (userId: string) => Effect.Effect<
-    {
-      id: string;
-      name: string | null;
-      email: string;
-      paystackSubAccountId: string | null;
-      paystackSplitGroupId: string | null;
-    } | null,
+    Prisma.UserGetPayload<{
+      select: {
+        id: true;
+        name: true;
+        email: true;
+        paystackSubAccountId: true;
+        paystackSplitGroupId: true;
+      };
+    }> | null,
     DatabaseError,
     never
   >;
@@ -139,6 +133,57 @@ export interface DatabaseService {
     userId: string,
     subaccountId: string,
     splitGroupId: string
+  ) => Effect.Effect<void, DatabaseError, never>;
+  readonly findLeaseWithLandlord: (leaseId: string) => Effect.Effect<
+    Prisma.LeaseGetPayload<{
+      select: {
+        id: true;
+        rent: true;
+        rentDueCurrency: true;
+        startDate: true;
+        unit: {
+          select: {
+            property: {
+              select: {
+                landlordId: true;
+                landlord: {
+                  select: {
+                    id: true;
+                    name: true;
+                    email: true;
+                    paystackSubAccountId: true;
+                    paystackSplitGroupId: true;
+                  };
+                };
+              };
+            };
+          };
+        };
+        tenantLease: {
+          select: {
+            tenant: {
+              select: {
+                id: true;
+                email: true;
+                firstName: true;
+                lastName: true;
+                phone: true;
+                paystackCustomerId: true;
+              };
+            };
+          };
+        };
+      };
+    }> | null,
+    DatabaseError,
+    never
+  >;
+  readonly updateLeasePaystackInfo: (
+    leaseId: string,
+    planCode: string,
+    subscriptionCode: string,
+    authorizationUrl: string,
+    reference: string
   ) => Effect.Effect<void, DatabaseError, never>;
   readonly disconnect: () => Effect.Effect<void, DatabaseError>;
 }
@@ -180,6 +225,48 @@ export interface PaystackService {
     currency: string;
   }) => Effect.Effect<
     { data?: { data?: { split_code?: string } } },
+    PaystackApiError
+  >;
+  readonly createPlan: (data: {
+    name: string;
+    amount: number;
+    interval: string;
+    description?: string;
+    currency?: string;
+    send_invoices?: boolean;
+    send_sms?: boolean;
+    invoice_limit?: number;
+  }) => Effect.Effect<
+    { data?: { data?: { plan_code?: string } } },
+    PaystackApiError
+  >;
+  readonly createSubscription: (data: {
+    customer: string;
+    plan: string;
+    authorization?: string;
+    start_date?: string;
+  }) => Effect.Effect<
+    { data?: { data?: { subscription_code?: string; email_token?: string } } },
+    PaystackApiError
+  >;
+  readonly initializeTransaction: (data: {
+    email: string;
+    amount: number;
+    currency?: string;
+    subaccount?: string;
+    split_code?: string;
+    plan?: string;
+    metadata?: string;
+  }) => Effect.Effect<
+    {
+      data?: {
+        data?: {
+          authorization_url?: string;
+          access_code?: string;
+          reference?: string;
+        };
+      };
+    },
     PaystackApiError
   >;
 }
@@ -436,6 +523,86 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
               : 'Failed to update landlord Paystack IDs',
         }),
     }),
+  findLeaseWithLandlord: (leaseId: string) =>
+    Effect.tryPromise({
+      try: async () => {
+        return db.lease.findUnique({
+          where: { id: leaseId },
+          select: {
+            id: true,
+            rent: true,
+            rentDueCurrency: true,
+            startDate: true,
+            unit: {
+              select: {
+                property: {
+                  select: {
+                    landlordId: true,
+                    landlord: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        paystackSubAccountId: true,
+                        paystackSplitGroupId: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            tenantLease: {
+              select: {
+                tenant: {
+                  select: {
+                    id: true,
+                    email: true,
+                    firstName: true,
+                    lastName: true,
+                    phone: true,
+                    paystackCustomerId: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+      },
+      catch: (error) =>
+        new DatabaseError({
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Failed to find lease with landlord',
+        }),
+    }),
+  updateLeasePaystackInfo: (
+    leaseId: string,
+    planCode: string,
+    subscriptionCode: string,
+    authorizationUrl: string,
+    reference: string
+  ) =>
+    Effect.tryPromise({
+      try: async () => {
+        await db.lease.update({
+          where: { id: leaseId },
+          data: {
+            paystackPlanCode: planCode,
+            paystackSubscriptionCode: subscriptionCode,
+            paystackAuthorizationUrl: authorizationUrl,
+            paystackReference: reference,
+          },
+        });
+      },
+      catch: (error) =>
+        new DatabaseError({
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Failed to update lease Paystack information',
+        }),
+    }),
   disconnect: () =>
     Effect.tryPromise({
       try: () => db.$disconnect(),
@@ -685,6 +852,196 @@ export const PaystackServiceLive = Layer.succeed(PaystackServiceTag, {
             ? error.message
             : `Paystack split creation error: ${error}`;
         console.error('PaystackService createSplit error:', errorMessage);
+
+        return new PaystackApiError({
+          message: errorMessage,
+        });
+      },
+    }),
+  createPlan: (planData) =>
+    Effect.tryPromise({
+      try: async () => {
+        console.log('Creating Paystack plan', {
+          name: planData.name,
+          amount: planData.amount,
+          interval: planData.interval,
+        });
+
+        const { data, error, response } = await paystack.POST('/plan', {
+          body: {
+            name: planData.name,
+            amount: planData.amount, // Amount should be in cents for ZAR
+            interval: planData.interval,
+            description: planData.description,
+            currency: planData.currency || 'ZAR',
+            send_invoices: planData.send_invoices ?? true,
+            send_sms: planData.send_sms ?? false,
+            invoice_limit: planData.invoice_limit,
+          },
+        });
+
+        if (error) {
+          const statusCode = response?.status;
+          const errorMessage = error.message || 'Unknown Paystack error';
+
+          if (statusCode === 429) {
+            throw new Error(
+              `Rate limit exceeded (429): ${errorMessage}. Please reduce request frequency.`
+            );
+          }
+
+          if (statusCode >= 500) {
+            throw new Error(
+              `Paystack server error (${statusCode}): ${errorMessage}`
+            );
+          }
+
+          throw new Error(
+            `Paystack API error (${statusCode}): ${errorMessage}`
+          );
+        }
+
+        console.log('Paystack plan created successfully', {
+          plan_code: data?.data?.plan_code,
+          status: response?.status,
+        });
+
+        return { data };
+      },
+      catch: (error) => {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : `Paystack plan creation error: ${error}`;
+        console.error('PaystackService createPlan error:', errorMessage);
+
+        return new PaystackApiError({
+          message: errorMessage,
+        });
+      },
+    }),
+  createSubscription: (subscriptionData) =>
+    Effect.tryPromise({
+      try: async () => {
+        console.log('Creating Paystack subscription', {
+          customer: subscriptionData.customer,
+          plan: subscriptionData.plan,
+        });
+
+        const { data, error, response } = await paystack.POST('/subscription', {
+          body: {
+            customer: subscriptionData.customer,
+            plan: subscriptionData.plan,
+            authorization: subscriptionData.authorization,
+            start_date: subscriptionData.start_date,
+          },
+        });
+
+        if (error) {
+          const statusCode = response?.status;
+          const errorMessage = error.message || 'Unknown Paystack error';
+
+          if (statusCode === 429) {
+            throw new Error(
+              `Rate limit exceeded (429): ${errorMessage}. Please reduce request frequency.`
+            );
+          }
+
+          if (statusCode >= 500) {
+            throw new Error(
+              `Paystack server error (${statusCode}): ${errorMessage}`
+            );
+          }
+
+          throw new Error(
+            `Paystack API error (${statusCode}): ${errorMessage}`
+          );
+        }
+
+        console.log('Paystack subscription created successfully', {
+          subscription_code: data?.data?.subscription_code,
+          status: response?.status,
+        });
+
+        return { data };
+      },
+      catch: (error) => {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : `Paystack subscription creation error: ${error}`;
+        console.error(
+          'PaystackService createSubscription error:',
+          errorMessage
+        );
+
+        return new PaystackApiError({
+          message: errorMessage,
+        });
+      },
+    }),
+  initializeTransaction: (transactionData) =>
+    Effect.tryPromise({
+      try: async () => {
+        console.log('Initializing Paystack transaction', {
+          email: transactionData.email,
+          amount: transactionData.amount,
+          currency: transactionData.currency,
+        });
+
+        const { data, error, response } = await paystack.POST(
+          '/transaction/initialize',
+          {
+            body: {
+              email: transactionData.email,
+              amount: transactionData.amount, // Amount should be in cents for ZAR
+              currency: transactionData.currency || 'ZAR',
+              subaccount: transactionData.subaccount,
+              split_code: transactionData.split_code,
+              plan: transactionData.plan,
+              metadata: transactionData.metadata,
+            },
+          }
+        );
+
+        if (error) {
+          const statusCode = response?.status;
+          const errorMessage = error.message || 'Unknown Paystack error';
+
+          if (statusCode === 429) {
+            throw new Error(
+              `Rate limit exceeded (429): ${errorMessage}. Please reduce request frequency.`
+            );
+          }
+
+          if (statusCode >= 500) {
+            throw new Error(
+              `Paystack server error (${statusCode}): ${errorMessage}`
+            );
+          }
+
+          throw new Error(
+            `Paystack API error (${statusCode}): ${errorMessage}`
+          );
+        }
+
+        console.log('Paystack transaction initialized successfully', {
+          authorization_url: data?.data?.authorization_url,
+          reference: data?.data?.reference,
+          status: response?.status,
+        });
+
+        return { data };
+      },
+      catch: (error) => {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : `Paystack transaction initialization error: ${error}`;
+        console.error(
+          'PaystackService initializeTransaction error:',
+          errorMessage
+        );
 
         return new PaystackApiError({
           message: errorMessage,

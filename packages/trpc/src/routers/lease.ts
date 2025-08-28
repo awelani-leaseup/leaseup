@@ -1,7 +1,15 @@
 import { VCreateLeaseSchema, VGetAllLeasesSchema } from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
+import { TRPCError } from '@trpc/server';
 import { nanoid } from 'nanoid';
-import { startOfDay } from 'date-fns';
+import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
+import {
+  InvoiceCycle,
+  LeaseStatus,
+  LeaseTermType,
+} from '@leaseup/prisma/client/index.js';
+import { createLeaseEffect } from '@leaseup/tasks/effect';
+import { Effect } from 'effect';
 
 export const leaseRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -194,12 +202,13 @@ export const leaseRouter = createTRPCRouter({
 
     // Count leases created this month
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     const thisMonthLeases = leases.filter((lease) => {
       const leaseDate = new Date(lease.createdAt);
-      return leaseDate >= startOfMonth && leaseDate <= endOfMonth;
+      return isWithinInterval(leaseDate, {
+        start: startOfMonth(now),
+        end: endOfMonth(now),
+      });
     }).length;
 
     return {
@@ -218,25 +227,16 @@ export const leaseRouter = createTRPCRouter({
           data: {
             id: nanoid(),
             unitId: input.unitId,
-            // Ensure startDate and endDate are set in Africa/Johannesburg timezone
-            startDate: startOfDay(
-              new Date(input.leaseStartDate).toLocaleString('en-US', {
-                timeZone: 'Africa/Johannesburg',
-              })
-            ),
+            startDate: new Date(input.leaseStartDate).toISOString(),
             endDate: input.leaseEndDate
-              ? startOfDay(
-                  new Date(input.leaseEndDate).toLocaleString('en-US', {
-                    timeZone: 'Africa/Johannesburg',
-                  })
-                )
+              ? new Date(input.leaseEndDate).toISOString()
               : null,
             deposit: input.deposit,
             rent: input.rent,
-            status: 'ACTIVE',
+            status: LeaseStatus.ACTIVE,
             rentDueCurrency: 'ZAR',
-            leaseType: 'MONTHLY',
-            invoiceCycle: 'MONTHLY',
+            leaseType: LeaseTermType.MONTHLY,
+            invoiceCycle: InvoiceCycle.MONTHLY,
             automaticInvoice: input.automaticInvoice,
             tenantLease: {
               create: {
@@ -246,32 +246,79 @@ export const leaseRouter = createTRPCRouter({
           },
         });
 
-        if (!input.automaticInvoice) {
-          return lease;
+        try {
+          await Effect.runPromise(
+            createLeaseEffect({
+              leaseId: lease.id,
+            })
+          );
+        } catch (effectError: any) {
+          // Convert Effect errors to meaningful user-facing errors and throw to abort transaction
+          if (
+            effectError &&
+            typeof effectError === 'object' &&
+            '_tag' in effectError
+          ) {
+            switch (effectError._tag) {
+              case 'LeaseNotFoundError':
+                throw new TRPCError({
+                  code: 'NOT_FOUND',
+                  message: `Lease not found: ${effectError.message}`,
+                });
+              case 'LandlordNotFoundError':
+                throw new TRPCError({
+                  code: 'NOT_FOUND',
+                  message: `Landlord not found: ${effectError.message}`,
+                });
+              case 'NoTenantsFoundError':
+                throw new TRPCError({
+                  code: 'NOT_FOUND',
+                  message: `No tenants found: ${effectError.message}`,
+                });
+              case 'LandlordOnboardingIncompleteError':
+                throw new TRPCError({
+                  code: 'PRECONDITION_FAILED',
+                  message: `Landlord onboarding incomplete: ${effectError.message}`,
+                });
+              case 'PaystackPlanCreationError':
+                throw new TRPCError({
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Failed to create payment plan: ${effectError.message}`,
+                });
+              case 'PaystackSubscriptionCreationError':
+                throw new TRPCError({
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Failed to create subscription: ${effectError.message}`,
+                });
+              case 'PaystackTransactionInitializationError':
+                throw new TRPCError({
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Failed to initialize payment: ${effectError.message}`,
+                });
+              case 'DatabaseError':
+                throw new TRPCError({
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Database error: ${effectError.message}`,
+                });
+              case 'PaystackApiError':
+                throw new TRPCError({
+                  code: 'BAD_REQUEST',
+                  message: `Payment service error: ${effectError.message || 'Unknown payment error'}`,
+                });
+              default:
+                throw new TRPCError({
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Failed to set up lease: ${effectError.message || 'Unknown error occurred'}`,
+                });
+            }
+          } else {
+            // Handle unexpected error format
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: `Failed to set up lease: ${effectError?.message || 'Unknown error occurred'}`,
+            });
+          }
         }
-
-        await tx.recurringBillable.create({
-          data: {
-            id: nanoid(),
-            description: 'Rent',
-            amount: input.rent,
-            category: 'RENT',
-            startDate: startOfDay(
-              new Date(input.leaseStartDate).toLocaleString('en-US', {
-                timeZone: 'Africa/Johannesburg',
-              })
-            ),
-            nextInvoiceAt: startOfDay(
-              new Date(input.leaseStartDate).toLocaleString('en-US', {
-                timeZone: 'Africa/Johannesburg',
-              })
-            ),
-            isActive: true,
-            cycle: 'MONTHLY',
-            tenantId: input.tenantId,
-            leaseId: lease.id,
-          },
-        });
 
         return lease;
       });

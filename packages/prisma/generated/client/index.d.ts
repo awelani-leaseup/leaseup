@@ -304,7 +304,7 @@ export const PropertyFeature: typeof $Enums.PropertyFeature
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -336,6 +336,13 @@ export class PrismaClient<
    * Disconnect from the database
    */
   $disconnect(): $Utils.JsPromise<void>;
+
+  /**
+   * Add a middleware
+   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
+   * @see https://pris.ly/d/extensions
+   */
+  $use(cb: Prisma.Middleware): void
 
 /**
    * Executes a prepared raw query and returns the number of affected rows.
@@ -603,8 +610,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.14.0
-   * Query Engine version: 717184b7b35ea05dfa71a3236b7af656013e1e49
+   * Prisma Client JS version: 6.9.0
+   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
    */
   export type PrismaVersion = {
     client: string
@@ -2100,24 +2107,16 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Shorthand for `emit: 'stdout'`
+     * // Defaults to stdout
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events only
+     * // Emit as events
      * log: [
-     *   { emit: 'event', level: 'query' },
-     *   { emit: 'event', level: 'info' },
-     *   { emit: 'event', level: 'warn' }
-     *   { emit: 'event', level: 'error' }
+     *   { emit: 'stdout', level: 'query' },
+     *   { emit: 'stdout', level: 'info' },
+     *   { emit: 'stdout', level: 'warn' }
+     *   { emit: 'stdout', level: 'error' }
      * ]
-     * 
-     * / Emit as events and log to stdout
-     * og: [
-     *  { emit: 'stdout', level: 'query' },
-     *  { emit: 'stdout', level: 'info' },
-     *  { emit: 'stdout', level: 'warn' }
-     *  { emit: 'stdout', level: 'error' }
-     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -2172,15 +2171,10 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
-
-  export type GetLogType<T> = CheckIsLogLevel<
-    T extends LogDefinition ? T['level'] : T
-  >;
-
-  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
-    ? GetLogType<T[number]>
-    : never;
+  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
+  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
+    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
+    : never
 
   export type QueryEvent = {
     timestamp: Date
@@ -2220,6 +2214,25 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
+
+  /**
+   * These options are being passed into the middleware as "params"
+   */
+  export type MiddlewareParams = {
+    model?: ModelName
+    action: PrismaAction
+    args: any
+    dataPath: string[]
+    runInTransaction: boolean
+  }
+
+  /**
+   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
+   */
+  export type Middleware<T = any> = (
+    params: MiddlewareParams,
+    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
+  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -11168,6 +11181,10 @@ export namespace Prisma {
     automaticInvoice: boolean | null
     invoiceCycle: $Enums.InvoiceCycle | null
     leaseType: $Enums.LeaseTermType | null
+    paystackPlanCode: string | null
+    paystackSubscriptionCode: string | null
+    paystackAuthorizationUrl: string | null
+    paystackReference: string | null
   }
 
   export type LeaseMaxAggregateOutputType = {
@@ -11184,6 +11201,10 @@ export namespace Prisma {
     automaticInvoice: boolean | null
     invoiceCycle: $Enums.InvoiceCycle | null
     leaseType: $Enums.LeaseTermType | null
+    paystackPlanCode: string | null
+    paystackSubscriptionCode: string | null
+    paystackAuthorizationUrl: string | null
+    paystackReference: string | null
   }
 
   export type LeaseCountAggregateOutputType = {
@@ -11200,6 +11221,10 @@ export namespace Prisma {
     automaticInvoice: number
     invoiceCycle: number
     leaseType: number
+    paystackPlanCode: number
+    paystackSubscriptionCode: number
+    paystackAuthorizationUrl: number
+    paystackReference: number
     _all: number
   }
 
@@ -11228,6 +11253,10 @@ export namespace Prisma {
     automaticInvoice?: true
     invoiceCycle?: true
     leaseType?: true
+    paystackPlanCode?: true
+    paystackSubscriptionCode?: true
+    paystackAuthorizationUrl?: true
+    paystackReference?: true
   }
 
   export type LeaseMaxAggregateInputType = {
@@ -11244,6 +11273,10 @@ export namespace Prisma {
     automaticInvoice?: true
     invoiceCycle?: true
     leaseType?: true
+    paystackPlanCode?: true
+    paystackSubscriptionCode?: true
+    paystackAuthorizationUrl?: true
+    paystackReference?: true
   }
 
   export type LeaseCountAggregateInputType = {
@@ -11260,6 +11293,10 @@ export namespace Prisma {
     automaticInvoice?: true
     invoiceCycle?: true
     leaseType?: true
+    paystackPlanCode?: true
+    paystackSubscriptionCode?: true
+    paystackAuthorizationUrl?: true
+    paystackReference?: true
     _all?: true
   }
 
@@ -11363,6 +11400,10 @@ export namespace Prisma {
     automaticInvoice: boolean
     invoiceCycle: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode: string | null
+    paystackSubscriptionCode: string | null
+    paystackAuthorizationUrl: string | null
+    paystackReference: string | null
     _count: LeaseCountAggregateOutputType | null
     _avg: LeaseAvgAggregateOutputType | null
     _sum: LeaseSumAggregateOutputType | null
@@ -11398,6 +11439,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: boolean
     leaseType?: boolean
+    paystackPlanCode?: boolean
+    paystackSubscriptionCode?: boolean
+    paystackAuthorizationUrl?: boolean
+    paystackReference?: boolean
     File?: boolean | Lease$FileArgs<ExtArgs>
     invoice?: boolean | Lease$invoiceArgs<ExtArgs>
     unit?: boolean | Lease$unitArgs<ExtArgs>
@@ -11422,6 +11467,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: boolean
     leaseType?: boolean
+    paystackPlanCode?: boolean
+    paystackSubscriptionCode?: boolean
+    paystackAuthorizationUrl?: boolean
+    paystackReference?: boolean
     unit?: boolean | Lease$unitArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
@@ -11439,6 +11488,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: boolean
     leaseType?: boolean
+    paystackPlanCode?: boolean
+    paystackSubscriptionCode?: boolean
+    paystackAuthorizationUrl?: boolean
+    paystackReference?: boolean
     unit?: boolean | Lease$unitArgs<ExtArgs>
   }, ExtArgs["result"]["lease"]>
 
@@ -11456,9 +11509,13 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: boolean
     leaseType?: boolean
+    paystackPlanCode?: boolean
+    paystackSubscriptionCode?: boolean
+    paystackAuthorizationUrl?: boolean
+    paystackReference?: boolean
   }
 
-  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "rent" | "deposit" | "status" | "createdAt" | "updatedAt" | "rentDueCurrency" | "unitId" | "automaticInvoice" | "invoiceCycle" | "leaseType", ExtArgs["result"]["lease"]>
+  export type LeaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "startDate" | "endDate" | "rent" | "deposit" | "status" | "createdAt" | "updatedAt" | "rentDueCurrency" | "unitId" | "automaticInvoice" | "invoiceCycle" | "leaseType" | "paystackPlanCode" | "paystackSubscriptionCode" | "paystackAuthorizationUrl" | "paystackReference", ExtArgs["result"]["lease"]>
   export type LeaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     File?: boolean | Lease$FileArgs<ExtArgs>
     invoice?: boolean | Lease$invoiceArgs<ExtArgs>
@@ -11501,6 +11558,10 @@ export namespace Prisma {
       automaticInvoice: boolean
       invoiceCycle: $Enums.InvoiceCycle
       leaseType: $Enums.LeaseTermType
+      paystackPlanCode: string | null
+      paystackSubscriptionCode: string | null
+      paystackAuthorizationUrl: string | null
+      paystackReference: string | null
     }, ExtArgs["result"]["lease"]>
     composites: {}
   }
@@ -11944,6 +12005,10 @@ export namespace Prisma {
     readonly automaticInvoice: FieldRef<"Lease", 'Boolean'>
     readonly invoiceCycle: FieldRef<"Lease", 'InvoiceCycle'>
     readonly leaseType: FieldRef<"Lease", 'LeaseTermType'>
+    readonly paystackPlanCode: FieldRef<"Lease", 'String'>
+    readonly paystackSubscriptionCode: FieldRef<"Lease", 'String'>
+    readonly paystackAuthorizationUrl: FieldRef<"Lease", 'String'>
+    readonly paystackReference: FieldRef<"Lease", 'String'>
   }
     
 
@@ -19955,7 +20020,11 @@ export namespace Prisma {
     unitId: 'unitId',
     automaticInvoice: 'automaticInvoice',
     invoiceCycle: 'invoiceCycle',
-    leaseType: 'leaseType'
+    leaseType: 'leaseType',
+    paystackPlanCode: 'paystackPlanCode',
+    paystackSubscriptionCode: 'paystackSubscriptionCode',
+    paystackAuthorizationUrl: 'paystackAuthorizationUrl',
+    paystackReference: 'paystackReference'
   };
 
   export type LeaseScalarFieldEnum = (typeof LeaseScalarFieldEnum)[keyof typeof LeaseScalarFieldEnum]
@@ -20741,7 +20810,6 @@ export namespace Prisma {
 
   export type TenantWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    email?: string
     landlordId_email?: TenantLandlordIdEmailCompoundUniqueInput
     landlordId_phone?: TenantLandlordIdPhoneCompoundUniqueInput
     AND?: TenantWhereInput | TenantWhereInput[]
@@ -20749,6 +20817,7 @@ export namespace Prisma {
     NOT?: TenantWhereInput | TenantWhereInput[]
     createdAt?: DateTimeFilter<"Tenant"> | Date | string
     updatedAt?: DateTimeFilter<"Tenant"> | Date | string
+    email?: StringFilter<"Tenant"> | string
     firstName?: StringFilter<"Tenant"> | string
     lastName?: StringFilter<"Tenant"> | string
     phone?: StringFilter<"Tenant"> | string
@@ -20768,7 +20837,7 @@ export namespace Prisma {
     landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
     tenantLease?: TenantLeaseListRelationFilter
     recurringBillable?: RecurringBillableListRelationFilter
-  }, "id" | "email" | "landlordId_email" | "landlordId_phone">
+  }, "id" | "landlordId_email" | "landlordId_phone">
 
   export type TenantOrderByWithAggregationInput = {
     id?: SortOrder
@@ -21039,6 +21108,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFilter<"Lease"> | boolean
     invoiceCycle?: EnumInvoiceCycleFilter<"Lease"> | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFilter<"Lease"> | $Enums.LeaseTermType
+    paystackPlanCode?: StringNullableFilter<"Lease"> | string | null
+    paystackSubscriptionCode?: StringNullableFilter<"Lease"> | string | null
+    paystackAuthorizationUrl?: StringNullableFilter<"Lease"> | string | null
+    paystackReference?: StringNullableFilter<"Lease"> | string | null
     File?: FileListRelationFilter
     invoice?: InvoiceListRelationFilter
     unit?: XOR<UnitNullableScalarRelationFilter, UnitWhereInput> | null
@@ -21062,6 +21135,10 @@ export namespace Prisma {
     automaticInvoice?: SortOrder
     invoiceCycle?: SortOrder
     leaseType?: SortOrder
+    paystackPlanCode?: SortOrderInput | SortOrder
+    paystackSubscriptionCode?: SortOrderInput | SortOrder
+    paystackAuthorizationUrl?: SortOrderInput | SortOrder
+    paystackReference?: SortOrderInput | SortOrder
     File?: FileOrderByRelationAggregateInput
     invoice?: InvoiceOrderByRelationAggregateInput
     unit?: UnitOrderByWithRelationInput
@@ -21088,6 +21165,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFilter<"Lease"> | boolean
     invoiceCycle?: EnumInvoiceCycleFilter<"Lease"> | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFilter<"Lease"> | $Enums.LeaseTermType
+    paystackPlanCode?: StringNullableFilter<"Lease"> | string | null
+    paystackSubscriptionCode?: StringNullableFilter<"Lease"> | string | null
+    paystackAuthorizationUrl?: StringNullableFilter<"Lease"> | string | null
+    paystackReference?: StringNullableFilter<"Lease"> | string | null
     File?: FileListRelationFilter
     invoice?: InvoiceListRelationFilter
     unit?: XOR<UnitNullableScalarRelationFilter, UnitWhereInput> | null
@@ -21111,6 +21192,10 @@ export namespace Prisma {
     automaticInvoice?: SortOrder
     invoiceCycle?: SortOrder
     leaseType?: SortOrder
+    paystackPlanCode?: SortOrderInput | SortOrder
+    paystackSubscriptionCode?: SortOrderInput | SortOrder
+    paystackAuthorizationUrl?: SortOrderInput | SortOrder
+    paystackReference?: SortOrderInput | SortOrder
     _count?: LeaseCountOrderByAggregateInput
     _avg?: LeaseAvgOrderByAggregateInput
     _max?: LeaseMaxOrderByAggregateInput
@@ -21135,6 +21220,10 @@ export namespace Prisma {
     automaticInvoice?: BoolWithAggregatesFilter<"Lease"> | boolean
     invoiceCycle?: EnumInvoiceCycleWithAggregatesFilter<"Lease"> | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeWithAggregatesFilter<"Lease"> | $Enums.LeaseTermType
+    paystackPlanCode?: StringNullableWithAggregatesFilter<"Lease"> | string | null
+    paystackSubscriptionCode?: StringNullableWithAggregatesFilter<"Lease"> | string | null
+    paystackAuthorizationUrl?: StringNullableWithAggregatesFilter<"Lease"> | string | null
+    paystackReference?: StringNullableWithAggregatesFilter<"Lease"> | string | null
   }
 
   export type InvoiceWhereInput = {
@@ -22523,6 +22612,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
@@ -22546,6 +22639,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
@@ -22567,6 +22664,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
@@ -22590,6 +22691,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
@@ -22612,6 +22717,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
   }
 
   export type LeaseUpdateManyMutationInput = {
@@ -22627,6 +22736,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type LeaseUncheckedUpdateManyInput = {
@@ -22643,6 +22756,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceCreateInput = {
@@ -24021,6 +24138,10 @@ export namespace Prisma {
     automaticInvoice?: SortOrder
     invoiceCycle?: SortOrder
     leaseType?: SortOrder
+    paystackPlanCode?: SortOrder
+    paystackSubscriptionCode?: SortOrder
+    paystackAuthorizationUrl?: SortOrder
+    paystackReference?: SortOrder
   }
 
   export type LeaseAvgOrderByAggregateInput = {
@@ -24042,6 +24163,10 @@ export namespace Prisma {
     automaticInvoice?: SortOrder
     invoiceCycle?: SortOrder
     leaseType?: SortOrder
+    paystackPlanCode?: SortOrder
+    paystackSubscriptionCode?: SortOrder
+    paystackAuthorizationUrl?: SortOrder
+    paystackReference?: SortOrder
   }
 
   export type LeaseMinOrderByAggregateInput = {
@@ -24058,6 +24183,10 @@ export namespace Prisma {
     automaticInvoice?: SortOrder
     invoiceCycle?: SortOrder
     leaseType?: SortOrder
+    paystackPlanCode?: SortOrder
+    paystackSubscriptionCode?: SortOrder
+    paystackAuthorizationUrl?: SortOrder
+    paystackReference?: SortOrder
   }
 
   export type LeaseSumOrderByAggregateInput = {
@@ -27677,6 +27806,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
@@ -27698,6 +27831,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
@@ -27796,6 +27933,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFilter<"Lease"> | boolean
     invoiceCycle?: EnumInvoiceCycleFilter<"Lease"> | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFilter<"Lease"> | $Enums.LeaseTermType
+    paystackPlanCode?: StringNullableFilter<"Lease"> | string | null
+    paystackSubscriptionCode?: StringNullableFilter<"Lease"> | string | null
+    paystackAuthorizationUrl?: StringNullableFilter<"Lease"> | string | null
+    paystackReference?: StringNullableFilter<"Lease"> | string | null
   }
 
   export type PropertyUpsertWithoutUnitInput = {
@@ -28305,6 +28446,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
@@ -28327,6 +28472,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
     tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
@@ -28564,6 +28713,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
@@ -28586,6 +28739,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
     tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
@@ -28795,6 +28952,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
@@ -28817,6 +28978,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
@@ -28999,6 +29164,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
@@ -29021,6 +29190,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
@@ -29210,6 +29383,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
@@ -29232,6 +29409,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
@@ -29315,6 +29496,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
@@ -29337,6 +29522,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
@@ -29357,6 +29546,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
@@ -29379,6 +29572,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
@@ -29468,6 +29665,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
@@ -29490,6 +29691,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
@@ -29609,6 +29814,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
@@ -29631,6 +29840,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutLeaseInput
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
@@ -29683,6 +29896,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
@@ -29705,6 +29922,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
@@ -29766,6 +29987,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     invoice?: InvoiceCreateNestedManyWithoutLeaseInput
     unit?: UnitCreateNestedOneWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestCreateNestedManyWithoutLeaseInput
@@ -29788,6 +30013,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
     invoice?: InvoiceUncheckedCreateNestedManyWithoutLeaseInput
     maintenanceRequest?: MaintenanceRequestUncheckedCreateNestedManyWithoutLeaseInput
     tenantLease?: TenantLeaseUncheckedCreateNestedManyWithoutLeaseInput
@@ -29996,6 +30225,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     unit?: UnitUpdateOneWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
@@ -30018,6 +30251,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
     tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
@@ -30905,6 +31142,10 @@ export namespace Prisma {
     automaticInvoice?: boolean
     invoiceCycle?: $Enums.InvoiceCycle
     leaseType: $Enums.LeaseTermType
+    paystackPlanCode?: string | null
+    paystackSubscriptionCode?: string | null
+    paystackAuthorizationUrl?: string | null
+    paystackReference?: string | null
   }
 
   export type LeaseUpdateWithoutUnitInput = {
@@ -30920,6 +31161,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUpdateManyWithoutLeaseNestedInput
@@ -30941,6 +31186,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutLeaseNestedInput
     invoice?: InvoiceUncheckedUpdateManyWithoutLeaseNestedInput
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
@@ -30962,6 +31211,10 @@ export namespace Prisma {
     automaticInvoice?: BoolFieldUpdateOperationsInput | boolean
     invoiceCycle?: EnumInvoiceCycleFieldUpdateOperationsInput | $Enums.InvoiceCycle
     leaseType?: EnumLeaseTermTypeFieldUpdateOperationsInput | $Enums.LeaseTermType
+    paystackPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackAuthorizationUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateManyLeaseInput = {

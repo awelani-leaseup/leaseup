@@ -9,14 +9,7 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { H5, H6 } from "@leaseup/ui/components/typography";
-import {
-  Bath,
-  Bed,
-  Building,
-  Plus,
-  RulerDimensionLine,
-  User,
-} from "lucide-react";
+import { Bath, Bed, Building, Plus, RulerDimensionLine } from "lucide-react";
 import Link from "next/link";
 import { PropertyStaticMap } from "./_components/PropertyStaticMap";
 import { Badge } from "@leaseup/ui/components/badge";

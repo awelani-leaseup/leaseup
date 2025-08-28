@@ -33,7 +33,7 @@ const EmptyState: FC<{
         <div className='text-center'>
           <span
             aria-hidden
-            className='text-gray-400 [&_svg]:mx-auto [&_svg]:size-6'
+            className='text-gray-400 [&_svg]:mx-auto [&_svg]:stroke-1 [&_svg]:size-6'
           >
             {icon}
           </span>

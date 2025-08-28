@@ -58,3 +58,7 @@ export const VGetTenantByIdSchema = v.object({
 export const VGetTenantTransactionsSchema = v.object({
   id: v.string(),
 });
+
+export const VDeleteTenantFileSchema = v.object({
+  id: v.string(),
+});

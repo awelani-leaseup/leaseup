@@ -38,7 +38,7 @@ export const PersonalInformation = withForm({
             );
 
             // Update the form field with the uploaded URL
-            form.setFieldValue("avataarUrl", newBlob.url);
+            form.setFieldValue("avatarUrl", newBlob.url);
           } catch (error) {
             console.error("Avatar upload failed:", error);
           }
@@ -46,11 +46,11 @@ export const PersonalInformation = withForm({
       });
 
     const previewUrl =
-      files[0]?.preview || form.getFieldValue("avataarUrl") || null;
+      files[0]?.preview || form.getFieldValue("avatarUrl") || null;
 
     return (
       <>
-        <form.AppField name="avataarUrl">
+        <form.AppField name="avatarUrl">
           {(field) => (
             <div className="col-span-full">
               <input {...getInputProps()} className="sr-only" type="file" />
@@ -77,12 +77,12 @@ export const PersonalInformation = withForm({
                     size="sm"
                     variant="soft"
                     color="destructive"
-                    disabled={!files[0] && !form.getFieldValue("avataarUrl")}
+                    disabled={!files[0] && !form.getFieldValue("avatarUrl")}
                     onClick={() => {
                       if (files[0]) {
                         removeFile(files[0].id);
                       }
-                      form.setFieldValue("avataarUrl", null);
+                      form.setFieldValue("avatarUrl", null);
                     }}
                   >
                     <X />

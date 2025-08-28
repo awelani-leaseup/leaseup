@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { nanoid } from "nanoid";
+import { authClient } from "@/utils/auth/client";
+import { upload } from "@vercel/blob/client";
 import {
   Card,
   CardContent,
@@ -25,6 +28,9 @@ import { PropertyFilesSubForm } from "./_components/property-files-sub-form";
 
 export default function CreatePropertyPage() {
   const [address, setAddress] = useState<string>("");
+  const [uploadingFiles, setUploadingFiles] = useState(false);
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
   const router = useRouter();
   const staticMapsUrl = createStaticMapsUrl({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
@@ -42,7 +48,7 @@ export default function CreatePropertyPage() {
   });
   const form = useAppForm({
     ...createPropertyFormOptions,
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       const data = { ...value, countryCode: "ZA" };
       const mappedPropertyUnits = (data.propertyUnits || []).map(
         ({ rent, deposit, ...unit }) => ({
@@ -61,6 +67,56 @@ export default function CreatePropertyPage() {
         deposit: data.deposit,
       };
 
+      let files: { url: string; name: string; type: string; size: number }[] =
+        [];
+
+      // Get the actual File objects from the form
+      const formFiles = form.getFieldValue("files") as File[] | null;
+
+      if (formFiles && formFiles.length > 0) {
+        setUploadingFiles(true);
+        const uploadedFiles = await Promise.all(
+          formFiles.map(async (file) => {
+            try {
+              const blob = await upload(`${user?.id}/${nanoid(21)}`, file, {
+                access: "public",
+                handleUploadUrl: "/api/file/upload",
+              });
+
+              return {
+                url: blob.url,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+              };
+            } catch (error) {
+              console.error("File upload failed:", error);
+            }
+          }),
+        )
+          .catch(() => {
+            toast.error(
+              "Failed to upload file(s), save property without files.",
+            );
+            return undefined;
+          })
+          .finally(() => {
+            setUploadingFiles(false);
+          });
+
+        files =
+          uploadedFiles?.filter(
+            (
+              file,
+            ): file is {
+              url: string;
+              name: string;
+              type: string;
+              size: number;
+            } => file !== undefined,
+          ) || [];
+      }
+
       toast.promise(
         createProperty.mutateAsync(
           {
@@ -73,11 +129,15 @@ export default function CreatePropertyPage() {
               data.propertyType === "SINGLE_UNIT"
                 ? [propertyUnit]
                 : mappedPropertyUnits,
-            files: Array.isArray(data.files) ? data.files : [],
+            files,
           },
           {
             onSuccess: () => {
               router.replace("/properties");
+            },
+            onError: (error) => {
+              console.error("Failed to create property:", error);
+              // Note: Vercel Blob files are automatically cleaned up if not referenced
             },
           },
         ),
@@ -180,19 +240,19 @@ export default function CreatePropertyPage() {
 
                   <div className="flex gap-4 border-t border-gray-100 pt-6">
                     <Button
-                      onClick={() => form.handleSubmit()}
-                      type="button"
-                      isLoading={createProperty.isPending}
-                      className="rounded-lg bg-[#3498DB] text-white transition-colors hover:bg-[#2C3E50]"
-                    >
-                      Create Property
-                    </Button>
-                    <Button
+                      color="secondary"
                       type="button"
                       variant="outlined"
-                      className="rounded-lg border border-gray-200 text-[#7F8C8D] hover:border-[#3498DB] hover:text-[#3498DB]"
+                      onClick={() => router.replace("/properties")}
                     >
                       Cancel
+                    </Button>
+                    <Button
+                      onClick={() => form.handleSubmit()}
+                      type="button"
+                      isLoading={createProperty.isPending || uploadingFiles}
+                    >
+                      Create Property
                     </Button>
                   </div>
                 </form.AppForm>

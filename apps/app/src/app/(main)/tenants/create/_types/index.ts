@@ -12,7 +12,7 @@ const FileSchema = v.pipe(
 );
 
 export const VTenantSchema = v.object({
-  avataarUrl: v.nullable(v.string()),
+  avatarUrl: v.nullable(v.string()),
   firstName: v.pipe(v.string(), v.minLength(1, "First name is required")),
   lastName: v.pipe(v.string(), v.minLength(1, "Last name is required")),
   dateOfBirth: v.pipe(

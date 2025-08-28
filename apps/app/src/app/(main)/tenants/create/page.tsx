@@ -26,8 +26,10 @@ import { TenantFilesSubForm } from "./_components/tenant-files-sub-form";
 import { nanoid } from "nanoid";
 import { authClient } from "@/utils/auth/client";
 import { upload } from "@vercel/blob/client";
+import { useState } from "react";
 
 export default function CreateTenantPage() {
+  const [uploadingFiles, setUploadingFiles] = useState(false);
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const router = useRouter();
@@ -38,14 +40,15 @@ export default function CreateTenantPage() {
     ...createTenantFormOptions,
     onSubmit: async ({ value }) => {
       let avatarUrl = null;
-      if (value.avataarUrl) {
-        avatarUrl = value.avataarUrl;
+      if (value.avatarUrl) {
+        avatarUrl = value.avatarUrl;
       }
 
       let files: { url: string; name: string; type: string; size: number }[] =
         [];
 
       if (value.files && value.files.length > 0) {
+        setUploadingFiles(true);
         const uploadedFiles = await Promise.all(
           value.files.map(async (file) => {
             try {
@@ -62,21 +65,28 @@ export default function CreateTenantPage() {
               };
             } catch (error) {
               console.error("File upload failed:", error);
-              return undefined;
             }
           }),
-        );
+        )
+          .catch(() => {
+            toast.error("Failed to upload file(s), save tenant without files.");
+            return undefined;
+          })
+          .finally(() => {
+            setUploadingFiles(false);
+          });
 
-        files = uploadedFiles.filter(
-          (
-            file,
-          ): file is {
-            url: string;
-            name: string;
-            type: string;
-            size: number;
-          } => file !== undefined,
-        );
+        files =
+          uploadedFiles?.filter(
+            (
+              file,
+            ): file is {
+              url: string;
+              name: string;
+              type: string;
+              size: number;
+            } => file !== undefined,
+          ) || [];
       }
 
       toast.promise(
@@ -116,9 +126,7 @@ export default function CreateTenantPage() {
               <form.AppForm>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <PersonalInformation form={form} />
-
                   <Separator className="col-span-full my-4" />
-
                   <div className="col-span-full grid grid-cols-2 gap-4">
                     <div className="col-span-1">
                       <AdditionalEmails form={form} />
@@ -127,23 +135,17 @@ export default function CreateTenantPage() {
                       <AdditionalPhones form={form} />
                     </div>
                   </div>
-
                   <Separator className="col-span-full my-4" />
-
                   <div className="col-span-full">
                     <EmergencyContacts form={form} />
                   </div>
-
                   <div className="col-span-full">
                     <Vehicles form={form} />
                   </div>
-
                   <Separator className="col-span-full my-4" />
-
                   <div className="col-span-full">
                     <TenantFilesSubForm form={form} />
                   </div>
-
                   <div className="col-span-full">
                     <form.FormMessage />
                   </div>
@@ -157,13 +159,13 @@ export default function CreateTenantPage() {
             <Link href="/">Cancel</Link>
           </Button>
           <Button
-            isLoading={isPending}
+            isLoading={isPending || uploadingFiles}
             onClick={() => {
               form.handleSubmit();
             }}
           >
             <Save />
-            Save Tenant
+            {uploadingFiles ? "Uploading Files..." : "Save Tenant"}
           </Button>
         </CardFooter>
       </Card>

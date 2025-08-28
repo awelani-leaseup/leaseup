@@ -67,7 +67,7 @@ const TenantFilesContent = ({ form }: TenantFilesContentProps) => {
                 onDragLeave={handleDragLeave}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
-                onClick={openFileDialog}
+                // onClick={openFileDialog}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
@@ -76,7 +76,7 @@ const TenantFilesContent = ({ form }: TenantFilesContentProps) => {
                 }}
                 data-dragging={isDragging || undefined}
                 data-files={files.length > 0 || undefined}
-                className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 focus:ring-ring flex min-h-56 cursor-pointer flex-col items-center rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center focus:ring-2 focus:ring-offset-2 focus:outline-none has-[input:focus]:ring-[3px]"
+                className="data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 focus:ring-ring flex min-h-56 cursor-pointer flex-col items-center transition-colors not-data-[files]:justify-center focus:ring-2 focus:ring-offset-2 focus:outline-none has-[input:focus]:ring-[3px]"
               >
                 <input
                   {...getInputProps()}
