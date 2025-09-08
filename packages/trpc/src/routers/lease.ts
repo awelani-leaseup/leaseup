@@ -3,10 +3,11 @@ import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
 import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import {
-  createLeaseEffect,
-  type LeaseCreationErrors,
-} from '@leaseup/tasks/effect';
-import { Effect } from 'effect';
+  InvoiceCategory,
+  InvoiceCycle,
+  LeaseStatus,
+  LeaseTermType,
+} from '@leaseup/prisma/client/client.js';
 
 export const leaseRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -16,7 +17,6 @@ export const leaseRouter = createTRPCRouter({
         input;
       const skip = (page - 1) * limit;
 
-      // Build base where clause
       const whereClause: any = {
         unit: {
           property: {
@@ -25,10 +25,8 @@ export const leaseRouter = createTRPCRouter({
         },
       };
 
-      // Add search functionality
       if (search && search.trim()) {
         whereClause.OR = [
-          // Search in tenant names and email
           {
             tenantLease: {
               some: {
@@ -42,7 +40,6 @@ export const leaseRouter = createTRPCRouter({
               },
             },
           },
-          // Search in property name
           {
             unit: {
               property: {
@@ -50,7 +47,6 @@ export const leaseRouter = createTRPCRouter({
               },
             },
           },
-          // Search in unit name
           {
             unit: {
               name: { contains: search, mode: 'insensitive' },
@@ -59,18 +55,15 @@ export const leaseRouter = createTRPCRouter({
         ];
       }
 
-      // Add status filter
       if (status && status !== 'all') {
         whereClause.status = status;
       }
 
-      // Add property filter
       if (propertyId && propertyId !== 'all') {
         whereClause.unit.property.id = propertyId;
       }
 
-      // Build order by clause
-      let orderBy: any = { createdAt: 'desc' }; // default sorting
+      let orderBy: any = { createdAt: 'desc' };
 
       if (sortBy && sortOrder) {
         switch (sortBy) {
@@ -126,7 +119,6 @@ export const leaseRouter = createTRPCRouter({
           skip,
           take: limit,
         }),
-        // Using explicit count with select for better type safety and clarity
         ctx.db.lease.count({
           where: whereClause,
           select: {
@@ -167,7 +159,6 @@ export const leaseRouter = createTRPCRouter({
   getLeaseStats: protectedProcedure.query(async ({ ctx }) => {
     const landlordId = ctx.auth?.session?.userId ?? '';
 
-    // Get all leases for the landlord to calculate stats
     const leases = await ctx.db.lease.findMany({
       where: {
         unit: {
@@ -185,7 +176,6 @@ export const leaseRouter = createTRPCRouter({
       },
     });
 
-    // Calculate totals
     const totalLeases = leases.length;
     const activeLeases = leases.filter(
       (lease) => lease.status === 'ACTIVE'
@@ -197,14 +187,23 @@ export const leaseRouter = createTRPCRouter({
       .filter((lease) => lease.status === 'ACTIVE')
       .reduce((sum, lease) => sum + lease.rent, 0);
 
-    // Count leases created this month
     const now = new Date();
+    const nowUTC = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
 
     const thisMonthLeases = leases.filter((lease) => {
       const leaseDate = new Date(lease.createdAt);
-      return isWithinInterval(leaseDate, {
-        start: startOfMonth(now),
-        end: endOfMonth(now),
+      const leaseDateUTC = new Date(
+        Date.UTC(
+          leaseDate.getUTCFullYear(),
+          leaseDate.getUTCMonth(),
+          leaseDate.getUTCDate()
+        )
+      );
+      return isWithinInterval(leaseDateUTC, {
+        start: startOfMonth(nowUTC),
+        end: endOfMonth(nowUTC),
       });
     }).length;
 
@@ -219,76 +218,171 @@ export const leaseRouter = createTRPCRouter({
   createLease: protectedProcedure
     .input(VCreateLeaseSchema)
     .mutation(async ({ ctx, input }) => {
-      const leaseEffect = createLeaseEffect({
-        unitId: input.unitId,
-        tenantId: input.tenantId,
-        leaseStartDate: input.leaseStartDate.toISOString(),
-        leaseEndDate: input.leaseEndDate?.toISOString(),
-        deposit: input.deposit,
-        rent: input.rent,
-        automaticInvoice: input.automaticInvoice,
-      });
+      const landlordId = ctx.auth?.session?.userId;
 
-      const result = await Effect.runPromise(
-        Effect.match(leaseEffect, {
-          onFailure: (error: LeaseCreationErrors) => {
-            switch (error._tag) {
-              case 'LeaseCreationError':
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to create lease`,
-                });
-              case 'LandlordNotFoundError':
-                throw new TRPCError({
-                  code: 'NOT_FOUND',
-                  message: `Landlord not found, please contact support.`,
-                });
-              case 'NoTenantsFoundError':
-                throw new TRPCError({
-                  code: 'NOT_FOUND',
-                  message: `No tenants found, please contact support.`,
-                });
-              case 'LandlordOnboardingIncompleteError':
-                throw new TRPCError({
-                  code: 'PRECONDITION_FAILED',
-                  message: `Landlord onboarding incomplete, complete onboarding to continue.`,
-                });
-              case 'PaystackPlanCreationError':
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to create payment plan`,
-                });
-              case 'PaystackTransactionInitializationError':
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to initialize payment`,
-                });
-              case 'DatabaseError':
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Database error, please contact support.`,
-                });
-              case 'PaystackApiError':
-                throw new TRPCError({
-                  code: 'BAD_REQUEST',
-                  message: `Unexpected error occurred, please contact support.`,
-                });
-              default:
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to set up lease, please contact support.`,
-                });
-            }
+      if (!landlordId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        });
+      }
+
+      try {
+        const unit = await ctx.db.unit.findFirst({
+          where: {
+            id: input.unitId,
+            property: {
+              landlordId: landlordId,
+            },
           },
-          onSuccess: (successResult) => successResult,
-        })
-      );
+          include: {
+            property: true,
+          },
+        });
 
-      return {
-        leaseId: result.leaseId,
-        message: result.message,
-        authorizationUrl: result.authorizationUrl,
-        reference: result.reference,
-      };
+        if (!unit) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Unit not found or does not belong to you',
+          });
+        }
+
+        const tenant = await ctx.db.tenant.findFirst({
+          where: {
+            id: input.tenantId,
+            landlordId: landlordId,
+          },
+        });
+
+        if (!tenant) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Tenant not found or does not belong to you',
+          });
+        }
+
+        const existingLease = await ctx.db.lease.findFirst({
+          where: {
+            unitId: input.unitId,
+            status: 'ACTIVE',
+          },
+        });
+
+        if (existingLease) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'Unit already has an active lease',
+          });
+        }
+
+        const result = await ctx.db.$transaction(async (tx) => {
+          const lease = await tx.lease.create({
+            data: {
+              unitId: input.unitId,
+              startDate: input.leaseStartDate,
+              endDate: input.leaseEndDate,
+              rent: input.rent,
+              deposit: input.deposit,
+              status: LeaseStatus.ACTIVE,
+              rentDueCurrency: 'ZAR',
+              leaseType: input.leaseEndDate
+                ? LeaseTermType.FIXED_TERM
+                : LeaseTermType.MONTHLY,
+              invoiceCycle: InvoiceCycle.MONTHLY,
+              automaticInvoice: input.automaticInvoice,
+              tenantLease: {
+                create: {
+                  tenantId: input.tenantId,
+                },
+              },
+            },
+            include: {
+              unit: {
+                include: {
+                  property: true,
+                },
+              },
+              tenantLease: {
+                include: {
+                  tenant: true,
+                },
+              },
+            },
+          });
+
+          let recurringBillable = null;
+          let automaticInvoice = true;
+          if (automaticInvoice) {
+            // Ensure we work with UTC dates for invoice scheduling
+            const startDateUTC = new Date(input.leaseStartDate);
+            let nextInvoiceDate = new Date(
+              Date.UTC(
+                startDateUTC.getUTCFullYear(),
+                startDateUTC.getUTCMonth(),
+                startDateUTC.getUTCDate()
+              )
+            );
+            if (input.invoiceCycle === InvoiceCycle.MONTHLY) {
+              nextInvoiceDate = new Date(
+                Date.UTC(
+                  nextInvoiceDate.getUTCFullYear(),
+                  nextInvoiceDate.getUTCMonth() + 1,
+                  nextInvoiceDate.getUTCDate()
+                )
+              );
+            }
+
+            recurringBillable = await tx.recurringBillable.create({
+              data: {
+                startDate: new Date(
+                  Date.UTC(
+                    startDateUTC.getUTCFullYear(),
+                    startDateUTC.getUTCMonth(),
+                    startDateUTC.getUTCDate()
+                  )
+                ),
+                endDate: input.leaseEndDate
+                  ? new Date(
+                      Date.UTC(
+                        input.leaseEndDate.getUTCFullYear(),
+                        input.leaseEndDate.getUTCMonth(),
+                        input.leaseEndDate.getUTCDate()
+                      )
+                    )
+                  : null,
+                description: `Monthly rent for ${tenant.firstName} ${tenant.lastName} - Unit ${unit.name}`,
+                amount: input.rent,
+                category: InvoiceCategory.RENT,
+                cycle: InvoiceCycle.MONTHLY,
+                nextInvoiceAt: nextInvoiceDate,
+                isActive: true,
+                leaseId: lease.id,
+                tenantId: input.tenantId,
+                propertyId: unit.propertyId,
+              },
+            });
+          }
+
+          return { lease, recurringBillable };
+        });
+
+        return {
+          success: true,
+          message: 'Lease created successfully',
+          lease: result.lease,
+          recurringBillable: result.recurringBillable,
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        console.error('Error creating lease:', error);
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to create lease. Please try again.',
+        });
+      }
     }),
 });

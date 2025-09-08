@@ -108,14 +108,32 @@ export const transactionRouter = createTRPCRouter({
         });
       }
 
-      // Date range filter
+      // Date range filter (using UTC)
       if (dateFrom || dateTo) {
         const dateFilter: any = {};
         if (dateFrom) {
-          dateFilter.gte = new Date(dateFrom);
+          const fromDateUTC = new Date(dateFrom);
+          dateFilter.gte = new Date(
+            Date.UTC(
+              fromDateUTC.getUTCFullYear(),
+              fromDateUTC.getUTCMonth(),
+              fromDateUTC.getUTCDate()
+            )
+          );
         }
         if (dateTo) {
-          dateFilter.lte = new Date(dateTo);
+          const toDateUTC = new Date(dateTo);
+          dateFilter.lte = new Date(
+            Date.UTC(
+              toDateUTC.getUTCFullYear(),
+              toDateUTC.getUTCMonth(),
+              toDateUTC.getUTCDate(),
+              23,
+              59,
+              59,
+              999
+            )
+          );
         }
         whereConditions.AND.push({
           createdAt: dateFilter,

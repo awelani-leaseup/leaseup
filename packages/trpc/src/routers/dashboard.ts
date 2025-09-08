@@ -184,13 +184,25 @@ export const dashboardRouter = createTRPCRouter({
         take: 5,
       }),
 
-      // Upcoming lease renewals (leases ending in next 60 days)
+      // Upcoming lease renewals (leases ending in next 60 days) - using UTC
       ctx.db.lease.findMany({
         where: {
           status: 'ACTIVE',
           endDate: {
-            gte: new Date(),
-            lte: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
+            gte: new Date(
+              Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth(),
+                new Date().getUTCDate()
+              )
+            ),
+            lte: new Date(
+              Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth(),
+                new Date().getUTCDate() + 60
+              )
+            ),
           },
           unit: {
             property: {

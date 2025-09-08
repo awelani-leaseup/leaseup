@@ -268,6 +268,8 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   lineItems: 'lineItems',
   landlordId: 'landlordId',
   tenantId: 'tenantId',
+  invoiceNumber: 'invoiceNumber',
+  paymentRequestUrl: 'paymentRequestUrl',
   recurringBillableId: 'recurringBillableId'
 };
 

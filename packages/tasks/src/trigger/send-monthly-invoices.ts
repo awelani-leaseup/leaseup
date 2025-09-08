@@ -1,6 +1,6 @@
 import { logger, schedules } from '@trigger.dev/sdk/v3';
 import { db } from '@leaseup/prisma/db.ts';
-import { addDays, isAfter, isBefore, startOfDay } from 'date-fns';
+import { addDays, isAfter, isBefore } from 'date-fns';
 import { createInvoiceTask, type CreateInvoicePayload } from './invoice-send';
 import { calculateNextInvoiceDate } from '../utils/calculate-next-invoice-date';
 import {
@@ -19,7 +19,11 @@ const CONFIG = {
 } as const;
 
 const calculateInvoiceDates = () => {
-  const today = startOfDay(new Date());
+  // Use UTC dates to match the database @db.Date fields
+  const now = new Date();
+  const today = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+  );
   const checkUntilDate = addDays(today, CONFIG.CHECK_DAYS_AHEAD);
   return { today, checkUntilDate };
 };
@@ -313,13 +317,18 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
   // Calculate date range for invoice checking
   const { today, checkUntilDate } = calculateInvoiceDates();
 
-  // Get recurring billables that don't already have pending/overdue invoices for the current cycle
+  // Get recurring billables and filter by startDate day in processBillable
+  // For monthly cycles, we'll check if the day of the month from startDate falls within today to checkUntilDate
   const recurringBillables = await db.recurringBillable.findMany({
     where: {
       isActive: true,
       cycle: InvoiceCycle.MONTHLY,
       lease: {
         status: LeaseStatus.ACTIVE,
+      },
+      // Only include billables that started before or on today (can't bill for future start dates)
+      startDate: {
+        lte: today,
       },
       // Exclude billables that already have pending/overdue invoices
       NOT: {

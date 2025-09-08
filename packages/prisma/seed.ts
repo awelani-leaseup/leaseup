@@ -467,6 +467,7 @@ async function main() {
         const invoicePromise = db.invoice.create({
           data: {
             ...invoiceData,
+            paymentRequestUrl: faker.internet.url(),
             lineItems: [
               {
                 description: 'Rent',

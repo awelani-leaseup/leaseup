@@ -201,7 +201,9 @@ model Invoice {
   lineItems           Json?
   landlordId          String
   tenantId            String
+  invoiceNumber       String             @default("")
   File                File[]
+  paymentRequestUrl   String             @default("")
   lease               Lease?             @relation(fields: [leaseId], references: [id])
   tenant              Tenant             @relation(fields: [tenantId], references: [id])
   transactions        Transactions[]

@@ -3,6 +3,9 @@ import { nanoid } from 'nanoid';
 import { db } from '@leaseup/prisma/db.ts';
 import { InvoiceCategory } from '@leaseup/prisma/client/index.js';
 import * as v from 'valibot';
+import { getMonth, getYear } from 'date-fns';
+
+const PAYSTACK_BASE_URL = 'https://paystack.shop';
 
 const CreateInvoiceTaskPayload = v.object({
   landlordId: v.string(),
@@ -14,7 +17,7 @@ const CreateInvoiceTaskPayload = v.object({
     v.pipe(v.string(), v.nonEmpty('Description is required'))
   ),
   lineItems: v.any(),
-  split_code: v.string(), // Made optional in practice but keep schema simple
+  split_code: v.string(),
   leaseId: v.optional(v.string()),
   category: v.pipe(v.string(), v.nonEmpty('Category is required')),
   recurringBillableId: v.string(),
@@ -26,7 +29,6 @@ export type CreateInvoicePayload = v.InferInput<
 
 const valibotParser = v.parser(CreateInvoiceTaskPayload);
 
-// Helper function to create Paystack invoice with built-in retry logic for 429 responses
 const createPaystackInvoice = async (invoiceData: CreateInvoicePayload) => {
   const paystackSecretKey = process.env.PAYSTACK_SECRET_KEY;
   if (!paystackSecretKey) {
@@ -90,7 +92,6 @@ const createPaystackInvoice = async (invoiceData: CreateInvoicePayload) => {
     const errorText = await response.text();
     const errorMsg = `Paystack API error: ${response.status} ${response.statusText} - ${errorText}`;
 
-    // Log rate limit information if this is a 429 error
     const rateLimitInfo =
       response.status === 429
         ? {
@@ -132,8 +133,8 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
     randomize: true,
   },
   schema: valibotParser,
-  handleError: async (payload, error) => {
-    // Handle rate limit errors at the task level
+  handleError: async ({ error, payload }) => {
+    logger.debug('Error in createInvoiceTask', { error, payload });
     if (
       error &&
       typeof error === 'object' &&
@@ -177,7 +178,6 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
     });
 
     try {
-      // Create Paystack invoice using retry.fetch with sophisticated retry strategies
       const paystackResult = await createPaystackInvoice(invoiceData);
 
       logger.log('Successfully created invoice via Paystack', {
@@ -185,7 +185,6 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
         leaseId: invoiceData.leaseId,
       });
 
-      // Create invoice in database
       const newInvoice = await db.invoice.create({
         data: {
           id: nanoid(),
@@ -199,6 +198,8 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
           status: 'PENDING',
           lineItems: invoiceData.lineItems ?? [],
           paystackId: paystackResult?.data?.request_code ?? '',
+          paymentRequestUrl: `${PAYSTACK_BASE_URL}/pay/${paystackResult?.data?.request_code}`,
+          invoiceNumber: `${getYear(new Date())}-${getMonth(new Date())}-${paystackResult?.data?.invoice_number}`,
           recurringBillableId: invoiceData.recurringBillableId,
         },
       });

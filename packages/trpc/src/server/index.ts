@@ -1,11 +1,13 @@
 import { createCallerFactory, createTRPCRouter } from './trpc';
-import { portfolioRouter } from '../routers';
-import { tenantRouter } from '../routers/tenant';
-import { leaseRouter } from '../routers/lease';
-import { invoiceRouter } from '../routers/invoice';
-import { onboardingRouter } from '../routers/onboarding';
-import { transactionRouter } from '../routers/transaction';
-import { dashboardRouter } from '../routers/dashboard';
+import {
+  portfolioRouter,
+  tenantRouter,
+  leaseRouter,
+  invoiceRouter,
+  onboardingRouter,
+  transactionRouter,
+  dashboardRouter,
+} from '../routers';
 
 export const appRouter = createTRPCRouter({
   portfolio: portfolioRouter,

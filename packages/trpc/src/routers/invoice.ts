@@ -316,14 +316,38 @@ export const invoiceRouter = createTRPCRouter({
       .filter((invoice) => invoice.status === 'OVERDUE')
       .reduce((sum, invoice) => sum + invoice.dueAmount, 0);
 
-    // Count invoices for this month
+    // Count invoices for this month (using UTC)
     const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const nowUTC = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    );
+    const startOfMonthUTC = new Date(
+      Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), 1)
+    );
+    const endOfMonthUTC = new Date(
+      Date.UTC(
+        nowUTC.getUTCFullYear(),
+        nowUTC.getUTCMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999
+      )
+    );
 
     const thisMonthInvoices = invoices.filter((invoice) => {
       const invoiceDate = new Date(invoice.createdAt);
-      return invoiceDate >= startOfMonth && invoiceDate <= endOfMonth;
+      const invoiceDateUTC = new Date(
+        Date.UTC(
+          invoiceDate.getUTCFullYear(),
+          invoiceDate.getUTCMonth(),
+          invoiceDate.getUTCDate()
+        )
+      );
+      return (
+        invoiceDateUTC >= startOfMonthUTC && invoiceDateUTC <= endOfMonthUTC
+      );
     }).length;
 
     return {

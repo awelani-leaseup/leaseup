@@ -37,7 +37,6 @@ export const fileRouter = createTRPCRouter({
       const { url } = input;
 
       try {
-        // Delete from Vercel Blob if it's a blob URL
         if (
           url.includes('vercel-storage.com') ||
           url.includes('blob.vercel-storage.com')
@@ -46,7 +45,6 @@ export const fileRouter = createTRPCRouter({
           return { success: true, message: 'File deleted from Vercel Blob' };
         }
 
-        // Delete from Supabase if it's a Supabase path
         if (typeof url === 'string' && !url.startsWith('http')) {
           const { error } = await ctx.supabaseServer.storage
             .from('file-storage')

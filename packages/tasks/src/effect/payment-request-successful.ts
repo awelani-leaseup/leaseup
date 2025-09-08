@@ -53,7 +53,6 @@ const processPaymentRequestSuccessfulEffect = (
       paidAt: payload.data.paid_at,
     });
 
-    // Find the invoice by Paystack request code
     const invoice = yield* databaseService.findInvoiceByPaystackId(
       payload.data.request_code
     );
@@ -67,7 +66,7 @@ const processPaymentRequestSuccessfulEffect = (
           `Invoice not found for Paystack request code: ${payload.data.request_code}`
         )
       );
-      return; // This line will never execute, but helps TypeScript
+      return;
     }
 
     if (invoice.status === InvoiceStatus.PAID) {
@@ -105,8 +104,16 @@ const processPaymentRequestSuccessfulEffect = (
 
     const transaction = yield* databaseService.createTransaction({
       id: nanoid(),
-      leaseId: invoice.leaseId ?? null,
-      invoiceId: invoice.id,
+      lease: {
+        connect: {
+          id: invoice.leaseId ?? '',
+        },
+      },
+      invoice: {
+        connect: {
+          id: invoice.id,
+        },
+      },
       description: `Payment received for ${invoice.description}`,
       amountPaid: amountPaid,
       referenceId: payload.data.offline_reference || payload.data.request_code,
@@ -121,7 +128,6 @@ const processPaymentRequestSuccessfulEffect = (
       referenceId: transaction.referenceId,
     });
 
-    // Get tenant information for logging
     const tenant = invoice.lease?.tenantLease[0]?.tenant;
     const property = invoice.lease?.unit?.property;
 
@@ -136,7 +142,6 @@ const processPaymentRequestSuccessfulEffect = (
       paidAt: payload.data.paid_at,
     });
 
-    // Ensure database cleanup
     return yield* Effect.ensuring(
       Effect.succeed({
         message: 'Payment processed successfully',

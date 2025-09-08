@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       // await runProcessInvoicePaymentFailedEffect(payload);
       break;
     case "invoice.payment_success":
-      // await runProcessInvoicePaymentSuccessEffect(payload);
+      await runProcessPaymentRequestSuccessfulEffect(payload);
       break;
     case "invoice.payment_failed":
       // await runProcessInvoicePaymentFailedEffect(payload);
