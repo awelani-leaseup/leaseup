@@ -47,7 +47,7 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
     const databaseService = yield* DatabaseServiceTag;
     const paystackService = yield* PaystackServiceTag;
 
-    yield* Console.log('Creating invoice with Effect-TS', payload);
+    yield* Console.log('Creating invoice with Effect-TS', payload.tenantId);
 
     // Create payment request via Paystack
     const paystackResponse = yield* paystackService.createPaymentRequest({
@@ -59,7 +59,10 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       split_code: payload.split_code ?? undefined,
     });
 
-    yield* Console.log('Created invoice via Paystack', paystackResponse);
+    yield* Console.log(
+      'Created invoice via Paystack',
+      paystackResponse.data?.data?.request_code
+    );
 
     const invoice: Omit<Invoice, 'createdAt' | 'updatedAt' | 'leaseId'> = {
       id: nanoid(),
@@ -86,11 +89,11 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       })
       .pipe(Effect.retry({ times: 30 }));
 
-    yield* Console.log('Successfully created invoice', {
-      invoiceId: newInvoice.id,
-      leaseId: payload.leaseId,
-      amount: newInvoice.dueAmount,
-    });
+    // yield* Console.log('Successfully created invoice', {
+    //   invoiceId: newInvoice.id,
+    //   leaseId: payload.leaseId,
+    //   amount: newInvoice.dueAmount,
+    // });
 
     // Ensure database cleanup
     return yield* Effect.ensuring(

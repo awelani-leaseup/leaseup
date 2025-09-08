@@ -371,7 +371,7 @@ async function main() {
   // Create invoices for leases that have been active for at least 1 month
   const invoicePromises: Promise<any>[] = [];
 
-  leasesWithTenants.forEach((lease) => {
+  for (const lease of leasesWithTenants) {
     const leaseStartDate = new Date(lease.startDate);
     const monthsSinceStart = Math.floor(
       (now.getTime() - leaseStartDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
@@ -384,6 +384,27 @@ async function main() {
       lease.tenantLease.length > 0
     ) {
       const tenant = lease.tenantLease[0].tenant;
+
+      // Validate that we have a valid landlord ID
+      if (!tenant.landlordId) {
+        console.error(
+          `Skipping invoice creation for lease ${lease.id}: tenant ${tenant.id} has no landlordId`
+        );
+        return;
+      }
+
+      // Verify that the landlord exists in the database
+      const landlordExists = await db.user.findUnique({
+        where: { id: tenant.landlordId },
+        select: { id: true },
+      });
+
+      if (!landlordExists) {
+        console.error(
+          `Skipping invoice creation for lease ${lease.id}: landlord ${tenant.landlordId} does not exist`
+        );
+        return;
+      }
 
       // Find the corresponding recurring billable for this lease (if it has automatic billing)
       const correspondingRecurringBillable = recurringBillables.find(
@@ -460,7 +481,7 @@ async function main() {
         invoicePromises.push(invoicePromise);
       }
     }
-  });
+  }
 
   await Promise.all(invoicePromises);
 

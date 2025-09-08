@@ -35,7 +35,7 @@ const InvoiceConfig = Context.GenericTag<InvoiceConfig>('InvoiceConfig');
 const InvoiceConfigLive = Layer.succeed(InvoiceConfig, {
   checkDaysAhead: 30,
   batchSize: 3, // Further reduced batch size to be more conservative
-  batchDelayMs: 15000, // 15-second delay between batches to handle rate limits
+  batchDelayMs: 0, // No batch delay - let retry logic handle rate limits
   apiCallDelayMs: 3000, // 3-second delay between individual API calls within a batch
 });
 
@@ -179,6 +179,8 @@ const processInvoiceWithRateLimit = (
   config: InvoiceConfig
 ) =>
   Effect.gen(function* () {
+    const invoiceStartTime = Date.now();
+
     yield* Effect.logInfo(
       `Processing invoice ${invoiceIndex + 1}/${batchLength} in batch ${batchNumber}`
     );
@@ -197,7 +199,7 @@ const processInvoiceWithRateLimit = (
     };
 
     // Create the invoice with enhanced retry logic for rate limiting
-    yield* Effect.tryPromise({
+    const result = yield* Effect.tryPromise({
       try: () => runCreateInvoiceEffect(invoicePayload),
       catch: (error: unknown) =>
         error instanceof Error ? error : new Error(String(error)),
@@ -210,16 +212,35 @@ const processInvoiceWithRateLimit = (
       ),
       Effect.catchAll((error: unknown) =>
         Effect.gen(function* () {
+          const invoiceEndTime = Date.now();
+          const invoiceDurationMs = invoiceEndTime - invoiceStartTime;
+
           yield* Effect.logError('Failed to create invoice after retries', {
             leaseId: invoicePayload.leaseId,
             tenantId: invoicePayload.tenantId,
             amount: invoicePayload.amount,
+            durationMs: invoiceDurationMs,
             error: error instanceof Error ? error.message : String(error),
           });
           return Effect.succeed(false); // Return false to indicate failure
         })
       ),
-      Effect.map(() => true) // Return true to indicate success
+      Effect.map(() => {
+        const invoiceEndTime = Date.now();
+        const invoiceDurationMs = invoiceEndTime - invoiceStartTime;
+
+        Effect.logInfo(
+          `Successfully created invoice ${invoiceIndex + 1}/${batchLength} in ${invoiceDurationMs}ms`,
+          {
+            leaseId: invoicePayload.leaseId,
+            tenantId: invoicePayload.tenantId,
+            amount: invoicePayload.amount,
+            durationMs: invoiceDurationMs,
+          }
+        ).pipe(Effect.runSync);
+
+        return true; // Return true to indicate success
+      })
     );
 
     // Add delay between individual API calls (except for the last invoice in the batch)
@@ -227,12 +248,13 @@ const processInvoiceWithRateLimit = (
       yield* Effect.sleep(`${config.apiCallDelayMs} millis`);
     }
 
-    return true; // Success
+    return result;
   });
 
 const createInvoicesInBatches = (invoices: Array<CreateInvoicePayload>) =>
   Effect.gen(function* () {
     const config = yield* InvoiceConfig;
+    const batchProcessingStartTime = Date.now();
 
     // Split into batches
     const batches: Array<Array<CreateInvoicePayload>> = [];
@@ -241,15 +263,22 @@ const createInvoicesInBatches = (invoices: Array<CreateInvoicePayload>) =>
     }
 
     yield* Effect.logInfo(
-      `Processing ${batches.length} batches with rate limiting`
+      `Processing ${batches.length} batches with retry logic for rate limiting`
     );
 
     let successfulInvoices = 0;
+    const batchTimings: Array<{
+      batchNumber: number;
+      durationMs: number;
+      invoiceCount: number;
+    }> = [];
 
     // Process each batch sequentially
     for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
       const batch = batches[batchIndex];
       if (!batch) continue; // Skip undefined batches
+
+      const batchStartTime = Date.now();
 
       yield* Effect.logInfo(
         `Processing batch ${batchIndex + 1} of ${batches.length} (${batch.length} invoices)`
@@ -269,50 +298,78 @@ const createInvoicesInBatches = (invoices: Array<CreateInvoicePayload>) =>
         { concurrency: 1 } // Process invoices sequentially within each batch
       );
 
+      const batchEndTime = Date.now();
+      const batchDurationMs = batchEndTime - batchStartTime;
+
       // Count successful invoices in this batch
       const batchSuccesses = batchResults.filter(Boolean).length;
       successfulInvoices += batchSuccesses;
 
-      yield* Effect.logInfo(
-        `Batch ${batchIndex + 1} completed: ${batchSuccesses}/${batch.length} invoices successful`
-      );
+      batchTimings.push({
+        batchNumber: batchIndex + 1,
+        durationMs: batchDurationMs,
+        invoiceCount: batch.length,
+      });
 
-      // Add delay between batches (except for the last one)
-      if (batchIndex < batches.length - 1) {
-        yield* Effect.logInfo(
-          `Waiting ${config.batchDelayMs}ms before next batch...`
-        );
-        yield* Effect.sleep(`${config.batchDelayMs} millis`);
-      }
+      yield* Effect.logInfo(
+        `Batch ${batchIndex + 1} completed: ${batchSuccesses}/${batch.length} invoices successful in ${(batchDurationMs / 1000).toFixed(2)}s`
+      );
     }
 
+    const batchProcessingEndTime = Date.now();
+    const totalBatchProcessingTime =
+      batchProcessingEndTime - batchProcessingStartTime;
+
     yield* Effect.logInfo(
-      `Successfully processed ${successfulInvoices} out of ${invoices.length} invoices`
+      `Successfully processed ${successfulInvoices} out of ${invoices.length} invoices in ${(totalBatchProcessingTime / 1000).toFixed(2)}s`,
+      { batchTimings }
     );
     return successfulInvoices;
   });
 
 // Main task effect
 const checkUpcomingInvoicesEffect = Effect.gen(function* () {
+  const startTime = Date.now();
+
   yield* Effect.logInfo(
-    'Starting check for upcoming invoices with rate limiting'
+    'Starting check for upcoming invoices with retry logic'
   );
 
   const invoicesToCreate = yield* processBillablesIntoInvoices;
+
+  const invoiceCreationStartTime = Date.now();
   const invoicesCreated = yield* createInvoicesInBatches(invoicesToCreate);
+  const invoiceCreationEndTime = Date.now();
+
+  const endTime = Date.now();
+  const totalDurationMs = endTime - startTime;
+  const invoiceCreationDurationMs =
+    invoiceCreationEndTime - invoiceCreationStartTime;
 
   const result = {
-    message: `Successfully created ${invoicesCreated} out of ${invoicesToCreate.length} invoices with rate limiting`,
+    message: `Successfully created ${invoicesCreated} out of ${invoicesToCreate.length} invoices with retry logic`,
     invoicesToCreate: invoicesToCreate.length,
     invoicesCreated: invoicesCreated,
     successRate:
       invoicesToCreate.length > 0
         ? ((invoicesCreated / invoicesToCreate.length) * 100).toFixed(2) + '%'
         : '0%',
+    timing: {
+      totalDurationMs,
+      totalDurationSeconds: (totalDurationMs / 1000).toFixed(2),
+      invoiceCreationDurationMs,
+      invoiceCreationDurationSeconds: (
+        invoiceCreationDurationMs / 1000
+      ).toFixed(2),
+      averageTimePerInvoiceMs:
+        invoicesCreated > 0
+          ? Math.round(invoiceCreationDurationMs / invoicesCreated)
+          : 0,
+    },
   };
 
   yield* Effect.logInfo(
-    'Completed invoice processing with rate limiting',
+    'Completed invoice processing with retry logic',
     result
   );
 

@@ -34,6 +34,7 @@
     "effect": "^3.17.2",
     "nanoid": "^5.1.5",
     "superjson": "^2.2.1",
+    "ts-pattern": "^5.8.0",
     "valibot": "^1.1.0"
   },
   "devDependencies": {

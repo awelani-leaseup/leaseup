@@ -351,3 +351,20 @@ export {
   ChartLegendContent,
   ChartStyle,
 };
+
+// Re-export recharts components for easy consumption
+export const {
+  Bar,
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Line,
+  LineChart,
+  Area,
+  AreaChart,
+  Pie,
+  PieChart,
+  Cell,
+  ResponsiveContainer,
+} = RechartsPrimitive;

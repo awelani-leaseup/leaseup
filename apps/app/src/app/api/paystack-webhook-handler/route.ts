@@ -13,10 +13,26 @@ export async function POST(req: Request) {
   const payload = await req.json();
 
   switch (payload.event) {
-    case "paymentrequest.success":
-      await runProcessPaymentRequestSuccessfulEffect(payload);
+    case "invoice.create":
+      // await runProcessInvoiceCreateEffect(payload);
       break;
-    case "paymentrequest.pending":
+    case "invoice.payment_failed":
+      // await runProcessInvoiceUpdateEffect(payload);
+      break;
+    case "invoice.update":
+      // await runProcessInvoicePaymentEffect(payload);
+      break;
+    case "invoice.payment_failed":
+      // await runProcessInvoicePaymentFailedEffect(payload);
+      break;
+    case "invoice.payment_success":
+      // await runProcessInvoicePaymentSuccessEffect(payload);
+      break;
+    case "invoice.payment_failed":
+      // await runProcessInvoicePaymentFailedEffect(payload);
+      break;
+    case "charge.success":
+      // await runProcessInvoicePaymentSuccessEffect(payload);
       break;
   }
 

@@ -75,8 +75,25 @@ export default function CreateLease() {
           onSuccess: () => {
             router.push("/leases");
           },
-          onError: () => {
-            toast.error("Failed to create lease, please try again later.");
+          onError: (error) => {
+            switch (error.data?.code) {
+              case "PRECONDITION_FAILED":
+                toast.error(
+                  "Landlord onboarding incomplete, complete onboarding to continue.",
+                );
+                break;
+              case "INTERNAL_SERVER_ERROR":
+                toast.error("Failed to create lease, please try again later.");
+                break;
+              case "BAD_REQUEST":
+                toast.error(error.message);
+                break;
+              case "NOT_FOUND":
+                toast.error(error.message);
+                break;
+              default:
+                toast.error("Failed to create lease, please try again later.");
+            }
           },
         },
       );

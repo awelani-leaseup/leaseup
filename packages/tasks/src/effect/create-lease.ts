@@ -9,9 +9,25 @@ import {
 } from './services';
 
 const CreateLeasePayload = Schema.Struct({
-  leaseId: Schema.String.pipe(
-    Schema.minLength(1, { message: () => 'Lease ID is required' })
+  unitId: Schema.String.pipe(
+    Schema.minLength(1, { message: () => 'Unit ID is required' })
   ),
+  tenantId: Schema.String.pipe(
+    Schema.minLength(1, { message: () => 'Tenant ID is required' })
+  ),
+  leaseStartDate: Schema.String.pipe(
+    Schema.minLength(1, { message: () => 'Lease start date is required' })
+  ),
+  leaseEndDate: Schema.optional(Schema.String),
+  deposit: Schema.Number.pipe(
+    Schema.greaterThanOrEqualTo(0, {
+      message: () => 'Deposit must be non-negative',
+    })
+  ),
+  rent: Schema.Number.pipe(
+    Schema.greaterThan(0, { message: () => 'Rent must be greater than 0' })
+  ),
+  automaticInvoice: Schema.Boolean,
   customerCode: Schema.optional(
     Schema.String.pipe(
       Schema.minLength(1, {
@@ -27,14 +43,18 @@ export type CreateLeasePayload = Schema.Schema.Type<typeof CreateLeasePayload>;
 // Custom Error Classes for Lease Creation
 // ============================================================================
 
-export class LeaseNotFoundError extends Data.TaggedError('LeaseNotFoundError')<{
-  readonly leaseId: string;
+export class LeaseCreationError extends Data.TaggedError('LeaseCreationError')<{
+  readonly unitId: string;
+  readonly tenantId: string;
   readonly message?: string;
 }> {
-  constructor(leaseId: string, message?: string) {
+  constructor(unitId: string, tenantId: string, message?: string) {
     super({
-      leaseId,
-      message: message || `Lease not found with ID: ${leaseId}`,
+      unitId,
+      tenantId,
+      message:
+        message ||
+        `Failed to create lease for unit ${unitId} and tenant ${tenantId}`,
     });
   }
 }
@@ -42,14 +62,13 @@ export class LeaseNotFoundError extends Data.TaggedError('LeaseNotFoundError')<{
 export class LandlordNotFoundError extends Data.TaggedError(
   'LandlordNotFoundError'
 )<{
-  readonly leaseId: string;
+  readonly unitId: string;
   readonly message?: string;
 }> {
-  constructor(leaseId: string, message?: string) {
+  constructor(unitId: string, message?: string) {
     super({
-      leaseId,
-      message:
-        message || `Landlord information not found for lease: ${leaseId}`,
+      unitId,
+      message: message || `Landlord information not found for unit: ${unitId}`,
     });
   }
 }
@@ -57,13 +76,13 @@ export class LandlordNotFoundError extends Data.TaggedError(
 export class NoTenantsFoundError extends Data.TaggedError(
   'NoTenantsFoundError'
 )<{
-  readonly leaseId: string;
+  readonly tenantId: string;
   readonly message?: string;
 }> {
-  constructor(leaseId: string, message?: string) {
+  constructor(tenantId: string, message?: string) {
     super({
-      leaseId,
-      message: message || `No tenants found for lease: ${leaseId}`,
+      tenantId,
+      message: message || `Tenant not found: ${tenantId}`,
     });
   }
 }
@@ -180,13 +199,12 @@ export class PaystackTransactionInitializationError extends Data.TaggedError(
 }
 
 // Union type for all possible lease creation errors
-export type LeaseCreationError =
-  | LeaseNotFoundError
+export type LeaseCreationErrors =
+  | LeaseCreationError
   | LandlordNotFoundError
   | NoTenantsFoundError
   | LandlordOnboardingIncompleteError
   | PaystackPlanCreationError
-  | PaystackSubscriptionCreationError
   | PaystackTransactionInitializationError
   | DatabaseError
   | PaystackApiError;
@@ -197,7 +215,6 @@ export const createLeaseEffect = (
   {
     message: string;
     planCode: string;
-    subscriptionCode: string;
     authorizationUrl: string;
     reference: string;
     accessCode: string | undefined;
@@ -205,31 +222,38 @@ export const createLeaseEffect = (
     tenantEmail: string;
     rentAmount: number;
     currency: string;
+    customerCode: string;
   },
-  LeaseCreationError
+  LeaseCreationErrors,
+  never
 > =>
   Effect.gen(function* () {
     const databaseService = yield* DatabaseServiceTag;
     const paystackService = yield* PaystackServiceTag;
 
     yield* Console.log('Processing lease creation with Paystack integration', {
-      leaseId: payload.leaseId,
+      unitId: payload.unitId,
+      tenantId: payload.tenantId,
       customerCode: payload.customerCode,
     });
 
-    // Step 1: Fetch lease with landlord and tenant information
-    const lease = yield* databaseService.findLeaseWithLandlord(payload.leaseId);
-
-    if (!lease) {
-      return yield* Effect.fail(new LeaseNotFoundError(payload.leaseId));
-    }
+    // Step 1: Create lease with all required data in a transaction
+    const lease = yield* databaseService.createLeaseWithTransaction(
+      payload.unitId,
+      payload.tenantId,
+      payload.leaseStartDate,
+      payload.leaseEndDate || null,
+      payload.deposit,
+      payload.rent,
+      payload.automaticInvoice
+    );
 
     if (!lease.unit?.property?.landlord) {
-      return yield* Effect.fail(new LandlordNotFoundError(payload.leaseId));
+      return yield* Effect.fail(new LandlordNotFoundError(payload.unitId));
     }
 
     if (lease.tenantLease.length === 0 || !lease.tenantLease[0]?.tenant) {
-      return yield* Effect.fail(new NoTenantsFoundError(payload.leaseId));
+      return yield* Effect.fail(new NoTenantsFoundError(payload.tenantId));
     }
 
     const landlord = lease.unit.property.landlord;
@@ -316,35 +340,9 @@ export const createLeaseEffect = (
       });
     }
 
-    // Step 4: Create customer subscription using the plan
-    yield* Console.log('Creating Paystack subscription', {
-      customer: finalCustomerCode,
-      plan: planCode,
-    });
-
-    const subscriptionResponse = yield* paystackService.createSubscription({
-      customer: finalCustomerCode,
-      plan: planCode,
-      start_date: lease?.startDate?.toISOString(),
-    });
-
-    const subscriptionCode = subscriptionResponse.data?.data?.subscription_code;
-    if (!subscriptionCode) {
-      return yield* Effect.fail(
-        new PaystackSubscriptionCreationError(
-          lease.id,
-          finalCustomerCode,
-          planCode
-        )
-      );
-    }
-
-    yield* Console.log('Successfully created Paystack subscription', {
-      subscriptionCode,
-      leaseId: lease.id,
-    });
-
-    // Step 5: Initialize a transaction using the landlord subaccount and plan
+    // Step 4: Initialize a transaction using the landlord subaccount and plan
+    // Note: When a plan is included in the transaction initialization,
+    // Paystack will automatically create a subscription after successful payment
     yield* Console.log('Initializing Paystack transaction', {
       email: tenant.email,
       amount: rentAmountInCents,
@@ -358,14 +356,14 @@ export const createLeaseEffect = (
       amount: rentAmountInCents,
       currency: lease.rentDueCurrency,
       subaccount: landlord.paystackSubAccountId,
-      split_code: landlord.paystackSplitGroupId,
+      // split_code: landlord.paystackSplitGroupId,
       plan: planCode,
       metadata: JSON.stringify({
         lease_id: lease.id,
         tenant_id: tenant.id,
         landlord_id: landlord.id,
         plan_code: planCode,
-        subscription_code: subscriptionCode,
+        customer_code: finalCustomerCode,
       }),
     });
 
@@ -393,11 +391,11 @@ export const createLeaseEffect = (
       leaseId: lease.id,
     });
 
-    // Step 6: Save Paystack information to the lease in the database
+    // Step 5: Save Paystack information to the lease in the database
+    // Note: subscriptionCode will be null initially and will be populated after successful payment
     yield* Console.log('Saving Paystack information to lease', {
       leaseId: lease.id,
       planCode,
-      subscriptionCode,
       authorizationUrl,
       reference,
     });
@@ -405,7 +403,7 @@ export const createLeaseEffect = (
     yield* databaseService.updateLeasePaystackInfo(
       lease.id,
       planCode,
-      subscriptionCode,
+      null, // subscriptionCode will be created after successful payment
       authorizationUrl,
       reference
     );
@@ -418,9 +416,9 @@ export const createLeaseEffect = (
     yield* databaseService.disconnect();
 
     return {
-      message: 'Lease Paystack integration completed successfully',
+      message:
+        'Lease Paystack integration completed successfully. Customer can now complete payment to activate subscription.',
       planCode,
-      subscriptionCode,
       authorizationUrl,
       reference,
       accessCode,
@@ -428,105 +426,11 @@ export const createLeaseEffect = (
       tenantEmail: tenant.email,
       rentAmount: lease.rent,
       currency: lease.rentDueCurrency,
+      customerCode: finalCustomerCode,
     };
   }).pipe(
     Effect.provide(DatabaseServiceLive),
-    Effect.provide(PaystackServiceLive),
-    Effect.catchTags({
-      LeaseNotFoundError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Lease not found during Paystack setup', {
-            leaseId: error.leaseId,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      LandlordNotFoundError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Landlord information missing', {
-            leaseId: error.leaseId,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      NoTenantsFoundError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('No tenants found for lease', {
-            leaseId: error.leaseId,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      LandlordOnboardingIncompleteError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Landlord onboarding incomplete', {
-            landlordId: error.landlordId,
-            missingField: error.missingField,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      PaystackPlanCreationError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Failed to create Paystack plan', {
-            leaseId: error.leaseId,
-            tenantName: error.tenantName,
-            amount: error.amount,
-            currency: error.currency,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      PaystackSubscriptionCreationError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Failed to create Paystack subscription', {
-            leaseId: error.leaseId,
-            customerCode: error.customerCode,
-            planCode: error.planCode,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      PaystackTransactionInitializationError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Failed to initialize Paystack transaction', {
-            leaseId: error.leaseId,
-            tenantEmail: error.tenantEmail,
-            amount: error.amount,
-            subaccount: error.subaccount,
-            splitCode: error.splitCode,
-            planCode: error.planCode,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      DatabaseError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Database error during lease Paystack setup', {
-            leaseId: payload.leaseId,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-      PaystackApiError: (error) =>
-        Effect.gen(function* () {
-          yield* Console.error('Paystack API error during lease setup', {
-            leaseId: payload.leaseId,
-            message: error.message,
-          });
-          return yield* Effect.fail(error);
-        }),
-    }),
-    Effect.catchAll((error) =>
-      Effect.gen(function* () {
-        yield* Console.error('Unexpected error during lease Paystack setup', {
-          leaseId: payload.leaseId,
-          error: error instanceof Error ? error.message : 'Unknown error',
-          errorType: typeof error,
-        });
-        return yield* Effect.fail(error);
-      })
-    )
+    Effect.provide(PaystackServiceLive)
   );
 
 export const runCreateLeaseEffect = (payload: CreateLeasePayload) =>

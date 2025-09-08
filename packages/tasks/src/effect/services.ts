@@ -9,6 +9,12 @@ import type {
   Transactions,
   InvoiceStatus,
 } from '@leaseup/prisma/client/index.js';
+import {
+  LeaseStatus,
+  LeaseTermType,
+  InvoiceCycle,
+} from '@leaseup/prisma/client/index.js';
+import { nanoid } from 'nanoid';
 
 export type RecurringBillable = Prisma.RecurringBillableGetPayload<{
   include: {
@@ -181,10 +187,49 @@ export interface DatabaseService {
   readonly updateLeasePaystackInfo: (
     leaseId: string,
     planCode: string,
-    subscriptionCode: string,
+    subscriptionCode: string | null,
     authorizationUrl: string,
     reference: string
   ) => Effect.Effect<void, DatabaseError, never>;
+  readonly createLeaseWithTransaction: (
+    unitId: string,
+    tenantId: string,
+    leaseStartDate: string,
+    leaseEndDate: string | null,
+    deposit: number,
+    rent: number,
+    automaticInvoice: boolean
+  ) => Effect.Effect<
+    {
+      id: string;
+      rent: number;
+      rentDueCurrency: string;
+      startDate: Date | null;
+      unit: {
+        property: {
+          landlord: {
+            id: string;
+            name: string | null;
+            email: string;
+            paystackSubAccountId: string | null;
+            paystackSplitGroupId: string | null;
+          } | null;
+        };
+      } | null;
+      tenantLease: Array<{
+        tenant: {
+          id: string;
+          email: string;
+          firstName: string;
+          lastName: string;
+          phone: string | null;
+          paystackCustomerId: string | null;
+        };
+      }>;
+    },
+    DatabaseError,
+    never
+  >;
   readonly disconnect: () => Effect.Effect<void, DatabaseError>;
 }
 
@@ -579,7 +624,7 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
   updateLeasePaystackInfo: (
     leaseId: string,
     planCode: string,
-    subscriptionCode: string,
+    subscriptionCode: string | null,
     authorizationUrl: string,
     reference: string
   ) =>
@@ -601,6 +646,84 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
             error instanceof Error
               ? error.message
               : 'Failed to update lease Paystack information',
+        }),
+    }),
+  createLeaseWithTransaction: (
+    unitId: string,
+    tenantId: string,
+    leaseStartDate: string,
+    leaseEndDate: string | null,
+    deposit: number,
+    rent: number,
+    automaticInvoice: boolean
+  ) =>
+    Effect.tryPromise({
+      try: async () => {
+        return await db.$transaction(async (tx) => {
+          const lease = await tx.lease.create({
+            data: {
+              id: nanoid(),
+              unitId,
+              startDate: new Date(leaseStartDate).toISOString(),
+              endDate: leaseEndDate
+                ? new Date(leaseEndDate).toISOString()
+                : null,
+              deposit,
+              rent,
+              status: LeaseStatus.ACTIVE,
+              rentDueCurrency: 'ZAR',
+              leaseType: LeaseTermType.MONTHLY,
+              invoiceCycle: InvoiceCycle.MONTHLY,
+              automaticInvoice,
+              tenantLease: {
+                create: {
+                  tenantId,
+                },
+              },
+            },
+            include: {
+              unit: {
+                include: {
+                  property: {
+                    include: {
+                      landlord: {
+                        select: {
+                          id: true,
+                          name: true,
+                          email: true,
+                          paystackSubAccountId: true,
+                          paystackSplitGroupId: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              tenantLease: {
+                include: {
+                  tenant: {
+                    select: {
+                      id: true,
+                      email: true,
+                      firstName: true,
+                      lastName: true,
+                      phone: true,
+                      paystackCustomerId: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+          return lease;
+        });
+      },
+      catch: (error) =>
+        new DatabaseError({
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Failed to create lease with transaction',
         }),
     }),
   disconnect: () =>

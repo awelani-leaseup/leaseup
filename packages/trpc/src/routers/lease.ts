@@ -1,14 +1,11 @@
 import { VCreateLeaseSchema, VGetAllLeasesSchema } from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
-import { nanoid } from 'nanoid';
 import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import {
-  InvoiceCycle,
-  LeaseStatus,
-  LeaseTermType,
-} from '@leaseup/prisma/client/index.js';
-import { createLeaseEffect } from '@leaseup/tasks/effect';
+  createLeaseEffect,
+  type LeaseCreationErrors,
+} from '@leaseup/tasks/effect';
 import { Effect } from 'effect';
 
 export const leaseRouter = createTRPCRouter({
@@ -222,105 +219,76 @@ export const leaseRouter = createTRPCRouter({
   createLease: protectedProcedure
     .input(VCreateLeaseSchema)
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.$transaction(async (tx) => {
-        const lease = await tx.lease.create({
-          data: {
-            id: nanoid(),
-            unitId: input.unitId,
-            startDate: new Date(input.leaseStartDate).toISOString(),
-            endDate: input.leaseEndDate
-              ? new Date(input.leaseEndDate).toISOString()
-              : null,
-            deposit: input.deposit,
-            rent: input.rent,
-            status: LeaseStatus.ACTIVE,
-            rentDueCurrency: 'ZAR',
-            leaseType: LeaseTermType.MONTHLY,
-            invoiceCycle: InvoiceCycle.MONTHLY,
-            automaticInvoice: input.automaticInvoice,
-            tenantLease: {
-              create: {
-                tenantId: input.tenantId,
-              },
-            },
-          },
-        });
+      const leaseEffect = createLeaseEffect({
+        unitId: input.unitId,
+        tenantId: input.tenantId,
+        leaseStartDate: input.leaseStartDate.toISOString(),
+        leaseEndDate: input.leaseEndDate?.toISOString(),
+        deposit: input.deposit,
+        rent: input.rent,
+        automaticInvoice: input.automaticInvoice,
+      });
 
-        try {
-          await Effect.runPromise(
-            createLeaseEffect({
-              leaseId: lease.id,
-            })
-          );
-        } catch (effectError: any) {
-          // Convert Effect errors to meaningful user-facing errors and throw to abort transaction
-          if (
-            effectError &&
-            typeof effectError === 'object' &&
-            '_tag' in effectError
-          ) {
-            switch (effectError._tag) {
-              case 'LeaseNotFoundError':
+      const result = await Effect.runPromise(
+        Effect.match(leaseEffect, {
+          onFailure: (error: LeaseCreationErrors) => {
+            switch (error._tag) {
+              case 'LeaseCreationError':
                 throw new TRPCError({
-                  code: 'NOT_FOUND',
-                  message: `Lease not found: ${effectError.message}`,
+                  code: 'INTERNAL_SERVER_ERROR',
+                  message: `Failed to create lease`,
                 });
               case 'LandlordNotFoundError':
                 throw new TRPCError({
                   code: 'NOT_FOUND',
-                  message: `Landlord not found: ${effectError.message}`,
+                  message: `Landlord not found, please contact support.`,
                 });
               case 'NoTenantsFoundError':
                 throw new TRPCError({
                   code: 'NOT_FOUND',
-                  message: `No tenants found: ${effectError.message}`,
+                  message: `No tenants found, please contact support.`,
                 });
               case 'LandlordOnboardingIncompleteError':
                 throw new TRPCError({
                   code: 'PRECONDITION_FAILED',
-                  message: `Landlord onboarding incomplete: ${effectError.message}`,
+                  message: `Landlord onboarding incomplete, complete onboarding to continue.`,
                 });
               case 'PaystackPlanCreationError':
                 throw new TRPCError({
                   code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to create payment plan: ${effectError.message}`,
-                });
-              case 'PaystackSubscriptionCreationError':
-                throw new TRPCError({
-                  code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to create subscription: ${effectError.message}`,
+                  message: `Failed to create payment plan`,
                 });
               case 'PaystackTransactionInitializationError':
                 throw new TRPCError({
                   code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to initialize payment: ${effectError.message}`,
+                  message: `Failed to initialize payment`,
                 });
               case 'DatabaseError':
                 throw new TRPCError({
                   code: 'INTERNAL_SERVER_ERROR',
-                  message: `Database error: ${effectError.message}`,
+                  message: `Database error, please contact support.`,
                 });
               case 'PaystackApiError':
                 throw new TRPCError({
                   code: 'BAD_REQUEST',
-                  message: `Payment service error: ${effectError.message || 'Unknown payment error'}`,
+                  message: `Unexpected error occurred, please contact support.`,
                 });
               default:
                 throw new TRPCError({
                   code: 'INTERNAL_SERVER_ERROR',
-                  message: `Failed to set up lease: ${effectError.message || 'Unknown error occurred'}`,
+                  message: `Failed to set up lease, please contact support.`,
                 });
             }
-          } else {
-            // Handle unexpected error format
-            throw new TRPCError({
-              code: 'INTERNAL_SERVER_ERROR',
-              message: `Failed to set up lease: ${effectError?.message || 'Unknown error occurred'}`,
-            });
-          }
-        }
+          },
+          onSuccess: (successResult) => successResult,
+        })
+      );
 
-        return lease;
-      });
+      return {
+        leaseId: result.leaseId,
+        message: result.message,
+        authorizationUrl: result.authorizationUrl,
+        reference: result.reference,
+      };
     }),
 });
