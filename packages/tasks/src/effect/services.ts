@@ -78,7 +78,17 @@ export interface DatabaseService {
           include: {
             unit: {
               include: {
-                property: true;
+                property: {
+                  include: {
+                    landlord: {
+                      select: {
+                        id: true;
+                        name: true;
+                        email: true;
+                      };
+                    };
+                  };
+                };
               };
             };
             tenantLease: {
@@ -446,7 +456,17 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
               include: {
                 unit: {
                   include: {
-                    property: true,
+                    property: {
+                      include: {
+                        landlord: {
+                          select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                          },
+                        },
+                      },
+                    },
                   },
                 },
                 tenantLease: {

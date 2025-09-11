@@ -2,6 +2,7 @@ import { Schema, Effect, Console } from 'effect';
 import { InvoiceStatus } from '@leaseup/prisma/client/client.js';
 import { nanoid } from 'nanoid';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
+import { novu } from '@leaseup/novu/client.ts';
 
 const PaymentRequestSuccessfulPayload = Schema.Struct({
   event: Schema.String,
@@ -104,11 +105,6 @@ const processPaymentRequestSuccessfulEffect = (
 
     const transaction = yield* databaseService.createTransaction({
       id: nanoid(),
-      lease: {
-        connect: {
-          id: invoice.leaseId ?? '',
-        },
-      },
       invoice: {
         connect: {
           id: invoice.id,
@@ -128,19 +124,72 @@ const processPaymentRequestSuccessfulEffect = (
       referenceId: transaction.referenceId,
     });
 
-    const tenant = invoice.lease?.tenantLease[0]?.tenant;
+    const tenantId = invoice.tenantId;
     const property = invoice.lease?.unit?.property;
+    const landlordId = invoice.landlordId;
+
+    const tenant = yield* databaseService.findTenant(tenantId);
+    const landlord = yield* databaseService.findLandlord(landlordId);
 
     yield* Console.log('Payment processed successfully', {
       invoiceId: invoice.id,
       transactionId: transaction.id,
       tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : 'Unknown',
+      landlordName: landlord ? landlord.name : 'Unknown',
       propertyName: property?.name || 'Unknown',
       unitName: invoice.lease?.unit?.name || 'Unknown',
       amountPaid,
       currency: payload.data.currency,
       paidAt: payload.data.paid_at,
     });
+
+    if (landlord) {
+      try {
+        yield* Effect.tryPromise({
+          try: () =>
+            novu.trigger({
+              to: {
+                subscriberId: landlord.id,
+                email: landlord.email,
+              },
+              workflowId: 'acknowledge-payment',
+              payload: {
+                landlordName: landlord.name || 'Unknown',
+                tenantName: tenant
+                  ? `${tenant.firstName} ${tenant.lastName}`
+                  : 'Unknown',
+                propertyName: property?.name || 'Unknown',
+                unitName: invoice.lease?.unit?.name || 'Unknown',
+                amountPaid: new Intl.NumberFormat('en-ZA', {
+                  style: 'currency',
+                  currency: 'ZAR',
+                }).format(amountPaid / 100), // Convert from kobo/cents to main currency
+                transactionId: transaction.id,
+                description: invoice.description,
+                paidAt: new Date(payload.data.paid_at).toLocaleDateString(),
+                viewTransactionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/${transaction.id}`,
+              },
+            }),
+          catch: (error) =>
+            new Error(`Failed to send Novu notification: ${error}`),
+        });
+
+        yield* Console.log('Novu payment acknowledgment notification sent', {
+          landlordId: landlord.id,
+          landlordEmail: landlord.email,
+          transactionId: transaction.id,
+        });
+      } catch (error) {
+        yield* Console.warn(
+          'Failed to send Novu notification, but payment was processed successfully',
+          {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            landlordId: landlord.id,
+            transactionId: transaction.id,
+          }
+        );
+      }
+    }
 
     return yield* Effect.ensuring(
       Effect.succeed({

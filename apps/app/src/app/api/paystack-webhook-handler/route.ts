@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
-import { runProcessPaymentRequestSuccessfulEffect } from "@leaseup/tasks/effect";
+import {
+  runProcessPaymentRequestSuccessfulEffect,
+  runProcessSubscriptionCreateEffect,
+  runProcessSubscriptionDisableEffect,
+  runProcessSubscriptionNotRenewingEffect,
+  runProcessExpiringCardsEffect,
+  runProcessInvoicePaymentFailedEffect,
+} from "@leaseup/tasks/effect";
 
-const ALLOWED_IPS = ["52.31.139.75", "52.49.173.169", "52.214.14.220"];
+const ALLOWED_IPS = [
+  "52.31.139.75",
+  "52.49.173.169",
+  "52.214.14.220",
+  "127.0.0.1",
+];
 
 export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0];
@@ -12,27 +24,39 @@ export async function POST(req: Request) {
 
   const payload = await req.json();
 
+  console.log("Event", payload.event);
+
   switch (payload.event) {
-    case "invoice.create":
-      // await runProcessInvoiceCreateEffect(payload);
+    case "paymentrequest.pending":
       break;
-    case "invoice.payment_failed":
-      // await runProcessInvoiceUpdateEffect(payload);
-      break;
-    case "invoice.update":
-      // await runProcessInvoicePaymentEffect(payload);
-      break;
-    case "invoice.payment_failed":
-      // await runProcessInvoicePaymentFailedEffect(payload);
-      break;
-    case "invoice.payment_success":
+    case "paymentrequest.success":
       await runProcessPaymentRequestSuccessfulEffect(payload);
       break;
+    case "subscription.create":
+      await runProcessSubscriptionCreateEffect(payload);
+      break;
+    case "subscription.disable":
+      await runProcessSubscriptionDisableEffect(payload);
+      break;
+    case "subscription.not_renewing":
+      await runProcessSubscriptionNotRenewingEffect(payload);
+      break;
+    case "subscription.expiring_cards":
+      await runProcessExpiringCardsEffect(payload);
+      break;
+    case "invoice.create":
+      // Log invoice creation for subscription tracking
+      console.log(
+        "Invoice created for subscription:",
+        payload.data.subscription,
+      );
+      break;
     case "invoice.payment_failed":
-      // await runProcessInvoicePaymentFailedEffect(payload);
+      await runProcessInvoicePaymentFailedEffect(payload);
       break;
     case "charge.success":
-      // await runProcessInvoicePaymentSuccessEffect(payload);
+      // Log successful charges (including subscription renewals)
+      console.log("Charge successful:", payload.data?.reference || "unknown");
       break;
   }
 

@@ -12,6 +12,9 @@ import {
   PaystackServiceLive,
   PaystackServiceTag,
 } from './services';
+import { getMonth, getYear } from 'date-fns';
+
+const PAYSTACK_BASE_URL = 'https://paystack.shop';
 
 const CreateInvoiceTaskPayload = Schema.Struct({
   landlordId: Schema.String.pipe(
@@ -47,15 +50,17 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
     const databaseService = yield* DatabaseServiceTag;
     const paystackService = yield* PaystackServiceTag;
 
-    yield* Console.log('Creating invoice with Effect-TS', payload.tenantId);
+    yield* Console.log('Creating invoice', payload.tenantId);
+
+    const landlord = yield* databaseService.findLandlord(payload.landlordId);
 
     // Create payment request via Paystack
     const paystackResponse = yield* paystackService.createPaymentRequest({
       customer: payload.customer,
       amount: Math.round(payload.amount),
       currency: 'ZAR',
-      description: payload.description,
-      // line_items: payload.lineItems ?? [],
+      description: `${landlord?.name} has sent you an invoice ${payload.description ? ` - ${payload.description}` : ''}`,
+      line_items: payload.lineItems ?? [],
       split_code: payload.split_code ?? undefined,
     });
 
@@ -68,14 +73,16 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       id: nanoid(),
       landlordId: payload.landlordId,
       tenantId: payload.tenantId ?? '',
-      description: payload.description ?? '',
+      description: `${payload.description ? `- ${payload.description}` : ''}`,
       dueAmount: payload.amount,
-      dueDate: payload.dueDate,
+      dueDate: new Date(payload.dueDate.toISOString()),
       category: payload.category as InvoiceCategory,
       status: InvoiceStatus.PENDING,
       lineItems: payload.lineItems ?? [],
       paystackId: paystackResponse.data?.data?.request_code ?? '',
       recurringBillableId: null,
+      paymentRequestUrl: `${PAYSTACK_BASE_URL}/pay/${paystackResponse.data?.data?.request_code}`,
+      invoiceNumber: `${getYear(new Date())}-${getMonth(new Date())}-${paystackResponse.data?.data?.invoice_number}`,
     };
 
     if (!invoice.dueDate) {
@@ -89,11 +96,11 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       })
       .pipe(Effect.retry({ times: 30 }));
 
-    // yield* Console.log('Successfully created invoice', {
-    //   invoiceId: newInvoice.id,
-    //   leaseId: payload.leaseId,
-    //   amount: newInvoice.dueAmount,
-    // });
+    yield* Console.log('Successfully created invoice', {
+      invoiceId: newInvoice.id,
+      leaseId: payload.leaseId,
+      amount: newInvoice.dueAmount,
+    });
 
     // Ensure database cleanup
     return yield* Effect.ensuring(

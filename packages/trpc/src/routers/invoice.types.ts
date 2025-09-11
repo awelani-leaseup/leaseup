@@ -17,7 +17,7 @@ export const VGetAllInvoicesSchema = v.object({
 export const VCreateInvoiceSchema = v.object({
   leaseId: v.optional(v.string()),
   tenantId: v.pipe(v.string(), v.nonEmpty()),
-  notes: v.optional(v.pipe(v.string(), v.nonEmpty())),
+  notes: v.optional(v.pipe(v.string())),
   dueDate: v.date('Due date is required'),
   invoiceDate: v.date('Invoice date is required'),
   markAsPaid: v.boolean(),

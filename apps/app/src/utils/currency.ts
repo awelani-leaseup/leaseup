@@ -4,3 +4,11 @@ export const formatCurrencyToZAR = (amount: number) => {
     currency: "ZAR",
   }).format(amount);
 };
+
+export const convertToCents = (amount: number) => {
+  return Math.round(amount * 100);
+};
+
+export const convertFromCents = (amount: number) => {
+  return amount / 100;
+};

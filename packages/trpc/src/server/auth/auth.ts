@@ -4,12 +4,13 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { novu } from '@leaseup/novu/client.ts';
 import { db as prisma } from '@leaseup/prisma/db.ts';
 
-const BASE_URL =
-  process.env.VERCEL_ENV === 'production'
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_ENV === 'preview'
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3001';
+let BASE_URL = 'http://localhost:3001';
+
+if (process.env.VERCEL_ENV === 'production') {
+  BASE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+} else if (process.env.VERCEL_ENV === 'preview') {
+  BASE_URL = `https://${process.env.VERCEL_URL}`;
+}
 
 const NOVU_PASSWORD_FORGOT_WORKFLOW_ID = 'landlord-password-forgot';
 const NOVU_USER_CREATED_WORKFLOW_ID = 'landlord-welcome-copy';
@@ -55,11 +56,7 @@ export const auth = betterAuth({
     },
   },
   hooks: {
-    after: createAuthMiddleware(async (ctx) => {
-      // if (ctx.context.session?.user.onboardingCompleted) {
-      //   ctx.redirect('/onboarding');
-      // }
-    }),
+    after: createAuthMiddleware(async (ctx) => {}),
   },
   databaseHooks: {
     user: {
@@ -72,7 +69,8 @@ export const auth = betterAuth({
             },
             workflowId: NOVU_USER_CREATED_WORKFLOW_ID,
             payload: {
-              fullName: user.name,
+              landlordName: user.name,
+              ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/properties`,
             },
           });
           _ctx?.redirect('/onboarding');

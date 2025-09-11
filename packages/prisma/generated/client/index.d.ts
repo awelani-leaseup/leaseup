@@ -2651,11 +2651,15 @@ export namespace Prisma {
   }
 
   export type UserAvgAggregateOutputType = {
+    subscriptionAmount: number | null
+    paymentRetryCount: number | null
     numberOfProperties: number | null
     numberOfUnits: number | null
   }
 
   export type UserSumAggregateOutputType = {
+    subscriptionAmount: number | null
+    paymentRetryCount: number | null
     numberOfProperties: number | null
     numberOfUnits: number | null
   }
@@ -2675,6 +2679,16 @@ export namespace Prisma {
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
     paystackSubscriptionId: string | null
+    paystackSubscriptionStatus: string | null
+    subscriptionPlanCode: string | null
+    subscriptionAmount: number | null
+    subscriptionCurrency: string | null
+    subscriptionInterval: string | null
+    nextPaymentDate: Date | null
+    subscriptionCreatedAt: Date | null
+    subscriptionUpdatedAt: Date | null
+    lastPaymentFailure: string | null
+    paymentRetryCount: number | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
@@ -2700,6 +2714,16 @@ export namespace Prisma {
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
     paystackSubscriptionId: string | null
+    paystackSubscriptionStatus: string | null
+    subscriptionPlanCode: string | null
+    subscriptionAmount: number | null
+    subscriptionCurrency: string | null
+    subscriptionInterval: string | null
+    nextPaymentDate: Date | null
+    subscriptionCreatedAt: Date | null
+    subscriptionUpdatedAt: Date | null
+    lastPaymentFailure: string | null
+    paymentRetryCount: number | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
@@ -2725,6 +2749,16 @@ export namespace Prisma {
     paystackSplitGroupId: number
     paystackSubAccountId: number
     paystackSubscriptionId: number
+    paystackSubscriptionStatus: number
+    subscriptionPlanCode: number
+    subscriptionAmount: number
+    subscriptionCurrency: number
+    subscriptionInterval: number
+    nextPaymentDate: number
+    subscriptionCreatedAt: number
+    subscriptionUpdatedAt: number
+    lastPaymentFailure: number
+    paymentRetryCount: number
     state: number
     zip: number
     onboardingCompleted: number
@@ -2738,11 +2772,15 @@ export namespace Prisma {
 
 
   export type UserAvgAggregateInputType = {
+    subscriptionAmount?: true
+    paymentRetryCount?: true
     numberOfProperties?: true
     numberOfUnits?: true
   }
 
   export type UserSumAggregateInputType = {
+    subscriptionAmount?: true
+    paymentRetryCount?: true
     numberOfProperties?: true
     numberOfUnits?: true
   }
@@ -2762,6 +2800,16 @@ export namespace Prisma {
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
     paystackSubscriptionId?: true
+    paystackSubscriptionStatus?: true
+    subscriptionPlanCode?: true
+    subscriptionAmount?: true
+    subscriptionCurrency?: true
+    subscriptionInterval?: true
+    nextPaymentDate?: true
+    subscriptionCreatedAt?: true
+    subscriptionUpdatedAt?: true
+    lastPaymentFailure?: true
+    paymentRetryCount?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -2787,6 +2835,16 @@ export namespace Prisma {
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
     paystackSubscriptionId?: true
+    paystackSubscriptionStatus?: true
+    subscriptionPlanCode?: true
+    subscriptionAmount?: true
+    subscriptionCurrency?: true
+    subscriptionInterval?: true
+    nextPaymentDate?: true
+    subscriptionCreatedAt?: true
+    subscriptionUpdatedAt?: true
+    lastPaymentFailure?: true
+    paymentRetryCount?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -2812,6 +2870,16 @@ export namespace Prisma {
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
     paystackSubscriptionId?: true
+    paystackSubscriptionStatus?: true
+    subscriptionPlanCode?: true
+    subscriptionAmount?: true
+    subscriptionCurrency?: true
+    subscriptionInterval?: true
+    nextPaymentDate?: true
+    subscriptionCreatedAt?: true
+    subscriptionUpdatedAt?: true
+    lastPaymentFailure?: true
+    paymentRetryCount?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -2924,6 +2992,16 @@ export namespace Prisma {
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
     paystackSubscriptionId: string | null
+    paystackSubscriptionStatus: string | null
+    subscriptionPlanCode: string | null
+    subscriptionAmount: number | null
+    subscriptionCurrency: string | null
+    subscriptionInterval: string | null
+    nextPaymentDate: Date | null
+    subscriptionCreatedAt: Date | null
+    subscriptionUpdatedAt: Date | null
+    lastPaymentFailure: string | null
+    paymentRetryCount: number | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean
@@ -2968,6 +3046,16 @@ export namespace Prisma {
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
     paystackSubscriptionId?: boolean
+    paystackSubscriptionStatus?: boolean
+    subscriptionPlanCode?: boolean
+    subscriptionAmount?: boolean
+    subscriptionCurrency?: boolean
+    subscriptionInterval?: boolean
+    nextPaymentDate?: boolean
+    subscriptionCreatedAt?: boolean
+    subscriptionUpdatedAt?: boolean
+    lastPaymentFailure?: boolean
+    paymentRetryCount?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -2999,6 +3087,16 @@ export namespace Prisma {
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
     paystackSubscriptionId?: boolean
+    paystackSubscriptionStatus?: boolean
+    subscriptionPlanCode?: boolean
+    subscriptionAmount?: boolean
+    subscriptionCurrency?: boolean
+    subscriptionInterval?: boolean
+    nextPaymentDate?: boolean
+    subscriptionCreatedAt?: boolean
+    subscriptionUpdatedAt?: boolean
+    lastPaymentFailure?: boolean
+    paymentRetryCount?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3024,6 +3122,16 @@ export namespace Prisma {
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
     paystackSubscriptionId?: boolean
+    paystackSubscriptionStatus?: boolean
+    subscriptionPlanCode?: boolean
+    subscriptionAmount?: boolean
+    subscriptionCurrency?: boolean
+    subscriptionInterval?: boolean
+    nextPaymentDate?: boolean
+    subscriptionCreatedAt?: boolean
+    subscriptionUpdatedAt?: boolean
+    lastPaymentFailure?: boolean
+    paymentRetryCount?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3049,6 +3157,16 @@ export namespace Prisma {
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
     paystackSubscriptionId?: boolean
+    paystackSubscriptionStatus?: boolean
+    subscriptionPlanCode?: boolean
+    subscriptionAmount?: boolean
+    subscriptionCurrency?: boolean
+    subscriptionInterval?: boolean
+    nextPaymentDate?: boolean
+    subscriptionCreatedAt?: boolean
+    subscriptionUpdatedAt?: boolean
+    lastPaymentFailure?: boolean
+    paymentRetryCount?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3059,7 +3177,7 @@ export namespace Prisma {
     phone?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackSubscriptionId" | "state" | "zip" | "onboardingCompleted" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     property?: boolean | User$propertyArgs<ExtArgs>
@@ -3095,6 +3213,16 @@ export namespace Prisma {
       paystackSplitGroupId: string | null
       paystackSubAccountId: string | null
       paystackSubscriptionId: string | null
+      paystackSubscriptionStatus: string | null
+      subscriptionPlanCode: string | null
+      subscriptionAmount: number | null
+      subscriptionCurrency: string | null
+      subscriptionInterval: string | null
+      nextPaymentDate: Date | null
+      subscriptionCreatedAt: Date | null
+      subscriptionUpdatedAt: Date | null
+      lastPaymentFailure: string | null
+      paymentRetryCount: number | null
       state: string | null
       zip: string | null
       onboardingCompleted: boolean
@@ -3545,6 +3673,16 @@ export namespace Prisma {
     readonly paystackSplitGroupId: FieldRef<"User", 'String'>
     readonly paystackSubAccountId: FieldRef<"User", 'String'>
     readonly paystackSubscriptionId: FieldRef<"User", 'String'>
+    readonly paystackSubscriptionStatus: FieldRef<"User", 'String'>
+    readonly subscriptionPlanCode: FieldRef<"User", 'String'>
+    readonly subscriptionAmount: FieldRef<"User", 'Int'>
+    readonly subscriptionCurrency: FieldRef<"User", 'String'>
+    readonly subscriptionInterval: FieldRef<"User", 'String'>
+    readonly nextPaymentDate: FieldRef<"User", 'DateTime'>
+    readonly subscriptionCreatedAt: FieldRef<"User", 'DateTime'>
+    readonly subscriptionUpdatedAt: FieldRef<"User", 'DateTime'>
+    readonly lastPaymentFailure: FieldRef<"User", 'String'>
+    readonly paymentRetryCount: FieldRef<"User", 'Int'>
     readonly state: FieldRef<"User", 'String'>
     readonly zip: FieldRef<"User", 'String'>
     readonly onboardingCompleted: FieldRef<"User", 'Boolean'>
@@ -19913,6 +20051,16 @@ export namespace Prisma {
     paystackSplitGroupId: 'paystackSplitGroupId',
     paystackSubAccountId: 'paystackSubAccountId',
     paystackSubscriptionId: 'paystackSubscriptionId',
+    paystackSubscriptionStatus: 'paystackSubscriptionStatus',
+    subscriptionPlanCode: 'subscriptionPlanCode',
+    subscriptionAmount: 'subscriptionAmount',
+    subscriptionCurrency: 'subscriptionCurrency',
+    subscriptionInterval: 'subscriptionInterval',
+    nextPaymentDate: 'nextPaymentDate',
+    subscriptionCreatedAt: 'subscriptionCreatedAt',
+    subscriptionUpdatedAt: 'subscriptionUpdatedAt',
+    lastPaymentFailure: 'lastPaymentFailure',
+    paymentRetryCount: 'paymentRetryCount',
     state: 'state',
     zip: 'zip',
     onboardingCompleted: 'onboardingCompleted',
@@ -20423,6 +20571,16 @@ export namespace Prisma {
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
+    paystackSubscriptionStatus?: StringNullableFilter<"User"> | string | null
+    subscriptionPlanCode?: StringNullableFilter<"User"> | string | null
+    subscriptionAmount?: IntNullableFilter<"User"> | number | null
+    subscriptionCurrency?: StringNullableFilter<"User"> | string | null
+    subscriptionInterval?: StringNullableFilter<"User"> | string | null
+    nextPaymentDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    subscriptionCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    subscriptionUpdatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastPaymentFailure?: StringNullableFilter<"User"> | string | null
+    paymentRetryCount?: IntNullableFilter<"User"> | number | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
@@ -20453,6 +20611,16 @@ export namespace Prisma {
     paystackSplitGroupId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
+    paystackSubscriptionStatus?: SortOrderInput | SortOrder
+    subscriptionPlanCode?: SortOrderInput | SortOrder
+    subscriptionAmount?: SortOrderInput | SortOrder
+    subscriptionCurrency?: SortOrderInput | SortOrder
+    subscriptionInterval?: SortOrderInput | SortOrder
+    nextPaymentDate?: SortOrderInput | SortOrder
+    subscriptionCreatedAt?: SortOrderInput | SortOrder
+    subscriptionUpdatedAt?: SortOrderInput | SortOrder
+    lastPaymentFailure?: SortOrderInput | SortOrder
+    paymentRetryCount?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
@@ -20487,6 +20655,16 @@ export namespace Prisma {
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
+    paystackSubscriptionStatus?: StringNullableFilter<"User"> | string | null
+    subscriptionPlanCode?: StringNullableFilter<"User"> | string | null
+    subscriptionAmount?: IntNullableFilter<"User"> | number | null
+    subscriptionCurrency?: StringNullableFilter<"User"> | string | null
+    subscriptionInterval?: StringNullableFilter<"User"> | string | null
+    nextPaymentDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    subscriptionCreatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    subscriptionUpdatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastPaymentFailure?: StringNullableFilter<"User"> | string | null
+    paymentRetryCount?: IntNullableFilter<"User"> | number | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
@@ -20516,6 +20694,16 @@ export namespace Prisma {
     paystackSplitGroupId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
+    paystackSubscriptionStatus?: SortOrderInput | SortOrder
+    subscriptionPlanCode?: SortOrderInput | SortOrder
+    subscriptionAmount?: SortOrderInput | SortOrder
+    subscriptionCurrency?: SortOrderInput | SortOrder
+    subscriptionInterval?: SortOrderInput | SortOrder
+    nextPaymentDate?: SortOrderInput | SortOrder
+    subscriptionCreatedAt?: SortOrderInput | SortOrder
+    subscriptionUpdatedAt?: SortOrderInput | SortOrder
+    lastPaymentFailure?: SortOrderInput | SortOrder
+    paymentRetryCount?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
@@ -20549,6 +20737,16 @@ export namespace Prisma {
     paystackSplitGroupId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    paystackSubscriptionStatus?: StringNullableWithAggregatesFilter<"User"> | string | null
+    subscriptionPlanCode?: StringNullableWithAggregatesFilter<"User"> | string | null
+    subscriptionAmount?: IntNullableWithAggregatesFilter<"User"> | number | null
+    subscriptionCurrency?: StringNullableWithAggregatesFilter<"User"> | string | null
+    subscriptionInterval?: StringNullableWithAggregatesFilter<"User"> | string | null
+    nextPaymentDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    subscriptionCreatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    subscriptionUpdatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    lastPaymentFailure?: StringNullableWithAggregatesFilter<"User"> | string | null
+    paymentRetryCount?: IntNullableWithAggregatesFilter<"User"> | number | null
     state?: StringNullableWithAggregatesFilter<"User"> | string | null
     zip?: StringNullableWithAggregatesFilter<"User"> | string | null
     onboardingCompleted?: BoolWithAggregatesFilter<"User"> | boolean
@@ -21807,6 +22005,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -21837,6 +22045,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -21867,6 +22085,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21897,6 +22125,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21927,6 +22165,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -21952,6 +22200,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -21977,6 +22235,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -23409,6 +23677,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
@@ -23479,6 +23758,16 @@ export namespace Prisma {
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSubscriptionId?: SortOrder
+    paystackSubscriptionStatus?: SortOrder
+    subscriptionPlanCode?: SortOrder
+    subscriptionAmount?: SortOrder
+    subscriptionCurrency?: SortOrder
+    subscriptionInterval?: SortOrder
+    nextPaymentDate?: SortOrder
+    subscriptionCreatedAt?: SortOrder
+    subscriptionUpdatedAt?: SortOrder
+    lastPaymentFailure?: SortOrder
+    paymentRetryCount?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -23490,6 +23779,8 @@ export namespace Prisma {
   }
 
   export type UserAvgOrderByAggregateInput = {
+    subscriptionAmount?: SortOrder
+    paymentRetryCount?: SortOrder
     numberOfProperties?: SortOrder
     numberOfUnits?: SortOrder
   }
@@ -23509,6 +23800,16 @@ export namespace Prisma {
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSubscriptionId?: SortOrder
+    paystackSubscriptionStatus?: SortOrder
+    subscriptionPlanCode?: SortOrder
+    subscriptionAmount?: SortOrder
+    subscriptionCurrency?: SortOrder
+    subscriptionInterval?: SortOrder
+    nextPaymentDate?: SortOrder
+    subscriptionCreatedAt?: SortOrder
+    subscriptionUpdatedAt?: SortOrder
+    lastPaymentFailure?: SortOrder
+    paymentRetryCount?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -23534,6 +23835,16 @@ export namespace Prisma {
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
     paystackSubscriptionId?: SortOrder
+    paystackSubscriptionStatus?: SortOrder
+    subscriptionPlanCode?: SortOrder
+    subscriptionAmount?: SortOrder
+    subscriptionCurrency?: SortOrder
+    subscriptionInterval?: SortOrder
+    nextPaymentDate?: SortOrder
+    subscriptionCreatedAt?: SortOrder
+    subscriptionUpdatedAt?: SortOrder
+    lastPaymentFailure?: SortOrder
+    paymentRetryCount?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -23545,6 +23856,8 @@ export namespace Prisma {
   }
 
   export type UserSumOrderByAggregateInput = {
+    subscriptionAmount?: SortOrder
+    paymentRetryCount?: SortOrder
     numberOfProperties?: SortOrder
     numberOfUnits?: SortOrder
   }
@@ -23623,6 +23936,20 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -23659,17 +23986,6 @@ export namespace Prisma {
     ipAddress?: SortOrder
     userAgent?: SortOrder
     userId?: SortOrder
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type AccountCountOrderByAggregateInput = {
@@ -23718,20 +24034,6 @@ export namespace Prisma {
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type VerificationCountOrderByAggregateInput = {
@@ -24745,6 +25047,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type AccountUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -24903,10 +25209,6 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -26134,6 +26436,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -26226,17 +26539,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -26898,6 +27200,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -26927,6 +27239,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -26972,6 +27294,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27001,6 +27333,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27030,6 +27372,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27059,6 +27411,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27104,6 +27466,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27133,6 +27505,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27252,6 +27634,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27281,6 +27673,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27441,6 +27843,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27470,6 +27882,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27600,6 +28022,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27629,6 +28061,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27770,6 +28212,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27799,6 +28251,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28697,6 +29159,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28726,6 +29198,16 @@ export namespace Prisma {
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
     paystackSubscriptionId?: string | null
+    paystackSubscriptionStatus?: string | null
+    subscriptionPlanCode?: string | null
+    subscriptionAmount?: number | null
+    subscriptionCurrency?: string | null
+    subscriptionInterval?: string | null
+    nextPaymentDate?: Date | string | null
+    subscriptionCreatedAt?: Date | string | null
+    subscriptionUpdatedAt?: Date | string | null
+    lastPaymentFailure?: string | null
+    paymentRetryCount?: number | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28968,6 +29450,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28997,6 +29489,16 @@ export namespace Prisma {
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackSubscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    subscriptionCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionInterval?: NullableStringFieldUpdateOperationsInput | string | null
+    nextPaymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
+    paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean

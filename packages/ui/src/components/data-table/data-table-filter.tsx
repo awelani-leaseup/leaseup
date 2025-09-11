@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, ArrowDownToLine, CornerDownRight } from 'lucide-react';
+import { Plus, CornerDownRight, ChevronDown } from 'lucide-react';
 import type { Column } from '@tanstack/react-table';
 
 import { Button } from '../button';
@@ -33,7 +33,10 @@ interface DataTableFilterProps<TData, TValue> {
     value: string;
   }[];
   type?: FilterType;
-  formatter?: (value: any) => string;
+  formatter?: (value: unknown) => string;
+  // External state management (for URL persistence with nuqs)
+  value?: FilterValues;
+  onValueChange?: (value: FilterValues) => void;
 }
 
 const ColumnFiltersLabel = ({
@@ -62,16 +65,14 @@ const ColumnFiltersLabel = ({
   }
 
   return (
-    <>
-      <span
-        className={cn(
-          'font-semibold text-indigo-600 dark:text-indigo-400',
-          className
-        )}
-      >
-        {columnFilterLabels[0]} and {columnFilterLabels.length - 1} more
-      </span>
-    </>
+    <span
+      className={cn(
+        'font-semibold text-indigo-600 dark:text-indigo-400',
+        className
+      )}
+    >
+      {columnFilterLabels[0]} and {columnFilterLabels.length - 1} more
+    </span>
   );
 };
 
@@ -82,12 +83,31 @@ export function DataTableFilter<TData, TValue>({
   title,
   options,
   type = 'select',
-  formatter = (value) => value.toString(),
+  formatter = (value) => String(value),
+  value: externalValue,
+  onValueChange: externalOnValueChange,
 }: DataTableFilterProps<TData, TValue>) {
   const columnFilters = column?.getFilterValue() as FilterValues;
 
-  const [selectedValues, setSelectedValues] =
+  const [localState, setLocalState] =
     React.useState<FilterValues>(columnFilters);
+
+  // Use external state if provided, otherwise use local state
+  const selectedValues = externalValue ?? localState;
+  const setSelectedValues = React.useCallback(
+    (value: FilterValues | ((prev: FilterValues) => FilterValues)) => {
+      if (externalOnValueChange) {
+        if (typeof value === 'function') {
+          externalOnValueChange(value(externalValue));
+        } else {
+          externalOnValueChange(value);
+        }
+      } else {
+        setLocalState(value);
+      }
+    },
+    [externalOnValueChange, externalValue]
+  );
 
   const columnFilterLabels = React.useMemo(() => {
     if (!selectedValues) return undefined;
@@ -153,15 +173,15 @@ export function DataTableFilter<TData, TValue>({
                       option.value
                     )}
                     onCheckedChange={(checked) => {
-                      setSelectedValues((prev) => {
+                      setSelectedValues((prev: FilterValues) => {
                         if (checked) {
-                          return prev
-                            ? [...(prev as string[]), option.value]
+                          return prev && Array.isArray(prev)
+                            ? [...prev, option.value]
                             : [option.value];
                         } else {
-                          return (prev as string[]).filter(
-                            (value) => value !== option.value
-                          );
+                          return Array.isArray(prev)
+                            ? prev.filter((value) => value !== option.value)
+                            : [];
                         }
                       });
                     }}
@@ -177,7 +197,7 @@ export function DataTableFilter<TData, TValue>({
             })}
           </div>
         );
-      case 'number':
+      case 'number': {
         const isBetween =
           (selectedValues as ConditionFilter)?.condition === 'is-between';
         return (
@@ -185,13 +205,14 @@ export function DataTableFilter<TData, TValue>({
             <Select
               value={(selectedValues as ConditionFilter)?.condition}
               onValueChange={(value) => {
-                setSelectedValues((prev) => {
+                setSelectedValues((prev: FilterValues) => {
+                  const prevCondition = prev as ConditionFilter;
                   return {
                     condition: value,
                     value: [
-                      value !== '' ? (prev as ConditionFilter)?.value?.[0] : '',
+                      value !== '' ? prevCondition?.value?.[0] || '' : '',
                       '',
-                    ],
+                    ] as [string | number, string | number],
                   };
                 });
               }}
@@ -220,13 +241,14 @@ export function DataTableFilter<TData, TValue>({
                 className='sm:[&>input]:py-1'
                 value={(selectedValues as ConditionFilter)?.value?.[0]}
                 onChange={(e) => {
-                  setSelectedValues((prev) => {
+                  setSelectedValues((prev: FilterValues) => {
+                    const prevCondition = prev as ConditionFilter;
                     return {
-                      condition: (prev as ConditionFilter)?.condition,
+                      condition: prevCondition?.condition || '',
                       value: [
                         e.target.value,
-                        isBetween ? (prev as ConditionFilter)?.value?.[1] : '',
-                      ],
+                        isBetween ? prevCondition?.value?.[1] || '' : '',
+                      ] as [string | number, string | number],
                     };
                   });
                 }}
@@ -242,13 +264,14 @@ export function DataTableFilter<TData, TValue>({
                     className='sm:[&>input]:py-1'
                     value={(selectedValues as ConditionFilter)?.value?.[1]}
                     onChange={(e) => {
-                      setSelectedValues((prev) => {
+                      setSelectedValues((prev: FilterValues) => {
+                        const prevCondition = prev as ConditionFilter;
                         return {
-                          condition: (prev as ConditionFilter)?.condition,
+                          condition: prevCondition?.condition || '',
                           value: [
-                            (prev as ConditionFilter)?.value?.[0],
+                            prevCondition?.value?.[0] || '',
                             e.target.value,
-                          ],
+                          ] as [string | number, string | number],
                         };
                       });
                     }}
@@ -258,12 +281,23 @@ export function DataTableFilter<TData, TValue>({
             </div>
           </div>
         );
+      }
     }
   };
 
+  // Sync external state with column filters when external state is provided
   React.useEffect(() => {
-    setSelectedValues(columnFilters);
-  }, [columnFilters]);
+    if (externalValue !== undefined && selectedValues !== columnFilters) {
+      column?.setFilterValue(selectedValues);
+    }
+  }, [selectedValues, externalValue, column, columnFilters]);
+
+  // Sync local state with column filters when external state is not provided
+  React.useEffect(() => {
+    if (externalValue === undefined) {
+      setLocalState(columnFilters);
+    }
+  }, [columnFilters, externalValue]);
 
   return (
     <Popover>
@@ -271,7 +305,7 @@ export function DataTableFilter<TData, TValue>({
         <button
           type='button'
           className={cn(
-            'flex w-full items-center gap-x-1.5 whitespace-nowrap rounded-md border border-gray-300 px-2 py-1.5 font-medium text-gray-600 hover:bg-gray-50 sm:w-fit sm:text-xs dark:border-gray-700 dark:text-gray-400 hover:dark:bg-gray-900',
+            'flex w-full items-center gap-x-1.5 whitespace-nowrap rounded-md border border-gray-300 px-2 py-1.5 font-medium  hover:bg-gray-50 sm:w-fit sm:text-xs',
             selectedValues &&
               ((typeof selectedValues === 'object' &&
                 'condition' in selectedValues &&
@@ -287,8 +321,18 @@ export function DataTableFilter<TData, TValue>({
             onClick={(e) => {
               if (selectedValues) {
                 e.stopPropagation();
+                let resetValue: FilterValues = '';
+                if (type === 'checkbox') {
+                  resetValue = [];
+                } else if (type === 'number') {
+                  resetValue = {
+                    condition: '',
+                    value: ['', ''] as [string | number, string | number],
+                  };
+                }
+
                 column?.setFilterValue('');
-                setSelectedValues('');
+                setSelectedValues(resetValue);
               }
             }}
           >
@@ -316,7 +360,7 @@ export function DataTableFilter<TData, TValue>({
             columnFilterLabels={columnFilterLabels}
             className='w-full text-left sm:w-fit'
           />
-          <ArrowDownToLine
+          <ChevronDown
             className='size-5 shrink-0 text-gray-500 sm:size-4'
             aria-hidden='true'
           />
@@ -335,15 +379,29 @@ export function DataTableFilter<TData, TValue>({
               'condition' in columnFilters &&
               columnFilters.condition === '')
           ) {
+            let resetValue: FilterValues = '';
+            if (type === 'checkbox') {
+              resetValue = [];
+            } else if (type === 'number') {
+              resetValue = {
+                condition: '',
+                value: ['', ''] as [string | number, string | number],
+              };
+            }
+
             column?.setFilterValue('');
-            setSelectedValues('');
+            setSelectedValues(resetValue);
           }
         }}
       >
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            column?.setFilterValue(selectedValues);
+            // For external state, the column filter is already synced via useEffect
+            // For local state, we need to set the column filter
+            if (externalValue === undefined) {
+              column?.setFilterValue(selectedValues);
+            }
           }}
         >
           <div className='space-y-2'>
@@ -364,14 +422,18 @@ export function DataTableFilter<TData, TValue>({
                 className='w-full sm:py-1'
                 type='button'
                 onClick={() => {
+                  let resetValue: FilterValues = '';
+                  if (type === 'checkbox') {
+                    resetValue = [];
+                  } else if (type === 'number') {
+                    resetValue = {
+                      condition: '',
+                      value: ['', ''] as [string | number, string | number],
+                    };
+                  }
+
                   column?.setFilterValue('');
-                  setSelectedValues(
-                    type === 'checkbox'
-                      ? []
-                      : type === 'number'
-                        ? { condition: '', value: ['', ''] }
-                        : ''
-                  );
+                  setSelectedValues(resetValue);
                 }}
               >
                 Reset

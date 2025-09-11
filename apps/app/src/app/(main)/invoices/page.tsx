@@ -11,7 +11,6 @@ import {
 } from "@leaseup/ui/components/card";
 
 import { Badge } from "@leaseup/ui/components/badge";
-import { EmptyState } from "@leaseup/ui/components/state";
 import {
   Avatar,
   AvatarFallback,
@@ -20,7 +19,6 @@ import {
 import { Input } from "@leaseup/ui/components/input";
 import {
   Plus,
-  FileText,
   Calendar,
   Clock,
   AlertTriangle,

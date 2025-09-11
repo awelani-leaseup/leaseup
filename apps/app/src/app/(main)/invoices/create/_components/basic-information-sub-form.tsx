@@ -1,13 +1,12 @@
 import { withForm } from "@leaseup/ui/components/form";
-import { createInvoiceFormOptions, billingPeriodOptions } from "../_utils";
+import { createInvoiceFormOptions } from "../_utils";
 import { api } from "@/trpc/react";
 import { useStore } from "@tanstack/react-form";
 
 export const BasicInformationSubForm = withForm({
   ...createInvoiceFormOptions,
   render: ({ form }) => {
-    const { data: allTenants, isLoading: tenantsLoading } =
-      api.invoice.getAllTenants.useQuery();
+    const { data: allTenants } = api.invoice.getAllTenants.useQuery();
 
     const selectedTenantId = useStore(
       form.store,
@@ -44,27 +43,29 @@ export const BasicInformationSubForm = withForm({
 
         {/* Lease Selection - Optional */}
         <form.AppField name="leaseId">
-          {(field) => (
-            <field.ComboboxField
-              label="Select Lease (Optional)"
-              placeholder={
-                !selectedTenantId
-                  ? "Select a tenant first..."
-                  : leasesLoading
-                    ? "Loading leases..."
-                    : "Choose a lease..."
-              }
-              options={
-                !selectedTenantId
-                  ? []
-                  : tenantLeases?.map((lease) => ({
-                      id: lease.id,
-                      label: `${lease.unit?.property?.name || "Unknown Property"} - ${lease.unit?.name || "Unknown Unit"}`,
-                      sublabel: `R${lease.rent.toLocaleString()}/month`,
-                    })) || []
-              }
-            />
-          )}
+          {(field) => {
+            const placeholder = !selectedTenantId
+              ? "Select a tenant first..."
+              : leasesLoading
+                ? "Loading leases..."
+                : "Choose a lease...";
+
+            const options = !selectedTenantId
+              ? []
+              : tenantLeases?.map((lease) => ({
+                  id: lease.id,
+                  label: `${lease.unit?.property?.name || "Unknown Property"} - ${lease.unit?.name || "Unknown Unit"}`,
+                  sublabel: `R${lease.rent.toLocaleString()}/month`,
+                })) || [];
+
+            return (
+              <field.ComboboxField
+                label="Select Lease (Optional)"
+                placeholder={placeholder}
+                options={options}
+              />
+            );
+          }}
         </form.AppField>
 
         <form.AppField name="invoiceDate">
@@ -73,15 +74,6 @@ export const BasicInformationSubForm = withForm({
 
         <form.AppField name="dueDate">
           {(field) => <field.DateField label="Due Date" mode="single" />}
-        </form.AppField>
-
-        <form.AppField name="billingPeriod">
-          {(field) => (
-            <field.SelectField
-              label="Billing Period"
-              options={billingPeriodOptions()}
-            />
-          )}
         </form.AppField>
 
         <form.AppField name="invoiceCategory">

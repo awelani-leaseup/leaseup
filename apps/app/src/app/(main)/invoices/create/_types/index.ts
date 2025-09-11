@@ -13,10 +13,6 @@ export const VCreateInvoiceFormSchema = v.object({
   // invoiceNumber field removed
   invoiceDate: v.date("Invoice date is required"),
   dueDate: v.date("Due date is required"),
-  billingPeriod: v.pipe(
-    v.string(),
-    v.minLength(1, "Billing period is required"),
-  ),
   invoiceCategory: v.pipe(
     v.string(),
     v.minLength(1, "Invoice category is required"),
@@ -26,7 +22,7 @@ export const VCreateInvoiceFormSchema = v.object({
     v.minLength(1, "At least one invoice item is required"),
   ),
   totalAmount: v.number(),
-  notes: v.pipe(v.string(), v.nonEmpty("Notes are required")),
+  notes: v.pipe(v.string()),
   markAsPaid: v.boolean(),
 });
 

@@ -363,6 +363,9 @@ importers:
 
   packages/tasks:
     dependencies:
+      '@leaseup/novu':
+        specifier: workspace:*
+        version: link:../novu
       '@leaseup/payments':
         specifier: workspace:*
         version: link:../payments

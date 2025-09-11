@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@leaseup/novu": "workspace:*",
     "@leaseup/payments": "workspace:*",
     "@leaseup/prisma": "workspace:*",
     "@prisma/client": "^5.0.0",

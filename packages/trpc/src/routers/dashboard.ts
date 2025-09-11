@@ -133,10 +133,26 @@ export const dashboardRouter = createTRPCRouter({
         take: 10,
       }),
 
-      // Upcoming payments (pending invoices)
+      // Upcoming payments (pending invoices due in the next month)
       ctx.db.invoice.findMany({
         where: {
           status: 'PENDING',
+          dueDate: {
+            gte: new Date(
+              Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth(),
+                new Date().getUTCDate()
+              )
+            ),
+            lte: new Date(
+              Date.UTC(
+                new Date().getUTCFullYear(),
+                new Date().getUTCMonth() + 1,
+                new Date().getUTCDate()
+              )
+            ),
+          },
           OR: [
             // Invoices with leases
             {

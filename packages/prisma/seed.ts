@@ -438,7 +438,7 @@ async function main() {
         }
 
         const invoiceData: any = {
-          dueAmount: lease.rent,
+          dueAmount: lease.rent * 100, // Convert to cents
           dueDate: dueDate,
           status: status,
           createdAt: invoiceDate,
@@ -471,7 +471,7 @@ async function main() {
             lineItems: [
               {
                 description: 'Rent',
-                amount: lease.rent,
+                amount: lease.rent * 100, // Convert to cents
                 quantity: 1,
                 rate: lease.rent,
               },
@@ -511,7 +511,7 @@ async function main() {
         leaseId: invoice.leaseId ?? undefined,
         invoiceId: invoice.id,
         description: `Payment for ${invoice.description}`,
-        amountPaid: invoice.dueAmount,
+        amountPaid: invoice.dueAmount / 100,
         referenceId: `TXN-${faker.string.alphanumeric(10).toUpperCase()}`,
         createdAt: faker.date.between({
           from: invoice.dueDate || invoice.createdAt,
