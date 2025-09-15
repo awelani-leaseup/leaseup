@@ -1,6 +1,7 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
 
 // Schema for subscription.disable webhook payload
 const SubscriptionDisablePayload = Schema.Struct({
@@ -105,7 +106,10 @@ const processSubscriptionDisableEffect = (
           data: {
             // Clear subscription data since it's disabled
             paystackSubscriptionId: null,
-            paystackSubscriptionStatus: payload.data.status,
+            paystackSubscriptionStatus:
+              payload.data.status === 'cancelled'
+                ? SubscriptionPlanStatus.CANCELLED
+                : SubscriptionPlanStatus.COMPLETED,
             subscriptionUpdatedAt: new Date(),
             nextPaymentDate: null,
             // Keep plan info for reference but clear active subscription

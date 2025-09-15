@@ -6,10 +6,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Save,
-  User,
-  Building2,
-  CreditCard,
-  CheckCircle,
   Lightbulb,
   Mail,
   Phone,
@@ -22,8 +18,7 @@ import { api } from "@/trpc/react";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
-// import { Textarea } from "@leaseup/ui/components/text-area";
-// import { Checkbox } from "@leaseup/ui/components/checkbox";
+
 import {
   Card,
   CardContent,
@@ -31,13 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@leaseup/ui/components/select";
+
 import { useAutocompleteSuggestions } from "@/hooks";
 import { useApiLoadingStatus } from "@vis.gl/react-google-maps";
 import {
@@ -96,78 +85,6 @@ export const Onboarding = () => {
     "4-7 years",
     "8-15 years",
     "15+ years",
-  ];
-
-  const states = [
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
-
-  const heardFromOptions = [
-    "Google Search",
-    "Social Media",
-    "Referral from friend/colleague",
-    "Industry publication",
-    "Trade show/conference",
-    "Advertisement",
-    "Other",
-  ];
-
-  const features = [
-    "Rent Collection",
-    "Tenant Screening",
-    "Maintenance Requests",
-    "Financial Reporting",
-    "Lease Management",
-    "Communication Tools",
   ];
 
   const form = useAppForm({
@@ -292,60 +209,58 @@ export const Onboarding = () => {
                   <div className="mt-6">
                     <form.AppField name="businessAddress">
                       {(field) => (
-                        <>
-                          <Popover
-                            open={
-                              suggestions.length > 0 &&
-                              form.state.values.businessAddress === ""
-                            }
-                            onOpenChange={(e) => {
-                              resetSession();
-                            }}
-                          >
-                            <PopoverTrigger className="flex w-full flex-col">
-                              <Label>Address *</Label>
-                              <div className="relative">
-                                <Input
-                                  className="mt-1 mb-2 w-full"
-                                  value={address}
-                                  onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                  ) => {
-                                    setAddress(e.target.value);
-                                    field.setValue("");
-                                  }}
-                                />
-                              </div>
-                            </PopoverTrigger>
+                        <Popover
+                          open={
+                            suggestions.length > 0 &&
+                            form.state.values.businessAddress === ""
+                          }
+                          onOpenChange={(e) => {
+                            resetSession();
+                          }}
+                        >
+                          <PopoverTrigger className="flex w-full flex-col">
+                            <Label>Address *</Label>
+                            <div className="relative">
+                              <Input
+                                className="mt-1 mb-2 w-full"
+                                value={address}
+                                onChange={(
+                                  e: React.ChangeEvent<HTMLInputElement>,
+                                ) => {
+                                  setAddress(e.target.value);
+                                  field.setValue("");
+                                }}
+                              />
+                            </div>
+                          </PopoverTrigger>
 
-                            <PopoverContent className="w-96 p-0" align="start">
-                              <div className="flex flex-col divide-y">
-                                {suggestions.map((suggestion) => (
-                                  <button
-                                    className="flex w-full cursor-pointer items-center gap-2 px-2 py-2 text-left hover:bg-gray-100"
-                                    key={suggestion.placePrediction?.placeId}
-                                    onClick={() => {
-                                      field.setValue(
-                                        suggestion.placePrediction?.text.text ??
-                                          "",
-                                      );
-                                      setAddress(
-                                        suggestion.placePrediction?.text.text ??
-                                          "",
-                                      );
-                                      resetSession();
-                                    }}
-                                  >
-                                    <MapPin className="size-4 shrink-0 stroke-1" />
-                                    <span className="text-sm">
-                                      {suggestion.placePrediction?.text.text}
-                                    </span>
-                                  </button>
-                                ))}
-                              </div>
-                            </PopoverContent>
-                          </Popover>
-                        </>
+                          <PopoverContent className="w-96 p-0" align="start">
+                            <div className="flex flex-col divide-y">
+                              {suggestions.map((suggestion) => (
+                                <button
+                                  className="flex w-full cursor-pointer items-center gap-2 px-2 py-2 text-left hover:bg-gray-100"
+                                  key={suggestion.placePrediction?.placeId}
+                                  onClick={() => {
+                                    field.setValue(
+                                      suggestion.placePrediction?.text.text ??
+                                        "",
+                                    );
+                                    setAddress(
+                                      suggestion.placePrediction?.text.text ??
+                                        "",
+                                    );
+                                    resetSession();
+                                  }}
+                                >
+                                  <MapPin className="size-4 shrink-0 stroke-1" />
+                                  <span className="text-sm">
+                                    {suggestion.placePrediction?.text.text}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       )}
                     </form.AppField>
                   </div>
@@ -536,47 +451,7 @@ export const Onboarding = () => {
               </div>
             </div>
 
-            {/* Right Column - Help & Progress */}
             <div className="space-y-6">
-              {/* Progress Overview */}
-              {/* <Card>
-                <CardHeader>
-                  <CardTitle>Getting Started</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {steps.map((step) => (
-                      <div key={step.id} className="flex items-center">
-                        <div
-                          className={`size-8 ${step.id <= currentStep ? "bg-[#3498DB]" : "bg-gray-200"} mr-3 flex items-center justify-center rounded-full`}
-                        >
-                          <step.icon
-                            className={`${step.id <= currentStep ? "text-white" : "text-gray-400"} size-4`}
-                          />
-                        </div>
-                        <span
-                          className={`text-sm ${step.id <= currentStep ? "font-medium text-[#3498DB]" : "text-gray-400"}`}
-                        >
-                          {step.title}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 rounded-lg bg-[#3498DB]/10 p-3">
-                    <p className="text-sm font-medium text-[#3498DB]">
-                      Step {currentStep} of 4
-                    </p>
-                    <div className="mt-2 h-2 w-full rounded-full bg-gray-200">
-                      <div
-                        className="h-2 rounded-full bg-[#3498DB] transition-all duration-300"
-                        style={{ width: `${(currentStep / 4) * 100}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card> */}
-
-              {/* Help & Tips */}
               <Card>
                 <CardHeader>
                   <CardTitle>Need Help?</CardTitle>

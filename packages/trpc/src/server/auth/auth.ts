@@ -55,24 +55,11 @@ export const auth = betterAuth({
       });
     },
   },
-  hooks: {
-    after: createAuthMiddleware(async (ctx) => {}),
-  },
+  hooks: {},
   databaseHooks: {
     user: {
       create: {
         after: async (user, _ctx) => {
-          await novu.trigger({
-            to: {
-              subscriberId: user.id,
-              email: user.email,
-            },
-            workflowId: NOVU_USER_CREATED_WORKFLOW_ID,
-            payload: {
-              landlordName: user.name,
-              ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/properties`,
-            },
-          });
           _ctx?.redirect('/onboarding');
         },
       },

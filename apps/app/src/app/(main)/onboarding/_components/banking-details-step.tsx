@@ -104,10 +104,10 @@ export function BankingDetailsStep({ form }: BankingDetailsStepProps) {
       <Separator className="my-8" />
       <DocumentVerificationForm form={form} />
 
-      <Alert className="border-blue-200 bg-blue-100 text-blue-800">
+      <Alert>
         <Info className="h-4 w-4" />
         <AlertTitle>Banking Information Security</AlertTitle>
-        <AlertDescription className="mt-2 text-sm text-blue-700">
+        <AlertDescription className="text-sm">
           Your banking information is encrypted and securely stored. We use this
           information solely for payment processing and account verification
           purposes. We never store your full banking credentials and follow

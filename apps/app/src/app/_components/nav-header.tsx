@@ -19,6 +19,7 @@ import {
 import { SidebarHeader, SidebarTrigger } from "@leaseup/ui/components/sidebar";
 import { Inbox } from "@novu/nextjs";
 import { ChevronDownIcon, LogOutIcon, Settings } from "lucide-react";
+import Link from "next/link";
 
 const NavHeader = () => {
   const { data: session } = authClient.useSession();
@@ -67,9 +68,15 @@ const NavHeader = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Settings size={16} className="opacity-60" aria-hidden="true" />
-                <span>Settings</span>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings
+                    size={16}
+                    className="opacity-60"
+                    aria-hidden="true"
+                  />
+                  <span>Settings</span>
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

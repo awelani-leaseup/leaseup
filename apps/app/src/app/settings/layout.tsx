@@ -79,21 +79,6 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
         },
       ],
     },
-    {
-      title: "Preferences",
-      items: [
-        {
-          title: "Notifications",
-          href: "/settings/notifications",
-          icon: Bell,
-        },
-        {
-          title: "API Keys",
-          href: "/settings/api-keys",
-          icon: Key,
-        },
-      ],
-    },
   ];
 
   return (

@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { useAppForm } from "@leaseup/ui/components/form";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -34,6 +35,7 @@ const VSignUpSchema = v.pipe(
 
 export default function SignUp() {
   const [errors, setErrors] = useState<string | undefined>(undefined);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const form = useAppForm({
     defaultValues: {
@@ -86,22 +88,56 @@ export default function SignUp() {
                   </form.AppField>
                   <form.AppField name="password">
                     {(field) => (
-                      <field.TextField
-                        type="password"
-                        label="Password"
-                        autoComplete="new-password"
-                        asterisk
-                      />
+                      <div className="relative">
+                        <field.TextField
+                          type={showPassword ? "text" : "password"}
+                          label="Password"
+                          autoComplete="new-password"
+                          asterisk
+                        />
+                        {showPassword ? (
+                          <button
+                            className="absolute top-9.5 right-2 -translate-y-1/2"
+                            onClick={() => setShowPassword(false)}
+                          >
+                            <Eye className="size-4" />
+                          </button>
+                        ) : (
+                          <button
+                            className="absolute top-9.5 right-2 -translate-y-1/2"
+                            onClick={() => setShowPassword(true)}
+                          >
+                            <EyeOff className="size-4" />
+                          </button>
+                        )}
+                      </div>
                     )}
                   </form.AppField>
                   <form.AppField name="confirmPassword">
                     {(field) => (
-                      <field.TextField
-                        type="password"
-                        label="Confirm Password"
-                        autoComplete="new-password"
-                        asterisk
-                      />
+                      <div className="relative">
+                        <field.TextField
+                          type={showPassword ? "text" : "password"}
+                          label="Confirm Password"
+                          autoComplete="new-password"
+                          asterisk
+                        />
+                        {showPassword ? (
+                          <button
+                            className="absolute top-9.5 right-2 -translate-y-1/2"
+                            onClick={() => setShowPassword(false)}
+                          >
+                            <Eye className="size-4" />
+                          </button>
+                        ) : (
+                          <button
+                            className="absolute top-9.5 right-2 -translate-y-1/2"
+                            onClick={() => setShowPassword(true)}
+                          >
+                            <EyeOff className="size-4" />
+                          </button>
+                        )}
+                      </div>
                     )}
                   </form.AppField>
                   <div className="flex flex-col gap-3">
@@ -124,6 +160,13 @@ export default function SignUp() {
                     Sign in
                   </Link>
                 </div>
+                <p className="text-muted-foreground mt-4 text-center text-sm">
+                  By signing using our service, you agree to our{" "}
+                  <Link href="/terms" className="underline underline-offset-4">
+                    Terms of Service
+                  </Link>{" "}
+                  and Data Processing Agreement
+                </p>
               </form.AppForm>
             </CardContent>
           </Card>

@@ -75,26 +75,19 @@ export default function CreateInvoice() {
                 <CardTitle className="text-2xl font-bold">
                   Create New Invoice
                 </CardTitle>
-                <CardDescription>
-                  Generate rental invoice for tenant
-                </CardDescription>
               </div>
             </div>
             <div className="flex gap-3">
               <Link href="/invoices">
                 <Button variant="outlined">Cancel</Button>
               </Link>
-              <Button variant="outlined">
+              {/* <Button variant="outlined">
                 <Save className="mr-2 h-4 w-4" />
                 Save Draft
-              </Button>
+              </Button> */}
             </div>
           </div>
         </CardHeader>
-      </Card>
-
-      {/* Invoice Form */}
-      <Card>
         <CardContent className="p-8">
           <form.AppForm>
             {/* Basic Information Section */}

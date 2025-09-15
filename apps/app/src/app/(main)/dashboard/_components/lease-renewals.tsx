@@ -71,7 +71,7 @@ export function LeaseRenewals() {
         </h2>
         <EmptyState
           title="No Upcoming Lease Renewals"
-          description="Your upcoming lease renewals will appear here once you start managing properties and tenants."
+          description="Your upcoming lease renewals will appear here."
           icon={<FileText />}
         />
       </div>

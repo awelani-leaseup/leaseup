@@ -368,6 +368,15 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.SubscriptionPlanStatus = exports.$Enums.SubscriptionPlanStatus = {
+  ACTIVE: 'ACTIVE',
+  NON_RENEWING: 'NON_RENEWING',
+  ATTENTION: 'ATTENTION',
+  DISABLED: 'DISABLED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.PropertyStatus = exports.$Enums.PropertyStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE'

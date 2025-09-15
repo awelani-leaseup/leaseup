@@ -58,6 +58,7 @@
     "react-dom": "^19.0.0",
     "react-email": "^4.0.16",
     "react-hot-toast": "^2.5.2",
+    "react-paystack": "^6.0.0",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tus-js-client": "^4.3.1",

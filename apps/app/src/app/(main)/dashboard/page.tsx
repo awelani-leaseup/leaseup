@@ -17,7 +17,7 @@ export default async function Dashboard() {
         id="main-content"
         className="h-full bg-[#ECF0F1] px-4 py-8 pt-[73px] md:px-8"
       >
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-5xl">
           <div id="dashboard-header" className="mb-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>

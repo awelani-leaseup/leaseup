@@ -66,7 +66,7 @@ export function UpcomingPayments() {
         </h2>
         <EmptyState
           title="No Upcoming Payments"
-          description="Your upcoming payments will appear here once you start managing properties and tenants."
+          description="Your upcoming payments will appear here."
           icon={<DollarSign />}
         />
       </div>

@@ -348,15 +348,12 @@ export default function Transactions() {
       {/* Single Card for Page Header and Main Content */}
       <Card>
         {/* Page Header */}
-        <CardHeader className="border-b border-gray-200">
+        <CardHeader>
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
               <CardTitle className="text-2xl font-bold text-[#2D3436]">
                 Transactions Management
               </CardTitle>
-              <CardDescription className="text-[#7F8C8D]">
-                Track all payment transactions across your properties
-              </CardDescription>
             </div>
           </div>
 
@@ -406,7 +403,7 @@ export default function Transactions() {
                         <p className={`mb-2 text-sm ${stat.textColor}`}>
                           {stat.label}
                         </p>
-                        <p className={`text-2xl font-bold ${stat.valueColor}`}>
+                        <p className={`text-lg font-bold ${stat.valueColor}`}>
                           {stat.value}
                         </p>
                       </div>

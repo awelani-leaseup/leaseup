@@ -122,6 +122,7 @@ export default function CreateLease() {
     if (property?.propertyType === "SINGLE_UNIT") {
       form.setFieldValue("unitId", property?.unit[0]?.id || "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propertyId]);
 
   return (
@@ -133,9 +134,6 @@ export default function CreateLease() {
             Add a new lease for a tenant to start collecting rent.
           </CardDescription>
         </CardHeader>
-      </Card>
-
-      <Card className="mt-8">
         <CardContent>
           <form.AppForm>
             <div>

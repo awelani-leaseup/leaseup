@@ -8,6 +8,7 @@ import {
   InvoiceStatus,
   LeaseStatus,
   type RecurringBillable,
+  type Prisma,
 } from '@leaseup/prisma/client/index.js';
 
 const CONFIG = {
@@ -17,6 +18,10 @@ const CONFIG = {
   API_CALL_DELAY_MS: 0, // No delay between individual API calls
   FETCH_BATCH_SIZE: 100, // Number of billables to fetch per batch
 } as const;
+
+// Check if we're in development environment
+const isDevelopment =
+  process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 
 const calculateInvoiceDates = () => {
   // Use UTC dates to match the database @db.Date fields
@@ -115,6 +120,26 @@ const processBillable = async (billable: any) => {
       return null;
     }
 
+    // Additional validation: Ensure landlord has active subscription (only in production)
+    // This is a safety check since we already filter at the database level
+    if (!isDevelopment) {
+      const landlordSubscriptionStatus =
+        billable.tenant?.landlord?.paystackSubscriptionStatus;
+
+      if (landlordSubscriptionStatus !== 'active') {
+        logger.log(
+          'Skipping billable: Landlord does not have active subscription',
+          {
+            billableId: billable.id,
+            landlordId,
+            subscriptionStatus: landlordSubscriptionStatus,
+            tenantId: billable.tenant?.id,
+          }
+        );
+        return null;
+      }
+    }
+
     const { today, checkUntilDate } = calculateInvoiceDates();
 
     const nextInvoiceDate = calculateNextInvoiceDate(
@@ -158,15 +183,13 @@ const processBillable = async (billable: any) => {
   }
 };
 
-// Process individual invoice with rate limiting and timing
+// Process individual invoice with rate limiting
 const processInvoiceWithRateLimit = async (
   invoicePayload: CreateInvoicePayload,
   invoiceIndex: number,
   batchLength: number,
   batchNumber: number
 ) => {
-  const invoiceStartTime = Date.now();
-
   logger.log(
     `Processing invoice ${invoiceIndex + 1}/${batchLength} in batch ${batchNumber}`,
     {
@@ -179,16 +202,12 @@ const processInvoiceWithRateLimit = async (
   try {
     const result = await createInvoiceTask.triggerAndWait(invoicePayload, {});
 
-    const invoiceEndTime = Date.now();
-    const invoiceDurationMs = invoiceEndTime - invoiceStartTime;
-
     logger.log(
-      `Successfully created invoice ${invoiceIndex + 1}/${batchLength} in ${invoiceDurationMs}ms`,
+      `Successfully created invoice ${invoiceIndex + 1}/${batchLength}`,
       {
         leaseId: invoicePayload.leaseId,
         tenantId: invoicePayload.tenantId,
         amount: invoicePayload.amount,
-        durationMs: invoiceDurationMs,
         invoiceId: result.id,
       }
     );
@@ -202,14 +221,10 @@ const processInvoiceWithRateLimit = async (
 
     return true; // Success
   } catch (error) {
-    const invoiceEndTime = Date.now();
-    const invoiceDurationMs = invoiceEndTime - invoiceStartTime;
-
     logger.error('Failed to create invoice', {
       leaseId: invoicePayload.leaseId,
       tenantId: invoicePayload.tenantId,
       amount: invoicePayload.amount,
-      durationMs: invoiceDurationMs,
       error: error instanceof Error ? error.message : String(error),
     });
 
@@ -217,12 +232,10 @@ const processInvoiceWithRateLimit = async (
   }
 };
 
-// Create invoices in batches with enhanced logging and timing
+// Create invoices in batches with enhanced logging
 const createInvoicesInBatches = async (
   invoices: Array<CreateInvoicePayload>
 ) => {
-  const batchProcessingStartTime = Date.now();
-
   // Split into batches
   const batches: Array<Array<CreateInvoicePayload>> = [];
   for (let i = 0; i < invoices.length; i += CONFIG.BATCH_SIZE) {
@@ -239,19 +252,11 @@ const createInvoicesInBatches = async (
   );
 
   let successfulInvoices = 0;
-  const batchTimings: Array<{
-    batchNumber: number;
-    durationMs: number;
-    invoiceCount: number;
-    successCount: number;
-  }> = [];
 
   // Process each batch sequentially
   for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
     const batch = batches[batchIndex];
     if (!batch) continue;
-
-    const batchStartTime = Date.now();
 
     logger.log(
       `Processing batch ${batchIndex + 1} of ${batches.length} (${batch.length} invoices)`
@@ -272,22 +277,12 @@ const createInvoicesInBatches = async (
       batchResults.push(result);
     }
 
-    const batchEndTime = Date.now();
-    const batchDurationMs = batchEndTime - batchStartTime;
-
     // Count successful invoices in this batch
     const batchSuccesses = batchResults.filter(Boolean).length;
     successfulInvoices += batchSuccesses;
 
-    batchTimings.push({
-      batchNumber: batchIndex + 1,
-      durationMs: batchDurationMs,
-      invoiceCount: batch.length,
-      successCount: batchSuccesses,
-    });
-
     logger.log(
-      `Batch ${batchIndex + 1} completed: ${batchSuccesses}/${batch.length} invoices successful in ${(batchDurationMs / 1000).toFixed(2)}s`
+      `Batch ${batchIndex + 1} completed: ${batchSuccesses}/${batch.length} invoices successful`
     );
 
     // Add delay between batches if configured
@@ -298,13 +293,8 @@ const createInvoicesInBatches = async (
     }
   }
 
-  const batchProcessingEndTime = Date.now();
-  const totalBatchProcessingTime =
-    batchProcessingEndTime - batchProcessingStartTime;
-
   logger.log(
-    `Successfully processed ${successfulInvoices} out of ${invoices.length} invoices in ${(totalBatchProcessingTime / 1000).toFixed(2)}s`,
-    { batchTimings }
+    `Successfully processed ${successfulInvoices} out of ${invoices.length} invoices`
   );
 
   return successfulInvoices;
@@ -319,38 +309,57 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
 
   // Get recurring billables and filter by startDate day in processBillable
   // For monthly cycles, we'll check if the day of the month from startDate falls within today to checkUntilDate
-  const recurringBillables = await db.recurringBillable.findMany({
-    where: {
-      isActive: true,
-      cycle: InvoiceCycle.MONTHLY,
-      lease: {
-        status: LeaseStatus.ACTIVE,
-      },
-      // Only include billables that started before or on today (can't bill for future start dates)
-      startDate: {
-        lte: today,
-      },
-      // Exclude billables that already have pending/overdue invoices
-      NOT: {
-        invoice: {
-          some: {
-            status: {
-              in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
-            },
-            dueDate: {
-              gte: today,
-              lte: checkUntilDate,
-            },
+  const whereClause: Prisma.RecurringBillableFindManyArgs['where'] = {
+    isActive: true,
+    cycle: InvoiceCycle.MONTHLY,
+    lease: {
+      status: LeaseStatus.ACTIVE,
+    },
+    // Only include billables that started before or on today (can't bill for future start dates)
+    startDate: {
+      lte: today,
+    },
+    // Exclude billables that already have pending/overdue invoices
+    NOT: {
+      invoice: {
+        some: {
+          status: {
+            in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
+          },
+          dueDate: {
+            gte: today,
+            lte: checkUntilDate,
           },
         },
       },
     },
+  };
+
+  // Only filter by subscription status in production environment
+  if (!isDevelopment) {
+    whereClause.tenant = {
+      landlord: {
+        paystackSubscriptionStatus: 'active',
+      },
+    };
+  }
+
+  const recurringBillables = await db.recurringBillable.findMany({
+    where: whereClause,
     include: {
       tenant: {
         select: {
           id: true,
           paystackCustomerId: true,
           landlordId: true,
+        },
+        include: {
+          landlord: {
+            select: {
+              id: true,
+              paystackSubscriptionStatus: true,
+            },
+          },
         },
       },
       lease: {
@@ -375,12 +384,12 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
   });
 
   logger.log(
-    `Fetched ${recurringBillables.length} billables from database (pre-filtered to exclude existing invoices)`
+    `Fetched ${recurringBillables.length} billables from database (pre-filtered to exclude existing invoices${!isDevelopment ? ' and include only active landlord subscriptions' : ' - subscription filtering disabled in development'})`
   );
 
   if (recurringBillables.length === 0) {
     logger.log(
-      'No billables found to process - all may already have pending invoices'
+      `No billables found to process - all may already have pending invoices${!isDevelopment ? ' or landlords may not have active subscriptions' : ''}`
     );
     return [];
   }
@@ -398,7 +407,7 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
     totalBillablesFetched: recurringBillables.length,
     validInvoicesFound: validInvoices.length,
     filteredOut: recurringBillables.length - validInvoices.length,
-    note: 'Most filtering already done at database level',
+    note: `Most filtering already done at database level${!isDevelopment ? ' (including subscription status)' : ' (subscription filtering disabled in dev)'}`,
   });
 
   return validInvoices;
@@ -413,12 +422,12 @@ export const checkUpcomingInvoicesTask = schedules.task({
     timezone: 'Africa/Johannesburg',
   },
   run: async (payload: any, { ctx }: { ctx: any }) => {
-    const startTime = Date.now();
-
     logger.log('Starting check for upcoming invoices with retry logic', {
       payload,
       ctx,
       config: CONFIG,
+      environment: process.env.NODE_ENV || 'unknown',
+      subscriptionFilteringEnabled: !isDevelopment,
     });
 
     try {
@@ -430,30 +439,16 @@ export const checkUpcomingInvoicesTask = schedules.task({
       );
 
       if (invoicesToCreate.length === 0) {
-        const endTime = Date.now();
-        const totalDurationMs = endTime - startTime;
-
         return {
           message: `No invoices to create from batch of ${CONFIG.FETCH_BATCH_SIZE} billables`,
           invoicesToCreate: 0,
           invoicesCreated: 0,
           successRate: '100%',
-          timing: {
-            totalDurationMs,
-            totalDurationSeconds: (totalDurationMs / 1000).toFixed(2),
-          },
         };
       }
 
       // Create invoices in batches
-      const invoiceCreationStartTime = Date.now();
       const invoicesCreated = await createInvoicesInBatches(invoicesToCreate);
-      const invoiceCreationEndTime = Date.now();
-
-      const endTime = Date.now();
-      const totalDurationMs = endTime - startTime;
-      const invoiceCreationDurationMs =
-        invoiceCreationEndTime - invoiceCreationStartTime;
 
       const result = {
         message: `Successfully created ${invoicesCreated} out of ${invoicesToCreate.length} invoices from batch of ${CONFIG.FETCH_BATCH_SIZE} billables`,
@@ -465,30 +460,14 @@ export const checkUpcomingInvoicesTask = schedules.task({
             ? ((invoicesCreated / invoicesToCreate.length) * 100).toFixed(2) +
               '%'
             : '0%',
-        timing: {
-          totalDurationMs,
-          totalDurationSeconds: (totalDurationMs / 1000).toFixed(2),
-          invoiceCreationDurationMs,
-          invoiceCreationDurationSeconds: (
-            invoiceCreationDurationMs / 1000
-          ).toFixed(2),
-          averageTimePerInvoiceMs:
-            invoicesCreated > 0
-              ? Math.round(invoiceCreationDurationMs / invoicesCreated)
-              : 0,
-        },
       };
 
       logger.log('Completed invoice processing with retry logic', result);
 
       return result;
     } catch (error) {
-      const endTime = Date.now();
-      const totalDurationMs = endTime - startTime;
-
       logger.error('Fatal error in invoice processing', {
         error: error instanceof Error ? error.message : String(error),
-        durationMs: totalDurationMs,
       });
       throw error;
     } finally {

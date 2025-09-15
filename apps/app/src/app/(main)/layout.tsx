@@ -3,7 +3,7 @@
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { Toaster } from "react-hot-toast";
-import { TRPCReactProvider } from "@/trpc/react";
+import { OnboardingWrapper } from "./_components/onboarding-wrapper";
 
 import {
   Sidebar,
@@ -32,7 +32,6 @@ import {
   DoorOpen,
   FileText,
   Folder,
-  KeyRound,
   LayoutDashboard,
   MessageSquare,
   Plus,
@@ -41,9 +40,8 @@ import {
 } from "lucide-react";
 import NavHeader from "../_components/nav-header";
 import { Button } from "@leaseup/ui/components/button";
-import { usePathname, useRouter } from "next/navigation";
-import { authClient } from "@/utils/auth/client";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { SubscriptionWrapper } from "../_components/subscription-wrapper";
 
 const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -55,24 +53,17 @@ if (!NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const isActive = (path: string) => pathname.startsWith(path);
-
-  const { data: session, isPending } = authClient.useSession();
-
-  useEffect(() => {
-    if (!isPending && !session?.user) {
-      router.push("/sign-in");
+  const isActive = (path: string) => {
+    if (typeof window !== "undefined") {
+      return window.location.pathname.startsWith(path);
     }
-  }, [session, isPending, router]);
+    return false;
+  };
 
-  if (!session?.user) {
-    return null;
-  }
+  const pathname = usePathname();
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={!pathname.startsWith("/onboarding")}>
       <Sidebar>
         <SidebarHeader>
           <Link href="/">
@@ -94,19 +85,19 @@ export default function Layout({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/properties/create">Property</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/units/create">Unit</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/leases/create">Lease</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/tenants/create">Tenant</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem asChild>
                           <Link href="/invoices/create">Invoice</Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -142,12 +133,6 @@ export default function Layout({
                   <SidebarMenuButton isActive={isActive("/units")}>
                     <DoorOpen />
                     <Link href="/units">Units</Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton isActive={isActive("/keys")}>
-                    <KeyRound />
-                    <Link href="/keys">Keys</Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -238,15 +223,17 @@ export default function Layout({
         <div className="sticky top-0 z-10 bg-white">
           <NavHeader />
         </div>
-        <TRPCReactProvider>
-          <APIProvider
-            apiKey={NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-            libraries={["places"]}
-          >
-            <Toaster position="top-right" />
-            <NuqsAdapter>{children}</NuqsAdapter>
-          </APIProvider>
-        </TRPCReactProvider>
+        <OnboardingWrapper>
+          <SubscriptionWrapper>
+            <APIProvider
+              apiKey={NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+              libraries={["places"]}
+            >
+              <Toaster position="top-right" />
+              <NuqsAdapter>{children}</NuqsAdapter>
+            </APIProvider>
+          </SubscriptionWrapper>
+        </OnboardingWrapper>
       </main>
     </SidebarProvider>
   );

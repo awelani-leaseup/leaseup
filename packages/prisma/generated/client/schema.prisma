@@ -11,13 +11,13 @@ datasource db {
 }
 
 model User {
-  id                         String     @id
+  id                         String                  @id
   name                       String
-  email                      String     @unique
-  emailVerified              Boolean    @default(false)
+  email                      String                  @unique
+  emailVerified              Boolean                 @default(false)
   image                      String?
-  createdAt                  DateTime   @default(now())
-  updatedAt                  DateTime   @updatedAt
+  createdAt                  DateTime                @default(now())
+  updatedAt                  DateTime                @updatedAt
   addressLine1               String?
   addressLine2               String?
   city                       String?
@@ -25,7 +25,7 @@ model User {
   paystackSplitGroupId       String?
   paystackSubAccountId       String?
   paystackSubscriptionId     String?
-  paystackSubscriptionStatus String? // active, non-renewing, attention, completed, cancelled
+  paystackSubscriptionStatus SubscriptionPlanStatus?
   subscriptionPlanCode       String? // PLN_xxx
   subscriptionAmount         Int? // in kobo/cents
   subscriptionCurrency       String? // NGN, ZAR, etc.
@@ -34,15 +34,15 @@ model User {
   subscriptionCreatedAt      DateTime?
   subscriptionUpdatedAt      DateTime?
   lastPaymentFailure         String? // Last failure reason
-  paymentRetryCount          Int?       @default(0)
+  paymentRetryCount          Int?                    @default(0)
   state                      String?
   zip                        String?
-  onboardingCompleted        Boolean    @default(false)
+  onboardingCompleted        Boolean                 @default(false)
   businessName               String?
-  countryCode                String?    @default("ZA")
+  countryCode                String?                 @default("ZA")
   numberOfProperties         Int?
   numberOfUnits              Int?
-  phone                      String?    @unique
+  phone                      String?                 @unique
   accounts                   Account[]
   property                   Property[]
   sessions                   Session[]
@@ -415,4 +415,13 @@ enum PropertyFeature {
   OVEN
   STOVE
   FIREPLACE
+}
+
+enum SubscriptionPlanStatus {
+  ACTIVE
+  NON_RENEWING
+  ATTENTION
+  DISABLED
+  COMPLETED
+  CANCELLED
 }

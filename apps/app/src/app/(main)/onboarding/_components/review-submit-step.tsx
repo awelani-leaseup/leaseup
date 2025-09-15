@@ -2,6 +2,16 @@
 
 import { H5 } from "@leaseup/ui/components/typography";
 import { Separator } from "@leaseup/ui/components/separator";
+import {
+  DescriptionList,
+  DescriptionTerm,
+  DescriptionDetails,
+} from "@leaseup/ui/components/description-list";
+import {
+  Alert,
+  AlertTitle,
+  AlertDescription,
+} from "@leaseup/ui/components/alert";
 import { CheckCircle } from "lucide-react";
 import { countryOptions, documentTypeOptions } from "../_constants";
 import { api } from "@/trpc/react";
@@ -17,30 +27,27 @@ function BusinessInformationReview({ form }: { form: any }) {
   return (
     <div>
       <H5>Business Information</H5>
-      <div className="mt-4 space-y-3">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Business Name
-            </p>
-            <p className="text-sm">{formData.businessName || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Number of Properties
-            </p>
-            <p className="text-sm">
+      <div className="mt-4 grid grid-cols-2">
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>Business Name</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.businessName || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>Number of Properties</DescriptionTerm>
+            <DescriptionDetails>
               {formData.numberOfProperties || "Not provided"}
-            </p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Number of Units
-            </p>
-            <p className="text-sm">
+            </DescriptionDetails>
+          </DescriptionList>
+        </div>
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>Number of Units</DescriptionTerm>
+            <DescriptionDetails>
               {formData.numberOfUnits || "Not provided"}
-            </p>
-          </div>
+            </DescriptionDetails>
+          </DescriptionList>
         </div>
       </div>
     </div>
@@ -58,22 +65,27 @@ function PersonalInformationReview({ form }: { form: any }) {
   return (
     <div>
       <H5>Personal Information</H5>
-      <div className="mt-4 space-y-3">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Full Name
-            </p>
-            <p className="text-sm">{formData.fullName || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">Email</p>
-            <p className="text-sm">{formData.email || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">Phone</p>
-            <p className="text-sm">{formData.phone || "Not provided"}</p>
-          </div>
+      <div className="mt-4 grid grid-cols-2">
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>Full Name</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.fullName || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>Email</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.email || "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
+        </div>
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>Phone</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.phone || "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
         </div>
       </div>
     </div>
@@ -101,44 +113,44 @@ function AddressInformationReview({ form }: { form: any }) {
   return (
     <div>
       <H5>Address Information</H5>
-      <div className="mt-4 space-y-3">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Address Line 1
-            </p>
-            <p className="text-sm">{formData.addressLine1 || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              Address Line 2
-            </p>
-            <p className="text-sm">{formData.addressLine2 || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">City</p>
-            <p className="text-sm">{formData.city || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              State/Province
-            </p>
-            <p className="text-sm">{formData.state || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">
-              ZIP/Postal Code
-            </p>
-            <p className="text-sm">{formData.zip || "Not provided"}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground text-sm font-medium">Country</p>
-            <p className="text-sm">
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>Address Line 1</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.addressLine1 || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>Address Line 2</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.addressLine2 || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>City</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.city || "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
+        </div>
+        <div>
+          <DescriptionList>
+            <DescriptionTerm>State/Province</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.state || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>ZIP/Postal Code</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.zip || "Not provided"}
+            </DescriptionDetails>
+
+            <DescriptionTerm>Country</DescriptionTerm>
+            <DescriptionDetails>
               {formData.countryCode
                 ? getCountryName(formData.countryCode)
                 : "Not provided"}
-            </p>
-          </div>
+            </DescriptionDetails>
+          </DescriptionList>
         </div>
       </div>
     </div>
@@ -170,52 +182,43 @@ function BankingDocumentInformationReview({ form }: { form: any }) {
       {/* Document Verification */}
       <div>
         <H5>Document Verification</H5>
-        <div className="mt-4 space-y-3">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">
-                Document Type
-              </p>
-              <p className="text-sm">
-                {formData.documentType
-                  ? getDocumentTypeName(formData.documentType)
-                  : "Not provided"}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">
-                ID Number
-              </p>
-              <p className="text-sm">{formData.idNumber || "Not provided"}</p>
-            </div>
-          </div>
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <DescriptionList>
+            <DescriptionTerm>Document Type</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.documentType
+                ? getDocumentTypeName(formData.documentType)
+                : "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
+          <DescriptionList>
+            <DescriptionTerm>ID Number</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.idNumber || "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
         </div>
       </div>
 
-      {/* Banking Information */}
       <div>
         <H5>Banking Information</H5>
-        <div className="mt-4 space-y-3">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">Bank</p>
-              <p className="text-sm">
-                {formData.bankCode
-                  ? getBankName(formData.bankCode)
-                  : "Not provided"}
-              </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">
-                Account Number
-              </p>
-              <p className="text-sm">
-                {formData.accountNumber
-                  ? `****${formData.accountNumber.slice(-4)}`
-                  : "Not provided"}
-              </p>
-            </div>
-          </div>
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <DescriptionList>
+            <DescriptionTerm>Bank</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.bankCode
+                ? getBankName(formData.bankCode)
+                : "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
+          <DescriptionList>
+            <DescriptionTerm>Account Number</DescriptionTerm>
+            <DescriptionDetails>
+              {formData.accountNumber
+                ? `****${formData.accountNumber.slice(-4)}`
+                : "Not provided"}
+            </DescriptionDetails>
+          </DescriptionList>
         </div>
       </div>
     </div>
@@ -238,39 +241,22 @@ export function ReviewSubmitStep({ form }: ReviewSubmitStepProps) {
       </div>
 
       <BusinessInformationReview form={form} />
+      <Separator />
       <PersonalInformationReview form={form} />
+      <Separator />
       <AddressInformationReview form={form} />
+      <Separator />
       <BankingDocumentInformationReview form={form} />
 
-      <Separator />
-
-      {/* Terms and Conditions */}
-      <div className="rounded-lg border bg-gray-50 p-4">
-        <div className="flex items-start space-x-3">
-          <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
-          <div className="text-sm text-gray-700">
-            <p className="font-medium">Terms and Conditions</p>
-            <p className="mt-1">
-              By submitting this form, you agree to our{" "}
-              <a
-                href="/terms-of-service"
-                className="text-blue-600 hover:underline"
-              >
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a
-                href="/privacy-policy"
-                className="text-blue-600 hover:underline"
-              >
-                Privacy Policy
-              </a>
-              . Your information will be used to set up your account and provide
-              our services.
-            </p>
-          </div>
-        </div>
-      </div>
+      <Alert>
+        <CheckCircle className="h-4 w-4" />
+        <AlertTitle>Terms and Conditions</AlertTitle>
+        <AlertDescription>
+          By submitting this form, you agree to our Terms of Service and Privacy
+          Policy. Your information will be used to set up your account and
+          provide our services.
+        </AlertDescription>
+      </Alert>
     </div>
   );
 }

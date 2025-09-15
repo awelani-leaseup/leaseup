@@ -42,9 +42,10 @@ export default async function Units() {
             </Button>
           </CardAction>
         </CardHeader>
+        <CardContent>
+          <UnitCard />
+        </CardContent>
       </Card>
-
-      <UnitCard />
     </div>
   );
 }

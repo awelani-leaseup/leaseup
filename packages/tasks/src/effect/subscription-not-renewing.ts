@@ -1,6 +1,7 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
 
 // Schema for subscription.not_renewing webhook payload
 const SubscriptionNotRenewingPayload = Schema.Struct({
@@ -107,7 +108,10 @@ const processSubscriptionNotRenewingEffect = (
           data: {
             // Keep subscription ID but update status
             paystackSubscriptionId: payload.data.subscription_code,
-            paystackSubscriptionStatus: payload.data.status,
+            paystackSubscriptionStatus:
+              payload.data.status === 'non-renewing'
+                ? SubscriptionPlanStatus.NON_RENEWING
+                : SubscriptionPlanStatus.DISABLED,
             subscriptionUpdatedAt: new Date(),
             nextPaymentDate: payload.data.next_payment_date
               ? new Date(payload.data.next_payment_date)

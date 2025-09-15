@@ -37,6 +37,7 @@ export default function OnboardingPage() {
   const { data: onboardingStatus } =
     api.onboarding.getOnboardingStatus.useQuery();
   const router = useRouter();
+  const utils = api.useUtils();
 
   useEffect(() => {
     if (onboardingStatus?.onboardingCompleted) {
@@ -45,16 +46,13 @@ export default function OnboardingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onboardingStatus]);
 
-  // tRPC mutation for completing onboarding
   const completeOnboardingMutation =
     api.onboarding.completeOnboarding.useMutation({
-      onSuccess: (data) => {
-        console.log("Onboarding completed successfully:", data);
-
+      onSuccess: () => {
+        utils.onboarding.getOnboardingStatus.invalidate();
         router.push("/dashboard");
       },
-      onError: (error) => {
-        console.error("Error completing onboarding:", error);
+      onError: () => {
         toast.error("Error completing onboarding");
       },
     });
@@ -70,12 +68,10 @@ export default function OnboardingPage() {
     },
   });
 
-  // Get form submission state
   const isSubmitting =
     useStore(form.store, (state) => state.isSubmitting) ||
     completeOnboardingMutation.isPending;
 
-  // Navigation handlers
   const handleNext = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
@@ -94,7 +90,6 @@ export default function OnboardingPage() {
     setCurrentStep(stepNumber);
   };
 
-  // Render the current step component
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:

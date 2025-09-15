@@ -1,6 +1,9 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
+
+const WELCOME_WORKFLOW_ID = 'landlord-welcome-copy';
 
 // Schema for Paystack subscription.create webhook payload
 const SubscriptionCreatePayload = Schema.Struct({
@@ -125,14 +128,21 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
           where: { id: landlord.id },
           data: {
             paystackSubscriptionId: payload.data.subscription_code,
-            paystackSubscriptionStatus: payload.data.status,
+            paystackSubscriptionStatus:
+              payload.data.status === 'active'
+                ? SubscriptionPlanStatus.ACTIVE
+                : SubscriptionPlanStatus.DISABLED,
             subscriptionPlanCode: payload.data.plan.plan_code,
-            subscriptionAmount: payload.data.amount,
+            subscriptionAmount: payload.data.amount / 100,
             subscriptionCurrency: payload.data.plan.currency,
             subscriptionInterval: payload.data.plan.interval,
-            nextPaymentDate: new Date(payload.data.next_payment_date),
-            subscriptionCreatedAt: new Date(payload.data.created_at),
-            subscriptionUpdatedAt: new Date(),
+            nextPaymentDate: new Date(
+              new Date(payload.data.next_payment_date).toUTCString()
+            ),
+            subscriptionCreatedAt: new Date(
+              new Date(payload.data.createdAt).toUTCString()
+            ),
+            subscriptionUpdatedAt: new Date(new Date().toUTCString()),
             lastPaymentFailure: null, // Clear any previous failure
             paymentRetryCount: 0, // Reset retry count
           },
@@ -157,7 +167,6 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
       nextPaymentDate: payload.data.next_payment_date,
     });
 
-    // Send welcome notification to the landlord
     try {
       yield* Effect.tryPromise({
         try: () =>
@@ -166,19 +175,10 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
               subscriberId: landlord.id,
               email: landlord.email,
             },
-            workflowId: 'welcome',
+            workflowId: WELCOME_WORKFLOW_ID,
             payload: {
               landlordName: landlord.name || 'Valued Customer',
-              planName: payload.data.plan.name,
-              planAmount: new Intl.NumberFormat('en-ZA', {
-                style: 'currency',
-                currency: payload.data.plan.currency,
-              }).format(payload.data.amount / 100), // Convert from kobo/cents to main currency
-              nextPaymentDate: new Date(
-                payload.data.next_payment_date
-              ).toLocaleDateString(),
-              subscriptionCode: payload.data.subscription_code,
-              dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
+              ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/properties/create`,
             },
           }),
         catch: (error) =>

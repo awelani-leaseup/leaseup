@@ -209,55 +209,52 @@ export default function CreatePropertyPage() {
                     Enter property details below to get started.
                   </CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <form.AppForm>
+                    {/* Basic Info Section */}
+                    <div className="mb-8">
+                      <H5>Basic Information</H5>
+                      <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <BasicInformationSubForm form={form} />
+                      </div>
+                    </div>
+                    <Separator className="my-8" />
+
+                    <PropertyDetailsSubForm form={form} />
+
+                    <Separator className="my-8" />
+
+                    <FeaturesAndAmenitiesSubForm form={form} />
+
+                    <Separator className="my-8" />
+
+                    <PropertyFilesSubForm form={form} />
+
+                    <div className="mt-4">
+                      <form.FormMessage />
+                    </div>
+
+                    <div className="flex gap-4 border-t border-gray-100 pt-6">
+                      <Button
+                        color="secondary"
+                        type="button"
+                        variant="outlined"
+                        onClick={() => router.replace("/properties")}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => form.handleSubmit()}
+                        type="button"
+                        isLoading={createProperty.isPending || uploadingFiles}
+                      >
+                        Create Property
+                      </Button>
+                    </div>
+                  </form.AppForm>
+                </CardContent>
               </Card>
             </div>
-
-            <Card>
-              <CardContent>
-                <form.AppForm>
-                  {/* Basic Info Section */}
-                  <div className="mb-8">
-                    <H5>Basic Information</H5>
-                    <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <BasicInformationSubForm form={form} />
-                    </div>
-                  </div>
-                  <Separator className="my-8" />
-
-                  <PropertyDetailsSubForm form={form} />
-
-                  <Separator className="my-8" />
-
-                  <FeaturesAndAmenitiesSubForm form={form} />
-
-                  <Separator className="my-8" />
-
-                  <PropertyFilesSubForm form={form} />
-
-                  <div className="mt-4">
-                    <form.FormMessage />
-                  </div>
-
-                  <div className="flex gap-4 border-t border-gray-100 pt-6">
-                    <Button
-                      color="secondary"
-                      type="button"
-                      variant="outlined"
-                      onClick={() => router.replace("/properties")}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={() => form.handleSubmit()}
-                      type="button"
-                      isLoading={createProperty.isPending || uploadingFiles}
-                    >
-                      Create Property
-                    </Button>
-                  </div>
-                </form.AppForm>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

@@ -118,8 +118,6 @@ export default function CreateTenantPage() {
           <CardTitle className="text-2xl">Add Tenant</CardTitle>
           <CardDescription>Add a new tenant for your property.</CardDescription>
         </CardHeader>
-      </Card>
-      <Card className="mt-8">
         <CardContent className="">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div className="col-span-2">

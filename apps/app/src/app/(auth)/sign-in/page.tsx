@@ -149,6 +149,13 @@ export default function SignIn() {
                     Sign up
                   </Link>
                 </div>
+                <p className="text-muted-foreground mt-4 text-center text-sm">
+                  By signing using our service, you agree to our{" "}
+                  <Link href="/terms" className="underline underline-offset-4">
+                    Terms of Service
+                  </Link>{" "}
+                  and Data Processing Agreement
+                </p>
               </form.AppForm>
             </CardContent>
           </Card>

@@ -7,3 +7,4 @@ export * from './tenant';
 export * from './transaction';
 export * from './dashboard';
 export * from './invoice';
+export * from './user';
