@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { VGetAllTransactionsSchema } from './transaction.types';
+import { Prisma } from '@leaseup/prisma/client/index.js';
 
 export const transactionRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -21,27 +22,21 @@ export const transactionRouter = createTRPCRouter({
 
       const offset = (page - 1) * limit;
 
-      // Build where conditions with landlord filter
-      const landlordFilter = {
-        lease: {
-          tenantLease: {
-            some: {
-              tenant: {
-                landlordId: ctx.auth?.session?.userId ?? '',
-              },
+      const whereConditions: Prisma.TransactionsWhereInput = {
+        AND: [
+          {
+            invoice: {
+              landlordId: ctx.auth?.session?.userId ?? '',
             },
           },
-        },
+        ],
       };
 
-      // Build base where conditions
-      const whereConditions: any = {
-        AND: [landlordFilter],
-      };
+      const andConditions =
+        whereConditions.AND as Prisma.TransactionsWhereInput[];
 
-      // Add search filter
       if (search) {
-        whereConditions.AND.push({
+        andConditions.push({
           OR: [
             { description: { contains: search, mode: 'insensitive' } },
             { referenceId: { contains: search, mode: 'insensitive' } },
@@ -70,9 +65,8 @@ export const transactionRouter = createTRPCRouter({
         });
       }
 
-      // Property filter
       if (propertyId) {
-        whereConditions.AND.push({
+        andConditions.push({
           lease: {
             unit: {
               propertyId: propertyId,
@@ -81,36 +75,44 @@ export const transactionRouter = createTRPCRouter({
         });
       }
 
-      // Tenant filter
       if (tenantId) {
-        whereConditions.AND.push({
-          lease: {
-            tenantLease: {
-              some: {
+        andConditions.push({
+          OR: [
+            // Filter by tenant through lease relationship
+            {
+              lease: {
+                tenantLease: {
+                  some: {
+                    tenantId: tenantId,
+                  },
+                },
+              },
+            },
+            // Filter by tenant through invoice relationship
+            {
+              invoice: {
                 tenantId: tenantId,
               },
             },
-          },
+          ],
         });
       }
 
-      // Amount range filter
       if (amountMin !== undefined || amountMax !== undefined) {
-        const amountFilter: any = {};
+        const amountFilter: Prisma.FloatFilter = {};
         if (amountMin !== undefined) {
           amountFilter.gte = amountMin;
         }
         if (amountMax !== undefined) {
           amountFilter.lte = amountMax;
         }
-        whereConditions.AND.push({
+        andConditions.push({
           amountPaid: amountFilter,
         });
       }
 
-      // Date range filter (using UTC)
       if (dateFrom || dateTo) {
-        const dateFilter: any = {};
+        const dateFilter: Prisma.DateTimeFilter = {};
         if (dateFrom) {
           const fromDateUTC = new Date(dateFrom);
           dateFilter.gte = new Date(
@@ -135,32 +137,53 @@ export const transactionRouter = createTRPCRouter({
             )
           );
         }
-        whereConditions.AND.push({
+        andConditions.push({
           createdAt: dateFilter,
         });
       }
 
-      // Build order by
-      const orderBy: any = {};
+      let orderBy: Prisma.TransactionsOrderByWithRelationInput = {};
+
       if (sortBy === 'tenant') {
-        orderBy.lease = {
-          tenantLease: {
-            _count: sortOrder,
+        orderBy = {
+          lease: {
+            tenantLease: {
+              _count: sortOrder,
+            },
           },
         };
       } else if (sortBy === 'property') {
-        orderBy.lease = {
-          unit: {
-            property: {
-              name: sortOrder,
+        orderBy = {
+          lease: {
+            unit: {
+              property: {
+                name: sortOrder,
+              },
             },
           },
         };
       } else {
-        orderBy[sortBy] = sortOrder;
+        switch (sortBy) {
+          case 'createdAt':
+            orderBy = { createdAt: sortOrder };
+            break;
+          case 'updatedAt':
+            orderBy = { updatedAt: sortOrder };
+            break;
+          case 'amountPaid':
+            orderBy = { amountPaid: sortOrder };
+            break;
+          case 'description':
+            orderBy = { description: sortOrder };
+            break;
+          case 'referenceId':
+            orderBy = { referenceId: sortOrder };
+            break;
+          default:
+            orderBy = { createdAt: sortOrder };
+        }
       }
 
-      // Get transactions with pagination
       const [transactions, totalCount] = await Promise.all([
         ctx.db.transactions.findMany({
           where: whereConditions,

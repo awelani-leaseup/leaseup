@@ -8,3 +8,4 @@ export * from './transaction';
 export * from './dashboard';
 export * from './invoice';
 export * from './user';
+export * from './profile';

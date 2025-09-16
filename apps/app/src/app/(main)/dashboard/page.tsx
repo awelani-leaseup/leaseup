@@ -3,14 +3,22 @@ import { Button } from "@leaseup/ui/components/button";
 import { DashboardStats } from "./_components/dashboard-stats";
 import { RecentActivity } from "./_components/recent-activity";
 import { UpcomingPayments } from "./_components/upcoming-payments";
-import { MaintenanceRequests } from "./_components/maintenance-requests";
+// import { MaintenanceRequests } from "./_components/maintenance-requests";
 import { LeaseRenewals } from "./_components/lease-renewals";
 import { DownloadIcon, PlusIcon } from "lucide-react";
+import { authClient } from "@/utils/auth/client";
+import { headers } from "next/headers";
 
 export default async function Dashboard() {
   // Prefetch dashboard data
   await api.dashboard.getStats.prefetch();
   await api.dashboard.getMaintenanceRequests.prefetch();
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
+
   return (
     <HydrateClient>
       <main
@@ -23,7 +31,8 @@ export default async function Dashboard() {
               <div>
                 <h1 className="text-lg font-bold text-[#2D3436]">Dashboard</h1>
                 <p className="text-[#7F8C8D]">
-                  Welcome back, John! Let&apos;s start managing your properties.
+                  Welcome back, {session?.data?.user?.name.split(" ")[0]}!
+                  Let&apos;s start managing your properties.
                 </p>
               </div>
               <div className="mt-4 flex space-x-3 md:mt-0">

@@ -1,6 +1,5 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { createAuthMiddleware } from 'better-auth/api';
 import { novu } from '@leaseup/novu/client.ts';
 import { db as prisma } from '@leaseup/prisma/db.ts';
 
@@ -53,6 +52,19 @@ export const auth = betterAuth({
           redirectLink: url,
         },
       });
+    },
+  },
+  user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user, request) => {
+        // Log the deletion attempt for audit purposes
+        console.log(`User deletion initiated for: ${user.email}`);
+      },
+      afterDelete: async (user, request) => {
+        // Log successful deletion
+        console.log(`User successfully deleted: ${user.email}`);
+      },
     },
   },
   hooks: {},

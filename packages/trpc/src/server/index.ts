@@ -8,6 +8,7 @@ import {
   transactionRouter,
   dashboardRouter,
   userRouter,
+  profileRouter,
 } from '../routers';
 
 export const appRouter = createTRPCRouter({
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   transaction: transactionRouter,
   dashboard: dashboardRouter,
   user: userRouter,
+  profile: profileRouter,
 });
 
 export type AppRouter = typeof appRouter;

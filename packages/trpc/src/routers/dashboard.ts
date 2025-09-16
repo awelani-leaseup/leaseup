@@ -4,7 +4,6 @@ export const dashboardRouter = createTRPCRouter({
   getStats: protectedProcedure.query(async ({ ctx }) => {
     const landlordId = ctx.auth?.session?.userId ?? '';
 
-    // Get all stats in parallel for better performance
     const [
       propertiesCount,
       tenantsCount,
@@ -14,7 +13,6 @@ export const dashboardRouter = createTRPCRouter({
       upcomingPayments,
       upcomingRenewals,
     ] = await Promise.all([
-      // Properties count
       ctx.db.property.count({
         where: {
           landlordId,
@@ -22,18 +20,15 @@ export const dashboardRouter = createTRPCRouter({
         },
       }),
 
-      // Tenants count
       ctx.db.tenant.count({
         where: {
           landlordId,
         },
       }),
 
-      // Total revenue from all transactions
       ctx.db.transactions.aggregate({
         where: {
           OR: [
-            // Transactions through leases
             {
               lease: {
                 unit: {
@@ -43,7 +38,6 @@ export const dashboardRouter = createTRPCRouter({
                 },
               },
             },
-            // Transactions through invoices without leases
             {
               invoice: {
                 AND: [
@@ -63,7 +57,6 @@ export const dashboardRouter = createTRPCRouter({
         },
       }),
 
-      // Pending maintenance requests count
       ctx.db.maintenanceRequest.count({
         where: {
           status: 'PENDING',
@@ -77,32 +70,38 @@ export const dashboardRouter = createTRPCRouter({
         },
       }),
 
-      // Recent activity (last 10 transactions)
       ctx.db.transactions.findMany({
         where: {
-          OR: [
-            // Transactions through leases
+          AND: [
             {
-              lease: {
-                unit: {
-                  property: {
-                    landlordId,
-                  },
-                },
+              createdAt: {
+                gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 14 days ago
               },
             },
-            // Transactions through invoices without leases
             {
-              invoice: {
-                AND: [
-                  { leaseId: null },
-                  {
-                    tenant: {
-                      landlordId,
+              OR: [
+                {
+                  lease: {
+                    unit: {
+                      property: {
+                        landlordId,
+                      },
                     },
                   },
-                ],
-              },
+                },
+                {
+                  invoice: {
+                    AND: [
+                      { leaseId: null },
+                      {
+                        tenant: {
+                          landlordId,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           ],
         },
@@ -130,10 +129,8 @@ export const dashboardRouter = createTRPCRouter({
         orderBy: {
           createdAt: 'desc',
         },
-        take: 10,
       }),
 
-      // Upcoming payments (pending invoices due in the next month)
       ctx.db.invoice.findMany({
         where: {
           status: 'PENDING',
@@ -154,7 +151,6 @@ export const dashboardRouter = createTRPCRouter({
             ),
           },
           OR: [
-            // Invoices with leases
             {
               lease: {
                 unit: {
@@ -164,7 +160,6 @@ export const dashboardRouter = createTRPCRouter({
                 },
               },
             },
-            // Invoices without leases but with tenants belonging to landlord
             {
               AND: [
                 { leaseId: null },
@@ -200,7 +195,6 @@ export const dashboardRouter = createTRPCRouter({
         take: 5,
       }),
 
-      // Upcoming lease renewals (leases ending in next 60 days) - using UTC
       ctx.db.lease.findMany({
         where: {
           status: 'ACTIVE',

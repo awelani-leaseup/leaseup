@@ -23,21 +23,42 @@ export type ConditionFilter = {
   value: [number | string, number | string];
 };
 
-type FilterType = 'select' | 'checkbox' | 'number';
-
-interface DataTableFilterProps<TData, TValue> {
+type DataTableFilterProps<TData, TValue> = {
   column: Column<TData, TValue> | undefined;
   title?: string;
-  options?: {
-    label: string;
-    value: string;
-  }[];
-  type?: FilterType;
   formatter?: (value: unknown) => string;
   // External state management (for URL persistence with nuqs)
   value?: FilterValues;
   onValueChange?: (value: FilterValues) => void;
-}
+} & (
+  | {
+      type: 'select';
+      options: {
+        label: string;
+        value: string;
+      }[];
+    }
+  | {
+      type: 'checkbox';
+      options: {
+        label: string;
+        value: string;
+      }[];
+    }
+  | {
+      type: 'number';
+      options: {
+        label: string;
+        value: string;
+      }[];
+    }
+  | {
+      options: {
+        label: string;
+        value: string;
+      }[];
+    }
+);
 
 const ColumnFiltersLabel = ({
   columnFilterLabels,
@@ -78,15 +99,18 @@ const ColumnFiltersLabel = ({
 
 type FilterValues = string | string[] | ConditionFilter | undefined;
 
-export function DataTableFilter<TData, TValue>({
-  column,
-  title,
-  options,
-  type = 'select',
-  formatter = (value) => String(value),
-  value: externalValue,
-  onValueChange: externalOnValueChange,
-}: DataTableFilterProps<TData, TValue>) {
+export function DataTableFilter<TData, TValue>(
+  props: DataTableFilterProps<TData, TValue>
+) {
+  const {
+    column,
+    title,
+    options,
+    formatter = (value) => String(value),
+    value: externalValue,
+    onValueChange: externalOnValueChange,
+  } = props;
+  const type = 'type' in props ? props.type : 'select';
   const columnFilters = column?.getFilterValue() as FilterValues;
 
   const [localState, setLocalState] =
@@ -113,11 +137,15 @@ export function DataTableFilter<TData, TValue>({
     if (!selectedValues) return undefined;
 
     if (Array.isArray(selectedValues)) {
-      return selectedValues.map((value) => formatter(value));
+      return selectedValues.map((value) => {
+        const option = options?.find((opt) => opt.value === value);
+        return option ? option.label : formatter(value);
+      });
     }
 
     if (typeof selectedValues === 'string') {
-      return [formatter(selectedValues)];
+      const option = options?.find((opt) => opt.value === selectedValues);
+      return [option ? option.label : formatter(selectedValues)];
     }
 
     if (typeof selectedValues === 'object' && 'condition' in selectedValues) {
@@ -329,9 +357,11 @@ export function DataTableFilter<TData, TValue>({
                     condition: '',
                     value: ['', ''] as [string | number, string | number],
                   };
+                } else if (type === 'select') {
+                  resetValue = 'all';
                 }
 
-                column?.setFilterValue('');
+                column?.setFilterValue(resetValue);
                 setSelectedValues(resetValue);
               }
             }}
@@ -387,9 +417,11 @@ export function DataTableFilter<TData, TValue>({
                 condition: '',
                 value: ['', ''] as [string | number, string | number],
               };
+            } else if (type === 'select') {
+              resetValue = 'all';
             }
 
-            column?.setFilterValue('');
+            column?.setFilterValue(resetValue);
             setSelectedValues(resetValue);
           }
         }}
@@ -430,9 +462,11 @@ export function DataTableFilter<TData, TValue>({
                       condition: '',
                       value: ['', ''] as [string | number, string | number],
                     };
+                  } else if (type === 'select') {
+                    resetValue = 'all';
                   }
 
-                  column?.setFilterValue('');
+                  column?.setFilterValue(resetValue);
                   setSelectedValues(resetValue);
                 }}
               >

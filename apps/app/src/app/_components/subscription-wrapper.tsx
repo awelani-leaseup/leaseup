@@ -28,13 +28,7 @@ import { useRouter } from "next/navigation";
 
 interface SubscriptionWrapperProps {
   children: React.ReactNode;
-  /**
-   * Optional custom message to display when subscription is required
-   */
   customMessage?: string;
-  /**
-   * Optional title for the subscription dialog
-   */
   customTitle?: string;
 }
 
@@ -60,6 +54,10 @@ const subscriptionPlan = {
   ],
 };
 
+if (!PAYSTACK_PUBLIC_KEY) {
+  throw new Error("PAYSTACK_PUBLIC_KEY is not set");
+}
+
 export function SubscriptionWrapper({
   children,
   customMessage,
@@ -71,7 +69,6 @@ export function SubscriptionWrapper({
   const [isOpen, setIsOpen] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Clear cache and reset state when user changes
   useEffect(() => {
     const newUserId = session?.user?.id || null;
     if (currentUserId !== newUserId) {
@@ -118,7 +115,6 @@ export function SubscriptionWrapper({
     console.warn("Failed to fetch subscription status:", error);
   }
 
-  // Don't show subscription wrapper if no user session
   if (!session?.user?.id) {
     return <>{children}</>;
   }
@@ -127,8 +123,6 @@ export function SubscriptionWrapper({
     return <>{children}</>;
   }
 
-  // Show loading dialog only if we don't have any subscription status yet
-  // This prevents blank screen when cache is being refreshed after payment
   if (isLoading && !subscriptionStatus) {
     return (
       <AlertDialog open>
@@ -257,10 +251,32 @@ export function SubscriptionWrapper({
                     setIsOpen(true);
                   },
                   onSuccess: () => {
-                    utils.user.getSubscriptionStatus.invalidate();
-                    utils.onboarding.getOnboardingStatus.invalidate();
-                    // Redirect to dashboard after successful subscription
-                    router.push("/dashboard");
+                    setIsOpen(false);
+                    try {
+                      utils.user.getSubscriptionStatus.setData(
+                        undefined,
+                        (oldData) => {
+                          if (!oldData) return oldData;
+                          return {
+                            ...oldData,
+                            status: "ACTIVE",
+                            isActive: true,
+                            lastPaymentFailure: null,
+                            paymentRetryCount: 0,
+                          };
+                        },
+                      );
+                    } catch (error) {
+                      console.warn(
+                        "Failed to optimistically update subscription status:",
+                        error,
+                      );
+                    }
+
+                    setTimeout(() => {
+                      router.push("/dashboard");
+                      utils.onboarding.getOnboardingStatus.invalidate();
+                    }, 200);
                   },
                 });
               }}

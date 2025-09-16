@@ -57,7 +57,7 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
     // Create payment request via Paystack
     const paystackResponse = yield* paystackService.createPaymentRequest({
       customer: payload.customer,
-      amount: Math.round(payload.amount),
+      amount: Math.round(payload.amount), // Amount  in cents
       currency: 'ZAR',
       description: `${landlord?.name} has sent you an invoice ${payload.description ? ` - ${payload.description}` : ''}`,
       line_items: payload.lineItems ?? [],
@@ -74,7 +74,7 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       landlordId: payload.landlordId,
       tenantId: payload.tenantId ?? '',
       description: `${payload.description ? `- ${payload.description}` : ''}`,
-      dueAmount: payload.amount,
+      dueAmount: payload.amount / 100, // Convert from cents
       dueDate: new Date(payload.dueDate.toISOString()),
       category: payload.category as InvoiceCategory,
       status: InvoiceStatus.PENDING,

@@ -93,7 +93,7 @@ const processPaymentRequestSuccessfulEffect = (
     yield* databaseService.updateInvoiceStatus(
       invoice.id,
       invoiceStatus,
-      new Date(payload.data.paid_at)
+      new Date(new Date(payload.data.paid_at).toISOString())
     );
 
     yield* Console.log(`Invoice status updated to ${invoiceStatus}`, {
@@ -110,17 +110,17 @@ const processPaymentRequestSuccessfulEffect = (
           id: invoice.id,
         },
       },
-      description: `Payment received for ${invoice.description}`,
-      amountPaid: amountPaid,
+      description: `Payment received for ${invoice.description ?? ''}`,
+      amountPaid: amountPaid / 100,
       referenceId: payload.data.offline_reference || payload.data.request_code,
-      createdAt: new Date(payload.data.paid_at),
+      createdAt: new Date(new Date(payload.data.paid_at).toISOString()),
       updatedAt: new Date(),
     });
 
     yield* Console.log('Transaction record created', {
       transactionId: transaction.id,
       invoiceId: invoice.id,
-      amountPaid,
+      amountPaid: amountPaid / 100,
       referenceId: transaction.referenceId,
     });
 
@@ -138,9 +138,9 @@ const processPaymentRequestSuccessfulEffect = (
       landlordName: landlord ? landlord.name : 'Unknown',
       propertyName: property?.name || 'Unknown',
       unitName: invoice.lease?.unit?.name || 'Unknown',
-      amountPaid,
+      amountPaid: amountPaid / 100,
       currency: payload.data.currency,
-      paidAt: payload.data.paid_at,
+      paidAt: new Date(new Date(payload.data.paid_at).toISOString()),
     });
 
     if (landlord) {
@@ -166,7 +166,9 @@ const processPaymentRequestSuccessfulEffect = (
                 }).format(amountPaid / 100), // Convert from kobo/cents to main currency
                 transactionId: transaction.id,
                 description: invoice.description,
-                paidAt: new Date(payload.data.paid_at).toLocaleDateString(),
+                paidAt: new Date(
+                  new Date(payload.data.paid_at).toISOString()
+                ).toLocaleDateString(),
                 viewTransactionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/transactions/${transaction.id}`,
               },
             }),
@@ -196,7 +198,7 @@ const processPaymentRequestSuccessfulEffect = (
         message: 'Payment processed successfully',
         invoiceId: invoice.id,
         transactionId: transaction.id,
-        amountPaid,
+        amountPaid: amountPaid / 100,
         currency: payload.data.currency,
         status: 'success',
       }),

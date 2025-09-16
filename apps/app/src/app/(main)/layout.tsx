@@ -210,7 +210,7 @@ export default function Layout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link href="/settings">
+                <Link href="/settings/profile">
                   <Settings />
                   Account Settings
                 </Link>

@@ -27,7 +27,7 @@ import { type FC, type ReactNode, useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-number-input/input';
 
 import { Alert, AlertDescription } from './alert';
-import { Button } from './button';
+import { Button, ButtonProps } from './button';
 import { Calendar } from './calendar';
 import { Checkbox } from './checkbox';
 import { Input } from './input';
@@ -512,10 +512,7 @@ export const FieldDescription: FC<{
   return <p className='text-muted-foreground text-sm'>{children}</p>;
 };
 
-export const SubmitFormButton: FC<{ children: ReactNode }> = ({
-  children,
-  ...props
-}) => {
+export const SubmitFormButton: FC<ButtonProps> = ({ children, ...props }) => {
   const { handleSubmit, Subscribe } = useFormContext();
   return (
     <Subscribe
@@ -523,17 +520,9 @@ export const SubmitFormButton: FC<{ children: ReactNode }> = ({
         isSubmitting: state.isSubmitting,
       })}
     >
-      {({ isSubmitting }) => (
-        <Button
-          onClick={handleSubmit}
-          {...props}
-          type='submit'
-          isLoading={isSubmitting}
-          className='mt-4'
-        >
-          {children}
-        </Button>
-      )}
+      <Button onClick={handleSubmit} {...props} type='submit' className='mt-4'>
+        {children}
+      </Button>
     </Subscribe>
   );
 };

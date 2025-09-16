@@ -9,6 +9,7 @@ import {
   LeaseStatus,
   type RecurringBillable,
   type Prisma,
+  SubscriptionPlanStatus,
 } from '@leaseup/prisma/client/index.js';
 
 const CONFIG = {
@@ -339,7 +340,7 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
   if (!isDevelopment) {
     whereClause.tenant = {
       landlord: {
-        paystackSubscriptionStatus: 'active',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.ACTIVE,
       },
     };
   }

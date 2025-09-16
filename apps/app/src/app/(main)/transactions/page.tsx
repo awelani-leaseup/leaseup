@@ -171,7 +171,7 @@ export default function Transactions() {
           const date = getValue();
           return (
             <div className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4 text-gray-500" />
+              <Calendar className="h-4 w-4 stroke-1 text-gray-500" />
               <span className="text-sm">
                 {format(new Date(date), "MMM dd, yyyy")}
               </span>
@@ -267,7 +267,7 @@ export default function Transactions() {
               href={`/invoices/${invoice.id}`}
               className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
             >
-              <FileText className="h-4 w-4" />
+              <FileText className="h-4 w-4 stroke-1" />
               <span className="text-sm">#{invoice.id.slice(0, 8)}</span>
             </Link>
           );
@@ -352,67 +352,75 @@ export default function Transactions() {
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
               <CardTitle className="text-2xl font-bold text-[#2D3436]">
-                Transactions Management
+                Transactions
               </CardTitle>
             </div>
           </div>
 
           {/* Summary Stats */}
           <div className="mt-6">
-            {transactionsLoading ? (
-              <TransactionStatsSkeleton />
-            ) : summaryStats ? (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {[
-                  {
-                    label: "Total Amount",
-                    value: formatCurrency(summaryStats.totalAmount),
-                    color: "success" as const,
-                    icon: Receipt,
-                    textColor: "text-green-700",
-                    valueColor: "text-green-800",
-                    iconColor: "text-green-600",
-                  },
-                  {
-                    label: "Total Transactions",
-                    value: summaryStats.transactionCount,
-                    color: "info" as const,
-                    icon: FileText,
-                    textColor: "text-blue-700",
-                    valueColor: "text-blue-800",
-                    iconColor: "text-blue-600",
-                  },
-                  {
-                    label: "Average Amount",
-                    value: formatCurrency(summaryStats.averageAmount),
-                    color: "warning" as const,
-                    icon: TrendingUp,
-                    textColor: "text-orange-700",
-                    valueColor: "text-orange-800",
-                    iconColor: "text-orange-600",
-                  },
-                ].map((stat, index) => (
-                  <Badge
-                    key={stat.label + index}
-                    variant="soft"
-                    color={stat.color}
-                    className="h-auto rounded-md p-4 [&_svg]:size-6 [&_svg]:stroke-1"
-                  >
-                    <div className="flex w-full items-center justify-between">
-                      <div>
-                        <p className={`mb-2 text-sm ${stat.textColor}`}>
-                          {stat.label}
-                        </p>
-                        <p className={`text-lg font-bold ${stat.valueColor}`}>
-                          {stat.value}
-                        </p>
+            {(() => {
+              if (transactionsLoading) {
+                return <TransactionStatsSkeleton />;
+              }
+
+              if (!summaryStats) {
+                return null;
+              }
+
+              return (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {[
+                    {
+                      label: "Total Amount",
+                      value: formatCurrency(summaryStats.totalAmount),
+                      color: "success" as const,
+                      icon: Receipt,
+                      textColor: "text-green-700",
+                      valueColor: "text-green-800",
+                      iconColor: "text-green-600",
+                    },
+                    {
+                      label: "Total Transactions",
+                      value: summaryStats.transactionCount,
+                      color: "info" as const,
+                      icon: FileText,
+                      textColor: "text-blue-700",
+                      valueColor: "text-blue-800",
+                      iconColor: "text-blue-600",
+                    },
+                    {
+                      label: "Average Amount",
+                      value: formatCurrency(summaryStats.averageAmount),
+                      color: "warning" as const,
+                      icon: TrendingUp,
+                      textColor: "text-orange-700",
+                      valueColor: "text-orange-800",
+                      iconColor: "text-orange-600",
+                    },
+                  ].map((stat, index) => (
+                    <Badge
+                      key={stat.label + index}
+                      variant="soft"
+                      color={stat.color}
+                      className="h-auto rounded-md p-4 [&_svg]:size-6 [&_svg]:stroke-1"
+                    >
+                      <div className="flex w-full items-center justify-between">
+                        <div>
+                          <p className={`mb-2 text-sm ${stat.textColor}`}>
+                            {stat.label}
+                          </p>
+                          <p className={`text-lg font-bold ${stat.valueColor}`}>
+                            {stat.value}
+                          </p>
+                        </div>
+                        <stat.icon className={stat.iconColor} />
                       </div>
-                      <stat.icon className={stat.iconColor} />
-                    </div>
-                  </Badge>
-                ))}
-              </div>
-            ) : null}
+                    </Badge>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         </CardHeader>
 
@@ -450,12 +458,11 @@ export default function Transactions() {
                       onClick={() => setGlobalFilter("")}
                       className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-4 w-4 stroke-1" />
                     </button>
                   )}
                 </div>
 
-                {/* Property Filter */}
                 <DataTableFilter
                   column={propertyColumn}
                   title="Property"
@@ -469,7 +476,6 @@ export default function Transactions() {
                   type="select"
                 />
 
-                {/* Tenant Filter */}
                 <DataTableFilter
                   column={tenantColumn}
                   title="Tenant"

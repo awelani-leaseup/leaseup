@@ -36,31 +36,6 @@ import {
 } from "@leaseup/ui/components/popover";
 
 export const Onboarding = () => {
-  const utils = api.useUtils();
-  const [formData, setFormData] = useState({
-    // Business Information
-    businessName: "",
-    businessType: "",
-    propertyCount: "",
-    yearsInBusiness: "",
-    businessAddress: "",
-    city: "",
-    state: "",
-    zipCode: "",
-
-    // Contact Information
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    jobTitle: "",
-    preferredContact: "Email",
-
-    // Additional Information
-    heardFrom: "",
-    features: [] as string[],
-    challenges: "",
-  });
 
   const businessTypes = [
     "Individual Landlord",
@@ -121,7 +96,6 @@ export const Onboarding = () => {
       input: debouncedAddress,
     },
   );
-  const status = useApiLoadingStatus();
 
   return (
     <div className="bg-[#ECF0F1 mt-6 flex min-h-screen justify-center px-4 sm:px-0">
@@ -336,95 +310,10 @@ export const Onboarding = () => {
                 </CardContent>
               </Card>
 
-              {/* Additional Information */}
-              {/* <Card>
-                <CardHeader>
-                  <CardTitle>Additional Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <Label
-                        htmlFor="heardFrom"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        How did you hear about us?
-                      </Label>
-                      <Select
-                        value={formData.heardFrom}
-                        onValueChange={(value: string) =>
-                          handleInputChange("heardFrom", value)
-                        }
-                      >
-                        <SelectTrigger className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]">
-                          <SelectValue placeholder="Select an option" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {heardFromOptions.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label className="mb-2 block text-sm font-medium text-[#2D3436]">
-                        What features are you most interested in?
-                      </Label>
-                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                        {features.map((feature) => (
-                          <div key={feature} className="flex items-center">
-                            <Checkbox
-                              id={feature}
-                              checked={formData.features.includes(feature)}
-                              onCheckedChange={() =>
-                                handleFeatureToggle(feature)
-                              }
-                              className="h-4 w-4 rounded border-gray-300 text-[#3498DB] focus:ring-[#3498DB]"
-                            />
-                            <Label
-                              htmlFor={feature}
-                              className="ml-2 text-sm text-[#2D3436]"
-                            >
-                              {feature}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label
-                        htmlFor="challenges"
-                        className="mb-2 block text-sm font-medium text-[#2D3436]"
-                      >
-                        Tell us about your biggest property management challenge
-                      </Label>
-                      <Textarea
-                        id="challenges"
-                        rows={4}
-                        placeholder="Optional: Help us understand how we can best serve you..."
-                        value={formData.challenges}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                          handleInputChange("challenges", e.target.value)
-                        }
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-[#3498DB]"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card> */}
-
               {/* Navigation Buttons */}
               <div className="flex justify-between">
                 <Button
                   variant="outlined"
-                  // disabled={currentStep === 1}
-                  // onClick={() =>
-                  //   // setCurrentStep((prev) => Math.max(1, prev - 1))
-                  // }
                   className="flex items-center rounded-lg border border-[#7F8C8D] px-6 py-3 text-[#7F8C8D] hover:bg-gray-50"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
@@ -438,12 +327,7 @@ export const Onboarding = () => {
                     <Save className="mr-2 h-4 w-4" />
                     Save as Draft
                   </Button>
-                  <Button
-                    // onClick={() =>
-                    //   setCurrentStep((prev) => Math.min(4, prev + 1))
-                    // }
-                    className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]"
-                  >
+                  <Button className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]">
                     Continue
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

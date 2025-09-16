@@ -70,7 +70,7 @@ export function LeaseRenewals() {
           Upcoming Lease Renewals
         </h2>
         <EmptyState
-          title="No Upcoming Lease Renewals"
+          title="No Upcoming Renewals"
           description="Your upcoming lease renewals will appear here."
           icon={<FileText />}
         />
@@ -97,28 +97,21 @@ export function LeaseRenewals() {
           return (
             <div key={lease.id} className="flex items-center justify-between">
               <div className="flex-1">
-                <p className="font-medium text-[#2D3436]">
+                <p className="font-medium tracking-tight text-[#2D3436]">
                   {tenant?.firstName} {tenant?.lastName}
                 </p>
-                <p className="text-sm text-[#7F8C8D]">
-                  {property?.name} • Unit {lease.unit?.name}
+                <p className="line-clamp-1 text-sm tracking-tight text-[#7F8C8D]">
+                  - {property?.name}
                 </p>
-                <p className="text-xs text-[#7F8C8D]">
-                  Expires{" "}
+                <p className="text-sm tracking-tight text-[#7F8C8D]">
+                  - Unit {lease.unit?.name}
+                </p>
+                <p className="text-sm tracking-tight text-[#7F8C8D]">
+                  - Expires{" "}
                   {lease.endDate
                     ? format(new Date(lease.endDate), "MMM d, yyyy")
                     : "TBD"}
                 </p>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`text-sm font-medium ${getDaysColor(
-                    daysUntilExpiry,
-                  )}`}
-                >
-                  {daysUntilExpiry} days
-                </p>
-                <p className="text-xs text-[#7F8C8D]">remaining</p>
               </div>
             </div>
           );

@@ -12,6 +12,14 @@ import {
 } from "@leaseup/ui/components/alert";
 import { Button } from "@leaseup/ui/components/button";
 import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardAction,
+} from "@leaseup/ui/components/card";
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -33,9 +41,9 @@ export function RecentActivity() {
     // Create a map to group transactions by day
     const dailyPayments = new Map();
 
-    // Get the last 7 days for consistent chart display
+    // Get the last 14 days for consistent chart display
     const today = startOfDay(new Date());
-    for (let i = 6; i >= 0; i--) {
+    for (let i = 13; i >= 0; i--) {
       const date = subDays(today, i);
       const dateKey = format(date, "yyyy-MM-dd");
       dailyPayments.set(dateKey, {
@@ -70,18 +78,17 @@ export function RecentActivity() {
 
   if (isLoading) {
     return (
-      <div
-        id="recent-activity"
-        className="rounded-xl border border-gray-200 bg-white p-6"
-      >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-[#2D3436]">
-            Recent Activity
-          </h2>
-          <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
-        </div>
-        <div className="h-[300px] animate-pulse rounded bg-gray-200"></div>
-      </div>
+      <Card id="recent-activity">
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+          <CardAction>
+            <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] animate-pulse rounded bg-gray-200"></div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -100,21 +107,18 @@ export function RecentActivity() {
 
   if (!hasData) {
     return (
-      <div
-        id="recent-activity"
-        className="rounded-xl border border-gray-200 bg-white p-6"
-      >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-[#2D3436]">
-            Recent Activity
-          </h2>
-        </div>
-        <EmptyState
-          title="No Recent Activity"
-          description="Your payment activity for the last 7 days will appear here once you start receiving payments."
-          icon={<Clock />}
-        />
-      </div>
+      <Card id="recent-activity">
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <EmptyState
+            title="No Recent Activity"
+            description="Your payment activity for the last 2 weeks will appear here once you start receiving payments."
+            icon={<Clock />}
+          />
+        </CardContent>
+      </Card>
     );
   }
 
@@ -122,78 +126,76 @@ export function RecentActivity() {
   const totalPayments = chartData.reduce((sum, day) => sum + day.count, 0);
 
   return (
-    <div
-      id="recent-activity"
-      className="rounded-xl border border-gray-200 bg-white p-6"
-    >
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-base font-semibold text-[#2D3436]">
-            Recent Activity
-          </h2>
-          <p className="mt-1 text-sm text-[#7F8C8D]">
-            Last 7 days • {totalPayments} payments •{" "}
-            {formatCurrencyToZAR(totalAmount)}
-          </p>
-        </div>
-        <Button variant="outlined">View All</Button>
-      </div>
-
-      <ChartContainer config={chartConfig} className="h-[300px]">
-        <BarChart
-          data={chartData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <XAxis
-            dataKey="date"
-            axisLine={false}
-            tickLine={false}
-            className="text-xs text-[#7F8C8D]"
-          />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            className="text-xs text-[#7F8C8D]"
-            tickFormatter={(value: number) => `R${(value / 1000).toFixed(0)}k`}
-          />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(label, payload) => (
-                  <div className="font-medium">
-                    {payload?.[0]?.payload?.fullDate
-                      ? format(
-                          new Date(payload[0].payload.fullDate),
-                          "EEEE, MMM dd, yyyy",
-                        )
-                      : label}
-                  </div>
-                )}
-                formatter={(value, name, item) => [
-                  <div key="payment-info" className="flex flex-col">
-                    <span className="font-semibold text-[#2ECC71]">
-                      {formatCurrencyToZAR(Number(value))}
-                    </span>
-                    {item.payload.count > 0 && (
-                      <span className="text-xs text-[#7F8C8D]">
-                        {item.payload.count} payment
-                        {item.payload.count !== 1 ? "s" : ""}
+    <Card id="recent-activity">
+      <CardHeader>
+        <CardTitle>Recent Activity</CardTitle>
+        <CardDescription>
+          Last 2 weeks • {totalPayments} payments •{" "}
+          {formatCurrencyToZAR(totalAmount)}
+        </CardDescription>
+        <CardAction>
+          <Button variant="outlined">View All</Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-[300px]">
+          <BarChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            <XAxis
+              dataKey="date"
+              axisLine={false}
+              tickLine={false}
+              className="text-xs text-[#7F8C8D]"
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              className="text-xs text-[#7F8C8D]"
+              tickFormatter={(value: number) =>
+                `R${(value / 1000).toFixed(0)}k`
+              }
+            />
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(label, payload) => (
+                    <div className="font-medium">
+                      {payload?.[0]?.payload?.fullDate
+                        ? format(
+                            new Date(payload[0].payload.fullDate),
+                            "EEEE, MMM dd, yyyy",
+                          )
+                        : label}
+                    </div>
+                  )}
+                  formatter={(value, name, item) => [
+                    <div key="payment-info" className="flex flex-col">
+                      <span className="font-semibold text-[#2ECC71]">
+                        {formatCurrencyToZAR(Number(value))}
                       </span>
-                    )}
-                  </div>,
-                  "",
-                ]}
-              />
-            }
-          />
-          <Bar
-            dataKey="amount"
-            fill="var(--color-amount)"
-            radius={[4, 4, 0, 0]}
-            className="opacity-80 hover:opacity-100"
-          />
-        </BarChart>
-      </ChartContainer>
-    </div>
+                      {item.payload.count > 0 && (
+                        <span className="text-xs text-[#7F8C8D]">
+                          {item.payload.count} payment
+                          {item.payload.count !== 1 ? "s" : ""}
+                        </span>
+                      )}
+                    </div>,
+                    "",
+                  ]}
+                />
+              }
+            />
+            <Bar
+              dataKey="amount"
+              fill="var(--color-amount)"
+              radius={[4, 4, 0, 0]}
+              className="opacity-80 hover:opacity-100"
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }

@@ -11,20 +11,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@leaseup/ui/components/sidebar";
-import {
-  User,
-  CreditCard,
-  Bell,
-  Building,
-  Shield,
-  Key,
-  Settings as SettingsIcon,
-  FileText,
-  Wallet,
-  X,
-} from "lucide-react";
+import { User, CreditCard, Shield, FileText, Wallet, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 interface SettingsLayoutProps {
   children: React.ReactNode;
@@ -52,11 +42,6 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
     {
       title: "Business",
       items: [
-        {
-          title: "Company",
-          href: "/settings/company",
-          icon: Building,
-        },
         {
           title: "Banking",
           href: "/settings/banking",
@@ -123,6 +108,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           </SidebarContent>
         </Sidebar>
         <div className="flex-1 p-6">
+          <Toaster position="top-right" />
           <div className="mx-auto max-w-4xl">{children}</div>
         </div>
       </div>

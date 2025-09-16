@@ -69,7 +69,7 @@ const NavHeader = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href="/settings">
+                <Link href="/settings/profile">
                   <Settings
                     size={16}
                     className="opacity-60"
