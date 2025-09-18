@@ -9,6 +9,7 @@ import {
   dashboardRouter,
   userRouter,
   profileRouter,
+  fileRouter,
 } from '../routers';
 
 export const appRouter = createTRPCRouter({
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardRouter,
   user: userRouter,
   profile: profileRouter,
+  file: fileRouter,
 });
 
 export type AppRouter = typeof appRouter;

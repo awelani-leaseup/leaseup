@@ -1,37 +1,53 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
-import { novu } from '@leaseup/novu/client.ts';
 import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
 
 // Schema for subscription.disable webhook payload
 const SubscriptionDisablePayload = Schema.Struct({
   event: Schema.String,
   data: Schema.Struct({
+    domain: Schema.String,
+    status: Schema.String, // "complete", "cancelled", etc.
     subscription_code: Schema.String.pipe(
       Schema.minLength(1, { message: () => 'Subscription code is required' })
     ),
-    status: Schema.String, // Should be "cancelled" or "completed"
+    email_token: Schema.String,
+    amount: Schema.Number,
+    cron_expression: Schema.String,
+    next_payment_date: Schema.String,
+    open_invoice: Schema.NullOr(Schema.Unknown), // Can be null or contain invoice data
+    plan: Schema.Struct({
+      id: Schema.Number,
+      name: Schema.String,
+      plan_code: Schema.String,
+      description: Schema.NullOr(Schema.String),
+      amount: Schema.Number,
+      interval: Schema.String,
+      send_invoices: Schema.Boolean,
+      send_sms: Schema.Boolean,
+      currency: Schema.String,
+    }),
+    authorization: Schema.Struct({
+      authorization_code: Schema.String,
+      bin: Schema.String,
+      last4: Schema.String,
+      exp_month: Schema.String,
+      exp_year: Schema.String,
+      card_type: Schema.String,
+      bank: Schema.String,
+      country_code: Schema.String,
+      brand: Schema.String,
+      account_name: Schema.String,
+    }),
     customer: Schema.Struct({
       first_name: Schema.String,
       last_name: Schema.String,
       email: Schema.String,
       customer_code: Schema.String,
+      phone: Schema.String, // Can be empty string
+      metadata: Schema.Record({ key: Schema.String, value: Schema.Unknown }),
+      risk_action: Schema.String,
     }),
-    plan: Schema.Struct({
-      name: Schema.String,
-      plan_code: Schema.String,
-      amount: Schema.Number,
-      currency: Schema.String,
-      interval: Schema.String,
-    }),
-    authorization: Schema.optional(
-      Schema.Struct({
-        authorization_code: Schema.String,
-        last4: Schema.String,
-        card_type: Schema.String,
-        bank: Schema.String,
-      })
-    ),
     created_at: Schema.String,
   }),
 });
@@ -53,7 +69,6 @@ const processSubscriptionDisableEffect = (
       planName: payload.data.plan.name,
     });
 
-    // Find the landlord by email
     const landlord = yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
@@ -88,7 +103,6 @@ const processSubscriptionDisableEffect = (
       return;
     }
 
-    // Verify this is the correct subscription
     if (landlord.paystackSubscriptionId !== payload.data.subscription_code) {
       yield* Console.warn('Subscription code mismatch', {
         landlordId: landlord.id,
@@ -97,14 +111,12 @@ const processSubscriptionDisableEffect = (
       });
     }
 
-    // Update the landlord's subscription status
     yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
         await db.user.update({
           where: { id: landlord.id },
           data: {
-            // Clear subscription data since it's disabled
             paystackSubscriptionId: null,
             paystackSubscriptionStatus:
               payload.data.status === 'cancelled'
@@ -112,7 +124,6 @@ const processSubscriptionDisableEffect = (
                 : SubscriptionPlanStatus.COMPLETED,
             subscriptionUpdatedAt: new Date(),
             nextPaymentDate: null,
-            // Keep plan info for reference but clear active subscription
             subscriptionPlanCode: null,
             subscriptionAmount: null,
             subscriptionCurrency: null,
@@ -134,60 +145,6 @@ const processSubscriptionDisableEffect = (
       subscriptionCode: payload.data.subscription_code,
       newStatus: payload.data.status,
     });
-
-    // Send notification about subscription cancellation/completion
-    const notificationWorkflow =
-      payload.data.status === 'completed'
-        ? 'subscription-completed'
-        : 'subscription-cancelled';
-
-    try {
-      yield* Effect.tryPromise({
-        try: () =>
-          novu.trigger({
-            to: {
-              subscriberId: landlord.id,
-              email: landlord.email,
-            },
-            workflowId: notificationWorkflow,
-            payload: {
-              landlordName: landlord.name || 'Valued Customer',
-              planName: payload.data.plan.name,
-              planAmount: new Intl.NumberFormat('en-ZA', {
-                style: 'currency',
-                currency: payload.data.plan.currency,
-              }).format(payload.data.plan.amount / 100),
-              subscriptionCode: payload.data.subscription_code,
-              disabledDate: new Date().toLocaleDateString(),
-              reactivateUrl: `${process.env.NEXT_PUBLIC_APP_URL}/billing/reactivate`,
-              dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-            },
-          }),
-        catch: (error) =>
-          new Error(
-            `Failed to send subscription disable notification: ${error}`
-          ),
-      });
-
-      yield* Console.log(
-        'Subscription disable notification sent successfully',
-        {
-          landlordId: landlord.id,
-          landlordEmail: landlord.email,
-          subscriptionCode: payload.data.subscription_code,
-          workflowId: notificationWorkflow,
-        }
-      );
-    } catch (error) {
-      yield* Console.warn(
-        'Failed to send subscription disable notification, but status was updated successfully',
-        {
-          error: error instanceof Error ? error.message : 'Unknown error',
-          landlordId: landlord.id,
-          subscriptionCode: payload.data.subscription_code,
-        }
-      );
-    }
 
     return yield* Effect.ensuring(
       Effect.succeed({

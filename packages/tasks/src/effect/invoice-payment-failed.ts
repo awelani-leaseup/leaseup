@@ -1,44 +1,97 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
+import { paystack } from '@leaseup/payments/open-api/client';
 
 // Schema for invoice.payment_failed webhook payload
 const InvoicePaymentFailedPayload = Schema.Struct({
   event: Schema.String,
   data: Schema.Struct({
-    subscription: Schema.Number, // Subscription ID
-    integration: Schema.Number,
     domain: Schema.String,
     invoice_code: Schema.String,
-    customer: Schema.Number, // Customer ID
-    transaction: Schema.Union(Schema.Number, Schema.Null),
     amount: Schema.Number,
     period_start: Schema.String,
     period_end: Schema.String,
-    status: Schema.String, // "failed"
-    paid: Schema.Number,
-    retries: Schema.Number,
-    authorization: Schema.Union(Schema.Number, Schema.Null),
+    status: Schema.String, // "pending", "failed", etc.
+    paid: Schema.Boolean,
     paid_at: Schema.Union(Schema.String, Schema.Null),
-    next_notification: Schema.Union(Schema.String, Schema.Null),
-    notification_flag: Schema.Union(Schema.String, Schema.Null),
-    description: Schema.String, // Failure reason like "Insufficient Funds"
-    id: Schema.Number,
+    description: Schema.Union(Schema.String, Schema.Null), // Failure reason
+    authorization: Schema.optional(
+      Schema.Struct({
+        authorization_code: Schema.String,
+        bin: Schema.String,
+        last4: Schema.String,
+        exp_month: Schema.String,
+        exp_year: Schema.String,
+        channel: Schema.String,
+        card_type: Schema.String,
+        bank: Schema.String,
+        country_code: Schema.String,
+        brand: Schema.String,
+        reusable: Schema.Boolean,
+        signature: Schema.String,
+        account_name: Schema.String,
+      })
+    ),
+    subscription: Schema.Struct({
+      status: Schema.String,
+      subscription_code: Schema.String,
+      email_token: Schema.String,
+      amount: Schema.Number,
+      cron_expression: Schema.String,
+      next_payment_date: Schema.String,
+      open_invoice: Schema.String,
+    }),
+    customer: Schema.Struct({
+      id: Schema.Number,
+      first_name: Schema.Union(Schema.String, Schema.Null),
+      last_name: Schema.Union(Schema.String, Schema.Null),
+      email: Schema.String,
+      customer_code: Schema.String,
+      phone: Schema.Union(Schema.String, Schema.Null),
+      metadata: Schema.Union(Schema.Unknown, Schema.Null),
+      risk_action: Schema.String,
+    }),
+    transaction: Schema.optional(
+      Schema.Record({ key: Schema.String, value: Schema.Unknown })
+    ),
     created_at: Schema.String,
-    updated_at: Schema.String,
-    // Additional fields that might be present
-    subscription_code: Schema.optional(Schema.String),
-    customer_email: Schema.optional(Schema.String),
-    customer_name: Schema.optional(Schema.String),
-    plan_name: Schema.optional(Schema.String),
-    plan_amount: Schema.optional(Schema.Number),
-    currency: Schema.optional(Schema.String),
   }),
 });
 
 export type InvoicePaymentFailedPayload = Schema.Schema.Type<
   typeof InvoicePaymentFailedPayload
 >;
+
+// Helper function to generate billing link for subscription management
+const generateBillingLink = (subscriptionCode: string) =>
+  Effect.tryPromise({
+    try: async () => {
+      const { data: managementLinkData, error: managementLinkError } =
+        await paystack.GET('/subscription/{code}/manage/link', {
+          params: {
+            path: {
+              code: subscriptionCode,
+            },
+          },
+        });
+
+      if (managementLinkError || !managementLinkData?.data) {
+        throw new Error(
+          `Failed to generate billing link: ${managementLinkError?.message || 'Unknown error'}`
+        );
+      }
+
+      return managementLinkData.data.link;
+    },
+    catch: (error) =>
+      new Error(
+        `Error generating billing link: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      ),
+  });
 
 const processInvoicePaymentFailedEffect = (
   payload: InvoicePaymentFailedPayload
@@ -48,23 +101,25 @@ const processInvoicePaymentFailedEffect = (
 
     yield* Console.log(`Processing ${payload.event} event with Effect-TS`, {
       invoiceCode: payload.data.invoice_code,
-      subscriptionId: payload.data.subscription,
-      customerId: payload.data.customer,
+      subscriptionCode: payload.data.subscription.subscription_code,
+      customerId: payload.data.customer.id,
+      customerEmail: payload.data.customer.email,
       amount: payload.data.amount,
       failureReason: payload.data.description,
-      retries: payload.data.retries,
+      status: payload.data.status,
     });
 
-    // Try to find the landlord by subscription or customer information
     let landlord = null;
 
-    // First, try to find by subscription code if available
-    if (payload.data.subscription_code) {
+    if (payload.data.subscription.subscription_code) {
       landlord = yield* Effect.tryPromise({
         try: async () => {
           const { db } = await import('@leaseup/prisma/db.ts');
           return db.user.findFirst({
-            where: { paystackSubscriptionId: payload.data.subscription_code },
+            where: {
+              paystackSubscriptionId:
+                payload.data.subscription.subscription_code,
+            },
             select: {
               id: true,
               name: true,
@@ -73,17 +128,16 @@ const processInvoicePaymentFailedEffect = (
             },
           });
         },
-        catch: () => null, // Continue to next method if this fails
+        catch: () => null,
       });
     }
 
-    // If not found by subscription code, try by customer email
-    if (!landlord && payload.data.customer_email) {
+    if (!landlord && payload.data.customer.email) {
       landlord = yield* Effect.tryPromise({
         try: async () => {
           const { db } = await import('@leaseup/prisma/db.ts');
           return db.user.findUnique({
-            where: { email: payload.data.customer_email },
+            where: { email: payload.data.customer.email },
             select: {
               id: true,
               name: true,
@@ -99,12 +153,11 @@ const processInvoicePaymentFailedEffect = (
     if (!landlord) {
       yield* Console.warn('Landlord not found for invoice payment failed', {
         invoiceCode: payload.data.invoice_code,
-        subscriptionId: payload.data.subscription,
-        customerId: payload.data.customer,
-        customerEmail: payload.data.customer_email,
+        subscriptionCode: payload.data.subscription.subscription_code,
+        customerId: payload.data.customer.id,
+        customerEmail: payload.data.customer.email,
       });
 
-      // Don't fail the entire process, just log and continue
       return {
         message: 'Landlord not found, but event logged',
         invoiceCode: payload.data.invoice_code,
@@ -112,17 +165,15 @@ const processInvoicePaymentFailedEffect = (
       };
     }
 
-    // Update subscription status to "attention" if we have subscription tracking
     yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
         await db.user.update({
           where: { id: landlord.id },
           data: {
-            paystackSubscriptionStatus: 'attention',
-            subscriptionUpdatedAt: new Date(),
-            lastPaymentFailure: payload.data.description,
-            paymentRetryCount: payload.data.retries,
+            paystackSubscriptionStatus: SubscriptionPlanStatus.ATTENTION,
+            subscriptionUpdatedAt: new Date(new Date().toUTCString()),
+            lastPaymentFailure: payload.data.description || 'Payment failed',
           },
         });
       },
@@ -141,12 +192,34 @@ const processInvoicePaymentFailedEffect = (
         landlordEmail: landlord.email,
         invoiceCode: payload.data.invoice_code,
         failureReason: payload.data.description,
-        retries: payload.data.retries,
+        status: payload.data.status,
       }
     );
 
-    // Send notification about payment failure
     try {
+      let billingLink = null;
+
+      if (landlord.paystackSubscriptionId) {
+        try {
+          billingLink = yield* generateBillingLink(
+            landlord.paystackSubscriptionId
+          );
+          yield* Console.log('Generated billing link successfully', {
+            landlordId: landlord.id,
+            subscriptionId: landlord.paystackSubscriptionId,
+          });
+        } catch (error) {
+          yield* Console.warn(
+            'Failed to generate billing link, continuing without it',
+            {
+              landlordId: landlord.id,
+              subscriptionId: landlord.paystackSubscriptionId,
+              error: error instanceof Error ? error.message : 'Unknown error',
+            }
+          );
+        }
+      }
+
       yield* Effect.tryPromise({
         try: () =>
           novu.trigger({
@@ -154,30 +227,15 @@ const processInvoicePaymentFailedEffect = (
               subscriberId: landlord.id,
               email: landlord.email,
             },
-            workflowId: 'subscription-payment-failed',
+            workflowId: 'landlord-subscription-invoice-failed',
             payload: {
               landlordName: landlord.name || 'Valued Customer',
-              planName: payload.data.plan_name || 'Your subscription',
-              planAmount: payload.data.plan_amount
-                ? new Intl.NumberFormat('en-ZA', {
-                    style: 'currency',
-                    currency: payload.data.currency || 'ZAR',
-                  }).format(payload.data.plan_amount / 100)
-                : new Intl.NumberFormat('en-ZA', {
-                    style: 'currency',
-                    currency: payload.data.currency || 'ZAR',
-                  }).format(payload.data.amount / 100),
-              invoiceCode: payload.data.invoice_code,
-              failureReason: payload.data.description,
-              retryAttempt: payload.data.retries,
-              nextRetryDate: payload.data.next_notification
-                ? new Date(payload.data.next_notification).toLocaleDateString()
-                : 'Soon',
-              updatePaymentUrl: `${process.env.NEXT_PUBLIC_APP_URL}/billing/update-payment`,
-              dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-              subscriptionCode:
-                payload.data.subscription_code ||
-                landlord.paystackSubscriptionId,
+              planName: 'Professional',
+              invoiceDate: new Date(
+                payload.data.created_at
+              ).toLocaleDateString(),
+              billingLink: billingLink ?? '#',
+              invoiceNumber: payload.data.invoice_code,
             },
           }),
         catch: (error) =>
@@ -206,7 +264,7 @@ const processInvoicePaymentFailedEffect = (
         landlordId: landlord.id,
         invoiceCode: payload.data.invoice_code,
         failureReason: payload.data.description,
-        retries: payload.data.retries,
+        status: payload.data.status,
       }),
       databaseService
         .disconnect()
@@ -220,7 +278,7 @@ const processInvoicePaymentFailedEffect = (
           'Failed to process invoice payment failed event:',
           {
             invoiceCode: payload.data.invoice_code,
-            subscriptionId: payload.data.subscription,
+            subscriptionCode: payload.data.subscription.subscription_code,
             error: error instanceof Error ? error.message : 'Unknown error',
           }
         );

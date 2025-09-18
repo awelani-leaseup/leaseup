@@ -143,23 +143,10 @@ const processSubscriptionNotRenewingEffect = (
               subscriberId: landlord.id,
               email: landlord.email,
             },
-            workflowId: 'subscription-not-renewing',
+            workflowId: 'landlord-cancel-subscription',
             payload: {
               landlordName: landlord.name || 'Valued Customer',
               planName: payload.data.plan.name,
-              planAmount: new Intl.NumberFormat('en-ZA', {
-                style: 'currency',
-                currency: payload.data.plan.currency,
-              }).format(payload.data.plan.amount / 100),
-              subscriptionCode: payload.data.subscription_code,
-              lastPaymentDate: payload.data.next_payment_date
-                ? new Date(payload.data.next_payment_date).toLocaleDateString()
-                : 'N/A',
-              renewUrl: `${process.env.NEXT_PUBLIC_APP_URL}/billing/renew`,
-              dashboardUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-              cardInfo: payload.data.authorization
-                ? `${payload.data.authorization.card_type} ending in ${payload.data.authorization.last4}`
-                : 'Payment method on file',
             },
           }),
         catch: (error) =>

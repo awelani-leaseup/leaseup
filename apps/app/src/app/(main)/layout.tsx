@@ -42,6 +42,7 @@ import NavHeader from "../_components/nav-header";
 import { Button } from "@leaseup/ui/components/button";
 import { usePathname } from "next/navigation";
 import { SubscriptionWrapper } from "../_components/subscription-wrapper";
+import { SubscriptionBanner } from "../_components/subscription-banner";
 
 const NEXT_PUBLIC_GOOGLE_MAPS_API_KEY =
   process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -222,6 +223,7 @@ export default function Layout({
       <main className="min-w-0 flex-1">
         <div className="sticky top-0 z-10 bg-white">
           <NavHeader />
+          <SubscriptionBanner />
         </div>
         <OnboardingWrapper>
           <SubscriptionWrapper>

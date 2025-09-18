@@ -24,6 +24,7 @@ model User {
   idNumber                   String?
   paystackSplitGroupId       String?
   paystackSubAccountId       String?
+  paystackCustomerId         String?
   paystackSubscriptionId     String?
   paystackSubscriptionStatus SubscriptionPlanStatus?
   subscriptionPlanCode       String? // PLN_xxx

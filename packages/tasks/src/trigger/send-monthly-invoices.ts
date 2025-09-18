@@ -20,12 +20,10 @@ const CONFIG = {
   FETCH_BATCH_SIZE: 100, // Number of billables to fetch per batch
 } as const;
 
-// Check if we're in development environment
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev';
 
 const calculateInvoiceDates = () => {
-  // Use UTC dates to match the database @db.Date fields
   const now = new Date();
   const today = new Date(
     Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
@@ -41,7 +39,7 @@ const shouldCreateInvoice = (
   leaseEndDate?: Date
 ): boolean => {
   if (leaseEndDate && isAfter(nextInvoiceDate, leaseEndDate)) {
-    return false; // Don't create invoices after lease ends
+    return false;
   }
   return (
     !isBefore(nextInvoiceDate, today) &&
@@ -66,7 +64,6 @@ const createInvoicePayload = (
   },
   nextInvoiceDate: Date
 ): CreateInvoicePayload & { recurringBillableId: string } => {
-  // Get landlord ID from lease relationship or fallback to tenant's landlord
   const landlordId =
     billable.lease?.unit?.property?.landlordId ??
     billable.tenant?.landlordId ??
@@ -101,7 +98,6 @@ const createInvoicePayload = (
 // Core business logic for processing billables
 const processBillable = async (billable: any) => {
   try {
-    // Validate that we have the necessary data to create an invoice
     const landlordId =
       billable.lease?.unit?.property?.landlordId ?? billable.tenant?.landlordId;
     if (!landlordId) {
@@ -121,13 +117,15 @@ const processBillable = async (billable: any) => {
       return null;
     }
 
-    // Additional validation: Ensure landlord has active subscription (only in production)
-    // This is a safety check since we already filter at the database level
     if (!isDevelopment) {
       const landlordSubscriptionStatus =
         billable.tenant?.landlord?.paystackSubscriptionStatus;
 
-      if (landlordSubscriptionStatus !== 'active') {
+      const isActive =
+        landlordSubscriptionStatus === SubscriptionPlanStatus.ACTIVE ||
+        landlordSubscriptionStatus === SubscriptionPlanStatus.NON_RENEWING;
+
+      if (!isActive) {
         logger.log(
           'Skipping billable: Landlord does not have active subscription',
           {

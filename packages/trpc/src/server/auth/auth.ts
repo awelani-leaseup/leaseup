@@ -68,15 +68,6 @@ export const auth = betterAuth({
     },
   },
   hooks: {},
-  databaseHooks: {
-    user: {
-      create: {
-        after: async (user, _ctx) => {
-          _ctx?.redirect('/onboarding');
-        },
-      },
-    },
-  },
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),

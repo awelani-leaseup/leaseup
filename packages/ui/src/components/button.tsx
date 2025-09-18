@@ -26,7 +26,7 @@ const buttonVariants = cva(
       },
       variant: {
         solid: '',
-        outlined: '',
+        outlined: 'border-[0.6px]',
         text: '',
         soft: '',
         icon: 'size-9',
@@ -47,7 +47,7 @@ const buttonVariants = cva(
         color: 'default',
         variant: 'outlined',
         class:
-          'border border-primary bg-transparent text-primary shadow-sm hover:bg-accent hover:text-accent-foreground',
+          'border-primary bg-transparent text-primary shadow-sm hover:bg-accent hover:text-accent-foreground',
       },
       {
         color: 'default',
@@ -69,7 +69,7 @@ const buttonVariants = cva(
         color: 'destructive',
         variant: 'outlined',
         class:
-          'border border-destructive text-destructive shadow-sm hover:bg-destructive/10',
+          'border-destructive text-destructive shadow-sm hover:bg-destructive/10',
       },
       {
         color: 'destructive',
@@ -91,7 +91,7 @@ const buttonVariants = cva(
         color: 'secondary',
         variant: 'outlined',
         class:
-          'border border-secondary text-secondary shadow-sm hover:bg-secondary/10',
+          'border-secondary text-secondary shadow-sm hover:bg-secondary/10',
       },
       {
         color: 'secondary',
@@ -112,8 +112,7 @@ const buttonVariants = cva(
       {
         color: 'success',
         variant: 'outlined',
-        class:
-          'border border-success text-success shadow-sm hover:bg-success/10',
+        class: 'border-success text-success shadow-sm hover:bg-success/10',
       },
       {
         color: 'success',
@@ -134,7 +133,7 @@ const buttonVariants = cva(
         color: 'link',
         variant: 'outlined',
         class:
-          'border border-transparent text-primary underline-offset-4 hover:underline',
+          'border-transparent text-primary underline-offset-4 hover:underline',
       },
       {
         color: 'link',
@@ -149,7 +148,7 @@ const buttonVariants = cva(
       {
         color: 'danger',
         variant: 'outlined',
-        class: 'border border-danger text-danger shadow-sm hover:bg-danger/10',
+        class: 'border-danger text-danger shadow-sm hover:bg-danger/10',
       },
       {
         color: 'danger',
@@ -169,7 +168,7 @@ const buttonVariants = cva(
       {
         color: 'info',
         variant: 'outlined',
-        class: 'border border-info text-info shadow-sm hover:bg-info/10',
+        class: 'border-info text-info shadow-sm hover:bg-info/10',
       },
       {
         color: 'info',
@@ -190,8 +189,7 @@ const buttonVariants = cva(
       {
         color: 'warning',
         variant: 'outlined',
-        class:
-          'border border-warning text-warning shadow-sm hover:bg-warning/10',
+        class: 'border-warning text-warning shadow-sm hover:bg-warning/10',
       },
       {
         color: 'warning',

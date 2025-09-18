@@ -45,3 +45,10 @@ export const VChangePasswordInput = v.pipe(
     ['currentPassword']
   )
 );
+
+export const VBankingInfoInput = v.object({
+  bankCode: v.pipe(v.string(), v.nonEmpty('Bank is required')),
+  accountNumber: v.pipe(v.string(), v.nonEmpty('Account Number is required')),
+  documentType: v.pipe(v.string(), v.nonEmpty('Document Type is required')),
+  idNumber: v.pipe(v.string(), v.nonEmpty('ID Number is required')),
+});

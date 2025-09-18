@@ -25,9 +25,9 @@ const LandlordOnboardSuccessfulPayload = Schema.Struct({
       Schema.minLength(1, { message: () => 'Account number is required' })
     )
   ),
-  primaryContactEmail: Schema.optional(Schema.String),
+  primaryContactEmail: Schema.String,
   primaryContactName: Schema.optional(Schema.String),
-  primaryContactPhone: Schema.optional(Schema.String),
+  primaryContactPhone: Schema.String,
 });
 
 export type LandlordOnboardSuccessfulPayload = Schema.Schema.Type<
@@ -58,19 +58,63 @@ const landlordOnboardSuccessfulEffect = (
       return;
     }
 
-    if (landlord.paystackSubAccountId && landlord.paystackSplitGroupId) {
-      yield* Console.log('Landlord already has subaccount and split group', {
-        userId: payload.userId,
-        subaccountId: landlord.paystackSubAccountId,
-        splitGroupId: landlord.paystackSplitGroupId,
-      });
+    if (
+      landlord.paystackSubAccountId &&
+      landlord.paystackSplitGroupId &&
+      landlord.paystackCustomerId
+    ) {
+      yield* Console.log(
+        'Landlord already has customer, subaccount and split group',
+        {
+          userId: payload.userId,
+          customerId: landlord.paystackCustomerId,
+          subaccountId: landlord.paystackSubAccountId,
+          splitGroupId: landlord.paystackSplitGroupId,
+        }
+      );
       return {
-        message: 'Landlord already has subaccount and split group',
+        message: 'Landlord already has customer, subaccount and split group',
+        customerId: landlord.paystackCustomerId,
         subaccountId: landlord.paystackSubAccountId,
         splitGroupId: landlord.paystackSplitGroupId,
       };
     }
 
+    // Step 1: Create Paystack customer if not exists
+    let customerCode = landlord.paystackCustomerId;
+
+    if (!customerCode) {
+      yield* Console.log('Creating Paystack customer for landlord', {
+        userId: payload.userId,
+        email: landlord.email,
+        name: landlord.name,
+      });
+
+      const customerResponse = yield* paystackService.createCustomer({
+        email: landlord.email,
+        first_name: landlord.name?.split(' ')[0] || 'Landlord',
+        last_name: landlord.name?.split(' ').slice(1).join(' ') || '',
+        phone: payload.primaryContactPhone || null,
+        metadata: {
+          tenant_id: payload.userId,
+          source: 'landlord_onboarding',
+        },
+      });
+
+      customerCode = customerResponse.data?.data?.customer_code ?? '';
+
+      if (!customerCode) {
+        yield* Effect.fail(new Error('Failed to create Paystack customer'));
+        return;
+      }
+
+      yield* Console.log('Successfully created Paystack customer', {
+        userId: payload.userId,
+        customerCode,
+      });
+    }
+
+    // Step 2: Create Paystack subaccount if not exists
     let subaccountCode = landlord.paystackSubAccountId;
 
     if (!subaccountCode) {
@@ -135,11 +179,13 @@ const landlordOnboardSuccessfulEffect = (
     yield* databaseService.updateLandlordPaystackIds(
       payload.userId,
       subaccountCode,
-      splitGroupCode
+      splitGroupCode,
+      customerCode
     );
 
     yield* Console.log('Successfully completed landlord onboarding setup', {
       userId: payload.userId,
+      customerCode,
       subaccountCode,
       splitGroupCode,
     });
@@ -149,6 +195,9 @@ const landlordOnboardSuccessfulEffect = (
 
     return {
       message: 'Landlord onboarding completed successfully',
+      customerId: customerCode,
+      subaccountId: subaccountCode,
+      splitGroupId: splitGroupCode,
     };
   }).pipe(
     Effect.provide(DatabaseServiceLive),

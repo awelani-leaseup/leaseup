@@ -2,15 +2,6 @@ import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
 
-// Subscription status types based on Paystack documentation
-export type SubscriptionStatus =
-  | 'active' // Currently active, will be charged on next payment date
-  | 'non-renewing' // Active but won't be charged on next payment date
-  | 'attention' // Active but payment issue (expired card, insufficient funds)
-  | 'completed' // Complete, no longer charged
-  | 'cancelled'; // Cancelled, no longer charged
-
-// Schema for subscription status update webhooks
 const SubscriptionStatusUpdatePayload = Schema.Struct({
   event: Schema.String,
   data: Schema.Struct({
@@ -26,7 +17,6 @@ const SubscriptionStatusUpdatePayload = Schema.Struct({
       amount: Schema.Number,
       currency: Schema.String,
     }),
-    // Optional fields that might be present
     next_payment_date: Schema.optional(Schema.String),
     most_recent_invoice: Schema.optional(
       Schema.Struct({
@@ -53,7 +43,6 @@ const processSubscriptionStatusUpdateEffect = (
       customerEmail: payload.data.customer.email,
     });
 
-    // Find the landlord by email
     const landlord = yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
@@ -83,14 +72,12 @@ const processSubscriptionStatusUpdateEffect = (
       return;
     }
 
-    // Update subscription status in database
     yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
         await db.user.update({
           where: { id: landlord.id },
           data: {
-            // Note: You'll need to add these fields to your User model
             // paystackSubscriptionStatus: payload.data.status,
             // subscriptionUpdatedAt: new Date(),
             // nextPaymentDate: payload.data.next_payment_date
@@ -107,7 +94,6 @@ const processSubscriptionStatusUpdateEffect = (
         ),
     });
 
-    // Send appropriate notifications based on status
     const notificationPayload = {
       landlordName: landlord.name || 'Valued Customer',
       planName: payload.data.plan.name,
@@ -117,7 +103,6 @@ const processSubscriptionStatusUpdateEffect = (
 
     switch (payload.data.status) {
       case 'attention':
-        // Payment failed - notify landlord to update payment method
         yield* Effect.tryPromise({
           try: () =>
             novu.trigger({
@@ -140,7 +125,6 @@ const processSubscriptionStatusUpdateEffect = (
         break;
 
       case 'cancelled':
-        // Subscription cancelled
         yield* Effect.tryPromise({
           try: () =>
             novu.trigger({
@@ -157,7 +141,6 @@ const processSubscriptionStatusUpdateEffect = (
         break;
 
       case 'non-renewing':
-        // Subscription will not renew
         yield* Effect.tryPromise({
           try: () =>
             novu.trigger({

@@ -140,6 +140,7 @@ export interface DatabaseService {
         email: true;
         paystackSubAccountId: true;
         paystackSplitGroupId: true;
+        paystackCustomerId: true;
       };
     }> | null,
     DatabaseError,
@@ -148,8 +149,12 @@ export interface DatabaseService {
   readonly updateLandlordPaystackIds: (
     userId: string,
     subaccountId: string,
-    splitGroupId: string
+    splitGroupId: string,
+    customerId?: string
   ) => Effect.Effect<void, DatabaseError, never>;
+  readonly checkUserSubscriptionHistory: (
+    userId: string
+  ) => Effect.Effect<boolean, DatabaseError, never>;
   readonly findLeaseWithLandlord: (leaseId: string) => Effect.Effect<
     Prisma.LeaseGetPayload<{
       select: {
@@ -556,6 +561,7 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
             email: true,
             paystackSubAccountId: true,
             paystackSplitGroupId: true,
+            paystackCustomerId: true,
           },
         });
       },
@@ -568,16 +574,23 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
   updateLandlordPaystackIds: (
     userId: string,
     subaccountId: string,
-    splitGroupId: string
+    splitGroupId: string,
+    customerId?: string
   ) =>
     Effect.tryPromise({
       try: async () => {
+        const updateData: any = {
+          paystackSubAccountId: subaccountId,
+          paystackSplitGroupId: splitGroupId,
+        };
+
+        if (customerId) {
+          updateData.paystackCustomerId = customerId;
+        }
+
         await db.user.update({
           where: { id: userId },
-          data: {
-            paystackSubAccountId: subaccountId,
-            paystackSplitGroupId: splitGroupId,
-          },
+          data: updateData,
         });
       },
       catch: (error) =>
@@ -586,6 +599,40 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
             error instanceof Error
               ? error.message
               : 'Failed to update landlord Paystack IDs',
+        }),
+    }),
+  checkUserSubscriptionHistory: (userId: string) =>
+    Effect.tryPromise({
+      try: async () => {
+        const user = await db.user.findUnique({
+          where: { id: userId },
+          select: {
+            subscriptionCreatedAt: true,
+            paystackSubscriptionStatus: true,
+            paystackSubscriptionId: true,
+          },
+        });
+
+        if (!user) {
+          return false;
+        }
+
+        // User has subscription history if they have:
+        // 1. A subscription creation date, OR
+        // 2. A current/previous subscription status (not null), OR
+        // 3. A Paystack subscription ID
+        return !!(
+          user.subscriptionCreatedAt ||
+          user.paystackSubscriptionStatus ||
+          user.paystackSubscriptionId
+        );
+      },
+      catch: (error) =>
+        new DatabaseError({
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Failed to check user subscription history',
         }),
     }),
   findLeaseWithLandlord: (leaseId: string) =>

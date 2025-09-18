@@ -40,6 +40,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
   const {
     data: onboardingStatus,
     isPending: isOnboardingPending,
+    isLoading: isOnboardingLoading,
     error: onboardingError,
     isError: isOnboardingError,
   } = api.onboarding.getOnboardingStatus.useQuery(undefined, {
@@ -62,18 +63,12 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
         return;
       }
 
-      if (session?.user?.id && !isAuthPage && !isOnboardingPage) {
-        if (isOnboardingError) {
-          console.error("Failed to load onboarding status:", onboardingError);
-          router.push("/onboarding");
-          return;
-        }
+      if (isOnboardingLoading || isOnboardingPending) {
+        return;
+      }
 
-        if (
-          !isOnboardingPending &&
-          onboardingStatus &&
-          !onboardingStatus.onboardingCompleted
-        ) {
+      if (session?.user?.id && !isAuthPage && !isOnboardingPage) {
+        if (onboardingStatus && !onboardingStatus.onboardingCompleted) {
           router.push("/onboarding");
           return;
         }
@@ -89,9 +84,10 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     isOnboardingPending,
     isOnboardingError,
     onboardingError,
+    isOnboardingLoading,
   ]);
 
-  if (isAuthPending || (shouldCheckOnboarding && isOnboardingPending)) {
+  if (isAuthPending || (shouldCheckOnboarding && isOnboardingLoading)) {
     return <div className="min-h-screen bg-gray-50" />;
   }
 

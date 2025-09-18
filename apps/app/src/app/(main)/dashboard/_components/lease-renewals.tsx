@@ -6,16 +6,15 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@leaseup/ui/components/alert";
-import { format, differenceInDays } from "date-fns";
+import { format } from "date-fns";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { FileText } from "lucide-react";
-
-const getDaysColor = (days: number) => {
-  if (days <= 7) return "text-red-600";
-  if (days <= 30) return "text-yellow-600";
-  return "text-gray-600";
-};
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@leaseup/ui/components/avataar";
 
 export function LeaseRenewals() {
   const { data, isLoading, error } = api.dashboard.getStats.useQuery();
@@ -89,28 +88,28 @@ export function LeaseRenewals() {
       <div className="space-y-4">
         {upcomingRenewals.map((lease) => {
           const tenant = lease.tenantLease?.[0]?.tenant;
-          const property = lease.unit?.property;
-          const daysUntilExpiry = lease.endDate
-            ? differenceInDays(new Date(lease.endDate), new Date())
-            : 0;
-
           return (
             <div key={lease.id} className="flex items-center justify-between">
               <div className="flex-1">
-                <p className="font-medium tracking-tight text-[#2D3436]">
-                  {tenant?.firstName} {tenant?.lastName}
-                </p>
-                <p className="line-clamp-1 text-sm tracking-tight text-[#7F8C8D]">
-                  - {property?.name}
-                </p>
-                <p className="text-sm tracking-tight text-[#7F8C8D]">
-                  - Unit {lease.unit?.name}
-                </p>
-                <p className="text-sm tracking-tight text-[#7F8C8D]">
-                  - Expires{" "}
-                  {lease.endDate
-                    ? format(new Date(lease.endDate), "MMM d, yyyy")
-                    : "TBD"}
+                <p className="flex items-center gap-2 font-medium tracking-tight text-[#2D3436]">
+                  <Avatar>
+                    <AvatarImage src={tenant?.avatarUrl ?? undefined} />
+                    <AvatarFallback>
+                      {tenant?.firstName?.[0]}
+                      {tenant?.lastName?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p>
+                      {tenant?.firstName} {tenant?.lastName}
+                    </p>
+                    <p className="text-sm tracking-tight text-[#7F8C8D]">
+                      Expires{" "}
+                      {lease.endDate
+                        ? format(new Date(lease.endDate), "MMM d, yyyy")
+                        : "TBD"}
+                    </p>
+                  </div>
                 </p>
               </div>
             </div>

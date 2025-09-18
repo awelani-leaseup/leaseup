@@ -3,318 +3,356 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
 import { Badge } from "@leaseup/ui/components/badge";
 import {
-  CreditCard,
+  DescriptionList,
+  DescriptionTerm,
+  DescriptionDetails,
+} from "@leaseup/ui/components/description-list";
+import {
   Calendar,
-  Download,
-  Plus,
   CheckCircle,
+  X,
+  Tag,
+  Banknote,
+  Clock,
+  AlertTriangle,
+  CircleCheck,
+  CalendarSync,
+  Circle,
+  CreditCard,
 } from "lucide-react";
+import { usePaystackPayment } from "react-paystack";
+import { authClient } from "@/utils/auth/client";
+import { api } from "@/trpc/react";
+import toast from "react-hot-toast";
+import { convertFromCents, formatCurrencyToZAR } from "@/utils/currency";
+import BillingLoading from "./loading";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@leaseup/ui/components/alert";
+import { useState } from "react";
+
+const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "";
+const PROFESSIONAL_PLAN_CODE = "PLN_v931v6xx7712tkl";
 
 export default function BillingPage() {
-  const currentPlan = {
-    name: "Pro Plan",
-    price: "$29",
-    period: "month",
-    features: [
-      "Unlimited properties",
-      "Advanced analytics",
-      "Priority support",
-      "API access",
-      "Custom branding",
-    ],
+  const { data: session } = authClient.useSession();
+  const utils = api.useUtils();
+  const [isRenewed, setIsRenewed] = useState(false);
+  const {
+    data: subscriptionData,
+    isLoading,
+    error,
+  } = api.user.getPaystackSubscriptionDetails.useQuery(undefined, {
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  const generateManagementLinkMutation =
+    api.user.generateSubscriptionManagementLink.useMutation({
+      onSuccess: (result) => {
+        if (result.managementLink) {
+          window.open(result.managementLink, "_blank", "noopener,noreferrer");
+        }
+      },
+      onError: (error) => {
+        console.error("Error generating management link:", error);
+        toast.error("Error generating management link");
+      },
+    });
+
+  const initializePayment = usePaystackPayment({
+    publicKey: PAYSTACK_PUBLIC_KEY,
+    email: session?.user?.email,
+    plan: PROFESSIONAL_PLAN_CODE,
+    amount: 0,
+  });
+
+  const handleManageBilling = () => {
+    generateManagementLinkMutation.mutate();
   };
 
-  const paymentMethods = [
-    {
-      type: "Visa",
-      last4: "4242",
-      expiry: "12/25",
-      isDefault: true,
-    },
-    {
-      type: "Mastercard",
-      last4: "8888",
-      expiry: "08/26",
-      isDefault: false,
-    },
-  ];
+  const handleRenewSubscription = () => {
+    initializePayment({
+      onSuccess: () => {
+        toast.success("Subscription renewed successfully!");
+        setIsRenewed(true);
+        utils.user.getSubscriptionStatus.setData(undefined, (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            hasSubscription: true,
+            status: "ACTIVE",
+            planCode: PROFESSIONAL_PLAN_CODE,
+            isActive: true,
+          };
+        });
 
-  const billingHistory = [
-    {
-      id: "INV-001",
-      date: "Dec 1, 2024",
-      amount: "$29.00",
-      status: "Paid",
-      description: "Pro Plan - Monthly",
-    },
-    {
-      id: "INV-002",
-      date: "Nov 1, 2024",
-      amount: "$29.00",
-      status: "Paid",
-      description: "Pro Plan - Monthly",
-    },
-    {
-      id: "INV-003",
-      date: "Oct 1, 2024",
-      amount: "$29.00",
-      status: "Paid",
-      description: "Pro Plan - Monthly",
-    },
-  ];
+        setTimeout(() => {
+          utils.user.getPaystackSubscriptionDetails.invalidate();
+        }, 5000);
+      },
+      onClose: () => {
+        console.log("Payment dialog closed");
+      },
+    });
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const getStatusBadge = (status: string | null | undefined) => {
+    if (!status)
+      return (
+        <Badge variant="outlined" color="secondary">
+          No Subscription
+        </Badge>
+      );
+
+    const statusMap: Record<
+      string,
+      {
+        variant: "solid" | "outlined" | "soft";
+        color: "primary" | "success" | "danger" | "warning" | "secondary";
+        label: string;
+        icon?: React.ReactNode;
+      }
+    > = {
+      active: {
+        variant: "soft",
+        color: "success",
+        label: "Active",
+        icon: <CircleCheck className="size-4 stroke-1" />,
+      },
+      "non-renewing": {
+        variant: "outlined",
+        color: "warning",
+        label: "Non-renewing",
+        icon: <Clock className="size-4 stroke-1" />,
+      },
+      cancelled: {
+        variant: "solid",
+        color: "danger",
+        label: "Cancelled",
+        icon: <X className="size-4 stroke-1" />,
+      },
+      completed: {
+        variant: "outlined",
+        color: "secondary",
+        label: "Completed",
+        icon: <CheckCircle className="size-4 stroke-1" />,
+      },
+      attention: {
+        variant: "solid",
+        color: "danger",
+        label: "Needs Attention",
+        icon: <AlertTriangle className="size-4 stroke-1" />,
+      },
+    };
+
+    const statusInfo = statusMap[status.toLowerCase()] ?? {
+      variant: "outlined",
+      color: "secondary",
+      label: status,
+    };
+    return (
+      <Badge
+        variant={statusInfo.variant}
+        color={statusInfo.color}
+        size="sm"
+        className="rounded-md"
+      >
+        {statusInfo.icon}
+        {statusInfo.label}
+      </Badge>
+    );
+  };
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div>
-        <div className="flex items-center gap-3">
-          <CreditCard className="h-8 w-8 text-blue-600" />
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Billing & Subscription
-            </h1>
-            <p className="text-gray-600">
-              Manage your subscription plan and payment methods
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Single Card Container */}
       <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Subscription</CardTitle>
+          <CardDescription>
+            Manage your subscription plan and payment methods
+          </CardDescription>
+        </CardHeader>
         <CardContent className="space-y-8 p-6">
-          {/* Current Plan */}
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Current Plan</h2>
-              <Badge>Active</Badge>
-            </div>
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
-                <p className="text-gray-600">
-                  {currentPlan.price}/{currentPlan.period} · Next billing: Jan
-                  1, 2025
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-3xl font-bold">{currentPlan.price}</p>
-                <p className="text-gray-600">per {currentPlan.period}</p>
-              </div>
+              <h2 className="text-lg font-semibold">Current Subscription</h2>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <h4 className="mb-3 font-medium">Plan Features:</h4>
-                <ul className="space-y-2">
-                  {currentPlan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-center gap-2 text-sm"
-                    >
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {(() => {
+              if (isLoading) {
+                return <BillingLoading />;
+              }
 
-              <div className="space-y-3">
-                <Button className="w-full">Upgrade Plan</Button>
-                <Button variant="outlined" className="w-full">
-                  Change Plan
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="w-full border-red-200 text-red-600 hover:bg-red-50"
-                >
-                  Cancel Subscription
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <hr className="border-gray-200" />
-
-          {/* Payment Methods */}
-          <div>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Payment Methods</h2>
-              <Button size="sm" className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Add Method
-              </Button>
-            </div>
-            <div className="space-y-3">
-              {paymentMethods.map((method) => (
-                <div
-                  key={method.type + method.last4}
-                  className="flex items-center justify-between rounded-lg border p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-12 items-center justify-center rounded bg-gray-200">
-                      <CreditCard className="h-4 w-4" />
+              if (error) {
+                return (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-red-500">
+                      Error loading subscription details
                     </div>
-                    <div>
-                      <p className="font-medium">
-                        {method.type} •••• {method.last4}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Expires {method.expiry}
-                      </p>
-                    </div>
-                    {method.isDefault && (
-                      <Badge variant="outlined" className="ml-2">
-                        Default
-                      </Badge>
-                    )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    {!method.isDefault && (
-                      <Button variant="outlined" size="sm">
-                        Set Default
-                      </Button>
-                    )}
-                    <Button variant="outlined" size="sm">
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="sm"
-                      className="border-red-200 text-red-600 hover:bg-red-50"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                );
+              }
 
-          {/* Divider */}
-          <hr className="border-gray-200" />
-
-          {/* Billing Information */}
-          <div>
-            <h2 className="mb-4 text-lg font-semibold">Billing Information</h2>
-            <div className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <p className="mb-1 text-sm font-medium">Billing Address</p>
-                  <p className="text-sm text-gray-600">
-                    123 Business Street
-                    <br />
-                    New York, NY 10001
-                    <br />
-                    United States
-                  </p>
-                </div>
-                <div>
-                  <p className="mb-1 text-sm font-medium">Tax Information</p>
-                  <p className="text-sm text-gray-600">
-                    Tax ID: 12-3456789
-                    <br />
-                    VAT: Not applicable
-                  </p>
-                </div>
-              </div>
-              <Button variant="outlined">Update Billing Information</Button>
-            </div>
-          </div>
-
-          {/* Divider */}
-          <hr className="border-gray-200" />
-
-          {/* Billing History */}
-          <div>
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <Calendar className="h-5 w-5" />
-              Billing History
-            </h2>
-            <div className="space-y-3">
-              {billingHistory.map((invoice) => (
-                <div
-                  key={invoice.id}
-                  className="flex items-center justify-between rounded-lg border p-4"
-                >
-                  <div>
-                    <p className="font-medium">{invoice.description}</p>
-                    <p className="text-sm text-gray-600">
-                      {invoice.date} • {invoice.id}
+              if (!subscriptionData?.hasSubscription) {
+                return (
+                  <div className="rounded-lg border border-gray-200 p-6 text-center">
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      No Active Subscription
+                    </h3>
+                    <p className="mt-2 text-gray-600">
+                      You don&apos;t have an active subscription plan.
                     </p>
+                    <Button className="mt-4">Subscribe to a Plan</Button>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="font-medium">{invoice.amount}</p>
-                      <div className="flex items-center gap-1">
-                        <CheckCircle className="h-3 w-3 text-green-500" />
-                        <span className="text-xs text-green-600">
-                          {invoice.status}
-                        </span>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outlined"
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <Download className="h-4 w-4" />
-                      Download
-                    </Button>
+                );
+              }
+
+              return (
+                <div className="grid gap-6 rounded-md border bg-gray-50 p-4 md:grid-cols-2">
+                  <div>
+                    <DescriptionList orientation="horizontal">
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <Tag className="size-4" />
+                        Plan Name
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {subscriptionData?.plan?.name ?? "N/A"}
+                      </DescriptionDetails>
+
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <Banknote className="size-4" />
+                        Amount
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {formatCurrencyToZAR(
+                          convertFromCents(subscriptionData?.plan?.amount ?? 0),
+                        )}
+                      </DescriptionDetails>
+
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <CalendarSync className="size-4" />
+                        Billing Interval
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {subscriptionData?.plan?.interval
+                          ? (subscriptionData.plan.interval as string)
+                              .charAt(0)
+                              .toUpperCase() +
+                            (subscriptionData.plan.interval as string).slice(
+                              1,
+                            ) +
+                            "ly"
+                          : "N/A"}
+                      </DescriptionDetails>
+                    </DescriptionList>
+                  </div>
+
+                  <div>
+                    <DescriptionList orientation="horizontal">
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <Circle className="size-4" />
+                        Subscription Status
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {getStatusBadge(subscriptionData?.subscription?.status)}
+                      </DescriptionDetails>
+
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <Calendar className="size-4" />
+                        Next Payment Date
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {formatDate(
+                          subscriptionData?.subscription?.next_payment_date ??
+                            null,
+                        )}
+                      </DescriptionDetails>
+
+                      <DescriptionTerm className="flex items-center gap-2">
+                        <Calendar className="size-4" />
+                        Created Date
+                      </DescriptionTerm>
+                      <DescriptionDetails>
+                        {formatDate(
+                          subscriptionData?.subscription?.createdAt ?? null,
+                        )}
+                      </DescriptionDetails>
+                    </DescriptionList>
                   </div>
                 </div>
-              ))}
-            </div>
-            <Button variant="outlined" className="mt-4 w-full">
-              View All Invoices
-            </Button>
-          </div>
+              );
+            })()}
 
-          {/* Divider */}
-          <hr className="border-gray-200" />
-
-          {/* Usage & Limits */}
-          <div>
-            <h2 className="mb-4 text-lg font-semibold">Usage & Limits</h2>
-            <div className="space-y-4">
-              <div className="space-y-3">
-                <div>
-                  <div className="mb-1 flex justify-between text-sm">
-                    <span>Properties</span>
-                    <span>45 / Unlimited</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-gray-200">
-                    <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
-                  </div>
+            <div className="mt-6">
+              {subscriptionData?.subscription?.status === "non-renewing" ? (
+                <div className="mb-4 flex w-fit flex-col gap-2">
+                  <h2 className="text-lg font-semibold">
+                    Renew Your Subscription
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Your subscription will not renew automatically and will be
+                    disabled after your next payment date. Click below to renew
+                    your plan.
+                  </p>
+                  <Button
+                    onClick={handleRenewSubscription}
+                    className="mt-4 w-fit"
+                  >
+                    <CreditCard className="size-4" />
+                    Renew Subscription
+                  </Button>
                 </div>
-
-                <div>
-                  <div className="mb-1 flex justify-between text-sm">
-                    <span>API Calls</span>
-                    <span>2,340 / 10,000</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-gray-200">
-                    <div className="h-2 w-1/4 rounded-full bg-blue-600"></div>
-                  </div>
+              ) : (
+                <div className="mb-4 flex w-fit flex-col gap-2">
+                  <h2 className="text-lg font-semibold">
+                    Manage Billing Information
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Manage your billing information.
+                  </p>
+                  <Button
+                    variant="outlined"
+                    color="info"
+                    onClick={handleManageBilling}
+                    disabled={generateManagementLinkMutation.isPending}
+                    className="mt-4 w-fit"
+                  >
+                    <CreditCard className="size-4" />
+                    {generateManagementLinkMutation.isPending
+                      ? "Generating Link..."
+                      : "Manage Billing"}
+                  </Button>
                 </div>
+              )}
 
-                <div>
-                  <div className="mb-1 flex justify-between text-sm">
-                    <span>Storage</span>
-                    <span>1.2 GB / 100 GB</span>
-                  </div>
-                  <div className="h-2 w-full rounded-full bg-gray-200">
-                    <div className="h-2 w-[2%] rounded-full bg-blue-600"></div>
-                  </div>
-                </div>
-              </div>
+              {isRenewed && (
+                <Alert className="mt-4">
+                  <AlertTitle>Subscription Renewed</AlertTitle>
+                  <AlertDescription>
+                    Your subscription has been renewed successfully, it might
+                    take some time to reflect in your account.
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
           </div>
         </CardContent>

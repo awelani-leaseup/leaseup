@@ -71,7 +71,6 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
       status: payload.data.status,
     });
 
-    // Find the user (landlord) by email from the customer data
     const landlord = yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
@@ -82,6 +81,7 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
             name: true,
             email: true,
             paystackSubscriptionId: true,
+            paystackSubscriptionStatus: true,
           },
         });
       },
@@ -106,21 +106,9 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
       return;
     }
 
-    // Check if subscription is already recorded
-    if (landlord.paystackSubscriptionId === payload.data.subscription_code) {
-      yield* Console.log('Subscription already recorded for landlord', {
-        landlordId: landlord.id,
-        subscriptionCode: payload.data.subscription_code,
-      });
-      return {
-        message: 'Subscription already recorded',
-        landlordId: landlord.id,
-        subscriptionCode: payload.data.subscription_code,
-        status: 'already_exists',
-      };
-    }
+    const hasSubscriptionHistory =
+      yield* databaseService.checkUserSubscriptionHistory(landlord.id);
 
-    // Update the landlord's subscription information
     yield* Effect.tryPromise({
       try: async () => {
         const { db } = await import('@leaseup/prisma/db.ts');
@@ -143,8 +131,8 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
               new Date(payload.data.createdAt).toUTCString()
             ),
             subscriptionUpdatedAt: new Date(new Date().toUTCString()),
-            lastPaymentFailure: null, // Clear any previous failure
-            paymentRetryCount: 0, // Reset retry count
+            lastPaymentFailure: null,
+            paymentRetryCount: 0,
           },
         });
       },
@@ -167,38 +155,48 @@ const processSubscriptionCreateEffect = (payload: SubscriptionCreatePayload) =>
       nextPaymentDate: payload.data.next_payment_date,
     });
 
-    try {
-      yield* Effect.tryPromise({
-        try: () =>
-          novu.trigger({
-            to: {
-              subscriberId: landlord.id,
-              email: landlord.email,
-            },
-            workflowId: WELCOME_WORKFLOW_ID,
-            payload: {
-              landlordName: landlord.name || 'Valued Customer',
-              ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/properties/create`,
-            },
-          }),
-        catch: (error) =>
-          new Error(`Failed to send Novu welcome notification: ${error}`),
-      });
-
-      yield* Console.log('Welcome notification sent successfully', {
-        landlordId: landlord.id,
-        landlordEmail: landlord.email,
-        subscriptionCode: payload.data.subscription_code,
-      });
-    } catch (error) {
-      yield* Console.warn(
-        'Failed to send welcome notification, but subscription was processed successfully',
+    if (hasSubscriptionHistory) {
+      yield* Console.log(
+        'Skipping welcome notification - user is renewing subscription',
         {
-          error: error instanceof Error ? error.message : 'Unknown error',
           landlordId: landlord.id,
           subscriptionCode: payload.data.subscription_code,
         }
       );
+    } else {
+      try {
+        yield* Effect.tryPromise({
+          try: () =>
+            novu.trigger({
+              to: {
+                subscriberId: landlord.id,
+                email: landlord.email,
+              },
+              workflowId: WELCOME_WORKFLOW_ID,
+              payload: {
+                landlordName: landlord.name || 'Valued Customer',
+                ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/properties/create`,
+              },
+            }),
+          catch: (error) =>
+            new Error(`Failed to send Novu welcome notification: ${error}`),
+        });
+
+        yield* Console.log('Welcome notification sent successfully', {
+          landlordId: landlord.id,
+          landlordEmail: landlord.email,
+          subscriptionCode: payload.data.subscription_code,
+        });
+      } catch (error) {
+        yield* Console.warn(
+          'Failed to send welcome notification, but subscription was processed successfully',
+          {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            landlordId: landlord.id,
+            subscriptionCode: payload.data.subscription_code,
+          }
+        );
+      }
     }
 
     return yield* Effect.ensuring(

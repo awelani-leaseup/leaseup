@@ -97,9 +97,8 @@ export function SubscriptionWrapper({
     enabled:
       !!session?.user?.id && onboardingStatus?.onboardingCompleted === true,
     staleTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 1,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const isLoading = isOnboardingLoading || isSubscriptionLoading;
@@ -108,7 +107,7 @@ export function SubscriptionWrapper({
     publicKey: PAYSTACK_PUBLIC_KEY,
     email: session?.user?.email,
     plan: PROFESSIONAL_PLAN_CODE,
-    amount: 0, // Plan amount will take precedence over amount
+    amount: 0,
   });
 
   if (error) {
@@ -133,7 +132,10 @@ export function SubscriptionWrapper({
     );
   }
 
-  if (subscriptionStatus?.status === "ACTIVE") {
+  if (
+    subscriptionStatus?.status === "ACTIVE" ||
+    subscriptionStatus?.status === "NON_RENEWING"
+  ) {
     return <>{children}</>;
   }
 
@@ -201,7 +203,7 @@ export function SubscriptionWrapper({
     }
 
     if (subscriptionStatus?.status === "NON_RENEWING") {
-      return "Subscription Expiring";
+      return "Subscription Not Renewing";
     }
 
     return "Subscription Required";

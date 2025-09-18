@@ -6,8 +6,11 @@ import {
   VAddressInfoInput,
   VProfilePictureInput,
   VChangePasswordInput,
+  VBankingInfoInput,
 } from './profile.types';
 import { auth } from '../server/auth/auth';
+import { paystack } from '@leaseup/payments/open-api/client';
+import { SubaccountUpdate } from '@leaseup/payments/open-api/paystack';
 
 export const profileRouter = createTRPCRouter({
   getProfile: protectedProcedure.query(async ({ ctx }) => {
@@ -29,6 +32,8 @@ export const profileRouter = createTRPCRouter({
           state: true,
           zip: true,
           countryCode: true,
+          paystackSubAccountId: true,
+          idNumber: true,
         },
       });
 
@@ -177,4 +182,139 @@ export const profileRouter = createTRPCRouter({
         });
       }
     }),
+
+  getBankingInfo: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.auth?.user?.id },
+        select: {
+          paystackSubAccountId: true,
+          idNumber: true,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found',
+        });
+      }
+
+      let subaccountDetails: SubaccountUpdate | null = null;
+
+      if (user.paystackSubAccountId) {
+        try {
+          const { data, error } = await paystack.GET('/subaccount/{code}', {
+            params: {
+              path: {
+                code: user.paystackSubAccountId,
+              },
+            },
+          });
+
+          if (!error && data?.data) {
+            subaccountDetails = data.data;
+          }
+        } catch (error) {
+          console.error('Error fetching subaccount details:', error);
+        }
+      }
+
+      return {
+        paystackSubAccountId: user.paystackSubAccountId,
+        idNumber: user.idNumber,
+        subaccountDetails,
+      };
+    } catch (error) {
+      console.error('Error fetching banking info:', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch banking information. Please try again.',
+      });
+    }
+  }),
+
+  updateBankingInfo: protectedProcedure
+    .input(VBankingInfoInput)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Update the user's ID information
+        const updatedUser = await ctx.db.user.update({
+          where: { id: ctx.auth?.user?.id },
+          data: {
+            idNumber: input.idNumber,
+          },
+          select: {
+            id: true,
+            paystackSubAccountId: true,
+            idNumber: true,
+            businessName: true,
+            name: true,
+            phone: true,
+            email: true,
+          },
+        });
+
+        if (updatedUser.paystackSubAccountId) {
+          try {
+            await paystack.PUT('/subaccount/{code}', {
+              params: {
+                path: {
+                  code: updatedUser.paystackSubAccountId,
+                },
+              },
+              body: {
+                settlement_bank: input.bankCode,
+                account_number: input.accountNumber,
+                primary_contact_name: updatedUser.name,
+                primary_contact_email: updatedUser.email,
+                primary_contact_phone: updatedUser.phone ?? undefined,
+              },
+            });
+          } catch (error) {
+            console.error('Error updating Paystack subaccount:', error);
+          }
+        }
+
+        return {
+          success: true,
+          user: updatedUser,
+          message: 'Banking information updated successfully',
+        };
+      } catch (error) {
+        console.error('Error updating banking information:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update banking information. Please try again.',
+        });
+      }
+    }),
+
+  getAllBanks: protectedProcedure.query(async ({ ctx }) => {
+    const BANKS_COUNTRY = 'south africa';
+    try {
+      const { data, error } = await paystack.GET('/bank', {
+        params: {
+          query: {
+            country: BANKS_COUNTRY,
+          },
+        },
+      });
+
+      if (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch banks from Paystack',
+        });
+      }
+
+      return data?.data || [];
+    } catch (error) {
+      console.error('Error fetching banks:', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch banks. Please try again.',
+      });
+    }
+  }),
 });

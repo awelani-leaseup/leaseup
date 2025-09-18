@@ -1,11 +1,5 @@
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
 import { db } from '@leaseup/prisma/db.ts';
-
-export type SubscriptionStatus =
-  | 'active' // Currently active, will be charged on next payment date
-  | 'non-renewing' // Active but won't be charged on next payment date
-  | 'attention' // Active but payment issue (expired card, insufficient funds)
-  | 'completed' // Complete, no longer charged
-  | 'cancelled'; // Cancelled, no longer charged
 
 export interface SubscriptionInfo {
   id: string;
@@ -24,13 +18,10 @@ export interface SubscriptionInfo {
   paymentRetryCount: number | null;
 }
 
-/**
- * Get all users with active subscriptions
- */
 export async function getActiveSubscriptions(): Promise<SubscriptionInfo[]> {
   return db.user.findMany({
     where: {
-      paystackSubscriptionStatus: 'active',
+      paystackSubscriptionStatus: SubscriptionPlanStatus.ACTIVE,
       paystackSubscriptionId: {
         not: null,
       },
@@ -54,15 +45,12 @@ export async function getActiveSubscriptions(): Promise<SubscriptionInfo[]> {
   });
 }
 
-/**
- * Get all users with subscriptions that need attention (payment issues)
- */
 export async function getSubscriptionsNeedingAttention(): Promise<
   SubscriptionInfo[]
 > {
   return db.user.findMany({
     where: {
-      paystackSubscriptionStatus: 'attention',
+      paystackSubscriptionStatus: SubscriptionPlanStatus.ATTENTION,
       paystackSubscriptionId: {
         not: null,
       },
@@ -89,9 +77,6 @@ export async function getSubscriptionsNeedingAttention(): Promise<
   });
 }
 
-/**
- * Get subscriptions expiring soon (next payment date within specified days)
- */
 export async function getSubscriptionsExpiringSoon(
   days: number = 7
 ): Promise<SubscriptionInfo[]> {
@@ -101,7 +86,10 @@ export async function getSubscriptionsExpiringSoon(
   return db.user.findMany({
     where: {
       paystackSubscriptionStatus: {
-        in: ['active', 'non-renewing'],
+        in: [
+          SubscriptionPlanStatus.ACTIVE,
+          SubscriptionPlanStatus.NON_RENEWING,
+        ],
       },
       nextPaymentDate: {
         lte: futureDate,
@@ -149,27 +137,27 @@ export async function getSubscriptionStats() {
     }),
     db.user.count({
       where: {
-        paystackSubscriptionStatus: 'active',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.ACTIVE,
       },
     }),
     db.user.count({
       where: {
-        paystackSubscriptionStatus: 'attention',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.ATTENTION,
       },
     }),
     db.user.count({
       where: {
-        paystackSubscriptionStatus: 'non-renewing',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.NON_RENEWING,
       },
     }),
     db.user.count({
       where: {
-        paystackSubscriptionStatus: 'cancelled',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.CANCELLED,
       },
     }),
     db.user.count({
       where: {
-        paystackSubscriptionStatus: 'completed',
+        paystackSubscriptionStatus: SubscriptionPlanStatus.COMPLETED,
       },
     }),
   ]);
@@ -184,12 +172,9 @@ export async function getSubscriptionStats() {
   };
 }
 
-/**
- * Update subscription status for a user
- */
 export async function updateSubscriptionStatus(
   userId: string,
-  status: SubscriptionStatus,
+  status: SubscriptionPlanStatus,
   additionalData?: {
     nextPaymentDate?: Date | null;
     lastPaymentFailure?: string | null;
@@ -206,12 +191,9 @@ export async function updateSubscriptionStatus(
   });
 }
 
-/**
- * Clear subscription data for a user (when subscription is cancelled/completed)
- */
 export async function clearSubscriptionData(
   userId: string,
-  status: 'cancelled' | 'completed'
+  status: SubscriptionPlanStatus
 ) {
   return db.user.update({
     where: { id: userId },
@@ -230,47 +212,31 @@ export async function clearSubscriptionData(
   });
 }
 
-/**
- * Format subscription amount for display
- */
-export function formatSubscriptionAmount(
-  amount: number | null,
-  currency: string | null = 'ZAR'
-): string {
-  if (!amount) return 'N/A';
-
-  return new Intl.NumberFormat('en-ZA', {
-    style: 'currency',
-    currency: currency || 'ZAR',
-  }).format(amount / 100); // Convert from kobo/cents
-}
-
-/**
- * Get subscription status display info
- */
-export function getSubscriptionStatusInfo(status: string | null) {
+export function getSubscriptionStatusInfo(
+  status: SubscriptionPlanStatus | null
+) {
   const statusMap = {
-    active: {
+    [SubscriptionPlanStatus.ACTIVE]: {
       label: 'Active',
       color: 'green',
       description: 'Subscription is active and will be charged on schedule',
     },
-    'non-renewing': {
+    [SubscriptionPlanStatus.NON_RENEWING]: {
       label: 'Not Renewing',
       color: 'yellow',
       description: 'Active but will not renew automatically',
     },
-    attention: {
+    [SubscriptionPlanStatus.ATTENTION]: {
       label: 'Needs Attention',
       color: 'red',
       description: 'Payment issue - requires action',
     },
-    completed: {
+    [SubscriptionPlanStatus.COMPLETED]: {
       label: 'Completed',
       color: 'gray',
       description: 'Subscription has completed successfully',
     },
-    cancelled: {
+    [SubscriptionPlanStatus.CANCELLED]: {
       label: 'Cancelled',
       color: 'gray',
       description: 'Subscription has been cancelled',

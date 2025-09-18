@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@leaseup/ui/components/sidebar";
-import { User, CreditCard, Shield, FileText, Wallet, X } from "lucide-react";
+import { User, CreditCard, Shield, Wallet, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
@@ -56,11 +56,6 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           title: "Subscription",
           href: "/settings/billing",
           icon: CreditCard,
-        },
-        {
-          title: "Invoices",
-          href: "/settings/invoices",
-          icon: FileText,
         },
       ],
     },

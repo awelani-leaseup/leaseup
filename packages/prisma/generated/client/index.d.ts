@@ -320,7 +320,7 @@ export const SubscriptionPlanStatus: typeof $Enums.SubscriptionPlanStatus
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -352,13 +352,6 @@ export class PrismaClient<
    * Disconnect from the database
    */
   $disconnect(): $Utils.JsPromise<void>;
-
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
 
 /**
    * Executes a prepared raw query and returns the number of affected rows.
@@ -626,8 +619,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.9.0
-   * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
+   * Prisma Client JS version: 6.16.2
+   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
     client: string
@@ -2123,16 +2116,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -2147,6 +2148,10 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
     /**
      * Global configuration for omitting model fields by default.
      * 
@@ -2187,10 +2192,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -2230,25 +2240,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -2694,6 +2685,7 @@ export namespace Prisma {
     idNumber: string | null
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
+    paystackCustomerId: string | null
     paystackSubscriptionId: string | null
     paystackSubscriptionStatus: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode: string | null
@@ -2729,6 +2721,7 @@ export namespace Prisma {
     idNumber: string | null
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
+    paystackCustomerId: string | null
     paystackSubscriptionId: string | null
     paystackSubscriptionStatus: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode: string | null
@@ -2764,6 +2757,7 @@ export namespace Prisma {
     idNumber: number
     paystackSplitGroupId: number
     paystackSubAccountId: number
+    paystackCustomerId: number
     paystackSubscriptionId: number
     paystackSubscriptionStatus: number
     subscriptionPlanCode: number
@@ -2815,6 +2809,7 @@ export namespace Prisma {
     idNumber?: true
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
+    paystackCustomerId?: true
     paystackSubscriptionId?: true
     paystackSubscriptionStatus?: true
     subscriptionPlanCode?: true
@@ -2850,6 +2845,7 @@ export namespace Prisma {
     idNumber?: true
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
+    paystackCustomerId?: true
     paystackSubscriptionId?: true
     paystackSubscriptionStatus?: true
     subscriptionPlanCode?: true
@@ -2885,6 +2881,7 @@ export namespace Prisma {
     idNumber?: true
     paystackSplitGroupId?: true
     paystackSubAccountId?: true
+    paystackCustomerId?: true
     paystackSubscriptionId?: true
     paystackSubscriptionStatus?: true
     subscriptionPlanCode?: true
@@ -3007,6 +3004,7 @@ export namespace Prisma {
     idNumber: string | null
     paystackSplitGroupId: string | null
     paystackSubAccountId: string | null
+    paystackCustomerId: string | null
     paystackSubscriptionId: string | null
     paystackSubscriptionStatus: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode: string | null
@@ -3061,6 +3059,7 @@ export namespace Prisma {
     idNumber?: boolean
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
+    paystackCustomerId?: boolean
     paystackSubscriptionId?: boolean
     paystackSubscriptionStatus?: boolean
     subscriptionPlanCode?: boolean
@@ -3102,6 +3101,7 @@ export namespace Prisma {
     idNumber?: boolean
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
+    paystackCustomerId?: boolean
     paystackSubscriptionId?: boolean
     paystackSubscriptionStatus?: boolean
     subscriptionPlanCode?: boolean
@@ -3137,6 +3137,7 @@ export namespace Prisma {
     idNumber?: boolean
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
+    paystackCustomerId?: boolean
     paystackSubscriptionId?: boolean
     paystackSubscriptionStatus?: boolean
     subscriptionPlanCode?: boolean
@@ -3172,6 +3173,7 @@ export namespace Prisma {
     idNumber?: boolean
     paystackSplitGroupId?: boolean
     paystackSubAccountId?: boolean
+    paystackCustomerId?: boolean
     paystackSubscriptionId?: boolean
     paystackSubscriptionStatus?: boolean
     subscriptionPlanCode?: boolean
@@ -3193,7 +3195,7 @@ export namespace Prisma {
     phone?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackCustomerId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     property?: boolean | User$propertyArgs<ExtArgs>
@@ -3228,6 +3230,7 @@ export namespace Prisma {
       idNumber: string | null
       paystackSplitGroupId: string | null
       paystackSubAccountId: string | null
+      paystackCustomerId: string | null
       paystackSubscriptionId: string | null
       paystackSubscriptionStatus: $Enums.SubscriptionPlanStatus | null
       subscriptionPlanCode: string | null
@@ -3688,6 +3691,7 @@ export namespace Prisma {
     readonly idNumber: FieldRef<"User", 'String'>
     readonly paystackSplitGroupId: FieldRef<"User", 'String'>
     readonly paystackSubAccountId: FieldRef<"User", 'String'>
+    readonly paystackCustomerId: FieldRef<"User", 'String'>
     readonly paystackSubscriptionId: FieldRef<"User", 'String'>
     readonly paystackSubscriptionStatus: FieldRef<"User", 'SubscriptionPlanStatus'>
     readonly subscriptionPlanCode: FieldRef<"User", 'String'>
@@ -20066,6 +20070,7 @@ export namespace Prisma {
     idNumber: 'idNumber',
     paystackSplitGroupId: 'paystackSplitGroupId',
     paystackSubAccountId: 'paystackSubAccountId',
+    paystackCustomerId: 'paystackCustomerId',
     paystackSubscriptionId: 'paystackSubscriptionId',
     paystackSubscriptionStatus: 'paystackSubscriptionStatus',
     subscriptionPlanCode: 'subscriptionPlanCode',
@@ -20600,6 +20605,7 @@ export namespace Prisma {
     idNumber?: StringNullableFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
+    paystackCustomerId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionStatus?: EnumSubscriptionPlanStatusNullableFilter<"User"> | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: StringNullableFilter<"User"> | string | null
@@ -20640,6 +20646,7 @@ export namespace Prisma {
     idNumber?: SortOrderInput | SortOrder
     paystackSplitGroupId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
+    paystackCustomerId?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
     paystackSubscriptionStatus?: SortOrderInput | SortOrder
     subscriptionPlanCode?: SortOrderInput | SortOrder
@@ -20684,6 +20691,7 @@ export namespace Prisma {
     idNumber?: StringNullableFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableFilter<"User"> | string | null
+    paystackCustomerId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableFilter<"User"> | string | null
     paystackSubscriptionStatus?: EnumSubscriptionPlanStatusNullableFilter<"User"> | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: StringNullableFilter<"User"> | string | null
@@ -20723,6 +20731,7 @@ export namespace Prisma {
     idNumber?: SortOrderInput | SortOrder
     paystackSplitGroupId?: SortOrderInput | SortOrder
     paystackSubAccountId?: SortOrderInput | SortOrder
+    paystackCustomerId?: SortOrderInput | SortOrder
     paystackSubscriptionId?: SortOrderInput | SortOrder
     paystackSubscriptionStatus?: SortOrderInput | SortOrder
     subscriptionPlanCode?: SortOrderInput | SortOrder
@@ -20766,6 +20775,7 @@ export namespace Prisma {
     idNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSplitGroupId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubAccountId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    paystackCustomerId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubscriptionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     paystackSubscriptionStatus?: EnumSubscriptionPlanStatusNullableWithAggregatesFilter<"User"> | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -22034,6 +22044,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -22074,6 +22085,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -22114,6 +22126,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22154,6 +22167,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22194,6 +22208,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -22229,6 +22244,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22264,6 +22280,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23794,6 +23811,7 @@ export namespace Prisma {
     idNumber?: SortOrder
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
+    paystackCustomerId?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubscriptionStatus?: SortOrder
     subscriptionPlanCode?: SortOrder
@@ -23836,6 +23854,7 @@ export namespace Prisma {
     idNumber?: SortOrder
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
+    paystackCustomerId?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubscriptionStatus?: SortOrder
     subscriptionPlanCode?: SortOrder
@@ -23871,6 +23890,7 @@ export namespace Prisma {
     idNumber?: SortOrder
     paystackSplitGroupId?: SortOrder
     paystackSubAccountId?: SortOrder
+    paystackCustomerId?: SortOrder
     paystackSubscriptionId?: SortOrder
     paystackSubscriptionStatus?: SortOrder
     subscriptionPlanCode?: SortOrder
@@ -27267,6 +27287,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27306,6 +27327,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27361,6 +27383,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27400,6 +27423,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27439,6 +27463,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27478,6 +27503,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27533,6 +27559,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27572,6 +27599,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27701,6 +27729,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27740,6 +27769,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -27910,6 +27940,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27949,6 +27980,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28089,6 +28121,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -28128,6 +28161,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -28279,6 +28313,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28318,6 +28353,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29226,6 +29262,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -29265,6 +29302,7 @@ export namespace Prisma {
     idNumber?: string | null
     paystackSplitGroupId?: string | null
     paystackSubAccountId?: string | null
+    paystackCustomerId?: string | null
     paystackSubscriptionId?: string | null
     paystackSubscriptionStatus?: $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: string | null
@@ -29517,6 +29555,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29556,6 +29595,7 @@ export namespace Prisma {
     idNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSplitGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    paystackCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
     paystackSubscriptionStatus?: NullableEnumSubscriptionPlanStatusFieldUpdateOperationsInput | $Enums.SubscriptionPlanStatus | null
     subscriptionPlanCode?: NullableStringFieldUpdateOperationsInput | string | null

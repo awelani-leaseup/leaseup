@@ -1,0 +1,25 @@
+# Ignore generated files
+generated/
+node_modules/
+
+# Ignore development files
+*.log
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore git
+.git/
+.gitignore

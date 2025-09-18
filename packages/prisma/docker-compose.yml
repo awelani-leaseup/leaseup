@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    container_name: leaseup-postgres
+    environment:
+      POSTGRES_USER: leaseup
+      POSTGRES_PASSWORD: leaseup_dev_password
+      POSTGRES_DB: leaseup_dev
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U leaseup -d leaseup_dev']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data:
+    driver: local

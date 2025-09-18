@@ -381,7 +381,7 @@ export default function Leases() {
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
               <CardTitle className="text-2xl font-bold text-[#2D3436]">
-                Leases Management
+                Leases
               </CardTitle>
             </div>
             <div className="mt-4 flex gap-3 md:mt-0">

@@ -6,6 +6,7 @@ import {
   runProcessSubscriptionNotRenewingEffect,
   runProcessExpiringCardsEffect,
   runProcessInvoicePaymentFailedEffect,
+  runProcessChargeSuccessEffect,
 } from "@leaseup/tasks/effect";
 
 const ALLOWED_IPS = [
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
     case "subscription.disable":
       await runProcessSubscriptionDisableEffect(payload);
       break;
-    case "subscription.not_renewing":
+    case "subscription.not_renew":
       await runProcessSubscriptionNotRenewingEffect(payload);
       break;
     case "subscription.expiring_cards":
@@ -55,8 +56,7 @@ export async function POST(req: Request) {
       await runProcessInvoicePaymentFailedEffect(payload);
       break;
     case "charge.success":
-      // Log successful charges (including subscription renewals)
-      console.log("Charge successful:", payload.data?.reference || "unknown");
+      await runProcessChargeSuccessEffect(payload);
       break;
   }
 
