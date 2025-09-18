@@ -4,6 +4,10 @@ generator client {
   binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
+generator triggerClient {
+  provider = "prisma-schema-generator"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")

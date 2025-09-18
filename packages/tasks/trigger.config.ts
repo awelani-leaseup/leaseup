@@ -1,9 +1,6 @@
-import { defineConfig } from '@trigger.dev/sdk/v3';
+import { defineConfig } from '@trigger.dev/sdk';
+import { syncVercelEnvVars } from '@trigger.dev/build/extensions/core';
 import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
-import {
-  syncVercelEnvVars,
-  additionalFiles,
-} from '@trigger.dev/build/extensions/core';
 
 export default defineConfig({
   project: 'proj_jlhisfoufrjnyuppyumz',
@@ -13,12 +10,8 @@ export default defineConfig({
     extensions: [
       prismaExtension({
         schema: '../prisma/schema.prisma',
-        clientGenerator: 'client',
         version: '6.9.0',
-        migrate: false,
-      }),
-      additionalFiles({
-        files: ['../prisma/generated/client/*'],
+        // clientGenerator: 'triggerClient',
       }),
       syncVercelEnvVars({
         vercelAccessToken: process.env.VERCEL_ACCESS_TOKEN,
@@ -26,7 +19,6 @@ export default defineConfig({
         vercelTeamId: process.env.VERCEL_TEAM_ID,
       }),
     ],
-    external: ['@prisma/client'],
   },
   maxDuration: 3600,
   retries: {
