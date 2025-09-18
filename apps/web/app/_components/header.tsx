@@ -10,8 +10,12 @@ import {
 } from '@leaseup/ui/components/navigation-menu';
 import Link from 'next/link';
 
-const SIGNIN_URL = process.env.NEXT_PUBLIC_SIGNIN_URL ?? '';
-const SIGNUP_URL = process.env.NEXT_PUBLIC_SIGNUP_URL ?? '';
+const SIGNIN_URL = process.env.NEXT_PUBLIC_SIGNIN_URL ?? null;
+const SIGNUP_URL = process.env.NEXT_PUBLIC_SIGNUP_URL ?? null;
+
+if (!SIGNIN_URL || !SIGNUP_URL) {
+  throw new Error('Missing SIGNIN_URL or SIGNUP_URL');
+}
 
 export const Header: FC<ComponentProps<'header'>> = () => {
   const [isScrolled, setIsScrolled] = useState(false);
