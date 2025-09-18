@@ -379,8 +379,8 @@ importers:
         specifier: workspace:*
         version: link:../prisma
       '@prisma/client':
-        specifier: ^5.0.0
-        version: 5.22.0(prisma@6.10.1(typescript@5.8.2))
+        specifier: ^6.9.0
+        version: 6.9.0(prisma@6.10.1(typescript@5.8.2))(typescript@5.8.2)
       '@trigger.dev/sdk':
         specifier: 4.0.2
         version: 4.0.2(zod@3.25.76)
@@ -2083,15 +2083,6 @@ packages:
 
   '@polka/url@0.5.0':
     resolution: {integrity: sha512-oZLYFEAzUKyi3SKnXvj32ZCEGH6RDnao7COuCVhDydMS9NrCSVXhM79VaKyP5+Zc33m0QXEd2DN3UkU7OsHcfw==}
-
-  '@prisma/client@5.22.0':
-    resolution: {integrity: sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==}
-    engines: {node: '>=16.13'}
-    peerDependencies:
-      prisma: '*'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
 
   '@prisma/client@6.10.1':
     resolution: {integrity: sha512-Re4pMlcUsQsUTAYMK7EJ4Bw2kg3WfZAAlr8GjORJaK4VOP6LxRQUQ1TuLnxcF42XqGkWQ36q5CQF1yVadANQ6w==}
@@ -9238,11 +9229,12 @@ snapshots:
 
   '@polka/url@0.5.0': {}
 
-  '@prisma/client@5.22.0(prisma@6.10.1(typescript@5.8.2))':
+  '@prisma/client@6.10.1(prisma@6.10.1(typescript@5.8.2))(typescript@5.8.2)':
     optionalDependencies:
       prisma: 6.10.1(typescript@5.8.2)
+      typescript: 5.8.2
 
-  '@prisma/client@6.10.1(prisma@6.10.1(typescript@5.8.2))(typescript@5.8.2)':
+  '@prisma/client@6.9.0(prisma@6.10.1(typescript@5.8.2))(typescript@5.8.2)':
     optionalDependencies:
       prisma: 6.10.1(typescript@5.8.2)
       typescript: 5.8.2

@@ -11,10 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "trigger dev",
     "deploy": "trigger deploy",
-    "cron": "node --loader ts-node/esm src/cron-runner.ts",
-    "cron:dev": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx src/cron-runner.ts",
-    "cron:test": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx src/test-cron-runner.ts",
-    "test:cron": "PAYSTACK_SECRET_KEY=sk_test_5ef59214386204ce14f664f98322ce7b93b590ce tsx test-cron.ts"
+    "postinstall": "cd ../prisma && npx prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +20,7 @@
     "@leaseup/novu": "workspace:*",
     "@leaseup/payments": "workspace:*",
     "@leaseup/prisma": "workspace:*",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^6.9.0",
     "@trigger.dev/sdk": "4.0.2",
     "date-fns": "^4.1.0",
     "effect": "^3.17.2",
