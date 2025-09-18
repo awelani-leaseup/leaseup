@@ -5,7 +5,7 @@ generator client {
 }
 
 generator triggerClient {
-  provider = "prisma-schema-generator"
+  provider = "prisma-client-js"
 }
 
 datasource db {

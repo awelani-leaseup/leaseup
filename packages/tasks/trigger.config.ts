@@ -11,7 +11,7 @@ export default defineConfig({
       prismaExtension({
         schema: '../prisma/schema.prisma',
         version: '6.9.0',
-        // clientGenerator: 'triggerClient',
+        clientGenerator: 'triggerClient',
       }),
       syncVercelEnvVars({
         vercelAccessToken: process.env.VERCEL_ACCESS_TOKEN,
