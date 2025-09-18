@@ -37,7 +37,7 @@ const createPaystackInvoice = async (invoiceData: CreateInvoicePayload) => {
 
   const requestBody = {
     customer: invoiceData.customer,
-    amount: Math.round(invoiceData.amount * 100), // convert to cents
+    amount: Math.round(invoiceData.amount * 100),
     currency: 'ZAR',
     description: invoiceData.description,
     line_items: invoiceData.lineItems ?? [],
