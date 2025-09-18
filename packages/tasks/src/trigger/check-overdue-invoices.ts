@@ -7,8 +7,8 @@ export const checkOverdueInvoicesTask = schedules.task({
   id: 'check-overdue-invoices',
   maxDuration: 300, // 5 minutes
   cron: {
-    pattern: '0 8 * * *', // Daily at 8:00 AM
-    timezone: 'Africa/Johannesburg', // Using South African timezone
+    pattern: '0 8 * * *',
+    timezone: 'Africa/Johannesburg',
   },
   retry: {
     maxAttempts: 3,

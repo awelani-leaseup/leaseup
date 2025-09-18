@@ -27,7 +27,7 @@ import { type FC, type ReactNode, useEffect, useState } from 'react';
 import PhoneInput from 'react-phone-number-input/input';
 
 import { Alert, AlertDescription } from './alert';
-import { Button, ButtonProps } from './button';
+import { Button, type ButtonProps } from './button';
 import { Calendar } from './calendar';
 import { Checkbox } from './checkbox';
 import { Input } from './input';
