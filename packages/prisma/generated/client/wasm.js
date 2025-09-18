@@ -5,28 +5,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientRustPanicError,
-  PrismaClientInitializationError,
-  PrismaClientValidationError,
-  getPrismaClient,
-  sqltag,
-  empty,
-  join,
-  raw,
-  skip,
   Decimal,
-  Debug,
   objectEnumValues,
   makeStrictEnum,
-  Extensions,
-  warnOnce,
-  defineDmmfProperty,
   Public,
   getRuntime,
-  createParam,
-} = require('./runtime/wasm-engine-edge.js')
+  skip
+} = require('./runtime/index-browser.js')
 
 
 const Prisma = {}
@@ -35,35 +20,79 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.16.2
- * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+ * Prisma Client JS version: 6.9.0
+ * Query Engine version: 81e4af48011447c3cc503a190e86995b66d2a28e
  */
 Prisma.prismaVersion = {
-  client: "6.16.2",
-  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
+  client: "6.9.0",
+  engine: "81e4af48011447c3cc503a190e86995b66d2a28e"
 }
 
-Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
-Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
-Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
-Prisma.PrismaClientInitializationError = PrismaClientInitializationError
-Prisma.PrismaClientValidationError = PrismaClientValidationError
+Prisma.PrismaClientKnownRequestError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)};
+Prisma.PrismaClientUnknownRequestError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientRustPanicError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientInitializationError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientValidationError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = sqltag
-Prisma.empty = empty
-Prisma.join = join
-Prisma.raw = raw
+Prisma.sql = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.empty = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.join = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.raw = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = Extensions.getExtensionContext
-Prisma.defineExtension = Extensions.defineExtension
+Prisma.getExtensionContext = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.defineExtension = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 
 /**
  * Shorthand utilities for JSON filtering
@@ -80,11 +109,10 @@ Prisma.NullTypes = {
 
 
 
-
-
 /**
  * Enums
  */
+
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
@@ -341,18 +369,13 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.InvoiceCycle = exports.$Enums.InvoiceCycle = {
-  MONTHLY: 'MONTHLY'
-};
-
-exports.LeaseTermType = exports.$Enums.LeaseTermType = {
-  MONTHLY: 'MONTHLY',
-  FIXED_TERM: 'FIXED_TERM'
-};
-
-exports.PropertyType = exports.$Enums.PropertyType = {
-  SINGLE_UNIT: 'SINGLE_UNIT',
-  MULTI_UNIT: 'MULTI_UNIT'
+exports.SubscriptionPlanStatus = exports.$Enums.SubscriptionPlanStatus = {
+  ACTIVE: 'ACTIVE',
+  NON_RENEWING: 'NON_RENEWING',
+  ATTENTION: 'ATTENTION',
+  DISABLED: 'DISABLED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.PropertyStatus = exports.$Enums.PropertyStatus = {
@@ -360,13 +383,9 @@ exports.PropertyStatus = exports.$Enums.PropertyStatus = {
   INACTIVE: 'INACTIVE'
 };
 
-exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
-  PENDING: 'PENDING',
-  PAID: 'PAID',
-  CANCELLED: 'CANCELLED',
-  OVERDUE: 'OVERDUE',
-  PARTIALLY_PAID: 'PARTIALLY_PAID',
-  DRAFT: 'DRAFT'
+exports.PropertyType = exports.$Enums.PropertyType = {
+  SINGLE_UNIT: 'SINGLE_UNIT',
+  MULTI_UNIT: 'MULTI_UNIT'
 };
 
 exports.LeaseStatus = exports.$Enums.LeaseStatus = {
@@ -376,40 +395,13 @@ exports.LeaseStatus = exports.$Enums.LeaseStatus = {
   EXPIRED: 'EXPIRED'
 };
 
-exports.TenantIncomeType = exports.$Enums.TenantIncomeType = {
-  SALARY: 'SALARY',
-  SELF_EMPLOYED: 'SELF_EMPLOYED',
-  UNEMPLOYED: 'UNEMPLOYED',
-  RETIRED: 'RETIRED',
-  DISABILITY: 'DISABILITY',
-  OTHER: 'OTHER'
+exports.InvoiceCycle = exports.$Enums.InvoiceCycle = {
+  MONTHLY: 'MONTHLY'
 };
 
-exports.TenantRelationship = exports.$Enums.TenantRelationship = {
-  SPOUSE: 'SPOUSE',
-  PARENT: 'PARENT',
-  GRANDPARENT: 'GRANDPARENT',
-  GRANDCHILD: 'GRANDCHILD',
-  SIBLING: 'SIBLING',
-  CHILD: 'CHILD',
-  AUNT_UNCLE: 'AUNT_UNCLE',
-  COUSIN: 'COUSIN',
-  NEPHEW_NIECE: 'NEPHEW_NIECE',
-  OTHER: 'OTHER'
-};
-
-exports.MaintenanceRequestStatus = exports.$Enums.MaintenanceRequestStatus = {
-  PENDING: 'PENDING',
-  ASSIGNED: 'ASSIGNED',
-  IN_PROGRESS: 'IN_PROGRESS',
-  CANCELLED: 'CANCELLED',
-  COMPLETE: 'COMPLETE'
-};
-
-exports.MaintenanceRequestPriority = exports.$Enums.MaintenanceRequestPriority = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH'
+exports.LeaseTermType = exports.$Enums.LeaseTermType = {
+  MONTHLY: 'MONTHLY',
+  FIXED_TERM: 'FIXED_TERM'
 };
 
 exports.InvoiceCategory = exports.$Enums.InvoiceCategory = {
@@ -424,38 +416,27 @@ exports.InvoiceCategory = exports.$Enums.InvoiceCategory = {
   OTHER: 'OTHER'
 };
 
-exports.PropertyAmenity = exports.$Enums.PropertyAmenity = {
-  BBQ_GRILL: 'BBQ_GRILL',
-  POOL: 'POOL',
-  FITNESS_CENTER: 'FITNESS_CENTER',
-  PET_FRIENDLY: 'PET_FRIENDLY',
-  GYM: 'GYM',
-  LAUNDRY: 'LAUNDRY',
-  PARKING: 'PARKING',
-  STORAGE: 'STORAGE'
+exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
+  OVERDUE: 'OVERDUE',
+  PARTIALLY_PAID: 'PARTIALLY_PAID',
+  DRAFT: 'DRAFT'
 };
 
-exports.PropertyFeature = exports.$Enums.PropertyFeature = {
-  ALARM_SYSTEM: 'ALARM_SYSTEM',
-  AIR_CONDITIONING: 'AIR_CONDITIONING',
-  WIFI_INTERNET: 'WIFI_INTERNET',
-  CABLE_TV: 'CABLE_TV',
-  DISHWASHER: 'DISHWASHER',
-  DRYER: 'DRYER',
-  FRIDGE: 'FRIDGE',
-  MICROWAVE: 'MICROWAVE',
-  OVEN: 'OVEN',
-  STOVE: 'STOVE',
-  FIREPLACE: 'FIREPLACE'
+exports.MaintenanceRequestStatus = exports.$Enums.MaintenanceRequestStatus = {
+  PENDING: 'PENDING',
+  ASSIGNED: 'ASSIGNED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  CANCELLED: 'CANCELLED',
+  COMPLETE: 'COMPLETE'
 };
 
-exports.SubscriptionPlanStatus = exports.$Enums.SubscriptionPlanStatus = {
-  ACTIVE: 'ACTIVE',
-  NON_RENEWING: 'NON_RENEWING',
-  ATTENTION: 'ATTENTION',
-  DISABLED: 'DISABLED',
-  COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+exports.MaintenanceRequestPriority = exports.$Enums.MaintenanceRequestPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
 };
 
 exports.Prisma.ModelName = {
@@ -474,87 +455,34 @@ exports.Prisma.ModelName = {
   MaintenanceRequest: 'MaintenanceRequest',
   File: 'File'
 };
+
 /**
- * Create the Client
+ * This is a stub Prisma Client that will error at runtime if called.
  */
-const config = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client-js"
-    },
-    "output": {
-      "value": "/Users/awelanimurovhib1sa/Downloads/repo/leaseup/packages/prisma/generated/client",
-      "fromEnvVar": null
-    },
-    "config": {
-      "engineType": "library"
-    },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "darwin-arm64",
-        "native": true
-      },
-      {
-        "fromEnvVar": null,
-        "value": "rhel-openssl-3.0.x"
-      }
-    ],
-    "previewFeatures": [],
-    "sourceFilePath": "/Users/awelanimurovhib1sa/Downloads/repo/leaseup/packages/prisma/schema.prisma",
-    "isCustomOutput": true
-  },
-  "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
-  },
-  "relativePath": "../..",
-  "clientVersion": "6.16.2",
-  "engineVersion": "1c57fdcd7e44b29b9313256c76699e91c3ac3c43",
-  "datasourceNames": [
-    "db"
-  ],
-  "activeProvider": "postgresql",
-  "postinstall": false,
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": "POSTGRES_PRISMA_URL",
-        "value": null
-      }
-    }
-  },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/client\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"POSTGRES_PRISMA_URL\")\n  directUrl = env(\"POSTGRES_URL\")\n}\n\nmodel User {\n  id                         String                  @id\n  name                       String\n  email                      String                  @unique\n  emailVerified              Boolean                 @default(false)\n  image                      String?\n  createdAt                  DateTime                @default(now())\n  updatedAt                  DateTime                @updatedAt\n  addressLine1               String?\n  addressLine2               String?\n  city                       String?\n  idNumber                   String?\n  paystackSplitGroupId       String?\n  paystackSubAccountId       String?\n  paystackCustomerId         String?\n  paystackSubscriptionId     String?\n  paystackSubscriptionStatus SubscriptionPlanStatus?\n  subscriptionPlanCode       String? // PLN_xxx\n  subscriptionAmount         Int? // in kobo/cents\n  subscriptionCurrency       String? // NGN, ZAR, etc.\n  subscriptionInterval       String? // monthly, yearly, etc.\n  nextPaymentDate            DateTime?\n  subscriptionCreatedAt      DateTime?\n  subscriptionUpdatedAt      DateTime?\n  lastPaymentFailure         String? // Last failure reason\n  paymentRetryCount          Int?                    @default(0)\n  state                      String?\n  zip                        String?\n  onboardingCompleted        Boolean                 @default(false)\n  businessName               String?\n  countryCode                String?                 @default(\"ZA\")\n  numberOfProperties         Int?\n  numberOfUnits              Int?\n  phone                      String?                 @unique\n  accounts                   Account[]\n  property                   Property[]\n  sessions                   Session[]\n  tenant                     Tenant[]\n  Invoice                    Invoice[]\n\n  @@map(\"user\")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String   @unique\n  createdAt DateTime\n  updatedAt DateTime\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@map(\"session\")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime\n  updatedAt             DateTime\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@map(\"account\")\n}\n\nmodel Verification {\n  id         String    @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime?\n  updatedAt  DateTime?\n\n  @@map(\"verification\")\n}\n\nmodel Tenant {\n  id                     String              @id @default(uuid())\n  createdAt              DateTime            @default(now())\n  updatedAt              DateTime            @updatedAt\n  email                  String\n  firstName              String\n  lastName               String\n  phone                  String\n  landlordId             String\n  dateOfBirth            DateTime?           @db.Date\n  tenantEmergencyContact Json?\n  tenantIncome           Json?\n  additionalEmails       String[]\n  additionalPhones       String[]\n  emergencyContacts      Json?\n  vehicles               Json?\n  avatarUrl              String?\n  fullName               String?\n  paystackCustomerId     String?\n  files                  File[]\n  Invoice                Invoice[]\n  landlord               User                @relation(fields: [landlordId], references: [id])\n  tenantLease            TenantLease[]\n  recurringBillable      RecurringBillable[]\n\n  @@unique([landlordId, email])\n  @@unique([landlordId, phone])\n  @@map(\"tenant\")\n}\n\nmodel Property {\n  id                String              @id @default(uuid())\n  name              String\n  addressLine1      String\n  addressLine2      String?\n  city              String\n  state             String\n  zip               String\n  createdAt         DateTime            @default(now())\n  updatedAt         DateTime            @updatedAt\n  imageUrl          String?\n  propertyStatus    PropertyStatus      @default(ACTIVE)\n  propertyType      PropertyType        @default(MULTI_UNIT)\n  amenities         String[]\n  countryCode       String              @default(\"ZA\")\n  features          String[]\n  landlordId        String\n  files             File[]\n  landlord          User                @relation(fields: [landlordId], references: [id])\n  unit              Unit[]\n  recurringBillable RecurringBillable[]\n\n  @@map(\"property\")\n}\n\nmodel Unit {\n  id         String   @id @default(uuid())\n  propertyId String\n  name       String\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n  bathrooms  Float    @default(1)\n  bedrooms   Int      @default(1)\n  deposit    Float    @default(0)\n  marketRent Float    @default(0)\n  sqmt       Float    @default(0)\n  lease      Lease[]\n  property   Property @relation(fields: [propertyId], references: [id])\n\n  @@map(\"unit\")\n}\n\nmodel Lease {\n  id                       String               @id @default(uuid())\n  startDate                DateTime             @db.Date\n  endDate                  DateTime?            @db.Date\n  rent                     Float\n  deposit                  Float\n  status                   LeaseStatus\n  createdAt                DateTime             @default(now())\n  updatedAt                DateTime             @updatedAt\n  rentDueCurrency          String\n  unitId                   String?\n  automaticInvoice         Boolean              @default(false)\n  invoiceCycle             InvoiceCycle         @default(MONTHLY)\n  leaseType                LeaseTermType\n  paystackPlanCode         String?\n  paystackSubscriptionCode String?\n  paystackAuthorizationUrl String?\n  paystackReference        String?\n  File                     File[]\n  invoice                  Invoice[]\n  unit                     Unit?                @relation(fields: [unitId], references: [id])\n  maintenanceRequest       MaintenanceRequest[]\n  tenantLease              TenantLease[]\n  transactions             Transactions[]\n  recurringBillable        RecurringBillable[]\n\n  @@map(\"lease\")\n}\n\nmodel Invoice {\n  id                  String             @id @default(uuid())\n  leaseId             String?\n  description         String\n  dueAmount           Float\n  category            InvoiceCategory\n  status              InvoiceStatus\n  createdAt           DateTime           @default(now())\n  updatedAt           DateTime           @updatedAt\n  paystackId          String\n  dueDate             DateTime?          @db.Date\n  lineItems           Json?\n  landlordId          String\n  tenantId            String\n  invoiceNumber       String             @default(\"\")\n  File                File[]\n  paymentRequestUrl   String             @default(\"\")\n  lease               Lease?             @relation(fields: [leaseId], references: [id])\n  tenant              Tenant             @relation(fields: [tenantId], references: [id])\n  transactions        Transactions[]\n  recurringBillable   RecurringBillable? @relation(fields: [recurringBillableId], references: [id])\n  recurringBillableId String?\n  landlord            User               @relation(fields: [landlordId], references: [id])\n\n  @@map(\"invoice\")\n}\n\nmodel RecurringBillable {\n  id            String          @id @default(uuid())\n  startDate     DateTime        @db.Date\n  endDate       DateTime?\n  createdAt     DateTime        @default(now())\n  updatedAt     DateTime        @updatedAt\n  description   String\n  amount        Float\n  category      InvoiceCategory\n  cycle         InvoiceCycle    @default(MONTHLY)\n  nextInvoiceAt DateTime\n  isActive      Boolean         @default(true)\n  leaseId       String?\n  tenantId      String\n  lease         Lease?          @relation(fields: [leaseId], references: [id])\n  tenant        Tenant          @relation(fields: [tenantId], references: [id])\n  invoice       Invoice[] // Invoices generated from this recurring rule\n  property      Property?       @relation(fields: [propertyId], references: [id])\n  propertyId    String?\n\n  @@map(\"recurring_billable\")\n}\n\nmodel Transactions {\n  id          String   @id @default(uuid())\n  leaseId     String?\n  description String\n  amountPaid  Float\n  referenceId String?\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n  invoiceId   String?\n  invoice     Invoice? @relation(fields: [invoiceId], references: [id])\n  lease       Lease?   @relation(fields: [leaseId], references: [id])\n\n  @@map(\"transaction\")\n}\n\nmodel TenantLease {\n  id       String @id @default(uuid())\n  tenantId String\n  leaseId  String\n  lease    Lease  @relation(fields: [leaseId], references: [id])\n  tenant   Tenant @relation(fields: [tenantId], references: [id])\n\n  @@map(\"tenant_lease\")\n}\n\nmodel MaintenanceRequest {\n  id          String                     @id @default(uuid())\n  leaseId     String\n  description String?\n  status      MaintenanceRequestStatus?\n  priority    MaintenanceRequestPriority\n  createdAt   DateTime                   @default(now())\n  updatedAt   DateTime                   @updatedAt\n  File        File[]\n  lease       Lease                      @relation(fields: [leaseId], references: [id])\n\n  @@map(\"maintenance_request\")\n}\n\nmodel File {\n  id                   String              @id @default(uuid())\n  name                 String\n  url                  String\n  ownerId              String\n  tenantId             String?\n  propertyId           String?\n  leaseId              String?\n  invoiceId            String?\n  maintenanceRequestId String?\n  createdAt            DateTime            @default(now())\n  updatedAt            DateTime            @updatedAt\n  size                 Int?\n  type                 String?\n  invoice              Invoice?            @relation(fields: [invoiceId], references: [id])\n  lease                Lease?              @relation(fields: [leaseId], references: [id])\n  maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])\n  property             Property?           @relation(fields: [propertyId], references: [id])\n  tenant               Tenant?             @relation(fields: [tenantId], references: [id])\n\n  @@map(\"file\")\n}\n\nenum InvoiceCycle {\n  MONTHLY\n}\n\nenum LeaseTermType {\n  MONTHLY\n  FIXED_TERM\n}\n\nenum PropertyType {\n  SINGLE_UNIT\n  MULTI_UNIT\n}\n\nenum PropertyStatus {\n  ACTIVE\n  INACTIVE\n}\n\nenum InvoiceStatus {\n  PENDING\n  PAID\n  CANCELLED\n  OVERDUE\n  PARTIALLY_PAID\n  DRAFT\n}\n\nenum LeaseStatus {\n  PENDING\n  ACTIVE\n  INACTIVE\n  EXPIRED\n}\n\nenum TenantIncomeType {\n  SALARY\n  SELF_EMPLOYED\n  UNEMPLOYED\n  RETIRED\n  DISABILITY\n  OTHER\n}\n\nenum TenantRelationship {\n  SPOUSE\n  PARENT\n  GRANDPARENT\n  GRANDCHILD\n  SIBLING\n  CHILD\n  AUNT_UNCLE\n  COUSIN\n  NEPHEW_NIECE\n  OTHER\n}\n\nenum MaintenanceRequestStatus {\n  PENDING\n  ASSIGNED\n  IN_PROGRESS\n  CANCELLED\n  COMPLETE\n}\n\nenum MaintenanceRequestPriority {\n  LOW\n  MEDIUM\n  HIGH\n}\n\nenum InvoiceCategory {\n  DEPOSIT\n  RENT\n  MAINTENANCE\n  UTILITY_BILL\n  LEVY\n  RATES_AND_TAXES\n  SERVICE_CHARGE\n  WATER_ELECTRICITY\n  OTHER\n}\n\nenum PropertyAmenity {\n  BBQ_GRILL\n  POOL\n  FITNESS_CENTER\n  PET_FRIENDLY\n  GYM\n  LAUNDRY\n  PARKING\n  STORAGE\n}\n\nenum PropertyFeature {\n  ALARM_SYSTEM\n  AIR_CONDITIONING\n  WIFI_INTERNET\n  CABLE_TV\n  DISHWASHER\n  DRYER\n  FRIDGE\n  MICROWAVE\n  OVEN\n  STOVE\n  FIREPLACE\n}\n\nenum SubscriptionPlanStatus {\n  ACTIVE\n  NON_RENEWING\n  ATTENTION\n  DISABLED\n  COMPLETED\n  CANCELLED\n}\n",
-  "inlineSchemaHash": "6db6cc8ee403c3f0f7c46aa80259e7754fb6c570c378030aa735211425ba0144",
-  "copyEngine": true
-}
-config.dirname = '/'
+class PrismaClient {
+  constructor() {
+    return new Proxy(this, {
+      get(target, prop) {
+        let message
+        const runtime = getRuntime()
+        if (runtime.isEdge) {
+          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
+- Use Prisma Accelerate: https://pris.ly/d/accelerate
+- Use Driver Adapters: https://pris.ly/d/driver-adapters
+`;
+        } else {
+          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
+        }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"addressLine1\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"addressLine2\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idNumber\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackSplitGroupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackSubAccountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackCustomerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackSubscriptionId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackSubscriptionStatus\",\"kind\":\"enum\",\"type\":\"SubscriptionPlanStatus\"},{\"name\":\"subscriptionPlanCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subscriptionAmount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"subscriptionCurrency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subscriptionInterval\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nextPaymentDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"subscriptionCreatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"subscriptionUpdatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lastPaymentFailure\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paymentRetryCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"zip\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"onboardingCompleted\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"businessName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"countryCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"numberOfProperties\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"numberOfUnits\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"PropertyToUser\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"Tenant\",\"relationName\":\"TenantToUser\"},{\"name\":\"Invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"InvoiceToUser\"}],\"dbName\":\"user\"},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"ipAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":\"session\"},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refreshTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"}],\"dbName\":\"account\"},\"Verification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"verification\"},\"Tenant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"landlordId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dateOfBirth\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tenantEmergencyContact\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"tenantIncome\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"additionalEmails\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"additionalPhones\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emergencyContacts\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"vehicles\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"avatarUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fullName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackCustomerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToTenant\"},{\"name\":\"Invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"InvoiceToTenant\"},{\"name\":\"landlord\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"TenantToUser\"},{\"name\":\"tenantLease\",\"kind\":\"object\",\"type\":\"TenantLease\",\"relationName\":\"TenantToTenantLease\"},{\"name\":\"recurringBillable\",\"kind\":\"object\",\"type\":\"RecurringBillable\",\"relationName\":\"RecurringBillableToTenant\"}],\"dbName\":\"tenant\"},\"Property\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"addressLine1\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"addressLine2\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"zip\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"propertyStatus\",\"kind\":\"enum\",\"type\":\"PropertyStatus\"},{\"name\":\"propertyType\",\"kind\":\"enum\",\"type\":\"PropertyType\"},{\"name\":\"amenities\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"countryCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"features\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"landlordId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToProperty\"},{\"name\":\"landlord\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PropertyToUser\"},{\"name\":\"unit\",\"kind\":\"object\",\"type\":\"Unit\",\"relationName\":\"PropertyToUnit\"},{\"name\":\"recurringBillable\",\"kind\":\"object\",\"type\":\"RecurringBillable\",\"relationName\":\"PropertyToRecurringBillable\"}],\"dbName\":\"property\"},\"Unit\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"propertyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"bathrooms\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"bedrooms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"deposit\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"marketRent\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"sqmt\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"LeaseToUnit\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"PropertyToUnit\"}],\"dbName\":\"unit\"},\"Lease\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"rent\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"deposit\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"LeaseStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"rentDueCurrency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"unitId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"automaticInvoice\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"invoiceCycle\",\"kind\":\"enum\",\"type\":\"InvoiceCycle\"},{\"name\":\"leaseType\",\"kind\":\"enum\",\"type\":\"LeaseTermType\"},{\"name\":\"paystackPlanCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackSubscriptionCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackAuthorizationUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paystackReference\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"File\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToLease\"},{\"name\":\"invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"InvoiceToLease\"},{\"name\":\"unit\",\"kind\":\"object\",\"type\":\"Unit\",\"relationName\":\"LeaseToUnit\"},{\"name\":\"maintenanceRequest\",\"kind\":\"object\",\"type\":\"MaintenanceRequest\",\"relationName\":\"LeaseToMaintenanceRequest\"},{\"name\":\"tenantLease\",\"kind\":\"object\",\"type\":\"TenantLease\",\"relationName\":\"LeaseToTenantLease\"},{\"name\":\"transactions\",\"kind\":\"object\",\"type\":\"Transactions\",\"relationName\":\"LeaseToTransactions\"},{\"name\":\"recurringBillable\",\"kind\":\"object\",\"type\":\"RecurringBillable\",\"relationName\":\"LeaseToRecurringBillable\"}],\"dbName\":\"lease\"},\"Invoice\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dueAmount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"category\",\"kind\":\"enum\",\"type\":\"InvoiceCategory\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"InvoiceStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"paystackId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dueDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"lineItems\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"landlordId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenantId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoiceNumber\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"File\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToInvoice\"},{\"name\":\"paymentRequestUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"InvoiceToLease\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"Tenant\",\"relationName\":\"InvoiceToTenant\"},{\"name\":\"transactions\",\"kind\":\"object\",\"type\":\"Transactions\",\"relationName\":\"InvoiceToTransactions\"},{\"name\":\"recurringBillable\",\"kind\":\"object\",\"type\":\"RecurringBillable\",\"relationName\":\"InvoiceToRecurringBillable\"},{\"name\":\"recurringBillableId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"landlord\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"InvoiceToUser\"}],\"dbName\":\"invoice\"},\"RecurringBillable\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endDate\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"category\",\"kind\":\"enum\",\"type\":\"InvoiceCategory\"},{\"name\":\"cycle\",\"kind\":\"enum\",\"type\":\"InvoiceCycle\"},{\"name\":\"nextInvoiceAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenantId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"LeaseToRecurringBillable\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"Tenant\",\"relationName\":\"RecurringBillableToTenant\"},{\"name\":\"invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"InvoiceToRecurringBillable\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"PropertyToRecurringBillable\"},{\"name\":\"propertyId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":\"recurring_billable\"},\"Transactions\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amountPaid\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"referenceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"invoiceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"InvoiceToTransactions\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"LeaseToTransactions\"}],\"dbName\":\"transaction\"},\"TenantLease\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenantId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"LeaseToTenantLease\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"Tenant\",\"relationName\":\"TenantToTenantLease\"}],\"dbName\":\"tenant_lease\"},\"MaintenanceRequest\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"MaintenanceRequestStatus\"},{\"name\":\"priority\",\"kind\":\"enum\",\"type\":\"MaintenanceRequestPriority\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"File\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToMaintenanceRequest\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"LeaseToMaintenanceRequest\"}],\"dbName\":\"maintenance_request\"},\"File\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ownerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenantId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"propertyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"leaseId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoiceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"maintenanceRequestId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"invoice\",\"kind\":\"object\",\"type\":\"Invoice\",\"relationName\":\"FileToInvoice\"},{\"name\":\"lease\",\"kind\":\"object\",\"type\":\"Lease\",\"relationName\":\"FileToLease\"},{\"name\":\"maintenanceRequest\",\"kind\":\"object\",\"type\":\"MaintenanceRequest\",\"relationName\":\"FileToMaintenanceRequest\"},{\"name\":\"property\",\"kind\":\"object\",\"type\":\"Property\",\"relationName\":\"FileToProperty\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"Tenant\",\"relationName\":\"FileToTenant\"}],\"dbName\":\"file\"}},\"enums\":{},\"types\":{}}")
-defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.engineWasm = {
-  getRuntime: async () => require('./query_engine_bg.js'),
-  getQueryEngineWasmModule: async () => {
-    const loader = (await import('#wasm-engine-loader')).default
-    const engine = (await loader).default
-    return engine
+        message += `
+If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
+
+        throw new Error(message)
+      }
+    })
   }
 }
-config.compilerWasm = undefined
 
-config.injectableEdgeEnv = () => ({
-  parsed: {
-    POSTGRES_PRISMA_URL: typeof globalThis !== 'undefined' && globalThis['POSTGRES_PRISMA_URL'] || typeof process !== 'undefined' && process.env && process.env.POSTGRES_PRISMA_URL || undefined
-  }
-})
-
-if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
-  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
-}
-
-const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-Object.assign(exports, Prisma)
 
+Object.assign(exports, Prisma)

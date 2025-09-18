@@ -10,7 +10,7 @@ import {
 } from './profile.types';
 import { auth } from '../server/auth/auth';
 import { paystack } from '@leaseup/payments/open-api/client';
-import { SubaccountUpdate } from '@leaseup/payments/open-api/paystack';
+import type { SubaccountUpdate } from '@leaseup/payments/open-api/paystack';
 
 export const profileRouter = createTRPCRouter({
   getProfile: protectedProcedure.query(async ({ ctx }) => {

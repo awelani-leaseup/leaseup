@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@leaseup/typescript-config": "workspace:*",
-    "@trigger.dev/build": "4.0.2"
+    "@trigger.dev/build": "4.0.2",
+    "trigger.dev": "^4.0.2"
   }
 }

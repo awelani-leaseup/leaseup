@@ -26,21 +26,19 @@ export const checkOverdueInvoicesTask = schedules.task({
     });
 
     try {
-      // Get current date in UTC for consistent comparison
       const currentDateUTC = new Date();
-      currentDateUTC.setUTCHours(0, 0, 0, 0); // Set to start of day in UTC
+      currentDateUTC.setUTCHours(0, 0, 0, 0);
 
       logger.log('Checking for overdue invoices', {
         currentDateUTC: currentDateUTC.toISOString(),
         currentDateUTCString: currentDateUTC.toDateString(),
       });
 
-      // Find all invoices that are pending and past due date
       const overdueInvoices = await db.invoice.findMany({
         where: {
           status: InvoiceStatus.PENDING,
           dueDate: {
-            lt: currentDateUTC, // Past due date (comparing with UTC date)
+            lt: currentDateUTC,
           },
         },
         include: {
@@ -95,7 +93,6 @@ export const checkOverdueInvoicesTask = schedules.task({
         };
       }
 
-      // Update all overdue invoices to OVERDUE status
       const updateResult = await db.invoice.updateMany({
         where: {
           id: {
@@ -109,7 +106,6 @@ export const checkOverdueInvoicesTask = schedules.task({
 
       logger.log(`Updated ${updateResult.count} invoices to OVERDUE status`);
 
-      // Group invoices by landlord
       const invoicesByLandlord = overdueInvoices.reduce(
         (acc, invoice) => {
           const landlordId = invoice.landlordId;
@@ -129,12 +125,10 @@ export const checkOverdueInvoicesTask = schedules.task({
         >
       );
 
-      // Send notifications to landlords using bulk trigger
       let notificationsSent = 0;
       const notificationErrors: string[] = [];
 
       try {
-        // Prepare events for bulk trigger
         const events = Object.entries(invoicesByLandlord).map(
           ([landlordId, { landlord, invoices }]) => ({
             workflowId: 'landlord-overdue-invoices',
@@ -156,7 +150,6 @@ export const checkOverdueInvoicesTask = schedules.task({
           })),
         });
 
-        // Send bulk notifications
         const result = await novu.triggerBulk({
           events,
         });
@@ -171,7 +164,6 @@ export const checkOverdueInvoicesTask = schedules.task({
         const errorMessage =
           error instanceof Error ? error.message : 'Unknown error';
 
-        // If bulk fails, log error for all landlords
         Object.entries(invoicesByLandlord).forEach(
           ([landlordId, { landlord }]) => {
             notificationErrors.push(`Landlord ${landlordId}: ${errorMessage}`);
@@ -194,7 +186,7 @@ export const checkOverdueInvoicesTask = schedules.task({
         notificationErrors:
           notificationErrors.length > 0 ? notificationErrors : undefined,
         durationMs: endTime - startTime,
-        processedAt: new Date().toISOString(), // UTC timestamp
+        processedAt: new Date().toISOString(),
       };
 
       logger.log('Overdue invoices check completed', result);

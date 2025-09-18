@@ -36,6 +36,7 @@ export const onboardingRouter = createTRPCRouter({
           accountNumber: input.accountNumber,
           primaryContactEmail: input.email,
           primaryContactName: input.fullName,
+          primaryContactPhone: input.phone,
         });
 
         return {

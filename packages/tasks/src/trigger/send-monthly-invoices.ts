@@ -1,4 +1,4 @@
-import { logger, schedules } from '@trigger.dev/sdk/v3';
+import { logger, schedules } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
 import { addDays, isAfter, isBefore } from 'date-fns';
 import { createInvoiceTask, type CreateInvoicePayload } from './invoice-send';
