@@ -1,6 +1,10 @@
 import { schedules, logger } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
-import { Invoice, InvoiceStatus } from '@leaseup/prisma/client/client.js';
+import {
+  Invoice,
+  InvoiceStatus,
+  SubscriptionPlanStatus,
+} from '@leaseup/prisma/client/client.js';
 import { novu } from '@leaseup/novu/client.ts';
 
 export const checkOverdueInvoicesTask = schedules.task({
@@ -34,11 +38,30 @@ export const checkOverdueInvoicesTask = schedules.task({
         currentDateUTCString: currentDateUTC.toDateString(),
       });
 
+      // First, get total count of overdue invoices (regardless of subscription status)
+      const totalOverdueCount = await db.invoice.count({
+        where: {
+          status: InvoiceStatus.PENDING,
+          dueDate: {
+            lt: currentDateUTC,
+          },
+        },
+      });
+
+      // Then get overdue invoices only for landlords with active subscriptions
       const overdueInvoices = await db.invoice.findMany({
         where: {
           status: InvoiceStatus.PENDING,
           dueDate: {
             lt: currentDateUTC,
+          },
+          landlord: {
+            paystackSubscriptionStatus: {
+              in: [
+                SubscriptionPlanStatus.ACTIVE,
+                SubscriptionPlanStatus.NON_RENEWING,
+              ],
+            },
           },
         },
         include: {
@@ -47,6 +70,7 @@ export const checkOverdueInvoicesTask = schedules.task({
               id: true,
               email: true,
               name: true,
+              paystackSubscriptionStatus: true,
             },
           },
           tenant: {
@@ -72,21 +96,34 @@ export const checkOverdueInvoicesTask = schedules.task({
         },
       });
 
-      logger.log(`Found ${overdueInvoices.length} overdue invoices`, {
-        count: overdueInvoices.length,
-        comparisonDate: currentDateUTC.toISOString(),
-        sampleOverdueInvoices: overdueInvoices.slice(0, 3).map((inv) => ({
-          id: inv.id,
-          dueDate: inv.dueDate?.toISOString(),
-          description: inv.description.substring(0, 50),
-        })),
-      });
+      const filteredOutCount = totalOverdueCount - overdueInvoices.length;
+
+      logger.log(
+        `Found ${overdueInvoices.length} overdue invoices from landlords with active subscriptions`,
+        {
+          totalOverdueInvoices: totalOverdueCount,
+          activeSubscriptionInvoices: overdueInvoices.length,
+          filteredOutDueToInactiveSubscription: filteredOutCount,
+          comparisonDate: currentDateUTC.toISOString(),
+          sampleOverdueInvoices: overdueInvoices.slice(0, 3).map((inv) => ({
+            id: inv.id,
+            dueDate: inv.dueDate?.toISOString(),
+            description: inv.description.substring(0, 50),
+            landlordSubscriptionStatus: inv.landlord.paystackSubscriptionStatus,
+          })),
+        }
+      );
 
       if (overdueInvoices.length === 0) {
         const endTime = Date.now();
         return {
-          message: 'No overdue invoices found',
+          message:
+            totalOverdueCount > 0
+              ? 'No overdue invoices found from landlords with active subscriptions'
+              : 'No overdue invoices found',
+          totalOverdueInvoices: totalOverdueCount,
           overdueInvoicesCount: 0,
+          filteredOutDueToInactiveSubscription: filteredOutCount,
           invoicesUpdated: 0,
           notificationsSent: 0,
           durationMs: endTime - startTime,
@@ -179,7 +216,9 @@ export const checkOverdueInvoicesTask = schedules.task({
       const endTime = Date.now();
       const result = {
         message: 'Overdue invoices check completed',
+        totalOverdueInvoices: totalOverdueCount,
         overdueInvoicesCount: overdueInvoices.length,
+        filteredOutDueToInactiveSubscription: filteredOutCount,
         invoicesUpdated: updateResult.count,
         landlordsNotified: Object.keys(invoicesByLandlord).length,
         notificationsSent,
