@@ -19,7 +19,7 @@ import {
   DatabaseServiceLive,
   PaystackServiceLive,
 } from './services';
-import type { RecurringBillable } from '@leaseup/prisma/client/index.js';
+import type { RecurringBillable } from '@leaseup/prisma/client/client.js';
 import { MockPaystackServiceFastLive } from './mock-paystack-service';
 
 // Configuration as a service

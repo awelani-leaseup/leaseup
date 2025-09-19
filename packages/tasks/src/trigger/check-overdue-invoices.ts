@@ -1,6 +1,6 @@
 import { schedules, logger } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
-import { Invoice, InvoiceStatus } from '@leaseup/prisma/client/index.js';
+import { Invoice, InvoiceStatus } from '@leaseup/prisma/client/client.js';
 import { novu } from '@leaseup/novu/client.ts';
 
 export const checkOverdueInvoicesTask = schedules.task({

@@ -4,8 +4,8 @@ import { nanoid } from 'nanoid';
 import {
   InvoiceCategory,
   InvoiceStatus,
-} from '@leaseup/prisma/client/index.js';
-import type { Invoice } from '@leaseup/prisma/client/index.js';
+} from '@leaseup/prisma/client/client.js';
+import type { Invoice } from '@leaseup/prisma/client/client.js';
 import {
   DatabaseServiceLive,
   DatabaseServiceTag,
@@ -54,7 +54,6 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
 
     const landlord = yield* databaseService.findLandlord(payload.landlordId);
 
-    // Create payment request via Paystack
     const paystackResponse = yield* paystackService.createPaymentRequest({
       customer: payload.customer,
       amount: Math.round(payload.amount), // Amount  in cents

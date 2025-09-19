@@ -1,4 +1,4 @@
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
 import { db } from '@leaseup/prisma/db.ts';
 
 export interface SubscriptionInfo {

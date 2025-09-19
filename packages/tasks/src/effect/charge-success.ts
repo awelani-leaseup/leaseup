@@ -1,7 +1,6 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
-import { paystack } from '@leaseup/payments/open-api/client';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
 
 const ChargeSuccessPayload = Schema.Struct({
   event: Schema.String,

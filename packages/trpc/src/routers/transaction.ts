@@ -1,6 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { VGetAllTransactionsSchema } from './transaction.types';
-import { Prisma } from '@leaseup/prisma/client/index.js';
+import { Prisma } from '@leaseup/prisma/client/client.js';
 
 export const transactionRouter = createTRPCRouter({
   getAll: protectedProcedure

@@ -6,6 +6,7 @@ import {
   publicProcedure,
 } from '../server/trpc';
 import { VCreatePropertySchema } from './portfolio.types';
+import { Prisma } from '@leaseup/prisma/client/client.js';
 
 const FEATURE_OPTIONS = [
   'Alarm System',
@@ -36,7 +37,7 @@ export const portfolioRouter = createTRPCRouter({
   createProperty: protectedProcedure
     .input(VCreatePropertySchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.$transaction(async (tx) => {
+      await ctx.db.$transaction(async (tx: Prisma.TransactionClient) => {
         return tx.property.create({
           data: {
             id: nanoid(),

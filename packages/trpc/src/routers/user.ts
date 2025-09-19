@@ -1,4 +1,4 @@
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { paystack } from '@leaseup/payments/open-api/client';
 import { TRPCError } from '@trpc/server';

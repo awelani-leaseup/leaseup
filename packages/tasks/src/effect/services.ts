@@ -2,18 +2,18 @@ import { Schema, Effect, Layer, Context } from 'effect';
 import { paystack } from '@leaseup/payments/open-api/client';
 import { db } from '@leaseup/prisma/db.ts';
 import type { PaymentRequestCreate } from '@leaseup/payments/open-api/paystack';
-import { Prisma } from '@leaseup/prisma/client/index.js';
+import { Prisma } from '@leaseup/prisma/client/client.js';
 import type {
   Invoice,
   Tenant,
   Transactions,
   InvoiceStatus,
-} from '@leaseup/prisma/client/index.js';
+} from '@leaseup/prisma/client/client.js';
 import {
   LeaseStatus,
   LeaseTermType,
   InvoiceCycle,
-} from '@leaseup/prisma/client/index.js';
+} from '@leaseup/prisma/client/client.js';
 import { nanoid } from 'nanoid';
 
 export type RecurringBillable = Prisma.RecurringBillableGetPayload<{
@@ -726,7 +726,7 @@ export const DatabaseServiceLive = Layer.succeed(DatabaseServiceTag, {
   ) =>
     Effect.tryPromise({
       try: async () => {
-        return await db.$transaction(async (tx) => {
+        return await db.$transaction(async (tx: Prisma.TransactionClient) => {
           const lease = await tx.lease.create({
             data: {
               id: nanoid(),

@@ -5,7 +5,6 @@ export const landlordRouter = createTRPCRouter({
     return ctx.auth?.session?.userId;
   }),
   handleNewUser: protectedProcedure.mutation(async ({ ctx }) => {
-    // Trigger welcome workflow
     return ctx.auth?.session?.userId;
   }),
   onboarding: protectedProcedure.mutation(async ({ ctx }) => {

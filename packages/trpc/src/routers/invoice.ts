@@ -8,7 +8,9 @@ import {
   Prisma,
   InvoiceStatus,
   InvoiceCategory,
-} from '@leaseup/prisma/client/index.js';
+  Invoice,
+  TenantLease,
+} from '@leaseup/prisma/client/client.js';
 
 export const invoiceRouter = createTRPCRouter({
   getInvoiceCategory: protectedProcedure.query(async ({ ctx }) => {
@@ -306,15 +308,15 @@ export const invoiceRouter = createTRPCRouter({
 
     // Calculate totals
     const totalInvoiced = invoices.reduce(
-      (sum, invoice) => sum + invoice.dueAmount,
+      (sum: number, invoice: Invoice) => sum + invoice.dueAmount,
       0
     );
     const pendingPayment = invoices
-      .filter((invoice) => invoice.status === 'PENDING')
-      .reduce((sum, invoice) => sum + invoice.dueAmount, 0);
+      .filter((invoice: Invoice) => invoice.status === 'PENDING')
+      .reduce((sum: number, invoice: Invoice) => sum + invoice.dueAmount, 0);
     const overdue = invoices
-      .filter((invoice) => invoice.status === 'OVERDUE')
-      .reduce((sum, invoice) => sum + invoice.dueAmount, 0);
+      .filter((invoice: Invoice) => invoice.status === 'OVERDUE')
+      .reduce((sum: number, invoice: Invoice) => sum + invoice.dueAmount, 0);
 
     // Count invoices for this month (using UTC)
     const now = new Date();
@@ -336,7 +338,7 @@ export const invoiceRouter = createTRPCRouter({
       )
     );
 
-    const thisMonthInvoices = invoices.filter((invoice) => {
+    const thisMonthInvoices = invoices.filter((invoice: Invoice) => {
       const invoiceDate = new Date(invoice.createdAt);
       const invoiceDateUTC = new Date(
         Date.UTC(
@@ -398,7 +400,7 @@ export const invoiceRouter = createTRPCRouter({
         }
 
         const tenantLease = lease.tenantLease.find(
-          (tl) => tl.tenantId === input.tenantId
+          (tl: TenantLease) => tl.tenantId === input.tenantId
         );
         if (!tenantLease) {
           throw new TRPCError({

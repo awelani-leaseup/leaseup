@@ -7,7 +7,7 @@ import {
 } from './file.types';
 import { TRPCError } from '@trpc/server';
 import { del } from '@vercel/blob';
-import { Prisma } from '@leaseup/prisma/client/index.js';
+import { Prisma } from '@leaseup/prisma/client/client.js';
 
 export const fileRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -92,7 +92,6 @@ export const fileRouter = createTRPCRouter({
         }
       }
 
-      // Execute queries
       const [files, totalCount] = await Promise.all([
         ctx.db.file.findMany({
           where: whereClause,
@@ -251,12 +250,10 @@ export const fileRouter = createTRPCRouter({
         },
       });
 
-      // Delete from storage
       try {
         await del(file.url);
       } catch (error) {
         console.error('Error deleting file from storage:', error);
-        // Don't fail the request if storage deletion fails
       }
 
       return {

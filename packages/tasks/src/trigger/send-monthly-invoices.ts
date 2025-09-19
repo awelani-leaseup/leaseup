@@ -10,7 +10,7 @@ import {
   type RecurringBillable,
   type Prisma,
   SubscriptionPlanStatus,
-} from '@leaseup/prisma/client/index.js';
+} from '@leaseup/prisma/client/client.js';
 
 const CONFIG = {
   CHECK_DAYS_AHEAD: 7, // Send invoices 7 days before due date (compromise for processing capacity)
@@ -378,7 +378,7 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
   );
 
   const validInvoices = invoiceResults.filter(
-    (invoice): invoice is NonNullable<typeof invoice> => invoice !== null
+    (invoice: any): invoice is NonNullable<typeof invoice> => invoice !== null
   );
 
   logger.log(`Processing results`, {

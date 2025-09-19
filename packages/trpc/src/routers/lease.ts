@@ -5,8 +5,10 @@ import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import {
   InvoiceCategory,
   InvoiceCycle,
+  Lease,
   LeaseStatus,
   LeaseTermType,
+  Prisma,
 } from '@leaseup/prisma/client/client.js';
 
 export const leaseRouter = createTRPCRouter({
@@ -178,21 +180,21 @@ export const leaseRouter = createTRPCRouter({
 
     const totalLeases = leases.length;
     const activeLeases = leases.filter(
-      (lease) => lease.status === 'ACTIVE'
+      (lease: Lease) => lease.status === 'ACTIVE'
     ).length;
     const expiredLeases = leases.filter(
-      (lease) => lease.status === 'EXPIRED'
+      (lease: Lease) => lease.status === 'EXPIRED'
     ).length;
     const totalRentValue = leases
-      .filter((lease) => lease.status === 'ACTIVE')
-      .reduce((sum, lease) => sum + lease.rent, 0);
+      .filter((lease: Lease) => lease.status === 'ACTIVE')
+      .reduce((sum: number, lease: Lease) => sum + lease.rent, 0);
 
     const now = new Date();
     const nowUTC = new Date(
       Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
     );
 
-    const thisMonthLeases = leases.filter((lease) => {
+    const thisMonthLeases = leases.filter((lease: Lease) => {
       const leaseDate = new Date(lease.createdAt);
       const leaseDateUTC = new Date(
         Date.UTC(
@@ -275,96 +277,98 @@ export const leaseRouter = createTRPCRouter({
           });
         }
 
-        const result = await ctx.db.$transaction(async (tx) => {
-          const lease = await tx.lease.create({
-            data: {
-              unitId: input.unitId,
-              startDate: input.leaseStartDate,
-              endDate: input.leaseEndDate,
-              rent: input.rent,
-              deposit: input.deposit,
-              status: LeaseStatus.ACTIVE,
-              rentDueCurrency: 'ZAR',
-              leaseType: input.leaseEndDate
-                ? LeaseTermType.FIXED_TERM
-                : LeaseTermType.MONTHLY,
-              invoiceCycle: InvoiceCycle.MONTHLY,
-              automaticInvoice: input.automaticInvoice,
-              tenantLease: {
-                create: {
-                  tenantId: input.tenantId,
-                },
-              },
-            },
-            include: {
-              unit: {
-                include: {
-                  property: true,
-                },
-              },
-              tenantLease: {
-                include: {
-                  tenant: true,
-                },
-              },
-            },
-          });
-
-          let recurringBillable = null;
-          let automaticInvoice = true;
-          if (automaticInvoice) {
-            // Ensure we work with UTC dates for invoice scheduling
-            const startDateUTC = new Date(input.leaseStartDate);
-            let nextInvoiceDate = new Date(
-              Date.UTC(
-                startDateUTC.getUTCFullYear(),
-                startDateUTC.getUTCMonth(),
-                startDateUTC.getUTCDate()
-              )
-            );
-            if (input.invoiceCycle === InvoiceCycle.MONTHLY) {
-              nextInvoiceDate = new Date(
-                Date.UTC(
-                  nextInvoiceDate.getUTCFullYear(),
-                  nextInvoiceDate.getUTCMonth() + 1,
-                  nextInvoiceDate.getUTCDate()
-                )
-              );
-            }
-
-            recurringBillable = await tx.recurringBillable.create({
+        const result = await ctx.db.$transaction(
+          async (tx: Prisma.TransactionClient) => {
+            const lease = await tx.lease.create({
               data: {
-                startDate: new Date(
-                  Date.UTC(
-                    startDateUTC.getUTCFullYear(),
-                    startDateUTC.getUTCMonth(),
-                    startDateUTC.getUTCDate()
-                  )
-                ),
-                endDate: input.leaseEndDate
-                  ? new Date(
-                      Date.UTC(
-                        input.leaseEndDate.getUTCFullYear(),
-                        input.leaseEndDate.getUTCMonth(),
-                        input.leaseEndDate.getUTCDate()
-                      )
-                    )
-                  : null,
-                description: `Monthly rent for ${tenant.firstName} ${tenant.lastName} - Unit ${unit.name}`,
-                amount: input.rent,
-                category: InvoiceCategory.RENT,
-                cycle: InvoiceCycle.MONTHLY,
-                nextInvoiceAt: nextInvoiceDate,
-                isActive: true,
-                leaseId: lease.id,
-                tenantId: input.tenantId,
-                propertyId: unit.propertyId,
+                unitId: input.unitId,
+                startDate: input.leaseStartDate,
+                endDate: input.leaseEndDate,
+                rent: input.rent,
+                deposit: input.deposit,
+                status: LeaseStatus.ACTIVE,
+                rentDueCurrency: 'ZAR',
+                leaseType: input.leaseEndDate
+                  ? LeaseTermType.FIXED_TERM
+                  : LeaseTermType.MONTHLY,
+                invoiceCycle: InvoiceCycle.MONTHLY,
+                automaticInvoice: input.automaticInvoice,
+                tenantLease: {
+                  create: {
+                    tenantId: input.tenantId,
+                  },
+                },
+              },
+              include: {
+                unit: {
+                  include: {
+                    property: true,
+                  },
+                },
+                tenantLease: {
+                  include: {
+                    tenant: true,
+                  },
+                },
               },
             });
-          }
 
-          return { lease, recurringBillable };
-        });
+            let recurringBillable = null;
+            let automaticInvoice = true;
+            if (automaticInvoice) {
+              // Ensure we work with UTC dates for invoice scheduling
+              const startDateUTC = new Date(input.leaseStartDate);
+              let nextInvoiceDate = new Date(
+                Date.UTC(
+                  startDateUTC.getUTCFullYear(),
+                  startDateUTC.getUTCMonth(),
+                  startDateUTC.getUTCDate()
+                )
+              );
+              if (input.invoiceCycle === InvoiceCycle.MONTHLY) {
+                nextInvoiceDate = new Date(
+                  Date.UTC(
+                    nextInvoiceDate.getUTCFullYear(),
+                    nextInvoiceDate.getUTCMonth() + 1,
+                    nextInvoiceDate.getUTCDate()
+                  )
+                );
+              }
+
+              recurringBillable = await tx.recurringBillable.create({
+                data: {
+                  startDate: new Date(
+                    Date.UTC(
+                      startDateUTC.getUTCFullYear(),
+                      startDateUTC.getUTCMonth(),
+                      startDateUTC.getUTCDate()
+                    )
+                  ),
+                  endDate: input.leaseEndDate
+                    ? new Date(
+                        Date.UTC(
+                          input.leaseEndDate.getUTCFullYear(),
+                          input.leaseEndDate.getUTCMonth(),
+                          input.leaseEndDate.getUTCDate()
+                        )
+                      )
+                    : null,
+                  description: `Monthly rent for ${tenant.firstName} ${tenant.lastName} - Unit ${unit.name}`,
+                  amount: input.rent,
+                  category: InvoiceCategory.RENT,
+                  cycle: InvoiceCycle.MONTHLY,
+                  nextInvoiceAt: nextInvoiceDate,
+                  isActive: true,
+                  leaseId: lease.id,
+                  tenantId: input.tenantId,
+                  propertyId: unit.propertyId,
+                },
+              });
+            }
+
+            return { lease, recurringBillable };
+          }
+        );
 
         return {
           success: true,

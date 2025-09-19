@@ -4,10 +4,6 @@ generator client {
   binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
-generator triggerClient {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")
@@ -31,14 +27,14 @@ model User {
   paystackCustomerId         String?
   paystackSubscriptionId     String?
   paystackSubscriptionStatus SubscriptionPlanStatus?
-  subscriptionPlanCode       String? // PLN_xxx
-  subscriptionAmount         Int? // in kobo/cents
-  subscriptionCurrency       String? // NGN, ZAR, etc.
-  subscriptionInterval       String? // monthly, yearly, etc.
+  subscriptionPlanCode       String?
+  subscriptionAmount         Int?
+  subscriptionCurrency       String?
+  subscriptionInterval       String?
   nextPaymentDate            DateTime?
   subscriptionCreatedAt      DateTime?
   subscriptionUpdatedAt      DateTime?
-  lastPaymentFailure         String? // Last failure reason
+  lastPaymentFailure         String?
   paymentRetryCount          Int?                    @default(0)
   state                      String?
   zip                        String?

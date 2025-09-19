@@ -1,7 +1,7 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/index.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
 
 // Schema for subscription.not_renewing webhook payload
 const SubscriptionNotRenewingPayload = Schema.Struct({

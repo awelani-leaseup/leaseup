@@ -17,12 +17,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@leaseup/drizzle": "workspace:*",
     "@leaseup/novu": "workspace:*",
     "@leaseup/payments": "workspace:*",
     "@leaseup/prisma": "workspace:*",
     "@prisma/client": "^6.9.0",
-    "@trigger.dev/sdk": "4.0.2",
+    "@trigger.dev/sdk": "4.0.4",
     "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.44.5",
     "effect": "^3.17.2",
     "nanoid": "^5.1.5",
     "tsx": "^4.20.3",
@@ -30,7 +32,7 @@
   },
   "devDependencies": {
     "@leaseup/typescript-config": "workspace:*",
-    "@trigger.dev/build": "4.0.2",
+    "@trigger.dev/build": "4.0.4",
     "trigger.dev": "^4.0.2"
   }
 }

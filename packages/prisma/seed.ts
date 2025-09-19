@@ -11,7 +11,7 @@ import {
   PropertyType,
   TenantIncomeType,
   LeaseStatus,
-} from './generated/client';
+} from './generated/client/client.js';
 
 function generateSouthAfricanIntlNumber() {
   const prefixes = [
