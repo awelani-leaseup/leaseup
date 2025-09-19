@@ -438,7 +438,7 @@ export const checkUpcomingInvoicesTask = schedules.task({
             : '0%',
       };
 
-      logger.log('Completed invoice processing with retry logic', result);
+      logger.log('Completed invoice processing with retry logic.', result);
 
       return result;
     } catch (error) {
