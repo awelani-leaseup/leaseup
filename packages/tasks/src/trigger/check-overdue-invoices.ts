@@ -38,7 +38,6 @@ export const checkOverdueInvoicesTask = schedules.task({
         currentDateUTCString: currentDateUTC.toDateString(),
       });
 
-      // First, get total count of overdue invoices (regardless of subscription status)
       const totalOverdueCount = await db.invoice.count({
         where: {
           status: InvoiceStatus.PENDING,
@@ -48,7 +47,6 @@ export const checkOverdueInvoicesTask = schedules.task({
         },
       });
 
-      // Then get overdue invoices only for landlords with active subscriptions
       const overdueInvoices = await db.invoice.findMany({
         where: {
           status: InvoiceStatus.PENDING,
