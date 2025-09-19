@@ -5,7 +5,7 @@ import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import {
   InvoiceCategory,
   InvoiceCycle,
-  Lease,
+  type Lease,
   LeaseStatus,
   LeaseTermType,
   Prisma,

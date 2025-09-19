@@ -8,8 +8,8 @@ import {
   Prisma,
   InvoiceStatus,
   InvoiceCategory,
-  Invoice,
-  TenantLease,
+  type Invoice,
+  type TenantLease,
 } from '@leaseup/prisma/client/client.js';
 
 export const invoiceRouter = createTRPCRouter({
@@ -24,9 +24,6 @@ export const invoiceRouter = createTRPCRouter({
         input;
       const skip = (page - 1) * limit;
 
-      // Build where clause for filtering invoices by landlord
-      // Include invoices with leases belonging to landlord's properties
-      // AND invoices without leases but belonging to landlord's tenants
       const whereClause: Prisma.InvoiceWhereInput = {
         OR: [
           // Invoices with leases
