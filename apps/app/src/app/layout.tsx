@@ -1,11 +1,11 @@
 import "@leaseup/ui/global.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Inter } from "next/font/google";
+import { Onest } from "next/font/google";
 import { AuthWrapper } from "./_components/auth-wrapper";
 import { TRPCReactProvider } from "@/trpc/react";
 
-const font = Inter({
+const font = Onest({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });

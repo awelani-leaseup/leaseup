@@ -22,6 +22,7 @@ export type FileWithPreview = {
   file: File | FileMetadata;
   id: string;
   preview?: string;
+  progress?: number; // Upload progress percentage (0-100)
 };
 
 export type FileUploadOptions = {
@@ -45,6 +46,7 @@ export type FileUploadActions = {
   removeFile: (id: string) => void;
   clearFiles: () => void;
   clearErrors: () => void;
+  updateFileProgress: (id: string, progress: number) => void;
   handleDragEnter: (e: DragEvent<HTMLElement>) => void;
   handleDragLeave: (e: DragEvent<HTMLElement>) => void;
   handleDragOver: (e: DragEvent<HTMLElement>) => void;
@@ -306,6 +308,15 @@ export const useFileUpload = (
     }));
   }, []);
 
+  const updateFileProgress = useCallback((id: string, progress: number) => {
+    setState((prev) => ({
+      ...prev,
+      files: prev.files.map((file) =>
+        file.id === id ? { ...file, progress } : file,
+      ),
+    }));
+  }, []);
+
   const handleDragEnter = useCallback((e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -390,6 +401,7 @@ export const useFileUpload = (
       removeFile,
       clearFiles,
       clearErrors,
+      updateFileProgress,
       handleDragEnter,
       handleDragLeave,
       handleDragOver,

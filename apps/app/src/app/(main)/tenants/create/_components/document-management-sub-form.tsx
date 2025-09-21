@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useFileUpload, formatBytes } from "@/hooks/use-file-upload";
 import { Badge } from "@leaseup/ui/components/badge";
+import { Progress } from "@leaseup/ui/components/progress";
 import { format } from "date-fns";
 import { ConfirmDeleteTenantFile } from "../../_components/confirm-delete-tenant-file";
 import { api } from "@/trpc/react";
@@ -47,7 +48,7 @@ const DocumentManagementContent = ({
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const { data: session } = authClient.useSession();
   const user = session?.user;
-
+  const utils = api.useUtils();
   const maxSize = 10 * 1024 * 1024; // 10MB default
   const maxFiles = 10;
 
@@ -65,6 +66,7 @@ const DocumentManagementContent = ({
       removeFile,
       clearFiles,
       getInputProps,
+      updateFileProgress,
     },
   ] = useFileUpload({
     multiple: true,
@@ -83,13 +85,24 @@ const DocumentManagementContent = ({
             toast.promise(
               async () => {
                 const uploadedFiles = await Promise.all(
-                  newFiles.map(async (file) => {
+                  newFiles.map(async (file, index) => {
+                    // Find the corresponding file in the files array to get its ID
+                    const fileWithId = addedFiles[index];
+
                     const blob = await upload(
                       `${user?.id}/${nanoid(21)}`,
                       file,
                       {
                         access: "public",
                         handleUploadUrl: "/api/file/upload",
+                        onUploadProgress: (progress) => {
+                          if (fileWithId) {
+                            updateFileProgress(
+                              fileWithId.id,
+                              progress.percentage,
+                            );
+                          }
+                        },
                       },
                     );
 
@@ -106,6 +119,10 @@ const DocumentManagementContent = ({
                   tenantId,
                   files: uploadedFiles,
                 });
+
+                clearFiles();
+
+                utils.tenant.getTenantById.invalidate();
               },
               {
                 loading: "Uploading files...",
@@ -228,6 +245,7 @@ const DocumentManagementContent = ({
                     removeFile,
                     clearFiles,
                     getInputProps,
+                    updateFileProgress,
                   }}
                   form={form}
                 />
@@ -256,6 +274,7 @@ const DocumentManagementContent = ({
                 removeFile,
                 clearFiles,
                 getInputProps,
+                updateFileProgress,
               }}
               form={form}
             />
@@ -283,6 +302,7 @@ interface FileUploadAreaProps {
     removeFile: (id: string) => void;
     clearFiles: () => void;
     getInputProps: () => any;
+    updateFileProgress: (id: string, progress: number) => void;
   };
   form: any;
 }
@@ -333,67 +353,36 @@ const FileUploadArea = ({
                   ? "Uploading Files..."
                   : `New Files (${files.length})`}
               </h3>
-              <Button
-                variant="outlined"
-                size="sm"
-                onClick={handlers.clearFiles}
-                disabled={uploadingFiles}
-              >
-                <Trash2Icon
-                  className="-ms-0.5 size-3.5 opacity-60"
-                  aria-hidden="true"
-                />
-                Remove all
-              </Button>
             </div>
-            <div className="w-full space-y-2 rounded-lg border border-gray-200 p-2">
+            <div className="w-full space-y-2 rounded-lg border-gray-200">
               {files.map((file) => (
                 <div
                   key={file.id}
                   className="bg-background flex items-center justify-between gap-2 rounded-lg border p-2 pe-3"
                 >
-                  <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded border">
+                  <div className="flex w-full items-center overflow-hidden">
+                    <div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded">
                       {getFileIcon(file)}
                     </div>
-                    <div className="flex min-w-0 flex-col gap-0.5">
-                      <p className="truncate text-[13px] font-medium tracking-tight">
+                    <div className="flex w-full min-w-0 flex-col gap-0.5">
+                      <p className="truncate text-left text-[13px] font-medium tracking-tight">
                         {file.file.name}
                       </p>
                       <p className="text-muted-foreground text-left text-xs tracking-tight">
                         {formatBytes(file.file.size)}
+                        {typeof file.progress === "number" &&
+                          file.progress < 100 && (
+                            <span className="ml-2">• {file.progress}%</span>
+                          )}
                       </p>
+                      {file.progress < 100 && (
+                        <Progress
+                          value={file.progress}
+                          className="mt-1 h-1 w-full"
+                        />
+                      )}
                     </div>
                   </div>
-
-                  <Button
-                    size="icon"
-                    variant="icon"
-                    className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
-                    onClick={() => {
-                      handlers.removeFile(file.id);
-                      // Update form state after removing file (for create mode)
-                      if (form) {
-                        const currentFiles = form.getFieldValue("files") || [];
-                        const fileIndex = files.findIndex(
-                          (f) => f.id === file.id,
-                        );
-                        if (fileIndex >= 0) {
-                          const updatedFiles = currentFiles.filter(
-                            (_: File, index: number) => index !== fileIndex,
-                          );
-                          form.setFieldValue(
-                            "files",
-                            updatedFiles.length > 0 ? updatedFiles : null,
-                          );
-                        }
-                      }
-                    }}
-                    disabled={uploadingFiles}
-                    aria-label="Remove file"
-                  >
-                    <XIcon className="size-4" aria-hidden="true" />
-                  </Button>
                 </div>
               ))}
 

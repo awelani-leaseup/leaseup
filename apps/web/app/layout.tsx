@@ -1,7 +1,7 @@
 import './index.css';
 
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Onest } from 'next/font/google';
 
 import { Header } from './_components/header';
 import { Footer } from './_components/footer';
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
 };
 
-const font = Inter({
+const font = Onest({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '900'],
 });

@@ -195,9 +195,11 @@ export default function Documents() {
 
           return (
             <div className="flex items-center space-x-3">
-              <FileIcon className="h-5 w-5 text-gray-500" />
+              <FileIcon className="text-primary h-5 w-5 stroke-1" />
               <div>
-                <p className="font-medium text-[#2D3436]">{name}</p>
+                <p className="font-medium tracking-tight text-[#2D3436]">
+                  {name}
+                </p>
                 {type && (
                   <p className="text-xs text-gray-500 uppercase">
                     {type.split("/")[1] || type}

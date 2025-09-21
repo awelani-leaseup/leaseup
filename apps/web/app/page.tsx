@@ -1,6 +1,6 @@
 import { Button } from '@leaseup/ui/components/button';
 import { Previews } from './_components/previews';
-import { Calendar, Play, Rocket } from 'lucide-react';
+import { Calendar, Rocket } from 'lucide-react';
 
 export default function Home() {
   const structuredData = {
@@ -104,6 +104,12 @@ export default function Home() {
     ],
   };
 
+  const SIGNUP_URL = process.env.NEXT_PUBLIC_SIGNUP_URL ?? null;
+
+  if (!SIGNUP_URL) {
+    throw new Error('Missing SIGNUP_URL');
+  }
+
   return (
     <>
       <script
@@ -118,22 +124,25 @@ export default function Home() {
                 <h1 className='text-4xl sm:text-5xl md:text-7xl  mb-6 tracking-tight leading-tight font-bold'>
                   Simplify Your{' '}
                   <span className='text-[#1ABC9C]'>Rental Property</span>{' '}
-                  Management in South Africa
+                  Management
                 </h1>
                 <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed text-pretty max-w-lg mx-auto'>
-                  The leading property management software for South African
-                  landlords. Automate rent collection, tenant management, and
-                  lease tracking with Paystack integration.
+                  Collect rent online, manage tenants, and grow your property
+                  portfolio.
                 </p>
                 <div className='flex flex-col sm:flex-row gap-4 justify-center w-full'>
-                  <Button size='lg'>
-                    <Rocket />
-                    Start Free Trial
-                  </Button>
-                  <Button size='lg'>
-                    <Play />
-                    Watch Demo
-                  </Button>
+                  <a href={SIGNUP_URL ?? ''}>
+                    <Button size='lg'>
+                      <Rocket />
+                      Get Started
+                    </Button>
+                  </a>
+                  <a href='mailto:awelani@leaseup.co.za'>
+                    <Button size='lg' color='secondary' variant='outlined'>
+                      <Calendar />
+                      Schedule Demo
+                    </Button>
+                  </a>
                 </div>
               </div>
               <Previews />
@@ -152,13 +161,11 @@ export default function Home() {
                 id='features-heading'
                 className='text-3xl sm:text-4xl font-bold text-[#2C3E50] mb-4'
               >
-                Complete Property Management Software for South African
-                Landlords
+                Property Management Made Simple
               </h2>
               <p className='text-base sm:text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
-                Streamline your rental property business with powerful landlord
-                tools designed for South African property managers and real
-                estate investors
+                Powerful tools designed for South African landlords and property
+                managers
               </p>
             </div>
 
@@ -179,32 +186,20 @@ export default function Home() {
                 </div>
                 <div className='w-full md:w-1/2'>
                   <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Automated Online Rent Collection with Paystack Integration
+                    Automated Rent Collection
                   </h3>
                   <p className='mb-4 text-[#475569]'>
-                    Streamline rent collection for your South African rental
-                    properties. Set up online invoicing, send automated
-                    reminders, and accept payments through all major South
-                    African payment methods including EFT, credit cards, and
-                    bank transfers.
+                    Accept payments online through all major South African
+                    payment methods. Send automated invoices and reminders to
+                    reduce late payments.
                   </p>
                   <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
+                    <li>✅ Online invoicing with automatic reminders</li>
+                    <li>✅ WhatsApp, SMS, and email notifications</li>
                     <li>
-                      ✅ Professional Online Invoicing - Trackable rent invoices
-                      sent automatically to tenants
+                      ✅ EFT, credit cards, and bank transfers via Paystack
                     </li>
-                    <li>
-                      ✅ Automated Rent Reminders - Reduce late payments with
-                      WhatsApp, SMS, and email notifications
-                    </li>
-                    <li>
-                      ✅ South African Payment Methods - Accept EFT, credit
-                      cards, debit cards, and bank transfers through Paystack
-                    </li>
-                    <li>
-                      ✅ Instant Payment Notifications - Get notified
-                      immediately when rent is paid with bank-grade security
-                    </li>
+                    <li>✅ Instant payment notifications</li>
                   </ul>
                   {/* <a
                   href='/features/accounting'
@@ -230,32 +225,17 @@ export default function Home() {
                 </div>
                 <div className='w-full md:w-1/2'>
                   <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Complete Tenant and Lease Management System
+                    Tenant & Lease Management
                   </h3>
                   <p className='mb-4 text-[#475569]'>
-                    Comprehensive tenant management software for South African
-                    landlords. Organize tenant information, track lease
-                    agreements, monitor payment history, and automate
-                    communication—all in one centralized platform.
+                    Organize tenant information, track lease agreements, and
+                    monitor payment history—all in one centralized platform.
                   </p>
                   <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
-                    <li>
-                      ✅ Centralized Tenant Database - Store contact
-                      information, FICA documents, and lease agreements securely
-                    </li>
-                    <li>
-                      ✅ Lease Tracking & Expiry Alerts - Automated
-                      notifications before lease renewals and expiry dates
-                    </li>
-                    <li>
-                      ✅ Complete Payment History - Track rent payments, late
-                      fees, and partial payments for each tenant
-                    </li>
-                    <li>
-                      ✅ Automated Tenant Communication - Professional WhatsApp,
-                      SMS, and email notifications for rent reminders and
-                      receipts
-                    </li>
+                    <li>✅ Secure tenant database with FICA documents</li>
+                    <li>✅ Lease tracking with expiry alerts</li>
+                    <li>✅ Complete payment history tracking</li>
+                    <li>✅ Automated tenant communication</li>
                   </ul>
                   {/* <a
                   href='/features/leasing'
@@ -281,27 +261,20 @@ export default function Home() {
                 </div>
                 <div className='w-full md:w-1/2'>
                   <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Automated Online Rent Collection for South African
-                    Properties
+                    Online Payment Options
                   </h3>
                   <p className='mb-4 text-[#475569]'>
-                    Eliminate the hassle of chasing rent payments. Provide
-                    tenants with convenient online payment options through
-                    Paystack, supporting all major South African banking and
-                    payment methods.
+                    Provide tenants with convenient online payment options
+                    through Paystack, supporting all major South African payment
+                    methods.
                   </p>
                   <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
+                    <li>✅ Credit cards, EFT, and bank transfers</li>
                     <li>
-                      ✅ Multiple Payment Methods - Credit cards, debit cards,
-                      EFT, bank transfers, and mobile payments through Paystack
+                      ✅ Full payments, partial payments, and installments
                     </li>
                     <li>
-                      ✅ Flexible Payment Options - Accept full rent payments,
-                      partial payments, and installments
-                    </li>
-                    <li>
-                      ✅ Real-time Payment Tracking - Monitor paid, pending, and
-                      overdue rent invoices with automated follow-ups
+                      ✅ Real-time payment tracking with automated follow-ups
                     </li>
                   </ul>
                   {/* <a
@@ -328,27 +301,18 @@ export default function Home() {
                 </div>
                 <div className='w-full md:w-1/2'>
                   <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Secure Property Document Management System
+                    Document Management
                   </h3>
                   <p className='mb-4 text-[#475569]'>
-                    Centralized document storage for South African landlords.
-                    Securely store and manage lease agreements, FICA documents,
-                    condition reports, payment proofs, and property maintenance
-                    records with easy access and automated backups.
+                    Securely store lease agreements, FICA documents, and
+                    property records with automated backups and easy access.
                   </p>
                   <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
+                    <li>✅ Secure cloud storage with automated backups</li>
                     <li>
-                      ✅ Secure Cloud Storage - All property and tenant
-                      documents stored safely with automated backups
+                      ✅ Generate lease agreements and invoices automatically
                     </li>
-                    <li>
-                      ✅ Document Generation - Create professional lease
-                      agreements, invoices, and receipts automatically
-                    </li>
-                    <li>
-                      ✅ FICA Compliance - Store and manage FICA documents and
-                      tenant verification records securely
-                    </li>
+                    <li>✅ FICA compliance and tenant verification</li>
                   </ul>
                   {/* <a
                   href='/features/maintenance'
@@ -377,8 +341,7 @@ export default function Home() {
               </h2>
               <p className='text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
                 Transparent pricing for South African landlords. One affordable
-                monthly plan covers unlimited rental properties and tenants with
-                no hidden fees.
+                monthly plan covers unlimited rental properties and tenants.
               </p>
             </div>
 
@@ -432,6 +395,13 @@ export default function Home() {
                     >
                       per month
                     </div>
+                    <div
+                      className={`text-sm mt-2 ${
+                        plan.popular ? 'text-blue-200' : 'text-[#95A5A6]'
+                      }`}
+                    >
+                      + 2.9% transaction fee on rent payments
+                    </div>
                   </div>
                   <ul className='space-y-4 mb-8'>
                     {plan.features.map((feature, featureIndex) => (
@@ -443,7 +413,7 @@ export default function Home() {
                           className={`fa-solid fa-check ${plan.popular ? 'text-[#1ABC9C]' : 'text-[#2ECC71]'}`}
                         ></i>
                         <span className={plan.popular ? '' : 'text-[#2C3E50]'}>
-                          {feature}
+                          ✅ {feature}
                         </span>
                       </li>
                     ))}
@@ -454,10 +424,40 @@ export default function Home() {
                     <Rocket />
                     {plan.name === 'Enterprise'
                       ? 'Contact Sales'
-                      : 'Start Free Trial'}
+                      : 'Get Started'}
                   </Button>
                 </div>
               ))}
+            </div>
+
+            {/* Transaction Fee Explanation */}
+            <div className='mt-12 max-w-4xl mx-auto'>
+              <div className='bg-[#F8FAFC] border border-gray-200 rounded-xl p-6'>
+                <div className='flex items-start gap-4'>
+                  <div className='flex-shrink-0'>
+                    <i className='fa-solid fa-info-circle text-[#3498DB] text-xl'></i>
+                  </div>
+                  <div>
+                    <h3 className='text-lg font-semibold text-[#2C3E50] mb-2'>
+                      Transparent Payment Processing
+                    </h3>
+                    <p className='text-[#7F8C8D] mb-3'>
+                      We use Paystack, South Africa&apos;s most trusted payment
+                      processor, to handle all rent payments securely. The 2.9%
+                      transaction fee is charged directly by Paystack and
+                      covers:
+                    </p>
+                    <p className='text-[#7F8C8D] text-sm'>
+                      <strong>Example:</strong> On a R10,000 rent payment, the
+                      transaction fee would be R290, which is automatically
+                      deducted before the payment reaches your account. This
+                      industry-standard rate is competitive with other payment
+                      processors and ensures your tenants can pay securely
+                      online.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -498,7 +498,12 @@ export default function Home() {
                 {
                   question: 'What payment methods do tenants have?',
                   answer:
-                    'Tenants can pay via credit card, debit card, EFT, or bank transfer. We support all major South African payment methods through Paystack.',
+                    'Tenants can pay via credit card, debit card, EFT, or bank transfer. We support all major South African payment methods through Paystack, with a standard 2.9% transaction fee that covers secure processing and fraud protection.',
+                },
+                {
+                  question: 'What are the transaction fees for rent payments?',
+                  answer:
+                    'We charge a transparent 2.9% transaction fee on all rent payments, which is processed by Paystack. This industry-standard rate includes bank-grade security, instant processing, fraud protection, and support for all major payment methods. For example, on a R10,000 rent payment, the fee would be R290.',
                 },
                 {
                   question: 'Is there a setup fee or long-term contract?',
@@ -558,20 +563,24 @@ export default function Home() {
               tenant management.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <Button
-                size='lg'
-                className='bg-[#1ABC9C] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2'
-              >
-                <Rocket />
-                Start Your Free Trial
-              </Button>
-              <Button
-                size='lg'
-                className='border-2 border-white/10 text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-[#2C3E50] transition-colors flex items-center justify-center gap-2'
-              >
-                <Calendar />
-                Schedule Demo
-              </Button>
+              <a href={SIGNUP_URL ?? ''}>
+                <Button
+                  size='lg'
+                  className='bg-[#1ABC9C] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2'
+                >
+                  <Rocket />
+                  Get Started
+                </Button>
+              </a>
+              <a href='mailto:awelani@leaseup.co.za'>
+                <Button
+                  size='lg'
+                  className='border-2 border-white/10 text-white px-8 py-4 rounded-lg font-medium hover:bg-white hover:text-[#2C3E50] transition-colors flex items-center justify-center gap-2'
+                >
+                  <Calendar />
+                  Schedule Demo
+                </Button>
+              </a>
             </div>
           </div>
         </section>

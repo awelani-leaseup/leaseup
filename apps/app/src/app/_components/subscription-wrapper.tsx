@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@leaseup/ui/components/alert-dialog";
 import { Button } from "@leaseup/ui/components/button";
-import { CircleCheck, CreditCard, Loader2, LogOut } from "lucide-react";
+import { CreditCard, Loader2, LogOut } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -176,11 +176,10 @@ export function SubscriptionWrapper({
         <Separator />
 
         <CardContent>
-          <ul className="flex flex-col gap-y-6">
+          <ul className="flex flex-col gap-y-4">
             {subscriptionPlan.features.map((feature) => (
               <li key={feature} className="flex items-start gap-2">
-                <CircleCheck className="size-5 flex-shrink-0 stroke-1 text-gray-500" />
-                <span className="text-sm tracking-tight">{feature}</span>
+                ✅<span className="text-base tracking-tight">{feature}</span>
               </li>
             ))}
           </ul>

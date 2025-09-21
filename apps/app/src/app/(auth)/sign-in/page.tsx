@@ -42,6 +42,8 @@ export default function SignIn() {
     await authClient.signIn.social(
       {
         provider: "google",
+        callbackURL: "/",
+        newUserCallbackURL: "/onboarding",
       },
       {
         onError: (error) => {
@@ -75,6 +77,7 @@ export default function SignIn() {
         {
           email: value.email,
           password: value.password,
+          callbackURL: "/",
         },
         {
           onError: (error) => {

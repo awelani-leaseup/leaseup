@@ -135,12 +135,12 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.db.user.findUnique({
         where: { id: userId },
         select: {
+          paystackCustomerId: true,
           paystackSubscriptionId: true,
-          subscriptionPlanCode: true,
         },
       });
 
-      if (!user || !user.paystackSubscriptionId) {
+      if (!user || !user.paystackCustomerId) {
         return {
           hasSubscription: false,
           subscription: null,
@@ -148,52 +148,66 @@ export const userRouter = createTRPCRouter({
         };
       }
 
-      let subscriptionDetails = null;
-      let planDetails = null;
-
       try {
-        const { data: subscriptionData, error: subscriptionError } =
-          await paystack.GET('/subscription/{code}', {
+        // Fetch customer data from Paystack customer endpoint
+        const { data: customerData, error: customerError } = await paystack.GET(
+          '/customer/{code}',
+          {
             params: {
               path: {
-                code: user.paystackSubscriptionId,
+                code: user.paystackCustomerId,
               },
             },
-          });
-
-        if (!subscriptionError && subscriptionData?.data) {
-          subscriptionDetails = subscriptionData.data;
-        }
-      } catch (error) {
-        console.error('Error fetching subscription from Paystack:', error);
-      }
-
-      if (user.subscriptionPlanCode) {
-        try {
-          const { data: planData, error: planError } = await paystack.GET(
-            '/plan/{code}',
-            {
-              params: {
-                path: {
-                  code: user.subscriptionPlanCode,
-                },
-              },
-            }
-          );
-
-          if (!planError && planData?.data) {
-            planDetails = planData.data;
           }
-        } catch (error) {
-          console.error('Error fetching plan from Paystack:', error);
-        }
-      }
+        );
 
-      return {
-        hasSubscription: true,
-        subscription: subscriptionDetails,
-        plan: planDetails,
-      };
+        if (customerError || !customerData?.data) {
+          console.error(
+            'Error fetching customer from Paystack:',
+            customerError
+          );
+          return {
+            hasSubscription: false,
+            subscription: null,
+            plan: null,
+          };
+        }
+
+        const customer = customerData.data as any;
+        const subscriptions = customer.subscriptions || [];
+
+        if (!subscriptions || subscriptions.length === 0) {
+          return {
+            hasSubscription: false,
+            subscription: null,
+            plan: null,
+          };
+        }
+
+        let activeSubscription = subscriptions.find(
+          (sub: any) => sub.status === 'active'
+        );
+        if (!activeSubscription && subscriptions.length > 0) {
+          activeSubscription = subscriptions[0];
+        }
+
+        console.log('Active subscription:', activeSubscription);
+
+        const planDetails = activeSubscription?.plan || null;
+
+        return {
+          hasSubscription: true,
+          subscription: activeSubscription,
+          plan: planDetails,
+        };
+      } catch (error) {
+        console.error('Error fetching customer data from Paystack:', error);
+        return {
+          hasSubscription: false,
+          subscription: null,
+          plan: null,
+        };
+      }
     } catch (error) {
       console.error('Error fetching Paystack subscription details:', error);
       throw new TRPCError({

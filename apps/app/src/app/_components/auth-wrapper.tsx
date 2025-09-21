@@ -28,7 +28,7 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     const newUserId = session?.user?.id || null;
     if (currentUserId !== newUserId) {
       if (currentUserId !== null) {
-        utils.invalidate();
+        utils.onboarding.getOnboardingStatus.invalidate();
       }
       setCurrentUserId(newUserId);
     }
