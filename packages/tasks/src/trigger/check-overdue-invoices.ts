@@ -29,6 +29,10 @@ export const checkOverdueInvoicesTask = schedules.task({
       timezone: payload.timezone,
     });
 
+    logger.log('Payload', {
+      key: process.env.POSTGRES_PRISMA_URL ?? 'No URL',
+    });
+
     try {
       const currentDateUTC = new Date();
       currentDateUTC.setUTCHours(0, 0, 0, 0);

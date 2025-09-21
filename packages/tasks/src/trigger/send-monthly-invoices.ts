@@ -330,29 +330,15 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
     where: whereClause,
     include: {
       tenant: {
-        select: {
-          id: true,
-          paystackCustomerId: true,
-          landlordId: true,
-        },
         include: {
-          landlord: {
-            select: {
-              id: true,
-              paystackSubscriptionStatus: true,
-            },
-          },
+          landlord: true,
         },
       },
       lease: {
         include: {
           unit: {
             include: {
-              property: {
-                select: {
-                  landlordId: true,
-                },
-              },
+              property: true,
             },
           },
         },
