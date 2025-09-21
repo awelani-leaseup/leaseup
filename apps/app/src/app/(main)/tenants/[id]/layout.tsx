@@ -11,8 +11,9 @@ import {
   AvatarImage,
 } from "@leaseup/ui/components/avataar";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
-import { MessageSquare, FileText, User, CreditCard } from "lucide-react";
+import { MessageSquare, FileText, User, CreditCard, Edit } from "lucide-react";
 import { format } from "date-fns";
+import { EditTenantDialog } from "./_components/edit-tenant-dialog";
 
 interface TenantLayoutProps {
   children: React.ReactNode;
@@ -35,7 +36,6 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
     return (
       <div className="min-h-screen bg-[#ECF0F1] px-4 py-8 md:px-8">
         <div className="mx-auto max-w-7xl">
-          {/* Tenant Header Skeleton */}
           <Card className="mb-8">
             <CardContent className="flex flex-col items-start justify-between md:flex-row md:items-center">
               <div className="mb-4 flex items-center md:mb-0">
@@ -52,7 +52,6 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
             </CardContent>
           </Card>
 
-          {/* Tabs Navigation Skeleton */}
           <Card className="mb-8">
             <CardContent>
               <nav className="flex space-x-8">
@@ -69,7 +68,6 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
             </CardContent>
           </Card>
 
-          {/* Page Content Skeleton */}
           <div className="space-y-6">
             <Card>
               <CardContent className="p-6">
@@ -159,6 +157,15 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
+                <EditTenantDialog tenantId={tenantId} tenant={tenant}>
+                  <Button
+                    variant="outlined"
+                    className="border-[#E74C3C] text-[#E74C3C] hover:bg-[#E74C3C] hover:text-white"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit Tenant
+                  </Button>
+                </EditTenantDialog>
                 <Button className="bg-[#3498DB] text-white hover:bg-[#2980B9]">
                   <MessageSquare className="h-4 w-4" />
                   Message

@@ -5,13 +5,6 @@ import { Button } from "@leaseup/ui/components/button";
 import { Trash, Plus } from "lucide-react";
 import { createTenantFormOptions } from "../_utils";
 import { api } from "@/trpc/react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@leaseup/ui/components/select";
 
 export const EmergencyContacts = withForm({
   ...createTenantFormOptions,
@@ -40,98 +33,56 @@ export const EmergencyContacts = withForm({
                       <Trash />
                     </Button>
                   </div>
-                  <form.Field name={`emergencyContacts[${index}].fullName`}>
+                  <form.AppField name={`emergencyContacts[${index}].fullName`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="Full Name"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
                         asterisk
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
+                  </form.AppField>
                   <div>
-                    <form.Field
+                    <form.AppField
                       name={`emergencyContacts[${index}].phoneNumber`}
                     >
                       {(subField) => (
-                        <form.ArraySubField
+                        <subField.TextField
                           label="Phone Number"
                           value={subField.state.value}
-                          onChange={(value) =>
-                            subField.handleChange(value as string)
-                          }
-                          errors={
-                            subField.state.meta.errors as {
-                              message: string;
-                            }[]
-                          }
+                          type="tel"
                         />
                       )}
-                    </form.Field>
+                    </form.AppField>
                   </div>
                   <div>
-                    <form.Field name={`emergencyContacts[${index}].email`}>
+                    <form.AppField name={`emergencyContacts[${index}].email`}>
                       {(subField) => (
-                        <form.ArraySubField
+                        <subField.TextField
                           label="Email"
                           value={subField.state.value}
-                          onChange={(value) =>
-                            subField.handleChange(value as string)
-                          }
-                          errors={
-                            subField.state.meta.errors as {
-                              message: string;
-                            }[]
-                          }
+                          type="email"
                         />
                       )}
-                    </form.Field>
+                    </form.AppField>
                   </div>
                   <div>
-                    <form.Field
+                    <form.AppField
                       name={`emergencyContacts[${index}].relationship`}
                     >
                       {(subField) => (
-                        <label>
-                          <Label>Relationship</Label>
-                          <Select
-                            onValueChange={(value) =>
-                              subField.handleChange(value as string)
-                            }
-                          >
-                            <SelectTrigger className="mt-1 w-full">
-                              <SelectValue placeholder="Select a relationship" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {tenantRelationships?.map((relationship) => (
-                                <SelectItem
-                                  key={relationship}
-                                  value={relationship}
-                                >
-                                  {relationship
-                                    .toLowerCase()
-                                    .replace(/_/g, " ")
-                                    .replace(/\b\w/g, (char) =>
-                                      char.toUpperCase(),
-                                    )}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                            {subField.state.meta.errors[0]?.message}
-                          </p>
-                        </label>
+                        <subField.SelectField
+                          label="Relationship"
+                          options={
+                            tenantRelationships?.map((relationship) => ({
+                              id: relationship,
+                              label: relationship,
+                            })) || []
+                          }
+                        />
                       )}
-                    </form.Field>
+                    </form.AppField>
                   </div>
                 </div>
               );

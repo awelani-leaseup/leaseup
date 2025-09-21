@@ -6,6 +6,8 @@ import {
   VTenantSchema,
   VGetTenantTransactionsSchema,
   VDeleteTenantFileSchema,
+  VUpdateTenantSchema,
+  VAddTenantFilesSchema,
 } from './tenant.types';
 import { tasks } from '@trigger.dev/sdk/v3';
 import { runCreateTenantCustomerEffect } from '@leaseup/tasks/effect';
@@ -85,6 +87,52 @@ export const tenantRouter = createTRPCRouter({
         success: true,
       };
     }),
+  addTenantFiles: protectedProcedure
+    .input(VAddTenantFilesSchema)
+    .mutation(async ({ ctx, input }) => {
+      const existingTenant = await ctx.db.tenant.findFirst({
+        where: {
+          id: input.tenantId,
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
+      if (!existingTenant) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message:
+            'Tenant not found or you do not have permission to add files',
+        });
+      }
+
+      try {
+        const createdFiles = await ctx.db.file.createMany({
+          data: input.files.map((file) => ({
+            id: nanoid(),
+            name: file.name,
+            url: file.url,
+            type: file.type,
+            size: file.size,
+            ownerId: ctx.auth?.session?.userId ?? '',
+            tenantId: input.tenantId,
+          })),
+        });
+
+        return {
+          success: true,
+          filesCreated: createdFiles.count,
+        };
+      } catch (error) {
+        console.error('Failed to add files to tenant:', error);
+
+        await del(input.files.map((file) => file.url)).catch(() => {});
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to add files to tenant',
+        });
+      }
+    }),
   createTenant: protectedProcedure
     .input(VTenantSchema)
     .mutation(async ({ ctx, input }) => {
@@ -136,6 +184,64 @@ export const tenantRouter = createTRPCRouter({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create tenant',
+        });
+      }
+    }),
+  updateTenant: protectedProcedure
+    .input(VUpdateTenantSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...updateData } = input;
+
+      try {
+        // Check if tenant exists and belongs to the current user
+        const existingTenant = await ctx.db.tenant.findFirst({
+          where: {
+            id,
+            landlordId: ctx.auth?.session?.userId ?? '',
+          },
+        });
+
+        if (!existingTenant) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message:
+              'Tenant not found or you do not have permission to update it',
+          });
+        }
+
+        const tenant = await ctx.db.tenant.update({
+          where: {
+            id,
+          },
+          data: {
+            firstName: updateData.firstName,
+            lastName: updateData.lastName,
+            email: updateData.primaryEmail,
+            phone: updateData.primaryPhoneNumber,
+            dateOfBirth: updateData.dateOfBirth,
+            additionalEmails: updateData.additionalEmails,
+            additionalPhones: updateData.additionalPhones,
+            emergencyContacts: updateData.emergencyContacts,
+            vehicles: updateData.vehicles,
+            // @ts-ignore
+            avatarUrl: updateData.avatarUrl,
+          },
+        });
+
+        return tenant;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        // Clean up uploaded avatar if update fails
+        if (updateData.avatarUrl) {
+          await del(updateData.avatarUrl).catch(() => {});
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update tenant',
         });
       }
     }),

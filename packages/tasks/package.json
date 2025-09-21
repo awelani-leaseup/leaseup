@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@date-fns/utc": "^2.1.1",
     "@leaseup/novu": "workspace:*",
     "@leaseup/payments": "workspace:*",
     "@leaseup/prisma": "workspace:*",

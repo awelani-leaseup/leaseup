@@ -4,26 +4,14 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { Button } from "@leaseup/ui/components/button";
-import {
-  Banknote,
-  CalendarDays,
-  Plus,
-  RulerDimensionLine,
-  User,
-  View,
-} from "lucide-react";
+import { Plus, View, Home, Users } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@leaseup/ui/components/badge";
-import {
-  DescriptionDetails,
-  DescriptionList,
-  DescriptionTerm,
-} from "@leaseup/ui/components/description-list";
+import { H4, H6 } from "@leaseup/ui/components/typography";
 import { format } from "date-fns";
 
 export default async function Units() {
@@ -54,122 +42,158 @@ const UnitCard = async () => {
   const units = await api.portfolio.getAllUnits();
 
   return (
-    <div id="main-content" className="mt-6 py-8">
-      <div className="mx-auto max-w-7xl">
-        <div
-          id="units-grid"
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-        >
-          {units.map((unit) => (
-            <Card key={unit.id}>
-              <CardHeader>
-                <CardTitle className="flex w-full items-start justify-between text-lg font-semibold text-[#2D3436]">
-                  {unit.name}
-                  <Badge
-                    color={unit?.lease.length > 0 ? "success" : "secondary"}
-                    size="sm"
-                  >
-                    {unit?.lease.length > 0 ? "Occupied" : "Vacant"}
-                  </Badge>
-                </CardTitle>
-                <CardDescription className="text-sm text-[#7F8C8D]">
-                  {unit.property?.propertyType === "MULTI_UNIT"
-                    ? unit.property?.name
-                    : `${unit.property?.addressLine1}, ${unit.property?.city}`}
-                </CardDescription>
-              </CardHeader>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {units.map((unit) => {
+          const isOccupied = unit?.lease.length > 0;
+          const tenant = unit.lease?.[0]?.tenantLease?.[0]?.tenant;
 
-              <CardContent className="mt-auto">
-                <DescriptionList orientation="horizontal">
-                  {unit?.lease.length > 0 ? (
+          const getColorClasses = (color: string) => {
+            switch (color) {
+              case "success":
+                return {
+                  textColor: "text-green-700",
+                  valueColor: "text-green-800",
+                  iconColor: "text-green-600",
+                };
+              case "warning":
+                return {
+                  textColor: "text-orange-700",
+                  valueColor: "text-orange-800",
+                  iconColor: "text-orange-600",
+                };
+              case "info":
+              default:
+                return {
+                  textColor: "text-blue-700",
+                  valueColor: "text-blue-800",
+                  iconColor: "text-blue-600",
+                };
+            }
+          };
+
+          const color = isOccupied ? "success" : "warning";
+          const colorClasses = getColorClasses(color);
+
+          return (
+            <Badge
+              key={unit.id}
+              variant="soft"
+              color={color as "success" | "warning"}
+              className="h-auto rounded-md p-6 [&_svg]:size-6 [&_svg]:stroke-1"
+            >
+              <div className="w-full space-y-4">
+                {/* Header */}
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <H4
+                      className={`text-lg font-semibold ${colorClasses.valueColor}`}
+                    >
+                      Unit #{unit.name}
+                    </H4>
+                    <p className={`text-sm ${colorClasses.textColor}`}>
+                      {unit.property?.propertyType === "MULTI_UNIT"
+                        ? unit.property?.name
+                        : `${unit.property?.addressLine1}, ${unit.property?.city}`}
+                    </p>
+                  </div>
+                  <Home className={colorClasses.iconColor} />
+                </div>
+
+                {/* Status Badge */}
+                <div className="flex gap-2">
+                  <Badge
+                    variant="soft"
+                    size="sm"
+                    color={isOccupied ? "success" : "warning"}
+                  >
+                    {isOccupied ? "Occupied" : "Vacant"}
+                  </Badge>
+                  {isOccupied && tenant && (
+                    <Badge variant="outlined" size="sm">
+                      <Users className="mr-1 size-3" />
+                      {tenant.firstName} {tenant.lastName}
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="space-y-3">
+                  {isOccupied ? (
                     <>
-                      <DescriptionTerm className="flex items-center">
-                        <User className="mr-2 size-4" />
-                        Tenant
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.lease[0]?.tenantLease[0]?.tenant.firstName}{" "}
-                        {unit.lease[0]?.tenantLease[0]?.tenant.lastName}
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <Banknote className="mr-2 size-4" />
-                        Rent
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {new Intl.NumberFormat("en-ZA", {
-                          style: "currency",
-                          currency: "ZAR",
-                        }).format(unit.lease[0]?.rent ?? 0)}
-                        /mo
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <CalendarDays className="mr-2 size-4" />
-                        Lease Start
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.lease[0]?.startDate &&
-                          format(unit.lease[0]?.startDate, "dd MMM yyyy")}
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <CalendarDays className="mr-2 size-4" />
-                        Lease Ends
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.lease[0]?.endDate &&
-                        unit.lease[0]?.leaseType === "MONTHLY"
-                          ? format(unit.lease[0]?.endDate, "dd MMM yyyy")
-                          : "Month to month"}
-                      </DescriptionDetails>
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm ${colorClasses.textColor}`}>
+                          Monthly Rent
+                        </span>
+                        <H6
+                          className={`tabular-nums ${colorClasses.valueColor}`}
+                        >
+                          {new Intl.NumberFormat("en-ZA", {
+                            style: "currency",
+                            currency: "ZAR",
+                          }).format(unit.lease[0]?.rent ?? 0)}
+                          <span className="text-muted-foreground text-sm font-normal">
+                            /mo
+                          </span>
+                        </H6>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm ${colorClasses.textColor}`}>
+                          Lease Period
+                        </span>
+                        <span className={`text-sm ${colorClasses.valueColor}`}>
+                          {unit.lease[0]?.startDate &&
+                            format(unit.lease[0]?.startDate, "MMM yyyy")}{" "}
+                          -{" "}
+                          {unit.lease[0]?.endDate &&
+                          unit.lease[0]?.leaseType === "MONTHLY"
+                            ? format(unit.lease[0]?.endDate, "MMM yyyy")
+                            : "Month to month"}
+                        </span>
+                      </div>
                     </>
                   ) : (
                     <>
-                      <DescriptionTerm className="flex items-center">
-                        <Banknote className="mr-2 size-4" />
-                        Target Rent
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {new Intl.NumberFormat("en-ZA", {
-                          style: "currency",
-                          currency: "ZAR",
-                        }).format(unit.marketRent)}
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <RulerDimensionLine className="mr-2 size-4" />
-                        Size
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.sqmt}m²
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <CalendarDays className="mr-2 size-4" />
-                        Created At
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.createdAt &&
-                          format(unit.createdAt, "dd MMM yyyy")}
-                      </DescriptionDetails>
-                      <DescriptionTerm className="flex items-center">
-                        <CalendarDays className="mr-2 size-4" />
-                        Updated At
-                      </DescriptionTerm>
-                      <DescriptionDetails className="md:text-right">
-                        {unit.updatedAt &&
-                          format(unit.updatedAt, "dd MMM yyyy")}
-                      </DescriptionDetails>
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm ${colorClasses.textColor}`}>
+                          Target Rent
+                        </span>
+                        <H6
+                          className={`tabular-nums ${colorClasses.valueColor}`}
+                        >
+                          {new Intl.NumberFormat("en-ZA", {
+                            style: "currency",
+                            currency: "ZAR",
+                          }).format(unit.marketRent)}
+                          <span className="text-muted-foreground text-sm font-normal">
+                            /mo
+                          </span>
+                        </H6>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className={`text-sm ${colorClasses.textColor}`}>
+                          Size
+                        </span>
+                        <span className={`text-sm ${colorClasses.valueColor}`}>
+                          {unit.sqmt}m² • {unit.bedrooms} bed, {unit.bathrooms}{" "}
+                          bath
+                        </span>
+                      </div>
                     </>
                   )}
-                </DescriptionList>
-              </CardContent>
+                </div>
 
-              <CardFooter>
-                <Button className="w-full" variant="soft">
-                  <View />
+                {/* Action Button */}
+                <Button className="mt-4 w-full" variant="soft" size="sm">
+                  <View className="mr-2 size-4" />
                   View Details
                 </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+              </div>
+            </Badge>
+          );
+        })}
       </div>
     </div>
   );

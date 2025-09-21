@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { VGetAllTransactionsSchema } from './transaction.types';
 import { Prisma } from '@leaseup/prisma/client/client.js';
+import { UTCDate } from '@date-fns/utc';
 
 export const transactionRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -114,27 +115,23 @@ export const transactionRouter = createTRPCRouter({
       if (dateFrom || dateTo) {
         const dateFilter: Prisma.DateTimeFilter = {};
         if (dateFrom) {
-          const fromDateUTC = new Date(dateFrom);
-          dateFilter.gte = new Date(
-            Date.UTC(
-              fromDateUTC.getUTCFullYear(),
-              fromDateUTC.getUTCMonth(),
-              fromDateUTC.getUTCDate()
-            )
+          const fromDateUTC = new UTCDate(dateFrom);
+          dateFilter.gte = new UTCDate(
+            fromDateUTC.getUTCFullYear(),
+            fromDateUTC.getUTCMonth(),
+            fromDateUTC.getUTCDate()
           );
         }
         if (dateTo) {
-          const toDateUTC = new Date(dateTo);
-          dateFilter.lte = new Date(
-            Date.UTC(
-              toDateUTC.getUTCFullYear(),
-              toDateUTC.getUTCMonth(),
-              toDateUTC.getUTCDate(),
-              23,
-              59,
-              59,
-              999
-            )
+          const toDateUTC = new UTCDate(dateTo);
+          dateFilter.lte = new UTCDate(
+            toDateUTC.getUTCFullYear(),
+            toDateUTC.getUTCMonth(),
+            toDateUTC.getUTCDate(),
+            23,
+            59,
+            59,
+            999
           );
         }
         andConditions.push({

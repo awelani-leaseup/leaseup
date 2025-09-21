@@ -12,6 +12,7 @@ import {
   TenantIncomeType,
   LeaseStatus,
 } from './generated/client/client.js';
+import { TenantRelationship } from './generated/client/enums.ts';
 
 function generateSouthAfricanIntlNumber() {
   const prefixes = [
@@ -194,17 +195,25 @@ async function main() {
           },
           additionalEmails: [faker.internet.email()],
           additionalPhones: [generateSouthAfricanIntlNumber()],
-          emergencyContacts: {
-            name: faker.person.fullName(),
-            phone: generateSouthAfricanIntlNumber(),
-          },
-          vehicles: {
-            make: faker.vehicle.manufacturer(),
-            model: faker.vehicle.model(),
-            year: faker.date.birthdate(),
-            color: faker.color.rgb(),
-            licensePlate: faker.vehicle.vrm(),
-          },
+          emergencyContacts: [
+            {
+              fullName: faker.person.fullName(),
+              phoneNumber: generateSouthAfricanIntlNumber(),
+              email: faker.internet.email(),
+              relationship: faker.helpers.arrayElement(
+                Object.values(TenantRelationship)
+              ),
+            },
+          ],
+          vehicles: [
+            {
+              make: faker.vehicle.manufacturer(),
+              model: faker.vehicle.model(),
+              year: faker.date.birthdate(),
+              color: faker.color.rgb(),
+              licensePlate: faker.vehicle.vrm(),
+            },
+          ],
           createdAt: faker.date.past(),
           updatedAt: faker.date.recent(),
         })

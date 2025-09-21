@@ -6,6 +6,8 @@ import {
   publicProcedure,
 } from '../server/trpc';
 import { VCreatePropertySchema } from './portfolio.types';
+import * as v from 'valibot';
+import { TRPCError } from '@trpc/server';
 import { Prisma } from '@leaseup/prisma/client/client.js';
 
 const FEATURE_OPTIONS = [
@@ -108,6 +110,66 @@ export const portfolioRouter = createTRPCRouter({
     });
     return properties;
   }),
+
+  getById: protectedProcedure
+    .input(v.string())
+    .query(async ({ ctx, input }) => {
+      const property = await ctx.db.property.findFirst({
+        where: {
+          id: input,
+          landlordId: ctx.auth?.session?.userId ?? '',
+        },
+        include: {
+          unit: {
+            include: {
+              lease: {
+                include: {
+                  tenantLease: {
+                    include: {
+                      tenant: true,
+                    },
+                  },
+                  transactions: {
+                    include: {
+                      invoice: true,
+                    },
+                    orderBy: {
+                      createdAt: 'desc',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          files: true,
+          landlord: {
+            select: {
+              id: true,
+              name: true,
+              businessName: true,
+              email: true,
+              phone: true,
+              addressLine1: true,
+              addressLine2: true,
+              city: true,
+              state: true,
+              zip: true,
+              countryCode: true,
+            },
+          },
+        },
+      });
+
+      if (!property) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message:
+            'Property not found or you do not have permission to view it',
+        });
+      }
+
+      return property;
+    }),
 
   getAllUnits: protectedProcedure.query(async ({ ctx }) => {
     const units = await ctx.db.unit.findMany({

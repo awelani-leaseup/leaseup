@@ -1,5 +1,6 @@
 import "@leaseup/ui/global.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter } from "next/font/google";
 import { AuthWrapper } from "./_components/auth-wrapper";
 import { TRPCReactProvider } from "@/trpc/react";
@@ -18,6 +19,7 @@ export default function RootLayout({
         <TRPCReactProvider>
           <AuthWrapper>{children}</AuthWrapper>
         </TRPCReactProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

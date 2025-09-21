@@ -266,4 +266,134 @@ export const userRouter = createTRPCRouter({
       }
     }
   ),
+  syncSubscription: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.auth?.user?.id;
+
+    if (!userId) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'User not authenticated',
+      });
+    }
+
+    try {
+      // Get the current user with their Paystack customer ID
+      const user = await ctx.db.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          paystackCustomerId: true,
+          email: true,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User not found',
+        });
+      }
+
+      if (!user.paystackCustomerId) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'No Paystack customer ID found for this user',
+        });
+      }
+
+      // Fetch customer data from Paystack to access subscriptions array
+      const { data: customerData, error: customerError } = await paystack.GET(
+        '/customer/{code}',
+        {
+          params: {
+            path: {
+              code: user.paystackCustomerId,
+            },
+          },
+        }
+      );
+
+      console.log('Customer data:', customerData);
+
+      if (customerError || !customerData?.data) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch customer data from Paystack',
+        });
+      }
+
+      const customer = customerData.data as any;
+      const subscriptions = customer.subscriptions || [];
+
+      if (!subscriptions || subscriptions.length === 0) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'No subscriptions found for this customer',
+        });
+      }
+
+      const firstSubscription = subscriptions[0];
+
+      await ctx.db.user.update({
+        where: { id: userId },
+        data: {
+          paystackSubscriptionId: firstSubscription.subscription_code,
+          paystackSubscriptionStatus:
+            firstSubscription.status === 'active'
+              ? SubscriptionPlanStatus.ACTIVE
+              : SubscriptionPlanStatus.DISABLED,
+          subscriptionPlanCode: firstSubscription.plan?.plan_code || null,
+          subscriptionAmount: firstSubscription.amount
+            ? Math.floor(firstSubscription.amount / 100)
+            : null,
+          subscriptionCurrency: firstSubscription.plan?.currency || null,
+          subscriptionInterval: firstSubscription.plan?.interval || null,
+          nextPaymentDate: firstSubscription.next_payment_date
+            ? new Date(firstSubscription.next_payment_date)
+            : null,
+          subscriptionCreatedAt: firstSubscription.createdAt
+            ? new Date(firstSubscription.createdAt)
+            : null,
+          subscriptionUpdatedAt: new Date(),
+          lastPaymentFailure: null,
+          paymentRetryCount: 0,
+        },
+      });
+
+      console.log('Subscription synced successfully', {
+        userId: user.id,
+        email: user.email,
+        subscriptionCode: firstSubscription.subscription_code,
+        status: firstSubscription.status,
+        planCode: firstSubscription.plan?.plan_code,
+        amount: firstSubscription.amount,
+        currency: firstSubscription.plan?.currency,
+      });
+
+      return {
+        success: true,
+        message: 'Subscription synced successfully',
+        subscription: {
+          id: firstSubscription.subscription_code,
+          status: firstSubscription.status,
+          planCode: firstSubscription.plan?.plan_code,
+          amount: firstSubscription.amount,
+          currency: firstSubscription.plan?.currency,
+          interval: firstSubscription.plan?.interval,
+          nextPaymentDate: firstSubscription.next_payment_date,
+        },
+      };
+    } catch (error) {
+      console.error('Error syncing subscription:', error);
+
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to sync subscription. Please try again.',
+      });
+    }
+  }),
 });

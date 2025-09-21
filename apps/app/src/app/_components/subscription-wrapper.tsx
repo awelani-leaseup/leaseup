@@ -68,6 +68,7 @@ export function SubscriptionWrapper({
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const syncSubscriptionMutation = api.user.syncSubscription.useMutation();
 
   useEffect(() => {
     const newUserId = session?.user?.id || null;
@@ -252,22 +253,16 @@ export function SubscriptionWrapper({
                   onClose: () => {
                     setIsOpen(true);
                   },
-                  onSuccess: () => {
+                  onSuccess: async () => {
                     setIsOpen(false);
                     try {
-                      utils.user.getSubscriptionStatus.setData(
-                        undefined,
-                        (oldData) => {
-                          if (!oldData) return oldData;
-                          return {
-                            ...oldData,
-                            status: "ACTIVE",
-                            isActive: true,
-                            lastPaymentFailure: null,
-                            paymentRetryCount: 0,
-                          };
-                        },
-                      );
+                      const { success } =
+                        await syncSubscriptionMutation.mutateAsync();
+                      if (success) {
+                        utils.user.getSubscriptionStatus.invalidate();
+                      } else {
+                        console.warn("Failed to sync subscription");
+                      }
                     } catch (error) {
                       console.warn(
                         "Failed to optimistically update subscription status:",

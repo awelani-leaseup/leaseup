@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { api } from "@/trpc/react";
-import { Button } from "@leaseup/ui/components/button";
 import {
   Card,
   CardContent,
@@ -10,11 +9,9 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { Badge } from "@leaseup/ui/components/badge";
-import { FileText, Download } from "lucide-react";
 import { format } from "date-fns";
-import { EmptyState } from "@leaseup/ui/components/state";
 import { TenantProfileSkeleton } from "../../_components/tenant-skeletons";
-import { ConfirmDeleteTenantFile } from "../../_components/confirm-delete-tenant-file";
+import { DocumentManagementContent } from "../../create/_components/document-management-sub-form";
 
 export default function TenantProfilePage() {
   const params = useParams();
@@ -118,59 +115,27 @@ export default function TenantProfilePage() {
             <CardTitle>Documents</CardTitle>
           </CardHeader>
           <CardContent>
-            {tenant.files && tenant.files.length > 0 ? (
-              <div className="space-y-4">
-                {tenant.files.map((file) => (
-                  <div
-                    key={file.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-2"
-                  >
-                    <div className="flex items-center">
-                      <FileText className="mr-3 size-4 stroke-1" />
-                      <div>
-                        <p className="text-sm font-medium tracking-tight text-[#2D3436]">
-                          {file.name}
-                        </p>
-                        <p className="text-muted-foreground text-sm tracking-tight">
-                          Uploaded{" "}
-                          {format(new Date(file.createdAt), "MMM d, yyyy")}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <ConfirmDeleteTenantFile
-                        fileId={file.id}
-                        fileName={file.name}
-                        onSuccess={() => {
-                          refetch();
-                        }}
-                      />
-                      <Button
-                        variant="icon"
-                        color="info"
-                        onClick={() => {
-                          window.open(file.url, "_blank");
-                        }}
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <EmptyState
-                title="No documents uploaded yet."
-                icon={<FileText className="h-4 w-4" />}
-              />
-            )}
+            <DocumentManagementContent
+              tenantId={tenantId}
+              existingFiles={
+                tenant.files?.map((file) => ({
+                  id: file.id,
+                  name: file.name,
+                  url: file.url,
+                  type: file.type || "application/octet-stream",
+                  size: file.size || 0,
+                  createdAt: file.createdAt,
+                })) || []
+              }
+              onFilesChange={() => {
+                refetch();
+              }}
+            />
           </CardContent>
         </Card>
       </div>
 
-      {/* Right Column */}
       <div className="space-y-8">
-        {/* Contact Information */}
         <Card>
           <CardHeader>
             <CardTitle>Contact Information</CardTitle>
@@ -206,7 +171,6 @@ export default function TenantProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Additional Information */}
         <Card>
           <CardHeader>
             <CardTitle>Additional Information</CardTitle>

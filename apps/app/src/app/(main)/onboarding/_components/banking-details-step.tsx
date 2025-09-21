@@ -49,8 +49,6 @@ function BankingInformationForm({ form }: { form: any }) {
             label="Account Number"
             type="text"
             placeholder="Enter your account number"
-            description="Enter your 10-digit account number"
-            maxLength={10}
           />
         )}
       </form.AppField>

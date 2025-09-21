@@ -26,86 +26,51 @@ export const Vehicles = withForm({
                       <Trash />
                     </Button>
                   </div>
-                  <form.Field name={`vehicles[${index}].make`}>
+                  <form.AppField name={`vehicles[${index}].make`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="Make"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
-                  <form.Field name={`vehicles[${index}].model`}>
+                  </form.AppField>
+                  <form.AppField name={`vehicles[${index}].model`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="Model"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
-                  <form.Field name={`vehicles[${index}].year`}>
+                  </form.AppField>
+                  <form.AppField name={`vehicles[${index}].year`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="Year"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
-                  <form.Field name={`vehicles[${index}].color`}>
+                  </form.AppField>
+                  <form.AppField name={`vehicles[${index}].color`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="Color"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
-                  <form.Field name={`vehicles[${index}].licensePlate`}>
+                  </form.AppField>
+                  <form.AppField name={`vehicles[${index}].licensePlate`}>
                     {(subField) => (
-                      <form.ArraySubField
+                      <subField.TextField
                         label="License Plate"
                         value={subField.state.value}
-                        onChange={(value) =>
-                          subField.handleChange(value as string)
-                        }
-                        errors={
-                          subField.state.meta.errors as {
-                            message: string;
-                          }[]
-                        }
+                        type="text"
                       />
                     )}
-                  </form.Field>
+                  </form.AppField>
                 </div>
               );
             })}
@@ -119,7 +84,6 @@ export const Vehicles = withForm({
                   year: "",
                   color: "",
                   licensePlate: "",
-                  registeredIn: "",
                 })
               }
             >

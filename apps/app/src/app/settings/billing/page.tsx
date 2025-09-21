@@ -55,6 +55,7 @@ export default function BillingPage() {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
+  const syncSubscriptionMutation = api.user.syncSubscription.useMutation();
 
   const generateManagementLinkMutation =
     api.user.generateSubscriptionManagementLink.useMutation({
@@ -82,23 +83,12 @@ export default function BillingPage() {
 
   const handleRenewSubscription = () => {
     initializePayment({
-      onSuccess: () => {
+      onSuccess: async () => {
+        await syncSubscriptionMutation.mutateAsync();
+        utils.user.getPaystackSubscriptionDetails.invalidate();
+
         toast.success("Subscription renewed successfully!");
         setIsRenewed(true);
-        utils.user.getSubscriptionStatus.setData(undefined, (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            hasSubscription: true,
-            status: "ACTIVE",
-            planCode: PROFESSIONAL_PLAN_CODE,
-            isActive: true,
-          };
-        });
-
-        setTimeout(() => {
-          utils.user.getPaystackSubscriptionDetails.invalidate();
-        }, 5000);
       },
       onClose: () => {
         console.log("Payment dialog closed");

@@ -11,10 +11,13 @@ import { Button } from "@leaseup/ui/components/button";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { upload } from "@vercel/blob/client";
 import { nanoid } from "nanoid";
+import { authClient } from "@/utils/auth/client";
 
 export const PersonalInformation = withForm({
   ...createTenantFormOptions,
   render: ({ form }) => {
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
     const [{ files }, { removeFile, openFileDialog, getInputProps }] =
       useFileUpload({
         accept: "image/*",
@@ -25,19 +28,14 @@ export const PersonalInformation = withForm({
           if (!avatar) return;
 
           try {
-            const newBlob = await upload(
-              `${nanoid(21)}/${nanoid(21)}`,
-              avatar,
-              {
-                access: "public",
-                handleUploadUrl: "/api/file/upload",
-                onUploadProgress: (progress) => {
-                  console.log("Avatar upload progress", progress);
-                },
+            const newBlob = await upload(`${user?.id}/${nanoid(21)}`, avatar, {
+              access: "public",
+              handleUploadUrl: "/api/file/upload",
+              onUploadProgress: (progress) => {
+                console.log("Avatar upload progress", progress);
               },
-            );
+            });
 
-            // Update the form field with the uploaded URL
             form.setFieldValue("avatarUrl", newBlob.url);
           } catch (error) {
             console.error("Avatar upload failed:", error);

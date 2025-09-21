@@ -22,7 +22,7 @@ import { EmergencyContacts } from "./_components/emergency-contacts-sub-form";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { TenantFilesSubForm } from "./_components/tenant-files-sub-form";
+import { DocumentManagementSubForm } from "./_components/document-management-sub-form";
 import { nanoid } from "nanoid";
 import { authClient } from "@/utils/auth/client";
 import { upload } from "@vercel/blob/client";
@@ -142,7 +142,7 @@ export default function CreateTenantPage() {
                   </div>
                   <Separator className="col-span-full my-4" />
                   <div className="col-span-full">
-                    <TenantFilesSubForm form={form} />
+                    <DocumentManagementSubForm form={form} />
                   </div>
                   <div className="col-span-full">
                     <form.FormMessage />

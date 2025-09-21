@@ -9,12 +9,20 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { H5, H6 } from "@leaseup/ui/components/typography";
-import { Bath, Bed, Building, Plus, RulerDimensionLine } from "lucide-react";
+import {
+  Bath,
+  Bed,
+  Building,
+  Plus,
+  RulerDimensionLine,
+  Eye,
+} from "lucide-react";
 import Link from "next/link";
 import { PropertyStaticMap } from "./_components/PropertyStaticMap";
 import { Badge } from "@leaseup/ui/components/badge";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { Avatar, AvatarFallback } from "@leaseup/ui/components/avataar";
+
 export default async function Properties() {
   const properties = await api.portfolio.getAllProperties();
 
@@ -48,7 +56,11 @@ export default async function Properties() {
                       <div className="flex w-full justify-between">
                         <div className="w-full">
                           <div className="flex items-center gap-4">
-                            <H5>{property.name}</H5>
+                            <Link href={`/properties/${property.id}`}>
+                              <H5 className="hover:text-primary cursor-pointer transition-colors">
+                                {property.name}
+                              </H5>
+                            </Link>
                             {property.propertyType === "SINGLE_UNIT" && (
                               <Badge
                                 variant="soft"
@@ -73,7 +85,7 @@ export default async function Properties() {
                             </span>
                           </p>
                         </div>
-                        <div className="shrink-0">
+                        <div className="flex shrink-0 flex-col items-end gap-3">
                           <H6 className="text-primary items-end text-right tabular-nums">
                             {new Intl.NumberFormat("en-ZA", {
                               style: "currency",
@@ -83,6 +95,12 @@ export default async function Properties() {
                               /mo
                             </span>
                           </H6>
+                          <Link href={`/properties/${property.id}`}>
+                            <Button variant="outlined" size="sm">
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Property
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                       <div className="mt-4">
@@ -103,7 +121,7 @@ export default async function Properties() {
                           <>
                             {property.unit.length > 4 && (
                               <Link
-                                href={`/properties/${property.id}/units`}
+                                href={`/properties/${property.id}?tab=units`}
                                 className="text-primary w-full justify-end text-right text-sm underline"
                               >
                                 View all units

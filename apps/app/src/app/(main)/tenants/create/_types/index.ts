@@ -46,7 +46,6 @@ export const VTenantSchema = v.object({
       year: v.string(),
       color: v.string(),
       licensePlate: v.string(),
-      registeredIn: v.string(),
     }),
   ),
   files: v.nullable(v.array(FileSchema)),

@@ -11,6 +11,7 @@ import {
   type Invoice,
   type TenantLease,
 } from '@leaseup/prisma/client/client.js';
+import { UTCDate } from '@date-fns/utc';
 
 export const invoiceRouter = createTRPCRouter({
   getInvoiceCategory: protectedProcedure.query(async ({ ctx }) => {
@@ -315,35 +316,24 @@ export const invoiceRouter = createTRPCRouter({
       .filter((invoice: Invoice) => invoice.status === 'OVERDUE')
       .reduce((sum: number, invoice: Invoice) => sum + invoice.dueAmount, 0);
 
-    // Count invoices for this month (using UTC)
-    const now = new Date();
-    const nowUTC = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+    const nowUTC = new UTCDate();
+    const startOfMonthUTC = new UTCDate(
+      nowUTC.getUTCFullYear(),
+      nowUTC.getUTCMonth(),
+      1
     );
-    const startOfMonthUTC = new Date(
-      Date.UTC(nowUTC.getUTCFullYear(), nowUTC.getUTCMonth(), 1)
-    );
-    const endOfMonthUTC = new Date(
-      Date.UTC(
-        nowUTC.getUTCFullYear(),
-        nowUTC.getUTCMonth() + 1,
-        0,
-        23,
-        59,
-        59,
-        999
-      )
+    const endOfMonthUTC = new UTCDate(
+      nowUTC.getUTCFullYear(),
+      nowUTC.getUTCMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
     );
 
     const thisMonthInvoices = invoices.filter((invoice: Invoice) => {
-      const invoiceDate = new Date(invoice.createdAt);
-      const invoiceDateUTC = new Date(
-        Date.UTC(
-          invoiceDate.getUTCFullYear(),
-          invoiceDate.getUTCMonth(),
-          invoiceDate.getUTCDate()
-        )
-      );
+      const invoiceDateUTC = new UTCDate(invoice.createdAt);
       return (
         invoiceDateUTC >= startOfMonthUTC && invoiceDateUTC <= endOfMonthUTC
       );

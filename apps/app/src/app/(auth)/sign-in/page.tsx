@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { useAppForm } from "@leaseup/ui/components/form";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ export default function SignIn() {
   const [status, setStatus] = useState<"loading" | "error" | "success" | null>(
     null,
   );
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const { data: session } = authClient.useSession();
   const router = useRouter();
@@ -36,7 +38,7 @@ export default function SignIn() {
   }, [session]);
 
   const handleGoogleSignIn = async () => {
-    setStatus("loading");
+    setIsLoadingGoogle(true);
     await authClient.signIn.social(
       {
         provider: "google",
@@ -44,10 +46,16 @@ export default function SignIn() {
       {
         onError: (error) => {
           setError(error.error.message);
-          setStatus("error");
+          setIsLoadingGoogle(false);
         },
         onRequest: () => {
-          setStatus("loading");
+          setIsLoadingGoogle(true);
+        },
+        onSuccess: () => {
+          setIsLoadingGoogle(false);
+        },
+        onResponse: () => {
+          setIsLoadingGoogle(false);
         },
       },
     );
@@ -90,6 +98,13 @@ export default function SignIn() {
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
+              <Image
+                className="mb-4 h-10 w-10 rounded-lg"
+                src="/leaseup-logo.svg"
+                alt="LeaseUp"
+                width={10}
+                height={10}
+              />
               <CardTitle>Login to your account</CardTitle>
               <CardDescription>
                 Enter your email below to login to your account
@@ -132,6 +147,7 @@ export default function SignIn() {
                       variant="outlined"
                       className="w-full"
                       onClick={handleGoogleSignIn}
+                      isLoading={isLoadingGoogle}
                     >
                       <GoogleIcon />
                       Login with Google
@@ -150,10 +166,19 @@ export default function SignIn() {
                 </div>
                 <p className="text-muted-foreground mt-4 text-center text-sm">
                   By signing using our service, you agree to our{" "}
-                  <Link href="/terms" className="underline underline-offset-4">
+                  <a
+                    href="https://leaseup.co.za/terms-of-service"
+                    className="underline underline-offset-4"
+                  >
                     Terms of Service
-                  </Link>{" "}
-                  and Data Processing Agreement
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="https://leaseup.co.za/privacy-policy"
+                    className="underline underline-offset-4"
+                  >
+                    Privacy Policy
+                  </a>
                 </p>
               </form.AppForm>
             </CardContent>
