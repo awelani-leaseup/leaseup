@@ -34,7 +34,7 @@ interface SubscriptionWrapperProps {
 
 const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "";
 
-const PROFESSIONAL_PLAN_CODE = "PLN_v931v6xx7712tkl";
+const PROFESSIONAL_PLAN_CODE = process.env.NEXT_PUBLIC_PAYSTACK_PLAN_CODE || "";
 
 const subscriptionPlan = {
   id: "professional",
@@ -56,6 +56,10 @@ const subscriptionPlan = {
 
 if (!PAYSTACK_PUBLIC_KEY) {
   throw new Error("PAYSTACK_PUBLIC_KEY is not set");
+}
+
+if (!PROFESSIONAL_PLAN_CODE) {
+  throw new Error("PROFESSIONAL_PLAN_CODE is not set");
 }
 
 export function SubscriptionWrapper({

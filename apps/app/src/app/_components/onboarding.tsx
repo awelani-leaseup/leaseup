@@ -14,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 
-import { api } from "@/trpc/react";
 import { Button } from "@leaseup/ui/components/button";
 import { Input } from "@leaseup/ui/components/input";
 import { Label } from "@leaseup/ui/components/label";
@@ -28,7 +27,6 @@ import {
 } from "@leaseup/ui/components/card";
 
 import { useAutocompleteSuggestions } from "@/hooks";
-import { useApiLoadingStatus } from "@vis.gl/react-google-maps";
 import {
   Popover,
   PopoverContent,
