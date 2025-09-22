@@ -40,7 +40,6 @@ const createPaystackInvoice = async (invoiceData: CreateInvoicePayload) => {
     amount: Math.round(invoiceData.amount * 100),
     currency: 'ZAR',
     description: invoiceData.description,
-    // line_items: invoiceData.lineItems ?? [],
     split_code: invoiceData.split_code || undefined,
   };
 
