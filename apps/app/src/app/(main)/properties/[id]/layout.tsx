@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/trpc/react";
+import { EditPropertyDialog } from "../_components/edit-property-dialog";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: Building },
@@ -161,12 +162,14 @@ export default function PropertyLayout({
             </div>
           </div>
           <CardAction>
-            <Link href={`/properties/${id}/edit`}>
-              <Button variant="outlined">
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Property
-              </Button>
-            </Link>
+            {property && (
+              <EditPropertyDialog property={property}>
+                <Button variant="outlined">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Property
+                </Button>
+              </EditPropertyDialog>
+            )}
           </CardAction>
         </CardHeader>
         <div className="border-b border-gray-200">

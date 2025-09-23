@@ -48,3 +48,38 @@ export const VCreatePropertySchema = v.object({
     })
   ),
 });
+
+export const VUpdatePropertySchema = v.object({
+  id: v.pipe(v.string(), v.minLength(1, 'Property ID is required')),
+  name: v.pipe(v.string(), v.minLength(1, 'Enter a valid name'), v.trim()),
+  propertyType: PropertyType,
+  addressLine1: v.string(),
+  addressLine2: v.string(),
+  city: v.string(),
+  state: v.string(),
+  zip: v.string(),
+  propertyUnits: v.array(
+    v.object({
+      id: v.optional(v.string()), // For existing units
+      unitNumber: v.pipe(
+        v.string(),
+        v.minLength(1, 'Enter a valid number'),
+        v.trim()
+      ),
+      bedrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      bathrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      sqmt: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      marketRent: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+    })
+  ),
+  features: v.array(v.string()),
+  amenities: v.array(v.string()),
+  files: v.array(
+    v.object({
+      url: v.string(),
+      name: v.string(),
+      type: v.string(),
+      size: v.number(),
+    })
+  ),
+});

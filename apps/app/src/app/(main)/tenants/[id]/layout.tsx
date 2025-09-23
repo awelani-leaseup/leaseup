@@ -11,7 +11,7 @@ import {
   AvatarImage,
 } from "@leaseup/ui/components/avataar";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
-import { MessageSquare, FileText, User, CreditCard, Edit } from "lucide-react";
+import { FileText, User, CreditCard, Edit } from "lucide-react";
 import { format } from "date-fns";
 import { EditTenantDialog } from "./_components/edit-tenant-dialog";
 

@@ -5,7 +5,10 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '../server/trpc';
-import { VCreatePropertySchema } from './portfolio.types';
+import {
+  VCreatePropertySchema,
+  VUpdatePropertySchema,
+} from './portfolio.types';
 import * as v from 'valibot';
 import { TRPCError } from '@trpc/server';
 import { Prisma } from '@leaseup/prisma/client/client.js';
@@ -82,6 +85,114 @@ export const portfolioRouter = createTRPCRouter({
         success: true,
         message: 'Property created successfully',
       };
+    }),
+
+  updateProperty: protectedProcedure
+    .input(VUpdatePropertySchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...updateData } = input;
+      const landlordId = ctx.auth?.session?.userId;
+
+      if (!landlordId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        });
+      }
+
+      try {
+        // Check if property exists and belongs to the current user
+        const existingProperty = await ctx.db.property.findFirst({
+          where: {
+            id,
+            landlordId,
+          },
+          include: {
+            unit: true,
+          },
+        });
+
+        if (!existingProperty) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message:
+              'Property not found or you do not have permission to update it',
+          });
+        }
+
+        await ctx.db.$transaction(async (tx: Prisma.TransactionClient) => {
+          // Update property basic info
+          await tx.property.update({
+            where: { id },
+            data: {
+              name: updateData.name,
+              addressLine1: updateData.addressLine1,
+              addressLine2: updateData.addressLine2,
+              city: updateData.city,
+              state: updateData.state,
+              zip: updateData.zip,
+              propertyType: updateData.propertyType,
+              features: updateData.features,
+              amenities: updateData.amenities,
+            },
+          });
+
+          // Handle units - delete existing ones first, then create new ones
+          await tx.unit.deleteMany({
+            where: { propertyId: id },
+          });
+
+          // Create new units
+          if (updateData.propertyUnits.length > 0) {
+            await tx.unit.createMany({
+              data: updateData.propertyUnits.map((unit) => ({
+                id: nanoid(),
+                propertyId: id,
+                name: unit.unitNumber,
+                bedrooms: unit.bedrooms,
+                bathrooms: unit.bathrooms,
+                sqmt: unit.sqmt,
+                marketRent: unit.marketRent,
+                deposit: 0,
+              })),
+            });
+          }
+
+          // Handle files - delete existing ones first, then create new ones
+          await tx.file.deleteMany({
+            where: { propertyId: id },
+          });
+
+          // Create new files
+          if (updateData.files.length > 0) {
+            await tx.file.createMany({
+              data: updateData.files.map((file) => ({
+                id: nanoid(),
+                name: file.name,
+                url: file.url,
+                type: file.type,
+                size: file.size,
+                ownerId: landlordId,
+                propertyId: id,
+              })),
+            });
+          }
+        });
+
+        return {
+          success: true,
+          message: 'Property updated successfully',
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update property',
+        });
+      }
     }),
 
   getAllProperties: protectedProcedure.query(async ({ ctx }) => {
