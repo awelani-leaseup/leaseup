@@ -24,7 +24,7 @@ import { formatCurrency } from "@/app/(main)/invoices/_utils";
 import { cn } from "@leaseup/ui/utils/cn";
 
 interface PropertyUnitsProps {
-  property: any; // We'll type this properly later
+  property: any;
 }
 
 export function PropertyUnits({ property }: PropertyUnitsProps) {
@@ -153,7 +153,6 @@ export function PropertyUnits({ property }: PropertyUnitsProps) {
                   )}
                 </div>
 
-                {/* Current Tenant */}
                 {tenant && (
                   <div className="mt-4 border-t border-gray-100 pt-4">
                     <h4 className="mb-2 text-sm font-medium text-gray-900">
@@ -201,21 +200,21 @@ export function PropertyUnits({ property }: PropertyUnitsProps) {
                   </div>
                 )}
 
-                {/* Vacant Unit Actions */}
                 {!isOccupied && (
                   <div className="mt-4 border-t border-gray-100 pt-4">
-                    <div className="flex gap-2">
-                      <Button variant="outlined" size="sm" className="flex-1">
-                        Find Tenant
-                      </Button>
-                      <Button variant="outlined" size="sm" className="flex-1">
-                        Create Lease
-                      </Button>
+                    <div className="flex w-full gap-2">
+                      <Link
+                        href={`/leases/create?unitId=${unit.id}&propertyId=${property.id}`}
+                        className="w-full"
+                      >
+                        <Button color="secondary" size="sm" className="w-full">
+                          Create Lease
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 )}
 
-                {/* Unit Status Indicator */}
                 <div className="mt-4 border-t border-gray-100 pt-4">
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Last updated</span>

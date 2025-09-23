@@ -727,6 +727,7 @@ export const ArraySubField: FC<{
         </span>
       </Label>
       <Input
+        inputMode={type === 'number' ? 'none' : 'text'}
         type={type}
         placeholder={placeholder}
         value={value}

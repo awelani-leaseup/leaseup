@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { FileText } from "lucide-react";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { TenantLeasesSkeleton } from "../../_components/tenant-skeletons";
+import Link from "next/link";
 
 export default function TenantLeasesPage() {
   const params = useParams();
@@ -55,7 +56,8 @@ export default function TenantLeasesPage() {
               const lease = tenantLease.lease;
               const property = lease.unit?.property;
               return (
-                <div
+                <Link
+                  href={`/leases/${lease.id}`}
                   key={lease.id}
                   className="rounded-lg border border-gray-200 p-4"
                 >
@@ -79,7 +81,7 @@ export default function TenantLeasesPage() {
                     Monthly Rent: {lease.rentDueCurrency}{" "}
                     {lease.rent?.toLocaleString()}
                   </p>
-                </div>
+                </Link>
               );
             })}
           </div>

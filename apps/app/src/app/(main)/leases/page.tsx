@@ -158,7 +158,7 @@ export default function Leases() {
         cell: ({ row }: { row: Row<Lease> }) => {
           const tenant = row.original.tenantLease[0]?.tenant;
           return (
-            <Link href={`/tenants/${tenant?.id}`} className="group">
+            <Link href={`/leases/${row.original.id}`} className="group">
               <div className="flex items-center gap-3">
                 <Avatar className="size-8">
                   <AvatarImage src={tenant?.avatarUrl ?? undefined} />

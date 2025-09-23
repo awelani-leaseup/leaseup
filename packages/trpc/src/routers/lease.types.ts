@@ -30,3 +30,19 @@ export const VCreateLeaseSchema = v.object({
   markPastInvoicesAsPaid: v.boolean(),
   rent: v.number(),
 });
+
+export const VAddLeaseFilesSchema = v.object({
+  leaseId: v.string(),
+  files: v.array(
+    v.object({
+      url: v.string(),
+      name: v.string(),
+      type: v.string(),
+      size: v.number(),
+    })
+  ),
+});
+
+export const VDeleteLeaseFileSchema = v.object({
+  id: v.string(),
+});

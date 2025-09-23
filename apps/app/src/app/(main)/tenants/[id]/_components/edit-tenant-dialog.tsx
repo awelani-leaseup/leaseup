@@ -64,6 +64,7 @@ import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { authClient } from "@/utils/auth/client";
+import { getUploadFileExtension } from "@/utils/file-utils";
 
 const editTenantFormOptions = formOptions({
   defaultValues: {
@@ -93,7 +94,7 @@ const editTenantFormOptions = formOptions({
 // Edit form components
 const EditPersonalInformation = withForm({
   ...editTenantFormOptions,
-  render: ({ form }) => {
+  render: function EditPersonalInformation({ form }) {
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const [{ files }, { removeFile, openFileDialog, getInputProps }] =
@@ -105,14 +106,20 @@ const EditPersonalInformation = withForm({
 
           if (!avatar) return;
 
+          const fileExtension = getUploadFileExtension(avatar);
+
           try {
-            const newBlob = await upload(`${user?.id}/${nanoid(21)}`, avatar, {
-              access: "public",
-              handleUploadUrl: "/api/file/upload",
-              onUploadProgress: (progress) => {
-                console.log("Avatar upload progress", progress);
+            const newBlob = await upload(
+              `${user?.id}/${nanoid(21)}.${fileExtension}`,
+              avatar,
+              {
+                access: "public",
+                handleUploadUrl: "/api/file/upload",
+                onUploadProgress: (progress) => {
+                  console.log("Avatar upload progress", progress);
+                },
               },
-            });
+            );
 
             form.setFieldValue("avatarUrl", newBlob.url);
           } catch (error) {

@@ -1,6 +1,12 @@
-import { VCreateLeaseSchema, VGetAllLeasesSchema } from './lease.types';
+import {
+  VCreateLeaseSchema,
+  VGetAllLeasesSchema,
+  VAddLeaseFilesSchema,
+  VDeleteLeaseFileSchema,
+} from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
+import * as v from 'valibot';
 import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
 import {
   InvoiceCategory,
@@ -10,6 +16,8 @@ import {
   LeaseTermType,
   Prisma,
 } from '@leaseup/prisma/client/client.js';
+import { del } from '@vercel/blob';
+import { nanoid } from 'nanoid';
 
 export const leaseRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -388,5 +396,166 @@ export const leaseRouter = createTRPCRouter({
           message: 'Failed to create lease. Please try again.',
         });
       }
+    }),
+
+  getById: protectedProcedure
+    .input(v.string())
+    .query(async ({ ctx, input }) => {
+      const lease = await ctx.db.lease.findFirst({
+        where: {
+          id: input,
+          unit: {
+            property: {
+              landlordId: ctx.auth?.session?.userId ?? '',
+            },
+          },
+        },
+        include: {
+          unit: {
+            include: {
+              property: {
+                include: {
+                  landlord: {
+                    select: {
+                      id: true,
+                      name: true,
+                      businessName: true,
+                      email: true,
+                      phone: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          tenantLease: {
+            include: {
+              tenant: {
+                include: {
+                  files: true,
+                },
+              },
+            },
+          },
+          File: true,
+          invoice: {
+            include: {
+              transactions: true,
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+          transactions: {
+            include: {
+              invoice: true,
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+          maintenanceRequest: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+          recurringBillable: {
+            where: {
+              isActive: true,
+            },
+          },
+        },
+      });
+
+      if (!lease) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Lease not found or you do not have permission to view it',
+        });
+      }
+
+      return lease;
+    }),
+
+  addLeaseFiles: protectedProcedure
+    .input(VAddLeaseFilesSchema)
+    .mutation(async ({ ctx, input }) => {
+      const existingLease = await ctx.db.lease.findFirst({
+        where: {
+          id: input.leaseId,
+          unit: {
+            property: {
+              landlordId: ctx.auth?.session?.userId ?? '',
+            },
+          },
+        },
+      });
+
+      if (!existingLease) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Lease not found or you do not have permission to add files',
+        });
+      }
+
+      try {
+        const createdFiles = await ctx.db.file.createMany({
+          data: input.files.map((file) => ({
+            id: nanoid(),
+            name: file.name,
+            url: file.url,
+            type: file.type,
+            size: file.size,
+            ownerId: ctx.auth?.session?.userId ?? '',
+            leaseId: input.leaseId,
+          })),
+        });
+
+        return {
+          success: true,
+          filesCreated: createdFiles.count,
+        };
+      } catch (error) {
+        console.error('Failed to add files to lease:', error);
+
+        await del(input.files.map((file) => file.url)).catch(() => {});
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to add files to lease',
+        });
+      }
+    }),
+
+  deleteLeaseFile: protectedProcedure
+    .input(VDeleteLeaseFileSchema)
+    .mutation(async ({ ctx, input }) => {
+      const file = await ctx.db.file.findFirst({
+        where: {
+          id: input.id,
+          ownerId: ctx.auth?.session?.userId ?? '',
+          leaseId: { not: null },
+        },
+      });
+
+      if (!file) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'File not found',
+        });
+      }
+
+      await ctx.db.file.delete({
+        where: {
+          id: file.id,
+          ownerId: ctx.auth?.session?.userId ?? '',
+        },
+      });
+
+      await del(file.url);
+
+      return {
+        success: true,
+      };
     }),
 });

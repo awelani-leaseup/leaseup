@@ -166,18 +166,16 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
                     Edit Tenant
                   </Button>
                 </EditTenantDialog>
-                <Button className="bg-[#3498DB] text-white hover:bg-[#2980B9]">
-                  <MessageSquare className="h-4 w-4" />
-                  Message
-                </Button>
                 {currentLease && (
-                  <Button
-                    variant="outlined"
-                    className="border-[#3498DB] text-[#3498DB] hover:bg-[#3498DB] hover:text-white"
-                  >
-                    <FileText className="h-4 w-4" />
-                    View Lease
-                  </Button>
+                  <Link href={`/tenants/${tenantId}/leases`}>
+                    <Button
+                      variant="outlined"
+                      className="border-[#3498DB] text-[#3498DB] hover:bg-[#3498DB] hover:text-white"
+                    >
+                      <FileText className="h-4 w-4" />
+                      View Lease
+                    </Button>
+                  </Link>
                 )}
               </div>
             </div>

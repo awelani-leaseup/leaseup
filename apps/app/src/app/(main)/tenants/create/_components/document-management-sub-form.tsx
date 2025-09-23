@@ -6,10 +6,8 @@ import { Button } from "@leaseup/ui/components/button";
 import { H5 } from "@leaseup/ui/components/typography";
 import {
   AlertCircleIcon,
-  Trash2Icon,
   UploadIcon,
   FileIcon,
-  XIcon,
   FileText,
   Download,
 } from "lucide-react";
@@ -18,16 +16,19 @@ import { Badge } from "@leaseup/ui/components/badge";
 import { Progress } from "@leaseup/ui/components/progress";
 import { format } from "date-fns";
 import { ConfirmDeleteTenantFile } from "../../_components/confirm-delete-tenant-file";
+import { ConfirmDeleteLeaseFile } from "../../../leases/_components/confirm-delete-lease-file";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
 import { authClient } from "@/utils/auth/client";
 import { upload } from "@vercel/blob/client";
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import { getUploadFileExtension } from "@/utils/file-utils";
 
 interface DocumentManagementContentProps {
-  form?: any; // Optional for profile page mode
-  tenantId?: string; // Optional for create mode
+  form?: any;
+  tenantId?: string;
+  leaseId?: string;
   existingFiles?: Array<{
     id: string;
     name: string;
@@ -36,12 +37,13 @@ interface DocumentManagementContentProps {
     size: number;
     createdAt: Date;
   }>;
-  onFilesChange?: () => void; // Callback for when files are added/removed
+  onFilesChange?: () => void;
 }
 
 const DocumentManagementContent = ({
   form,
   tenantId,
+  leaseId,
   existingFiles = [],
   onFilesChange,
 }: DocumentManagementContentProps) => {
@@ -54,6 +56,8 @@ const DocumentManagementContent = ({
 
   const { mutateAsync: addTenantFiles } =
     api.tenant.addTenantFiles.useMutation();
+
+  const { mutateAsync: addLeaseFiles } = api.lease.addLeaseFiles.useMutation();
 
   const [
     { files, isDragging, errors },
@@ -74,7 +78,7 @@ const DocumentManagementContent = ({
     maxSize,
     initialFiles: [],
     onFilesAdded: async (addedFiles) => {
-      if (tenantId) {
+      if (tenantId || leaseId) {
         const newFiles = addedFiles
           .map((f) => f.file)
           .filter((file): file is File => file instanceof File);
@@ -86,11 +90,12 @@ const DocumentManagementContent = ({
               async () => {
                 const uploadedFiles = await Promise.all(
                   newFiles.map(async (file, index) => {
-                    // Find the corresponding file in the files array to get its ID
                     const fileWithId = addedFiles[index];
 
+                    const fileExtension = getUploadFileExtension(file);
+
                     const blob = await upload(
-                      `${user?.id}/${nanoid(21)}`,
+                      `${user?.id}/${nanoid(21)}.${fileExtension}`,
                       file,
                       {
                         access: "public",
@@ -115,14 +120,21 @@ const DocumentManagementContent = ({
                   }),
                 );
 
-                await addTenantFiles({
-                  tenantId,
-                  files: uploadedFiles,
-                });
+                if (tenantId) {
+                  await addTenantFiles({
+                    tenantId,
+                    files: uploadedFiles,
+                  });
+                  utils.tenant.getTenantById.invalidate();
+                } else if (leaseId) {
+                  await addLeaseFiles({
+                    leaseId,
+                    files: uploadedFiles,
+                  });
+                  utils.lease.getById.invalidate();
+                }
 
                 clearFiles();
-
-                utils.tenant.getTenantById.invalidate();
               },
               {
                 loading: "Uploading files...",
@@ -149,7 +161,7 @@ const DocumentManagementContent = ({
       }
     },
     onFilesChange: (allFiles) => {
-      if (!tenantId && form) {
+      if (!tenantId && !leaseId && form) {
         const fileObjects = allFiles
           .map((f) => f.file)
           .filter((file): file is File => file instanceof File);
@@ -167,7 +179,7 @@ const DocumentManagementContent = ({
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between">
-        <H5>Tenant Documents</H5>
+        <H5>{leaseId ? "Lease Documents" : "Tenant Documents"}</H5>
         {existingFiles.length > 0 && (
           <Badge variant="outlined">{existingFiles.length} existing</Badge>
         )}
@@ -200,13 +212,23 @@ const DocumentManagementContent = ({
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <ConfirmDeleteTenantFile
-                      fileId={file.id}
-                      fileName={file.name}
-                      onSuccess={() => {
-                        onFilesChange?.();
-                      }}
-                    />
+                    {tenantId ? (
+                      <ConfirmDeleteTenantFile
+                        fileId={file.id}
+                        fileName={file.name}
+                        onSuccess={() => {
+                          onFilesChange?.();
+                        }}
+                      />
+                    ) : leaseId ? (
+                      <ConfirmDeleteLeaseFile
+                        fileId={file.id}
+                        fileName={file.name}
+                        onSuccess={() => {
+                          onFilesChange?.();
+                        }}
+                      />
+                    ) : null}
                     <Button
                       variant="icon"
                       color="info"
@@ -224,7 +246,7 @@ const DocumentManagementContent = ({
         )}
 
         {/* File Upload Section */}
-        {!tenantId && form && (
+        {!tenantId && !leaseId && form && (
           <form.AppField name="files" mode="array">
             {() => (
               <div className="flex flex-col gap-2">
@@ -255,7 +277,7 @@ const DocumentManagementContent = ({
         )}
 
         {/* Upload Area for Update Mode */}
-        {tenantId && canAddMore && (
+        {(tenantId || leaseId) && canAddMore && (
           <div className="space-y-2">
             <FileUploadArea
               files={files}

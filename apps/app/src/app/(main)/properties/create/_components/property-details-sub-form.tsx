@@ -1,8 +1,6 @@
 import { withForm } from "@leaseup/ui/components/form";
 import { createPropertyFormOptions } from "../_utils";
 import { Button } from "@leaseup/ui/components/button";
-import { Input } from "@leaseup/ui/components/input";
-import { Label } from "@leaseup/ui/components/label";
 import { H5, H6 } from "@leaseup/ui/components/typography";
 import {
   Bed,
@@ -11,9 +9,9 @@ import {
   RulerDimensionLine,
   Plus,
   Trash,
+  Home,
 } from "lucide-react";
 import * as v from "valibot";
-import { Badge } from "@leaseup/ui/components/badge";
 
 export const PropertyDetailsSubForm = withForm({
   ...createPropertyFormOptions,
@@ -107,8 +105,7 @@ export const PropertyDetailsSubForm = withForm({
                           </H6>
                           <Button
                             type="button"
-                            variant="icon"
-                            className="h-auto p-0 text-[#3498DB] hover:text-[#2C3E50]"
+                            variant="outlined"
                             onClick={() => {
                               field.pushValue({
                                 unitNumber: "",
@@ -120,7 +117,7 @@ export const PropertyDetailsSubForm = withForm({
                               });
                             }}
                           >
-                            <Plus className="mr-2 h-4 w-4" />
+                            <Plus />
                             Add Unit
                           </Button>
                         </div>
@@ -145,197 +142,84 @@ export const PropertyDetailsSubForm = withForm({
                             </div>
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                               <div>
-                                <Label className="mb-2">Unit Number/Name</Label>
-                                <form.Field
+                                <form.AppField
                                   name={`propertyUnits[${idx}].unitNumber`}
                                 >
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        placeholder="e.g. 101"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(e.target.value)
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Unit Number"
+                                      type="text"
+                                      icon={<Home className="h-4 w-4" />}
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                               <div>
-                                <Label className="mb-2">Bedrooms</Label>
-
-                                <form.Field
+                                <form.AppField
                                   name={`propertyUnits[${idx}].bedrooms`}
                                 >
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        icon={<Bed className="h-4 w-4" />}
-                                        type="number"
-                                        placeholder="e.g. 1, 2"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(
-                                            Number(e.target.value),
-                                          )
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Bedrooms"
+                                      type="number"
+                                      icon={<Bed className="h-4 w-4" />}
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                               <div>
-                                <Label className="mb-2">Bathrooms</Label>
-                                <form.Field
+                                <form.AppField
                                   name={`propertyUnits[${idx}].bathrooms`}
                                 >
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        icon={<Bath className="h-4 w-4" />}
-                                        type="number"
-                                        placeholder="e.g. 1, 2.5"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(
-                                            Number(e.target.value),
-                                          )
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Bathrooms"
+                                      type="number"
+                                      icon={<Bath className="h-4 w-4" />}
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                               <div>
-                                <Label className="mb-2">Square Meters</Label>
-                                <form.Field name={`propertyUnits[${idx}].sqmt`}>
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        icon={
-                                          <RulerDimensionLine className="h-4 w-4" />
-                                        }
-                                        type="number"
-                                        placeholder="e.g. 100, 150"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(
-                                            Number(e.target.value),
-                                          )
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                <form.AppField
+                                  name={`propertyUnits[${idx}].sqmt`}
+                                >
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Square Meters"
+                                      type="number"
+                                      icon={
+                                        <RulerDimensionLine className="h-4 w-4" />
+                                      }
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                               <div>
-                                <Label className="mb-2">Market Rent ($)</Label>
-                                <form.Field name={`propertyUnits[${idx}].rent`}>
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        icon={
-                                          <DollarSign className="h-4 w-4" />
-                                        }
-                                        type="number"
-                                        placeholder="e.g. 1000, 1500"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(
-                                            Number(e.target.value),
-                                          )
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                <form.AppField
+                                  name={`propertyUnits[${idx}].rent`}
+                                >
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Market Rent"
+                                      type="number"
+                                      icon={<DollarSign className="h-4 w-4" />}
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                               <div>
-                                <Label className="mb-2">
-                                  Security Deposit ($)
-                                </Label>
-                                <form.Field
+                                <form.AppField
                                   name={`propertyUnits[${idx}].deposit`}
                                 >
-                                  {(subField) => (
-                                    <>
-                                      <Input
-                                        icon={
-                                          <DollarSign className="h-4 w-4" />
-                                        }
-                                        type="number"
-                                        placeholder="e.g. 1000, 1500"
-                                        value={subField.state.value}
-                                        onChange={(e) =>
-                                          subField.setValue(
-                                            Number(e.target.value),
-                                          )
-                                        }
-                                      />
-                                      {subField.state.meta.errors &&
-                                        subField.state.meta.errors.length >
-                                          0 && (
-                                          <p className="mt-1 text-sm tracking-tight text-rose-600">
-                                            {
-                                              subField.state.meta.errors[0]
-                                                ?.message
-                                            }
-                                          </p>
-                                        )}
-                                    </>
+                                  {(field) => (
+                                    <field.TextField
+                                      label="Security Deposit"
+                                      type="number"
+                                      icon={<DollarSign className="h-4 w-4" />}
+                                    />
                                   )}
-                                </form.Field>
+                                </form.AppField>
                               </div>
                             </div>
                           </div>

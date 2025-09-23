@@ -29,18 +29,24 @@ import { Button } from "@leaseup/ui/components/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { addMonths, format, startOfDay } from "date-fns";
+import { parseAsString, useQueryStates } from "nuqs";
 
 export default function CreateLease() {
   const createLease = api.lease.createLease.useMutation();
   const router = useRouter();
+  const [{ tenantId, unitId, propertyId }] = useQueryStates({
+    tenantId: parseAsString,
+    unitId: parseAsString,
+    propertyId: parseAsString,
+  });
   const form = useAppForm({
     validators: {
       onSubmit: VLeaseSchema,
     },
     defaultValues: {
-      propertyId: "",
-      unitId: "",
-      tenantId: "",
+      unitId: unitId || "",
+      propertyId: propertyId || "",
+      tenantId: tenantId || "",
       leaseType: "MONTHLY",
       automaticInvoice: true,
       invoiceFrequency: "MONTHLY",
@@ -103,7 +109,7 @@ export default function CreateLease() {
   const { data: properties } = api.lease.getAllProperties.useQuery();
   const { data: tenants } = api.lease.getAllTenants.useQuery();
 
-  const propertyId = useStore(form.store, (state) => state.values.propertyId);
+  const propId = useStore(form.store, (state) => state.values.propertyId);
   const automaticInvoice = useStore(
     form.store,
     (state) => state.values.automaticInvoice,
@@ -115,15 +121,15 @@ export default function CreateLease() {
   );
 
   const property = useMemo(() => {
-    return properties?.find((property) => property.id === propertyId);
-  }, [properties, propertyId]);
+    return properties?.find((property) => property.id === propId);
+  }, [properties, propId]);
 
   useEffect(() => {
     if (property?.propertyType === "SINGLE_UNIT") {
       form.setFieldValue("unitId", property?.unit[0]?.id || "");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [propertyId]);
+  }, [propId]);
 
   return (
     <div className="mx-auto my-10 flex max-w-3xl flex-col">

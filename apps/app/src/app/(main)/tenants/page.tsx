@@ -231,23 +231,33 @@ export default async function Tenants() {
                   </CardContent>
                   <CardFooter>
                     {!tenant?.tenantLease[0]?.lease ? (
-                      <Button
-                        color="secondary"
-                        variant="soft"
+                      <Link
+                        href={`/leases/create?tenantId=${tenant.id}`}
                         className="w-full"
                       >
-                        <Plus />
-                        Add Lease
-                      </Button>
+                        <Button
+                          color="secondary"
+                          variant="soft"
+                          className="w-full"
+                        >
+                          <Plus />
+                          Add Lease
+                        </Button>
+                      </Link>
                     ) : (
-                      <Button
-                        variant="soft"
-                        color="secondary"
+                      <Link
+                        href={`/tenants/${tenant.id}/leases`}
                         className="w-full"
                       >
-                        <Signature />
-                        View Lease
-                      </Button>
+                        <Button
+                          variant="soft"
+                          color="secondary"
+                          className="w-full"
+                        >
+                          <Signature />
+                          View Lease
+                        </Button>
+                      </Link>
                     )}
                     <TenantDropdownActions
                       tenantId={tenant.id}

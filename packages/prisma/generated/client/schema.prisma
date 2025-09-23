@@ -43,7 +43,7 @@ model User {
   countryCode                String?                 @default("ZA")
   numberOfProperties         Int?
   numberOfUnits              Int?
-  phone                      String?                 @unique
+  phone                      String?
   accounts                   Account[]
   property                   Property[]
   sessions                   Session[]
