@@ -351,12 +351,14 @@ export const ComboboxField: FC<{
   placeholder?: string;
   asterisk?: boolean;
   description?: string;
+  disabled?: boolean;
 }> = ({
   label,
   options,
   placeholder = 'Select a value',
   asterisk,
   description,
+  disabled,
 }) => {
   const { handleChange, handleBlur, state } = useFieldContext<string>();
   const [open, setOpen] = useState(false);
@@ -373,6 +375,7 @@ export const ComboboxField: FC<{
             color='secondary'
             role='combobox'
             aria-expanded={open}
+            disabled={disabled}
             className="border-input ring-offset-background data-[placeholder]:text-muted-foreground focus:ring-ring [&>span]:line-clamp-1' relative mt-1 flex h-9 w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm overflow-ellipsis whitespace-nowrap shadow-sm focus:ring-1 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className='mr-3 flex w-full items-center overflow-clip'>

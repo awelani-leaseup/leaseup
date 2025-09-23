@@ -1,7 +1,14 @@
 "use client";
 
 import { format } from "date-fns";
-import { Download, Printer, FileText, Calendar, User } from "lucide-react";
+import {
+  Download,
+  Printer,
+  FileText,
+  Calendar,
+  User,
+  Edit,
+} from "lucide-react";
 import { Button } from "@leaseup/ui/components/button";
 import {
   Card,
@@ -21,6 +28,8 @@ import { formatCurrencyToZAR } from "@/utils/currency";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { UpdateLeaseDocumentsDialog } from "../../_components/update-lease-documents-dialog";
 import { ViewAllDocumentsDialog } from "../../_components/view-all-documents-dialog";
+import { EditLeaseDialog } from "../../_components/edit-lease-dialog";
+import Link from "next/link";
 
 type LeaseData = {
   id: string;
@@ -44,6 +53,11 @@ type LeaseData = {
       city: string;
       state: string;
       zip: string;
+      propertyType?: string;
+      unit?: Array<{
+        id: string;
+        name: string;
+      }>;
       landlord: {
         id: string;
         name: string;
@@ -163,12 +177,20 @@ export function LeaseView({ lease }: LeaseViewProps) {
                   Download PDF
                 </Button>
                 <Button
+                  variant="outlined"
                   onClick={handlePrint}
                   className="flex items-center gap-2"
                 >
                   <Printer className="h-4 w-4" />
                   Print
                 </Button>
+                {/* @ts-expect-error - Lease is defined in the parent component */}
+                <EditLeaseDialog lease={lease}>
+                  <Button>
+                    <Edit className="h-4 w-4" />
+                    Edit Lease
+                  </Button>
+                </EditLeaseDialog>
               </div>
             </div>
 
@@ -176,7 +198,10 @@ export function LeaseView({ lease }: LeaseViewProps) {
               <div>
                 <h3 className="mb-2 text-sm text-gray-500">Tenant</h3>
                 {primaryTenant ? (
-                  <div className="flex items-center">
+                  <Link
+                    href={`/tenants/${primaryTenant.id}`}
+                    className="flex items-center"
+                  >
                     <Avatar className="mr-3 h-10 w-10">
                       <AvatarImage
                         src={primaryTenant.avatarUrl || undefined}
@@ -195,7 +220,7 @@ export function LeaseView({ lease }: LeaseViewProps) {
                         {primaryTenant.email}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ) : (
                   <p className="text-gray-500">No tenant assigned</p>
                 )}
@@ -204,7 +229,12 @@ export function LeaseView({ lease }: LeaseViewProps) {
                 <h3 className="mb-2 text-sm text-gray-500">Property</h3>
                 {property ? (
                   <>
-                    <p className="font-medium text-gray-900">{property.name}</p>
+                    <Link
+                      href={`/properties/${property.id}`}
+                      className="font-medium tracking-tight text-gray-900"
+                    >
+                      {property.name}
+                    </Link>
                     <p className="text-gray-900">Unit {lease.unit?.name}</p>
                     <p className="text-sm text-gray-600">
                       {formatAddress(property)}
@@ -411,7 +441,7 @@ export function LeaseView({ lease }: LeaseViewProps) {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center rounded-lg bg-gray-50 p-3">
-                    <Calendar className="mr-3 h-5 w-5 text-blue-500" />
+                    <Calendar className="mr-3 h-5 w-5 stroke-1 text-blue-500" />
                     <div>
                       <p className="text-sm text-gray-500">Lease Start</p>
                       <p className="font-medium text-gray-900">
@@ -421,7 +451,7 @@ export function LeaseView({ lease }: LeaseViewProps) {
                   </div>
                   {lease.endDate && (
                     <div className="flex items-center rounded-lg bg-gray-50 p-3">
-                      <Calendar className="mr-3 h-5 w-5 text-red-500" />
+                      <Calendar className="mr-3 h-5 w-5 stroke-1 text-red-500" />
                       <div>
                         <p className="text-sm text-gray-500">
                           Lease Expiration
@@ -433,7 +463,7 @@ export function LeaseView({ lease }: LeaseViewProps) {
                     </div>
                   )}
                   <div className="flex items-center rounded-lg bg-gray-50 p-3">
-                    <Calendar className="mr-3 h-5 w-5 text-green-500" />
+                    <Calendar className="mr-3 h-5 w-5 stroke-1 text-green-500" />
                     <div>
                       <p className="text-sm text-gray-500">Next Rent Due</p>
                       <p className="font-medium text-gray-900">
@@ -466,7 +496,7 @@ export function LeaseView({ lease }: LeaseViewProps) {
                       <div>
                         <p className="text-sm text-gray-500">Name</p>
                         <p className="font-medium text-gray-900">
-                          {landlord.businessName || landlord.name}
+                          {landlord.name}
                         </p>
                       </div>
                     </div>

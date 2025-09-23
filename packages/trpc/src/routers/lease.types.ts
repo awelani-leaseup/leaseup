@@ -43,6 +43,32 @@ export const VAddLeaseFilesSchema = v.object({
   ),
 });
 
+export const VUpdateLeaseSchema = v.object({
+  id: v.pipe(v.string(), v.minLength(1, 'Lease ID is required')),
+  propertyId: v.optional(
+    v.pipe(v.string(), v.minLength(1, 'Property is required'))
+  ),
+  unitId: v.optional(v.pipe(v.string(), v.minLength(1, 'Unit is required'))),
+  tenantId: v.optional(
+    v.pipe(v.string(), v.minLength(1, 'Tenant is required'))
+  ),
+  leaseType: v.optional(
+    v.pipe(v.string(), v.minLength(1, 'Lease type is required'))
+  ),
+  leaseTermType: v.optional(v.string()),
+  leaseStartDate: v.optional(v.date()),
+  leaseEndDate: v.optional(v.nullable(v.date())),
+  depositRequired: v.optional(v.boolean()),
+  deposit: v.optional(v.number()),
+  depositDate: v.optional(v.nullable(v.date())),
+  automaticInvoice: v.optional(v.boolean()),
+  invoiceCycle: v.optional(
+    v.pipe(v.string(), v.minLength(1, 'Invoice cycle is required'))
+  ),
+  markPastInvoicesAsPaid: v.optional(v.boolean()),
+  rent: v.optional(v.number()),
+});
+
 export const VDeleteLeaseFileSchema = v.object({
   id: v.string(),
 });

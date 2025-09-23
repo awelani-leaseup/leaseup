@@ -3,6 +3,7 @@ import {
   VGetAllLeasesSchema,
   VAddLeaseFilesSchema,
   VDeleteLeaseFileSchema,
+  VUpdateLeaseSchema,
 } from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
@@ -557,5 +558,193 @@ export const leaseRouter = createTRPCRouter({
       return {
         success: true,
       };
+    }),
+
+  updateLease: protectedProcedure
+    .input(VUpdateLeaseSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...updateData } = input;
+      const landlordId = ctx.auth?.session?.userId;
+
+      if (!landlordId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        });
+      }
+
+      try {
+        // Check if lease exists and belongs to the current user
+        const existingLease = await ctx.db.lease.findFirst({
+          where: {
+            id,
+            unit: {
+              property: {
+                landlordId: landlordId,
+              },
+            },
+          },
+          include: {
+            unit: {
+              include: {
+                property: true,
+              },
+            },
+            tenantLease: true,
+          },
+        });
+
+        if (!existingLease) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message:
+              'Lease not found or you do not have permission to update it',
+          });
+        }
+
+        if (updateData.unitId || updateData.propertyId) {
+          const unitId = updateData.unitId ?? existingLease.unitId;
+
+          if (!unitId) {
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: 'Unit ID is required',
+            });
+          }
+
+          const unit = await ctx.db.unit.findFirst({
+            where: {
+              id: unitId,
+              property: {
+                landlordId: landlordId,
+              },
+            },
+            include: {
+              property: true,
+            },
+          });
+
+          if (!unit) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Unit not found or does not belong to you',
+            });
+          }
+
+          if (updateData.unitId && updateData.unitId !== existingLease.unitId) {
+            const existingActiveLeaseOnUnit = await ctx.db.lease.findFirst({
+              where: {
+                unitId: updateData.unitId,
+                status: 'ACTIVE',
+                id: { not: id },
+              },
+            });
+
+            if (existingActiveLeaseOnUnit) {
+              throw new TRPCError({
+                code: 'CONFLICT',
+                message: 'Unit already has an active lease',
+              });
+            }
+          }
+        }
+
+        if (updateData.tenantId) {
+          const tenant = await ctx.db.tenant.findFirst({
+            where: {
+              id: updateData.tenantId,
+              landlordId: landlordId,
+            },
+          });
+
+          if (!tenant) {
+            throw new TRPCError({
+              code: 'NOT_FOUND',
+              message: 'Tenant not found or does not belong to you',
+            });
+          }
+        }
+
+        const leaseUpdateData: any = {};
+
+        if (updateData.leaseStartDate !== undefined) {
+          leaseUpdateData.startDate = updateData.leaseStartDate;
+        }
+        if (updateData.leaseEndDate !== undefined) {
+          leaseUpdateData.endDate = updateData.leaseEndDate;
+        }
+        if (updateData.rent !== undefined) {
+          leaseUpdateData.rent = updateData.rent;
+        }
+        if (updateData.deposit !== undefined) {
+          leaseUpdateData.deposit = updateData.deposit;
+        }
+
+        if (updateData.invoiceCycle !== undefined) {
+          leaseUpdateData.invoiceCycle =
+            updateData.invoiceCycle as InvoiceCycle;
+        }
+        if (updateData.leaseType !== undefined) {
+          leaseUpdateData.leaseType = updateData.leaseType as LeaseTermType;
+        }
+        if (updateData.unitId !== undefined) {
+          leaseUpdateData.unitId = updateData.unitId;
+        }
+
+        const updatedLease = await ctx.db.lease.update({
+          where: { id },
+          data: leaseUpdateData,
+          include: {
+            unit: {
+              include: {
+                property: {
+                  include: {
+                    landlord: true,
+                  },
+                },
+              },
+            },
+            tenantLease: {
+              include: {
+                tenant: true,
+              },
+            },
+            File: true,
+          },
+        });
+
+        // If tenant is being updated, update the tenant lease relationship
+        if (
+          updateData.tenantId &&
+          updateData.tenantId !== existingLease.tenantLease[0]?.tenantId
+        ) {
+          // Remove existing tenant lease relationships
+          await ctx.db.tenantLease.deleteMany({
+            where: {
+              leaseId: id,
+            },
+          });
+
+          // Create new tenant lease relationship
+          await ctx.db.tenantLease.create({
+            data: {
+              leaseId: id,
+              tenantId: updateData.tenantId,
+            },
+          });
+        }
+
+        return updatedLease;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        console.error('Failed to update lease:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update lease',
+        });
+      }
     }),
 });
