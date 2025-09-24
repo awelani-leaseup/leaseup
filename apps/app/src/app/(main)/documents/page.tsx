@@ -143,7 +143,10 @@ export default function Documents() {
 
   const { data: properties } = api.portfolio.getAllProperties.useQuery();
 
-  const { data: tenants } = api.tenant.getAll.useQuery();
+  const { data: tenants } = api.tenant.getAll.useQuery({
+    page: 1,
+    limit: 1000,
+  });
 
   const formatFileSize = (bytes: number | null) => {
     if (!bytes) return "Unknown";
@@ -565,7 +568,7 @@ export default function Documents() {
                   title="Tenant"
                   options={[
                     { label: "All Tenants", value: "all" },
-                    ...(tenants?.map((tenant) => ({
+                    ...(tenants?.tenants.map((tenant) => ({
                       label: `${tenant.firstName} ${tenant.lastName}`,
                       value: tenant.id,
                     })) || []),

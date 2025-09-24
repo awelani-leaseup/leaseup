@@ -10,8 +10,139 @@ import {
 } from "@leaseup/ui/components/card";
 import { Badge } from "@leaseup/ui/components/badge";
 import { format } from "date-fns";
-import { TenantProfileSkeleton } from "../../_components/tenant-skeletons";
 import { DocumentManagementContent } from "../../create/_components/document-management-sub-form";
+import { Skeleton } from "@leaseup/ui/components/skeleton";
+
+function TenantProfileSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      {/* Left Column */}
+      <div className="space-y-8 lg:col-span-2">
+        {/* Current Lease Information Skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-32" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <Skeleton className="mb-1 h-4 w-16" />
+                <Skeleton className="h-5 w-48" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-20" />
+                <Skeleton className="h-5 w-36" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-20" />
+                <Skeleton className="h-5 w-36" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-32" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-16" />
+                <Skeleton className="h-6 w-16 rounded-full" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Documents Skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-24" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="flex items-center space-x-3">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <div>
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="mt-1 h-3 w-20" />
+                  </div>
+                </div>
+                <Skeleton className="h-8 w-8 rounded" />
+              </div>
+              <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="flex items-center space-x-3">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <div>
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="mt-1 h-3 w-24" />
+                  </div>
+                </div>
+                <Skeleton className="h-8 w-8 rounded" />
+              </div>
+              <Skeleton className="h-10 w-full rounded-lg" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right Column */}
+      <div className="space-y-8">
+        {/* Contact Information Skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-40" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Skeleton className="mb-1 h-4 w-12" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-12" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-36" />
+                <Skeleton className="h-4 w-40" />
+                <Skeleton className="mt-1 h-4 w-32" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Additional Information Skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-44" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Skeleton className="mb-1 h-4 w-24" />
+                <Skeleton className="h-4 w-36" />
+              </div>
+              <div>
+                <Skeleton className="mb-1 h-4 w-36" />
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="mt-1 h-4 w-44" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
 export default function TenantProfilePage() {
   const params = useParams();

@@ -111,3 +111,29 @@ export const VUpdateTenantSchema = v.object({
     })
   ),
 });
+
+export const VGetAllTenantsSchema = v.object({
+  page: v.optional(v.pipe(v.number(), v.minValue(1)), 1),
+  limit: v.optional(v.pipe(v.number(), v.minValue(1), v.maxValue(100)), 20),
+  search: v.optional(v.string()),
+  propertyId: v.optional(v.string()),
+  status: v.optional(
+    v.union([
+      v.literal('active'),
+      v.literal('inactive'),
+      v.literal('no_lease'),
+      v.literal('all'),
+    ])
+  ),
+  sortBy: v.optional(
+    v.union([
+      v.literal('firstName'),
+      v.literal('lastName'),
+      v.literal('email'),
+      v.literal('createdAt'),
+      v.literal('updatedAt'),
+    ]),
+    'createdAt'
+  ),
+  sortOrder: v.optional(v.union([v.literal('asc'), v.literal('desc')]), 'desc'),
+});

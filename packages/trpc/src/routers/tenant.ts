@@ -8,11 +8,13 @@ import {
   VDeleteTenantFileSchema,
   VUpdateTenantSchema,
   VAddTenantFilesSchema,
+  VGetAllTenantsSchema,
 } from './tenant.types';
 import { tasks } from '@trigger.dev/sdk/v3';
 import { runCreateTenantCustomerEffect } from '@leaseup/tasks/effect';
 import { del } from '@vercel/blob';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@leaseup/prisma/client/client.js';
 
 const TENANT_RELATIONSHIPS = [
   'Spouse',
@@ -27,33 +29,129 @@ const TENANT_RELATIONSHIPS = [
 ];
 
 export const tenantRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    const tenants = await ctx.db.tenant.findMany({
-      where: {
+  getAll: protectedProcedure
+    .input(VGetAllTenantsSchema)
+    .query(async ({ ctx, input }) => {
+      const { page, limit, search, propertyId, status, sortBy, sortOrder } =
+        input;
+      const skip = (page - 1) * limit;
+
+      // Build where clause for filtering tenants by landlord
+      const whereClause: Prisma.TenantWhereInput = {
         landlordId: ctx.auth?.session?.userId ?? '',
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        tenantLease: {
-          include: {
+      };
+
+      // Add search filter
+      if (search && search.trim()) {
+        whereClause.OR = [
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search, mode: 'insensitive' } },
+        ];
+      }
+
+      // Add property filter
+      if (propertyId && propertyId !== 'all') {
+        whereClause.tenantLease = {
+          some: {
             lease: {
-              include: {
-                unit: {
-                  include: {
-                    property: true,
+              unit: {
+                propertyId: propertyId,
+              },
+            },
+          },
+        };
+      }
+
+      // Add status filter
+      if (status && status !== 'all') {
+        switch (status) {
+          case 'active':
+            whereClause.tenantLease = {
+              some: {
+                lease: {
+                  status: 'ACTIVE',
+                },
+              },
+            };
+            break;
+          case 'inactive':
+            whereClause.tenantLease = {
+              some: {
+                lease: {
+                  status: { not: 'ACTIVE' },
+                },
+              },
+            };
+            break;
+          case 'no_lease':
+            whereClause.tenantLease = {
+              none: {},
+            };
+            break;
+        }
+      }
+
+      // Build orderBy clause
+      let orderBy: Prisma.TenantOrderByWithRelationInput = {
+        createdAt: 'desc',
+      };
+      if (sortBy && sortOrder) {
+        switch (sortBy) {
+          case 'firstName':
+            orderBy = { firstName: sortOrder };
+            break;
+          case 'lastName':
+            orderBy = { lastName: sortOrder };
+            break;
+          case 'email':
+            orderBy = { email: sortOrder };
+            break;
+          case 'createdAt':
+            orderBy = { createdAt: sortOrder };
+            break;
+          case 'updatedAt':
+            orderBy = { updatedAt: sortOrder };
+            break;
+        }
+      }
+
+      // Get total count for pagination
+      const totalCount = await ctx.db.tenant.count({
+        where: whereClause,
+      });
+
+      // Get tenants with pagination
+      const tenants = await ctx.db.tenant.findMany({
+        where: whereClause,
+        orderBy,
+        skip,
+        take: limit,
+        include: {
+          tenantLease: {
+            include: {
+              lease: {
+                include: {
+                  unit: {
+                    include: {
+                      property: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    return tenants;
-  }),
+      return {
+        tenants,
+        totalCount,
+        totalPages: Math.ceil(totalCount / limit),
+        currentPage: page,
+      };
+    }),
   getTenantRelationShips: protectedProcedure.query(async ({ ctx }) => {
     return TENANT_RELATIONSHIPS;
   }),

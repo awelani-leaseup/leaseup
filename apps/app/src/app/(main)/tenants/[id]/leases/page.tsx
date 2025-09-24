@@ -12,7 +12,7 @@ import { Badge } from "@leaseup/ui/components/badge";
 import { format } from "date-fns";
 import { FileText } from "lucide-react";
 import { EmptyState } from "@leaseup/ui/components/state";
-import { TenantLeasesSkeleton } from "../../_components/tenant-skeletons";
+import { Skeleton } from "@leaseup/ui/components/skeleton";
 import Link from "next/link";
 
 export default function TenantLeasesPage() {
@@ -91,6 +91,34 @@ export default function TenantLeasesPage() {
             icon={<FileText className="h-4 w-4" />}
           />
         )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function TenantLeasesSkeleton() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Lease History</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div
+              key={`lease-skeleton-${i}`}
+              className="rounded-lg border border-gray-200 p-4"
+            >
+              <div className="mb-2 flex items-start justify-between">
+                <Skeleton className="h-5 w-48" /> {/* Property name and unit */}
+                <Skeleton className="h-6 w-16 rounded-full" />{" "}
+                {/* Status badge */}
+              </div>
+              <Skeleton className="mb-1 h-4 w-64" /> {/* Date range */}
+              <Skeleton className="h-4 w-40" /> {/* Monthly rent */}
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

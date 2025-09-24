@@ -146,7 +146,10 @@ export default function Transactions() {
   const { data: properties } = api.portfolio.getAllProperties.useQuery();
 
   // Fetch tenants for filter dropdown
-  const { data: tenants } = api.tenant.getAll.useQuery();
+  const { data: tenants } = api.tenant.getAll.useQuery({
+    page: 1,
+    limit: 1000,
+  });
 
   const columns = useMemo<ColumnDef<Transaction, any>[]>(
     () => [
@@ -481,7 +484,7 @@ export default function Transactions() {
                   title="Tenant"
                   options={[
                     { label: "All Tenants", value: "all" },
-                    ...(tenants?.map((tenant) => ({
+                    ...(tenants?.tenants.map((tenant) => ({
                       label: `${tenant.firstName} ${tenant.lastName}`,
                       value: tenant.id,
                     })) || []),

@@ -6,7 +6,7 @@ import {
 } from "@leaseup/ui/components/card";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
 
-export default function Loading() {
+export function TenantsSkeleton() {
   return (
     <div className="mx-auto my-10 flex max-w-7xl flex-col">
       {/* Header Card Skeleton */}

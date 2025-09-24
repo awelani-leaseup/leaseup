@@ -22,20 +22,12 @@ import {
   Plus,
   Trash,
   Home,
-  Building,
 } from "lucide-react";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import { formOptions } from "@tanstack/react-form";
 import * as v from "valibot";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@leaseup/ui/components/select";
-import { Badge } from "@leaseup/ui/components/badge";
+import { useRouter } from "next/navigation";
 
 const VAddUnitsFormSchema = v.object({
   propertyId: v.pipe(v.string(), v.minLength(1, "Property is required")),
@@ -256,6 +248,7 @@ const UnitsForm = withForm({
 export function AddUnitDialog({ children }: AddUnitDialogProps) {
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
+  const router = useRouter();
 
   const form = useAppForm({
     ...addUnitsFormOptions,
@@ -266,6 +259,7 @@ export function AddUnitDialog({ children }: AddUnitDialogProps) {
             utils.portfolio.getAllUnits.invalidate();
             setOpen(false);
             form.reset();
+            router.refresh();
           },
           onError: (error) => {
             toast.error("Failed to add units");
