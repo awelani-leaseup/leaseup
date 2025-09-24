@@ -8,6 +8,7 @@ import {
 import {
   VCreatePropertySchema,
   VUpdatePropertySchema,
+  VAddUnitsSchema,
 } from './portfolio.types';
 import * as v from 'valibot';
 import { TRPCError } from '@trpc/server';
@@ -313,4 +314,60 @@ export const portfolioRouter = createTRPCRouter({
   getPropertyAmenities: publicProcedure.query(async ({ ctx }) => {
     return AMENITIES;
   }),
+
+  addUnits: protectedProcedure
+    .input(VAddUnitsSchema)
+    .mutation(async ({ ctx, input }) => {
+      const landlordId = ctx.auth?.session?.userId;
+
+      if (!landlordId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        });
+      }
+
+      // Verify property belongs to landlord
+      const property = await ctx.db.property.findFirst({
+        where: {
+          id: input.propertyId,
+          landlordId: landlordId,
+        },
+      });
+
+      if (!property) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Property not found or does not belong to you',
+        });
+      }
+
+      try {
+        // Create units
+        await ctx.db.unit.createMany({
+          data: input.units.map((unit) => ({
+            id: nanoid(),
+            propertyId: input.propertyId,
+            name: unit.unitNumber,
+            bedrooms: unit.bedrooms,
+            bathrooms: unit.bathrooms,
+            sqmt: unit.sqmt,
+            marketRent: unit.marketRent,
+            deposit: unit.deposit,
+          })),
+        });
+
+        return {
+          success: true,
+          message: 'Units added successfully',
+        };
+      } catch (error) {
+        console.error('Error adding units:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message:
+            error instanceof Error ? error.message : 'Failed to add units',
+        });
+      }
+    }),
 });

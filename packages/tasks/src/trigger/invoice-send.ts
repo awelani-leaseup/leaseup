@@ -163,7 +163,6 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
       }
     }
 
-    // For other errors, use default retry logic
     return undefined;
   },
   run: async (payload) => {
@@ -227,7 +226,7 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
       const endTime = Date.now();
       const durationMs = endTime - startTime;
 
-      logger.error('Failed to create invoice after all retries', {
+      logger.error('Failed to create invoice', {
         leaseId: invoiceData.leaseId,
         tenantId: invoiceData.tenantId,
         amount: invoiceData.amount,

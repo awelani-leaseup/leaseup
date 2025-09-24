@@ -30,7 +30,6 @@ const createTenantCustomerEffect = (payload: TenantCreatePayload) =>
       }
     );
 
-    // Fetch the tenant from the database
     const tenant = yield* databaseService.findTenant(payload.tenantId);
 
     if (!tenant) {
@@ -40,7 +39,6 @@ const createTenantCustomerEffect = (payload: TenantCreatePayload) =>
       return; // This line will never execute, but helps TypeScript
     }
 
-    // Check if tenant already has a Paystack customer ID
     if (tenant.paystackCustomerId) {
       yield* Console.log('Tenant already has a Paystack customer ID', {
         tenantId: payload.tenantId,
@@ -58,7 +56,6 @@ const createTenantCustomerEffect = (payload: TenantCreatePayload) =>
       email: tenant.email,
     });
 
-    // Create Paystack customer
     const paystackResponse = yield* paystackService.createCustomer({
       email: tenant.email,
       first_name: tenant.firstName,
@@ -84,7 +81,6 @@ const createTenantCustomerEffect = (payload: TenantCreatePayload) =>
       customerCode,
     });
 
-    // Update tenant with Paystack customer ID
     yield* databaseService.updateTenantPaystackId(
       payload.tenantId,
       customerCode
@@ -98,7 +94,6 @@ const createTenantCustomerEffect = (payload: TenantCreatePayload) =>
       }
     );
 
-    // Ensure database cleanup
     return yield* Effect.ensuring(
       Effect.succeed({
         message: 'Tenant Paystack customer created successfully',

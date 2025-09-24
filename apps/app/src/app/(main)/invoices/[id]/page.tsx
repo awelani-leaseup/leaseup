@@ -27,7 +27,6 @@ import {
 import {
   ArrowLeft,
   Edit,
-  Download,
   Check,
   Clock,
   AlertTriangle,
@@ -41,11 +40,14 @@ import Link from "next/link";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
+import { PDFDownloadButton } from "@/components/pdf/PDFDownloadButton";
 
 export default function InvoiceViewPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const utils = api.useUtils();
+  const [isCopied, setIsCopied] = useState(false);
 
   const { data: invoice, isLoading } = api.invoice.getById.useQuery(id);
   const { mutate: voidInvoice, isPending: isVoiding } =
@@ -88,7 +90,6 @@ export default function InvoiceViewPage() {
     }
   };
 
-  // Get status icon
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "PAID":
@@ -102,18 +103,16 @@ export default function InvoiceViewPage() {
     }
   };
 
-  // Calculate totals
   const calculateSubtotal = () => {
     if (!invoice?.lineItems) return 0;
     const lineItems = Array.isArray(invoice.lineItems) ? invoice.lineItems : [];
-    return lineItems.reduce(
-      (sum: number, item: any) => sum + item.amount / 100,
-      0,
-    );
+    return lineItems.reduce((sum: number, item: unknown) => {
+      const lineItem = item as { amount: number };
+      return sum + lineItem.amount;
+    }, 0);
   };
 
   const calculateTax = (subtotal: number) => {
-    // Assuming 15% VAT for South Africa
     return subtotal * 0.15;
   };
 
@@ -137,13 +136,27 @@ export default function InvoiceViewPage() {
   };
 
   const handleDuplicateInvoice = () => {
-    // TODO: Implement duplicate invoice functionality
     router.push(`/invoices/create?duplicate=${id}`);
   };
 
   const handleSendReminder = () => {
-    // TODO: Implement send reminder functionality
     console.log("Send reminder");
+  };
+
+  const handleCopyPaymentUrl = async () => {
+    if (!invoice?.paymentRequestUrl) return;
+
+    try {
+      await navigator.clipboard.writeText(invoice.paymentRequestUrl);
+      setIsCopied(true);
+      toast.success("Payment URL copied to clipboard!");
+
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch {
+      toast.error("Failed to copy payment URL");
+    }
   };
 
   if (isLoading) {
@@ -176,12 +189,10 @@ export default function InvoiceViewPage() {
   const subtotal = calculateSubtotal();
   const tax = calculateTax(subtotal);
 
-  // Get tenant information
   const tenant = invoice.lease?.tenantLease?.[0]?.tenant || invoice.tenant;
   const property = invoice.lease?.unit?.property;
   const unit = invoice.lease?.unit;
 
-  // Get landlord information
   const landlord =
     invoice.lease?.unit?.property?.landlord ||
     invoice.tenant?.landlord ||
@@ -200,14 +211,11 @@ export default function InvoiceViewPage() {
             <div className="flex gap-3">
               <Link href={`/invoices/${id}/edit`}>
                 <Button variant="outlined">
-                  <Edit className="mr-2 h-4 w-4" />
+                  <Edit className="h-4 w-4" />
                   Edit
                 </Button>
               </Link>
-              <Button>
-                <Download className="mr-2 h-4 w-4" />
-                Download PDF
-              </Button>
+              <PDFDownloadButton invoice={invoice as any} />
             </div>
           </CardAction>
         </CardHeader>
@@ -244,6 +252,46 @@ export default function InvoiceViewPage() {
           </div>
         </CardContent>
       </Card>
+
+      {invoice.paymentRequestUrl &&
+        invoice.status !== "PAID" &&
+        invoice.status !== "CANCELLED" && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Payment Request URL</CardTitle>
+              <CardDescription>
+                Share this URL with the tenant to allow them to pay the invoice
+                online
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-3 rounded-lg bg-[#ECF0F1] p-4">
+                <div className="flex-1 overflow-hidden">
+                  <p className="truncate font-mono text-sm text-[#2D3436]">
+                    {invoice.paymentRequestUrl}
+                  </p>
+                </div>
+                <Button
+                  variant="outlined"
+                  size="sm"
+                  onClick={handleCopyPaymentUrl}
+                >
+                  {isCopied ? (
+                    <span className="animate-in fade-in-10 flex items-center gap-2">
+                      <Check className="h-4 w-4" />
+                      Copied!
+                    </span>
+                  ) : (
+                    <span className="animate-in fade-in-10 flex items-center gap-2">
+                      <Copy className="h-4 w-4" />
+                      Copy URL
+                    </span>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
       {/* Invoice Details */}
       <Card>
@@ -362,32 +410,41 @@ export default function InvoiceViewPage() {
                 <TableBody>
                   {Array.isArray(invoice.lineItems) &&
                   invoice.lineItems.length > 0 ? (
-                    invoice.lineItems.map((item: any, index: number) => (
-                      <TableRow
-                        key={index}
-                        className="border-t border-gray-200"
-                      >
-                        <TableCell className="p-4">
-                          <p className="font-medium text-[#2D3436]">
-                            {item.name || item.description}
-                          </p>
-                          {unit && property && (
-                            <p className="text-sm text-[#7F8C8D]">
-                              Unit {unit.name}, {property.name}
+                    invoice.lineItems.map((item: unknown, index: number) => {
+                      const lineItem = item as {
+                        name?: string;
+                        description?: string;
+                        quantity: number;
+                        rate: number;
+                        amount: number;
+                      };
+                      return (
+                        <TableRow
+                          key={index}
+                          className="border-t border-gray-200"
+                        >
+                          <TableCell className="p-4">
+                            <p className="font-medium text-[#2D3436]">
+                              {lineItem.name || lineItem.description}
                             </p>
-                          )}
-                        </TableCell>
-                        <TableCell className="p-4 text-center text-[#7F8C8D]">
-                          {item.quantity}
-                        </TableCell>
-                        <TableCell className="p-4 text-right text-[#7F8C8D]">
-                          {formatCurrency(item.rate)}
-                        </TableCell>
-                        <TableCell className="p-4 text-right font-medium text-[#2D3436]">
-                          {formatCurrency(item.amount / 100)}
-                        </TableCell>
-                      </TableRow>
-                    ))
+                            {unit && property && (
+                              <p className="text-sm text-[#7F8C8D]">
+                                Unit {unit.name}, {property.name}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell className="p-4 text-center text-[#7F8C8D]">
+                            {lineItem.quantity}
+                          </TableCell>
+                          <TableCell className="p-4 text-right text-[#7F8C8D]">
+                            {formatCurrency(lineItem.rate)}
+                          </TableCell>
+                          <TableCell className="p-4 text-right font-medium text-[#2D3436]">
+                            {formatCurrency(lineItem.amount)}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
                   ) : (
                     <TableRow className="border-t border-gray-200">
                       <TableCell className="p-4">

@@ -196,27 +196,7 @@ const processInvoiceWithRateLimit = async (
   );
 
   try {
-    const result = await createInvoiceTask.triggerAndWait(invoicePayload, {});
-
-    if (result.ok) {
-      logger.log(
-        `Successfully created invoice ${invoiceIndex + 1}/${batchLength}`,
-        {
-          leaseId: invoicePayload.leaseId,
-          tenantId: invoicePayload.tenantId,
-          amount: invoicePayload.amount,
-          invoiceId: result.id,
-        }
-      );
-    } else {
-      logger.error('Failed to create invoice', {
-        leaseId: invoicePayload.leaseId,
-        tenantId: invoicePayload.tenantId,
-        amount: invoicePayload.amount,
-        error: result.error,
-      });
-    }
-
+    await createInvoiceTask.triggerAndWait(invoicePayload, {});
     return true;
   } catch (error) {
     logger.error('Failed to create invoice', {

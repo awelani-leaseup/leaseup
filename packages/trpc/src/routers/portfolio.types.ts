@@ -83,3 +83,21 @@ export const VUpdatePropertySchema = v.object({
     })
   ),
 });
+
+export const VAddUnitsSchema = v.object({
+  propertyId: v.pipe(v.string(), v.minLength(1, 'Property ID is required')),
+  units: v.array(
+    v.object({
+      unitNumber: v.pipe(
+        v.string(),
+        v.minLength(1, 'Enter a valid unit number'),
+        v.trim()
+      ),
+      bedrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      bathrooms: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      sqmt: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      marketRent: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+      deposit: v.pipe(v.number(), v.minValue(0, 'Enter a valid number')),
+    })
+  ),
+});

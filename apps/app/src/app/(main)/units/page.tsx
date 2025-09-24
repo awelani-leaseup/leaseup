@@ -28,6 +28,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { formatCurrency } from "@/app/(main)/invoices/_utils";
 import { cn } from "@leaseup/ui/utils/cn";
+import { AddUnitDialog } from "./_components/add-unit-dialog";
 
 export default async function Units() {
   return (
@@ -39,10 +40,12 @@ export default async function Units() {
             <CardDescription>Manage your units.</CardDescription>
           </div>
           <CardAction>
-            <Button>
-              <Plus />
-              <Link href="/units/create">Add Unit</Link>
-            </Button>
+            <AddUnitDialog>
+              <Button>
+                <Plus />
+                Add Unit
+              </Button>
+            </AddUnitDialog>
           </CardAction>
         </CardHeader>
         <CardContent>

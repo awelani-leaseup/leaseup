@@ -157,10 +157,12 @@ export function PropertyTenants({ property }: PropertyTenantsProps) {
             </div>
           </CardContent>
           <CardFooter>
-            <Button variant="soft" color="secondary" className="w-full">
-              <Signature />
-              View Lease
-            </Button>
+            <Link href={`/leases/${tenant?.lease?.id}`} className="w-full">
+              <Button variant="soft" color="secondary" className="w-full">
+                <Signature />
+                View Lease
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       ))}

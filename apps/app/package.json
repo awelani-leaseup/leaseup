@@ -27,6 +27,8 @@
     "@novu/nextjs": "^3.5.0",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.13.0",
     "@react-email/components": "^0.1.0",
+    "@react-pdf/renderer": "^4.3.1",
+    "@sentry/nextjs": "^10",
     "@supabase/supabase-js": "^2.50.4",
     "@t3-oss/env-nextjs": "^0.12.0",
     "@tanstack/react-form": "^1.12.3",
