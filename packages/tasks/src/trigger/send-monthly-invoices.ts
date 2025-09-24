@@ -13,7 +13,7 @@ import {
 } from '@leaseup/prisma/client/client.js';
 
 const CONFIG = {
-  CHECK_DAYS_AHEAD: 3, // Send invoices 7 days before due date (compromise for processing capacity)
+  CHECK_DAYS_AHEAD: 3, // Increase days ahead to allow for more time to process invoices
   BATCH_SIZE: 5, // Smaller batch size to be more conservative with rate limits
   BATCH_DELAY_MS: 0, // No batch delay - let retry logic handle rate limits
   API_CALL_DELAY_MS: 0, // No delay between individual API calls
