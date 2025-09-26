@@ -17,7 +17,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Badge } from "@leaseup/ui/components/badge";
 import { EmptyState } from "@leaseup/ui/components/state";
 import { Plus, FileText } from "lucide-react";

@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
-import { Badge } from "@leaseup/ui/components/badge";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
 import {
   ArrowLeft,
@@ -20,8 +19,7 @@ import {
   Home,
   FileText,
   BarChart3,
-  Circle,
-  House,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/trpc/react";
@@ -118,96 +116,132 @@ export default function PropertyLayout({
   }
 
   return (
-    <div className="mx-auto my-10 flex max-w-7xl flex-col space-y-8">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-4">
-            <Link href="/properties">
-              <Button variant="outlined" size="sm">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
-            <div className="flex-1">
-              <CardTitle className="text-2xl">{property.name}</CardTitle>
-              <CardDescription>
-                {property.addressLine1}, {property.city}, {property.state}{" "}
-                {property.zip}
-              </CardDescription>
-              <div className="mt-2 flex items-center gap-2">
-                <Badge
-                  size="sm"
-                  variant="soft"
-                  color={
-                    property.propertyStatus === "ACTIVE" ? "success" : "warning"
-                  }
-                >
-                  {property.propertyStatus === "ACTIVE" ? (
-                    <Circle className="text-success fill-success h-4 w-4 animate-pulse" />
-                  ) : (
-                    <Circle className="text-warning fill-warning h-4 w-4" />
-                  )}
-                  {property.propertyStatus === "ACTIVE" ? "Active" : "Inactive"}
-                </Badge>
-                <Badge size="sm" variant="outlined">
-                  {property.propertyType === "SINGLE_UNIT" ? (
-                    <House />
-                  ) : (
-                    <Building />
-                  )}
-                  {property.propertyType === "SINGLE_UNIT"
-                    ? "Single Unit"
-                    : "Multi Unit"}
-                </Badge>
+    <div className="min-h-screen bg-[#ECF0F1] px-4 py-8 md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <Card className="rounded-xl bg-white">
+          <CardHeader>
+            <div className="mb-6 flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                <Link href="/properties">
+                  <Button variant="outlined" size="sm">
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-[#2D3436]">
+                    {property.name}
+                  </CardTitle>
+                  <CardDescription className="text-[#7F8C8D]">
+                    {property.addressLine1}, {property.city}, {property.state}{" "}
+                    {property.zip}
+                  </CardDescription>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                {property && (
+                  <EditPropertyDialog property={property}>
+                    <Button
+                      variant="outlined"
+                      className="border-[#3498DB] text-[#3498DB]"
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit Property
+                    </Button>
+                  </EditPropertyDialog>
+                )}
+                <Button className="bg-[#3498DB] text-white">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Unit
+                </Button>
               </div>
             </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+              <div className="rounded-lg bg-[#ECF0F1] p-4">
+                <h3 className="mb-1 text-sm text-[#7F8C8D]">Total Units</h3>
+                <p className="text-2xl font-bold text-[#2D3436]">
+                  {property.unit?.length || 0}
+                </p>
+              </div>
+              <div className="rounded-lg bg-[#ECF0F1] p-4">
+                <h3 className="mb-1 text-sm text-[#7F8C8D]">Occupied</h3>
+                <p className="text-2xl font-bold text-[#2ECC71]">
+                  {property.unit?.filter(
+                    (unit: unknown) =>
+                      (unit as any).lease && (unit as any).lease.length > 0,
+                  ).length || 0}
+                </p>
+              </div>
+              <div className="rounded-lg bg-[#ECF0F1] p-4">
+                <h3 className="mb-1 text-sm text-[#7F8C8D]">Vacant</h3>
+                <p className="text-2xl font-bold text-[#F39C12]">
+                  {(property.unit?.length || 0) -
+                    (property.unit?.filter(
+                      (unit: unknown) =>
+                        (unit as any).lease && (unit as any).lease.length > 0,
+                    ).length || 0)}
+                </p>
+              </div>
+              <div className="rounded-lg bg-[#ECF0F1] p-4">
+                <h3 className="mb-1 text-sm text-[#7F8C8D]">Monthly Revenue</h3>
+                <p className="text-2xl font-bold text-[#2D3436]">
+                  {new Intl.NumberFormat("en-ZA", {
+                    style: "currency",
+                    currency: "ZAR",
+                  }).format(
+                    property.unit?.reduce((sum: number, unit: unknown) => {
+                      const unitData = unit as any;
+                      if (unitData.lease && unitData.lease.length > 0) {
+                        return (
+                          sum +
+                          (unitData.lease[0].rent || unitData.marketRent || 0)
+                        );
+                      }
+                      return sum;
+                    }, 0) || 0,
+                  )}
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                const href =
+                  tab.id === "overview"
+                    ? `/properties/${id}`
+                    : `/properties/${id}/${tab.id}`;
+
+                if (
+                  property.propertyType === "SINGLE_UNIT" &&
+                  tab.id === "units"
+                ) {
+                  return null;
+                }
+
+                return (
+                  <Link
+                    key={tab.id}
+                    href={href}
+                    className={`flex items-center gap-2 border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap ${
+                      isActive
+                        ? "border-blue-500 text-blue-600"
+                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {tab.label}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
-          <CardAction>
-            {property && (
-              <EditPropertyDialog property={property}>
-                <Button variant="outlined">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Property
-                </Button>
-              </EditPropertyDialog>
-            )}
-          </CardAction>
-        </CardHeader>
-        <div className="border-b border-gray-200">
-          <nav className="flex space-x-8 px-6" aria-label="Tabs">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              const href =
-                tab.id === "overview"
-                  ? `/properties/${id}`
-                  : `/properties/${id}/${tab.id}`;
-
-              if (
-                property.propertyType === "SINGLE_UNIT" &&
-                tab.id === "units"
-              ) {
-                return null;
-              }
-
-              return (
-                <Link
-                  key={tab.id}
-                  href={href}
-                  className={`flex items-center gap-2 border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap ${
-                    isActive
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {tab.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-        <CardContent>{children}</CardContent>
-      </Card>
+          <CardContent>{children}</CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

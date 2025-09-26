@@ -13,7 +13,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import {
   Plus,
   Bath,

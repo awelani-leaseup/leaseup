@@ -4,6 +4,11 @@ import { db } from '@leaseup/prisma/db.ts';
 import { InvoiceCategory } from '@leaseup/prisma/client/client.js';
 import * as v from 'valibot';
 import { getMonth, getYear } from 'date-fns';
+import {
+  getInvoiceTestEmail,
+  logTestEmailUsage,
+  isDevelopment,
+} from '../utils/resend-test-emails';
 
 const PAYSTACK_BASE_URL = 'https://paystack.shop';
 
@@ -205,6 +210,36 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
       const endTime = Date.now();
       const durationMs = endTime - startTime;
 
+      // In development, log what test emails would be used for notifications
+      if (isDevelopment && invoiceData.tenantId) {
+        try {
+          const tenant = await db.tenant.findUnique({
+            where: { id: invoiceData.tenantId },
+            select: { email: true },
+          });
+
+          if (tenant?.email) {
+            const testEmail = getInvoiceTestEmail(
+              tenant.email,
+              newInvoice.id,
+              'tenant',
+              'DELIVERED'
+            );
+
+            logTestEmailUsage(
+              tenant.email,
+              testEmail,
+              `Invoice ${newInvoice.id} tenant notification`
+            );
+          }
+        } catch (error) {
+          logger.warn('Could not fetch tenant email for test email logging', {
+            tenantId: invoiceData.tenantId,
+            invoiceId: newInvoice.id,
+          });
+        }
+      }
+
       logger.log('Successfully created invoice', {
         invoiceId: newInvoice.id,
         leaseId: invoiceData.leaseId,
@@ -212,6 +247,7 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
         amount: newInvoice.dueAmount,
         durationMs,
         paystackId: newInvoice.paystackId,
+        testEmailsEnabled: isDevelopment,
       });
 
       return {

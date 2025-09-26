@@ -14,7 +14,7 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 
 export function LeaseRenewals() {
   const { data, isLoading, error } = api.dashboard.getStats.useQuery();

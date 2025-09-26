@@ -4,7 +4,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Button } from "@leaseup/ui/components/button";
 import { EmptyState } from "@leaseup/ui/components/state";
 import {

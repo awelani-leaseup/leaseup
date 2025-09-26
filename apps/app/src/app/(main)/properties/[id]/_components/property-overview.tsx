@@ -1,28 +1,53 @@
 import { Badge } from "@leaseup/ui/components/badge";
-import { H6 } from "@leaseup/ui/components/typography";
-import {
-  DescriptionList,
-  DescriptionTerm,
-  DescriptionDetails,
-} from "@leaseup/ui/components/description-list";
-import {
-  Bath,
-  Bed,
-  Building,
-  RulerDimensionLine,
-  MapPin,
-  Calendar,
-  DollarSign,
-  Users,
-  Home,
-  FileText,
-  Circle,
-} from "lucide-react";
+import { Button } from "@leaseup/ui/components/button";
+import { FileText, Download, Plus } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@leaseup/ui/utils/cn";
+import { formatBytes } from "@/hooks/use-file-upload";
+import { EmptyState } from "@leaseup/ui/components/state";
+import {
+  type Property,
+  type Unit,
+  type Lease,
+  type TenantLease,
+  type Tenant,
+  type Transactions,
+  type File,
+} from "@leaseup/prisma/client/client.js";
+
+// Extended types to match what's returned from tRPC with relations
+type PropertyWithRelations = Property & {
+  // Add missing property fields
+  yearBuilt?: number | null;
+  totalSqft?: number | null;
+  parkingSpaces?: number | null;
+  unit: (Unit & {
+    lease: (Lease & {
+      tenantLease: (TenantLease & {
+        tenant: Tenant;
+      })[];
+      transactions: (Transactions & {
+        invoice: { id: string } | null; // Simplified invoice type
+      })[];
+    })[];
+  })[];
+  files: File[];
+  landlord: {
+    id: string;
+    name: string | null;
+    businessName: string | null;
+    email: string;
+    phone: string | null;
+    addressLine1: string | null;
+    addressLine2: string | null;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+    countryCode: string | null;
+  };
+};
 
 interface PropertyOverviewProps {
-  property: any;
+  property: PropertyWithRelations;
 }
 
 export function PropertyOverview({ property }: PropertyOverviewProps) {
@@ -33,314 +58,205 @@ export function PropertyOverview({ property }: PropertyOverviewProps) {
     }).format(amount);
   };
 
-  const totalUnits = property.unit?.length || 0;
-  const occupiedUnits =
-    property.unit?.filter((unit: any) => unit.lease && unit.lease.length > 0)
-      .length || 0;
-  const vacantUnits = totalUnits - occupiedUnits;
-  const occupancyRate = totalUnits > 0 ? (occupiedUnits / totalUnits) * 100 : 0;
-
+  // Calculate actual monthly rental income from active leases
   const currentRent =
-    property.unit?.reduce((sum: number, unit: any) => {
+    property.unit?.reduce((sum: number, unit) => {
       if (unit.lease && unit.lease.length > 0) {
-        return sum + (unit.lease[0].rent || unit.marketRent || 0);
+        const activeLease =
+          unit.lease.find((lease) => lease.status === "ACTIVE") ||
+          unit.lease[0];
+        return sum + (activeLease?.rent || unit.marketRent || 0);
       }
       return sum;
     }, 0) || 0;
 
-  // Create different stats arrays based on property type
-  const getStatsArray = () => {
-    if (
-      property.propertyType === "SINGLE_UNIT" &&
-      property.unit &&
-      property.unit[0]
-    ) {
-      const unit = property.unit[0];
-      return [
-        {
-          label: "Bedrooms",
-          value: unit.bedrooms,
-          color: "info" as const,
-          icon: Bed,
-          textColor: "text-blue-700",
-          valueColor: "text-blue-800",
-          iconColor: "text-blue-600",
-        },
-        {
-          label: "Bathrooms",
-          value: unit.bathrooms,
-          color: "info" as const,
-          icon: Bath,
-          textColor: "text-blue-700",
-          valueColor: "text-blue-800",
-          iconColor: "text-blue-600",
-        },
-        {
-          label: "Size (sqm)",
-          value: unit.sqmt,
-          color: "info" as const,
-          icon: RulerDimensionLine,
-          textColor: "text-blue-700",
-          valueColor: "text-blue-800",
-          iconColor: "text-blue-600",
-        },
-        {
-          label: "Monthly Rent",
-          value: formatCurrency(unit.marketRent || 0),
-          color: "success" as const,
-          icon: DollarSign,
-          textColor: "text-green-700",
-          valueColor: "text-green-800",
-          iconColor: "text-green-600",
-        },
-      ];
-    } else {
-      return [
-        {
-          label: "Total Units",
-          value: totalUnits,
-          color: "info" as const,
-          icon: Home,
-          textColor: "text-blue-700",
-          valueColor: "text-blue-800",
-          iconColor: "text-blue-600",
-        },
-        {
-          label: "Occupied",
-          value: occupiedUnits,
-          color: "success" as const,
-          icon: Users,
-          textColor: "text-green-700",
-          valueColor: "text-green-800",
-          iconColor: "text-green-600",
-        },
-        {
-          label: "Vacant",
-          value: vacantUnits,
-          color: "warning" as const,
-          icon: Building,
-          textColor: "text-orange-700",
-          valueColor: "text-orange-800",
-          iconColor: "text-orange-600",
-        },
-        {
-          label: "Monthly Rent",
-          value: formatCurrency(currentRent),
-          color: "success" as const,
-          icon: DollarSign,
-          textColor: "text-green-700",
-          valueColor: "text-green-800",
-          iconColor: "text-green-600",
-        },
-      ];
-    }
-  };
+  // Calculate total revenue from property transactions
+  const totalRevenue =
+    property.unit?.reduce((sum: number, unit) => {
+      if (unit.lease && unit.lease.length > 0) {
+        return (
+          sum +
+          unit.lease.reduce((leaseSum: number, lease) => {
+            return (
+              leaseSum +
+              (lease.transactions?.reduce((transSum: number, transaction) => {
+                return transSum + (transaction.amountPaid || 0);
+              }, 0) || 0)
+            );
+          }, 0)
+        );
+      }
+      return sum;
+    }, 0) || 0;
+
+  // Calculate potential annual income
+  const potentialAnnualIncome = currentRent * 12;
+
+  const propertyDocuments = property.files || [];
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {getStatsArray().map((stat, index) => (
-          <Badge
-            key={stat.label + index}
-            variant="soft"
-            color={stat.color}
-            className="h-auto rounded-md p-4 [&_svg]:size-6 [&_svg]:stroke-1"
-          >
-            <div className="flex w-full items-center justify-between">
-              <div>
-                <p className={`mb-2 text-sm ${stat.textColor}`}>{stat.label}</p>
-                <p className={`text-lg font-bold ${stat.valueColor}`}>
-                  {stat.value}
-                </p>
-              </div>
-              <stat.icon className={stat.iconColor} />
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      {/* Left Column */}
+      <div className="space-y-8 lg:col-span-2">
+        {/* Property Documents */}
+        <section className="rounded-xl bg-white p-6">
+          <div className="mt-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#2D3436]">
+                Property Documents
+              </h2>
+              {propertyDocuments.length > 0 && (
+                <Badge variant="outlined">
+                  {propertyDocuments.length} documents
+                </Badge>
+              )}
             </div>
-          </Badge>
-        ))}
+
+            <div className="mt-6 space-y-4">
+              {propertyDocuments.length > 0 ? (
+                <div className="space-y-4">
+                  <h6 className="text-sm font-medium text-gray-700">
+                    Existing Documents
+                  </h6>
+                  <div className="space-y-2">
+                    {propertyDocuments.map((file) => (
+                      <div
+                        key={file.id}
+                        className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-2"
+                      >
+                        <div className="flex items-center">
+                          <FileText className="mr-3 size-4 stroke-1" />
+                          <div>
+                            <p className="text-sm font-medium tracking-tight text-[#2D3436]">
+                              {file.name}
+                            </p>
+                            <p className="text-muted-foreground text-sm tracking-tight">
+                              Uploaded{" "}
+                              {format(new Date(file.createdAt), "MMM d, yyyy")}{" "}
+                              •{" "}
+                              {file.size
+                                ? formatBytes(file.size)
+                                : "Unknown size"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="icon"
+                            color="info"
+                            onClick={() => {
+                              window.open(file.url, "_blank");
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <EmptyState
+                  title="No documents"
+                  icon={<FileText className="h-12 w-12" />}
+                  description="No property documents have been uploaded yet."
+                  buttons={
+                    <Button>
+                      <Plus className="h-4 w-4" />
+                      Add Document
+                    </Button>
+                  }
+                />
+              )}
+            </div>
+          </div>
+        </section>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Right Column */}
+      <div className="space-y-8">
         {/* Property Details */}
-        <div>
-          <h3>Property Details</h3>
-          <div>
-            <DescriptionList>
-              <DescriptionTerm>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  Address
-                </div>
-              </DescriptionTerm>
-              <DescriptionDetails>
-                {property.addressLine1}
-                {property.addressLine2 && `, ${property.addressLine2}`}
-                <br />
-                {property.city}, {property.state} {property.zip}
-              </DescriptionDetails>
-
-              <DescriptionTerm>
-                <div className="flex items-center gap-2">
-                  <Building className="h-4 w-4" />
-                  Property Type
-                </div>
-              </DescriptionTerm>
-              <DescriptionDetails>
+        <section className="rounded-xl bg-white p-6">
+          <h2 className="mb-4 text-xl font-semibold text-[#2D3436]">
+            Property Details
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="mb-1 text-sm text-[#7F8C8D]">Property Type</h3>
+              <p className="font-medium text-[#2D3436]">
                 {property.propertyType === "SINGLE_UNIT"
                   ? "Single Unit"
-                  : "Multi Unit"}
-              </DescriptionDetails>
-
-              <DescriptionTerm>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Created
-                </div>
-              </DescriptionTerm>
-              <DescriptionDetails>
-                {format(new Date(property.createdAt), "MMM dd, yyyy")}
-              </DescriptionDetails>
-
-              <DescriptionTerm>
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Occupancy Rate
-                </div>
-              </DescriptionTerm>
-              <DescriptionDetails>
-                {occupancyRate.toFixed(1)}%
-              </DescriptionDetails>
-            </DescriptionList>
-          </div>
-        </div>
-
-        {/* Features and Amenities */}
-        <div className="space-y-6">
-          <div>
-            <h3>Features</h3>
-            <div className="mt-4">
-              {property.features && property.features.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {property.features.map((feature: string) => (
-                    <Badge
-                      size="sm"
-                      key={feature}
-                      variant="outlined"
-                      className="border-primary text-primary rounded-full font-semibold"
-                    >
-                      ⭐ {feature}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">No features listed</p>
-              )}
+                  : "Apartment Building"}
+              </p>
             </div>
-          </div>
-
-          <div>
-            <h3>Amenities</h3>
-            <div className="mt-4">
-              {property.amenities && property.amenities.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {property.amenities.map((amenity: string) => (
-                    <Badge
-                      size="sm"
-                      key={amenity}
-                      variant="outlined"
-                      className="border-primary text-primary rounded-full font-semibold"
-                    >
-                      ✅ {amenity}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">No amenities listed</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Units Summary */}
-      {property.propertyType === "MULTI_UNIT" &&
-        property.unit &&
-        property.unit.length > 0 && (
-          <div>
-            <h3>Units Summary</h3>
             <div>
-              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {property.unit.slice(0, 6).map((unit: any) => (
-                  <div
-                    key={unit.id}
-                    className="rounded-lg border border-gray-200 p-4"
-                  >
-                    <div className="mb-2 flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">
-                        Unit {unit.name}
-                      </p>
-                      <Badge
-                        size="sm"
-                        variant="soft"
-                        color={
-                          unit.lease && unit.lease.length > 0
-                            ? "success"
-                            : "warning"
-                        }
-                      >
-                        <Circle
-                          className={cn(
-                            unit.lease && unit.lease.length > 0
-                              ? "fill-success text-success"
-                              : "fill-warning text-warning",
-                            "animate-pulse",
-                          )}
-                        />
-                        {unit.lease && unit.lease.length > 0
-                          ? "Occupied"
-                          : "Vacant"}
-                      </Badge>
-                    </div>
-
-                    <div className="mb-2 flex gap-2">
-                      <Badge variant="outlined" size="sm">
-                        <Bed className="mr-1 h-3 w-3" /> {unit.bedrooms}
-                      </Badge>
-                      <Badge variant="outlined" size="sm">
-                        <Bath className="mr-1 h-3 w-3" /> {unit.bathrooms}
-                      </Badge>
-                      <Badge variant="outlined" size="sm">
-                        <RulerDimensionLine className="mr-1 h-3 w-3" />{" "}
-                        {unit.sqmt}m²
-                      </Badge>
-                    </div>
-
-                    <p className="text-sm font-medium text-gray-900">
-                      {formatCurrency(unit.marketRent || 0)}/mo
-                    </p>
-
-                    {unit.lease &&
-                      unit.lease.length > 0 &&
-                      unit.lease[0].tenantLease && (
-                        <p className="mt-1 text-xs text-gray-500">
-                          Tenant:{" "}
-                          {unit.lease[0].tenantLease[0]?.tenant?.firstName}{" "}
-                          {unit.lease[0].tenantLease[0]?.tenant?.lastName}
-                        </p>
-                      )}
-                  </div>
-                ))}
+              <h3 className="mb-1 text-sm text-[#7F8C8D]">Year Built</h3>
+              <p className="font-medium text-[#2D3436]">
+                {property.yearBuilt ||
+                  format(new Date(property.createdAt), "yyyy")}
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-1 text-sm text-[#7F8C8D]">Square Footage</h3>
+              <p className="font-medium text-[#2D3436]">
+                {property.totalSqft || "N/A"} sq ft
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-1 text-sm text-[#7F8C8D]">Parking Spaces</h3>
+              <p className="font-medium text-[#2D3436]">
+                {property.parkingSpaces || "N/A"} spaces
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-1 text-sm text-[#7F8C8D]">Amenities</h3>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {property.amenities && property.amenities.length > 0 ? (
+                  property.amenities.map((amenity: string) => (
+                    <span
+                      key={amenity}
+                      className="rounded bg-[#ECF0F1] px-2 py-1 text-xs text-[#2D3436]"
+                    >
+                      {amenity}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-[#7F8C8D]">
+                    No amenities listed
+                  </span>
+                )}
               </div>
-
-              {property.unit.length > 6 && (
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">
-                    And {property.unit.length - 6} more units...
-                  </p>
-                </div>
-              )}
             </div>
           </div>
-        )}
+        </section>
+
+        {/* Financial Summary */}
+        <section className="rounded-xl bg-white p-6">
+          <h2 className="mb-4 text-xl font-semibold text-[#2D3436]">
+            Financial Summary
+          </h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-[#7F8C8D]">Monthly Rent Income</span>
+              <span className="font-medium text-[#2D3436]">
+                {formatCurrency(currentRent)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#7F8C8D]">Potential Annual Income</span>
+              <span className="font-medium text-[#2D3436]">
+                {formatCurrency(potentialAnnualIncome)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[#7F8C8D]">Total Revenue (All Time)</span>
+              <span className="font-medium text-[#2D3436]">
+                {formatCurrency(totalRevenue)}
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

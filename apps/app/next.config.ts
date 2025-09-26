@@ -18,9 +18,7 @@ const config = {
   },
 };
 
-export default config;
-
-module.exports = withSentryConfig(module.exports, {
+export default withSentryConfig(config, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 

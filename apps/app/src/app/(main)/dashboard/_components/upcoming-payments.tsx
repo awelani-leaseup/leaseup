@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { convertFromCents, formatCurrencyToZAR } from "@/utils/currency";
+import { formatCurrencyToZAR } from "@/utils/currency";
 import {
   Alert,
   AlertTitle,

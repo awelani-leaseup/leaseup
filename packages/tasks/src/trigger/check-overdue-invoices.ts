@@ -6,6 +6,11 @@ import {
   SubscriptionPlanStatus,
 } from '@leaseup/prisma/client/client.js';
 import { novu } from '@leaseup/novu/client.ts';
+import {
+  getLandlordTestEmail,
+  logTestEmailUsage,
+  isDevelopment,
+} from '../utils/resend-test-emails';
 
 export const checkOverdueInvoicesTask = schedules.task({
   id: 'check-overdue-invoices',
@@ -169,22 +174,47 @@ export const checkOverdueInvoicesTask = schedules.task({
 
       try {
         const events = Object.entries(invoicesByLandlord).map(
-          ([landlordId, { landlord, invoices }]) => ({
-            workflowId: 'landlord-overdue-invoices',
-            to: landlord.id,
-            payload: {
-              landlordName: landlord.name || 'Landlord',
-              overdueInvoicesCount: invoices.length,
-              ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/invoices`,
-            },
-            overrides: {},
-          })
+          ([landlordId, { landlord, invoices }]) => {
+            // Use Resend test email in development
+            const emailAddress = getLandlordTestEmail(
+              landlord.email,
+              landlordId,
+              'DELIVERED'
+            );
+
+            // Log test email usage in development
+            if (isDevelopment) {
+              logTestEmailUsage(
+                landlord.email,
+                emailAddress,
+                `Overdue invoices notification for landlord ${landlordId}`
+              );
+            }
+
+            return {
+              workflowId: 'landlord-overdue-invoices',
+              to: {
+                subscriberId: landlord.id,
+                email: emailAddress, // Use test email in dev, real email in prod
+              },
+              payload: {
+                landlordName: landlord.name || 'Landlord',
+                overdueInvoicesCount: invoices.length,
+                ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/invoices`,
+              },
+              overrides: {},
+            };
+          }
         );
 
         logger.log('Sending bulk notifications', {
           eventCount: events.length,
+          testEmailsEnabled: isDevelopment,
           landlords: events.map((event) => ({
-            subscriberId: event.to,
+            subscriberId:
+              typeof event.to === 'object' ? event.to.subscriberId : event.to,
+            email:
+              typeof event.to === 'object' ? event.to.email : 'legacy format',
             overdueCount: event.payload.overdueInvoicesCount,
           })),
         });
@@ -224,6 +254,7 @@ export const checkOverdueInvoicesTask = schedules.task({
         invoicesUpdated: updateResult.count,
         landlordsNotified: Object.keys(invoicesByLandlord).length,
         notificationsSent,
+        testEmailsEnabled: isDevelopment,
         notificationErrors:
           notificationErrors.length > 0 ? notificationErrors : undefined,
         durationMs: endTime - startTime,

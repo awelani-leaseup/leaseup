@@ -11,7 +11,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { upload } from "@vercel/blob/client";
 import { authClient } from "@/utils/auth/client";

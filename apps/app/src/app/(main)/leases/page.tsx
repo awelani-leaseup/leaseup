@@ -14,7 +14,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Input } from "@leaseup/ui/components/input";
 import { Plus, ArrowUpDown, ArrowUp, ArrowDown, Search, X } from "lucide-react";
 import Link from "next/link";

@@ -22,7 +22,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Separator } from "@leaseup/ui/components/separator";
 import { formatCurrencyToZAR } from "@/utils/currency";
 import { EmptyState } from "@leaseup/ui/components/state";

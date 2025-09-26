@@ -9,7 +9,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Skeleton } from "@leaseup/ui/components/skeleton";
 import { FileText, User, CreditCard, Edit } from "lucide-react";
 import { format } from "date-fns";

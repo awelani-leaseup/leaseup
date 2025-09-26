@@ -3,11 +3,19 @@ import { Button } from "@leaseup/ui/components/button";
 import { DashboardStats } from "./_components/dashboard-stats";
 import { RecentActivity } from "./_components/recent-activity";
 import { UpcomingPayments } from "./_components/upcoming-payments";
-// import { MaintenanceRequests } from "./_components/maintenance-requests";
 import { LeaseRenewals } from "./_components/lease-renewals";
-import { DownloadIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { authClient } from "@/utils/auth/client";
 import { headers } from "next/headers";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@leaseup/ui/components/card";
+import Link from "next/link";
 
 export default async function Dashboard() {
   // Prefetch dashboard data
@@ -27,25 +35,29 @@ export default async function Dashboard() {
       >
         <div className="mx-auto max-w-5xl">
           <div id="dashboard-header" className="mb-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <h1 className="text-lg font-bold text-[#2D3436]">Dashboard</h1>
-                <p className="text-[#7F8C8D]">
-                  Welcome back, {session?.data?.user?.name.split(" ")[0]}!
-                  Let&apos;s start managing your properties.
-                </p>
-              </div>
-              <div className="mt-4 flex space-x-3 md:mt-0">
-                <Button variant="outlined">
-                  <DownloadIcon className="mr-2" />
-                  Export
-                </Button>
-                <Button>
-                  <PlusIcon className="mr-2" />
-                  Add Property
-                </Button>
-              </div>
-            </div>
+            <Card>
+              <CardContent>
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-[#2D3436]">
+                    Dashboard
+                  </CardTitle>
+                  <CardDescription className="text-base text-[#7F8C8D]">
+                    Welcome back, {session?.data?.user?.name.split(" ")[0]}!
+                    Let&apos;s start managing your properties.
+                  </CardDescription>
+                  <CardAction>
+                    <div className="mt-4 flex space-x-3 md:mt-0">
+                      <Link href="/properties/create">
+                        <Button>
+                          <PlusIcon className="mr-2" />
+                          Add Property
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardAction>
+                </CardHeader>
+              </CardContent>
+            </Card>
           </div>
 
           <DashboardStats />

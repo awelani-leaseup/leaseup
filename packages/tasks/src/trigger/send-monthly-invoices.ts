@@ -4,6 +4,12 @@ import { addDays, isAfter, isBefore } from 'date-fns';
 import { createInvoiceTask, type CreateInvoicePayload } from './invoice-send';
 import { calculateNextInvoiceDate } from '../utils/calculate-next-invoice-date';
 import {
+  getLandlordTestEmail,
+  getTenantTestEmail,
+  logTestEmailUsage,
+  isDevelopment as isDevEnvironment,
+} from '../utils/resend-test-emails';
+import {
   InvoiceCycle,
   InvoiceStatus,
   LeaseStatus,
@@ -186,12 +192,56 @@ const processInvoiceWithRateLimit = async (
   batchLength: number,
   batchNumber: number
 ) => {
+  // In development, log what test emails would be used for notifications
+  if (isDevEnvironment && invoicePayload.tenantId) {
+    try {
+      const tenant = await db.tenant.findUnique({
+        where: { id: invoicePayload.tenantId },
+        select: { email: true, landlord: { select: { email: true } } },
+      });
+
+      if (tenant?.email) {
+        const tenantTestEmail = getTenantTestEmail(
+          tenant.email,
+          invoicePayload.tenantId,
+          'DELIVERED'
+        );
+
+        logTestEmailUsage(
+          tenant.email,
+          tenantTestEmail,
+          `Monthly invoice batch ${batchNumber} - tenant notification`
+        );
+      }
+
+      if (tenant?.landlord?.email) {
+        const landlordTestEmail = getLandlordTestEmail(
+          tenant.landlord.email,
+          invoicePayload.landlordId,
+          'DELIVERED'
+        );
+
+        logTestEmailUsage(
+          tenant.landlord.email,
+          landlordTestEmail,
+          `Monthly invoice batch ${batchNumber} - landlord notification`
+        );
+      }
+    } catch (error) {
+      logger.warn('Could not fetch emails for test email logging', {
+        tenantId: invoicePayload.tenantId,
+        batchNumber,
+      });
+    }
+  }
+
   logger.log(
     `Processing invoice ${invoiceIndex + 1}/${batchLength} in batch ${batchNumber}`,
     {
       leaseId: invoicePayload.leaseId,
       tenantId: invoicePayload.tenantId,
       amount: invoicePayload.amount,
+      testEmailsEnabled: isDevEnvironment,
     }
   );
 

@@ -15,7 +15,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { SidebarHeader, SidebarTrigger } from "@leaseup/ui/components/sidebar";
 import { Inbox } from "@novu/nextjs";
 import { ChevronDownIcon, LogOutIcon, Settings } from "lucide-react";

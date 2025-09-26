@@ -21,7 +21,7 @@ import Link from "next/link";
 import { PropertyStaticMap } from "./_components/PropertyStaticMap";
 import { Badge } from "@leaseup/ui/components/badge";
 import { EmptyState } from "@leaseup/ui/components/state";
-import { Avatar, AvatarFallback } from "@leaseup/ui/components/avataar";
+import { Avatar, AvatarFallback } from "@leaseup/ui/components/avatar";
 
 export default async function Properties() {
   const properties = await api.portfolio.getAllProperties();

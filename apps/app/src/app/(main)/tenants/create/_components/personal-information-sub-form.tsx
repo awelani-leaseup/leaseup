@@ -5,7 +5,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@leaseup/ui/components/avataar";
+} from "@leaseup/ui/components/avatar";
 import { Label } from "@leaseup/ui/components/label";
 import { Button } from "@leaseup/ui/components/button";
 import { useFileUpload } from "@/hooks/use-file-upload";
