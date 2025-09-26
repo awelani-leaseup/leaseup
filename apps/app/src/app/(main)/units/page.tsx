@@ -105,7 +105,6 @@ const UnitCard = async () => {
                 </div>
               </div>
 
-              {/* Property Info */}
               <div className="mb-4">
                 <p className="text-sm text-gray-600">
                   {unit.property?.propertyType === "MULTI_UNIT"
@@ -154,7 +153,6 @@ const UnitCard = async () => {
                 )}
               </div>
 
-              {/* Current Tenant */}
               {tenant && (
                 <div className="mt-4 border-t border-gray-100 pt-4">
                   <h4 className="mb-2 text-sm font-medium text-gray-900">
@@ -202,21 +200,25 @@ const UnitCard = async () => {
                 </div>
               )}
 
-              {/* Vacant Unit Actions */}
               {!isOccupied && (
                 <div className="mt-4 border-t border-gray-100 pt-4">
                   <div className="flex gap-2">
-                    <Button variant="outlined" size="sm" className="flex-1">
-                      Find Tenant
-                    </Button>
-                    <Button variant="outlined" size="sm" className="flex-1">
-                      Create Lease
-                    </Button>
+                    <Link href={`/tenants/`}>
+                      <Button variant="outlined" size="sm" className="flex-1">
+                        Find Tenant
+                      </Button>
+                    </Link>
+                    <Link
+                      href={`/leases/create?unitId=${unit.id}&propertyId=${unit.propertyId}`}
+                    >
+                      <Button variant="outlined" size="sm" className="flex-1">
+                        Create Lease
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               )}
 
-              {/* Unit Status Indicator */}
               <div className="mt-4 border-t border-gray-100 pt-4">
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>Last updated</span>

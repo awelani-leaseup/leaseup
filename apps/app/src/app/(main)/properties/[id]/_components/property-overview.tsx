@@ -4,53 +4,18 @@ import { FileText, Download, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { formatBytes } from "@/hooks/use-file-upload";
 import { EmptyState } from "@leaseup/ui/components/state";
-import {
-  type Property,
-  type Unit,
-  type Lease,
-  type TenantLease,
-  type Tenant,
-  type Transactions,
-  type File,
-} from "@leaseup/prisma/client/client.js";
-
-// Extended types to match what's returned from tRPC with relations
-type PropertyWithRelations = Property & {
-  // Add missing property fields
-  yearBuilt?: number | null;
-  totalSqft?: number | null;
-  parkingSpaces?: number | null;
-  unit: (Unit & {
-    lease: (Lease & {
-      tenantLease: (TenantLease & {
-        tenant: Tenant;
-      })[];
-      transactions: (Transactions & {
-        invoice: { id: string } | null; // Simplified invoice type
-      })[];
-    })[];
-  })[];
-  files: File[];
-  landlord: {
-    id: string;
-    name: string | null;
-    businessName: string | null;
-    email: string;
-    phone: string | null;
-    addressLine1: string | null;
-    addressLine2: string | null;
-    city: string | null;
-    state: string | null;
-    zip: string | null;
-    countryCode: string | null;
-  };
-};
+import { api } from "@/trpc/react";
 
 interface PropertyOverviewProps {
-  property: PropertyWithRelations;
+  id: string;
 }
 
-export function PropertyOverview({ property }: PropertyOverviewProps) {
+export function PropertyOverview({ id }: PropertyOverviewProps) {
+  const { data: property } = api.portfolio.getById.useQuery(id);
+
+  if (!property) {
+    return null; // Loading and error states are handled by layout
+  }
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-ZA", {
       style: "currency",
@@ -192,27 +157,28 @@ export function PropertyOverview({ property }: PropertyOverviewProps) {
             <div>
               <h3 className="mb-1 text-sm text-[#7F8C8D]">Year Built</h3>
               <p className="font-medium text-[#2D3436]">
-                {property.yearBuilt ||
+                {(property as any).yearBuilt ||
                   format(new Date(property.createdAt), "yyyy")}
               </p>
             </div>
             <div>
               <h3 className="mb-1 text-sm text-[#7F8C8D]">Square Footage</h3>
               <p className="font-medium text-[#2D3436]">
-                {property.totalSqft || "N/A"} sq ft
+                {(property as any).totalSqft || "N/A"} sq ft
               </p>
             </div>
             <div>
               <h3 className="mb-1 text-sm text-[#7F8C8D]">Parking Spaces</h3>
               <p className="font-medium text-[#2D3436]">
-                {property.parkingSpaces || "N/A"} spaces
+                {(property as any).parkingSpaces || "N/A"} spaces
               </p>
             </div>
             <div>
               <h3 className="mb-1 text-sm text-[#7F8C8D]">Amenities</h3>
               <div className="mt-2 flex flex-wrap gap-2">
-                {property.amenities && property.amenities.length > 0 ? (
-                  property.amenities.map((amenity: string) => (
+                {(property as any).amenities &&
+                (property as any).amenities.length > 0 ? (
+                  (property as any).amenities.map((amenity: string) => (
                     <span
                       key={amenity}
                       className="rounded bg-[#ECF0F1] px-2 py-1 text-xs text-[#2D3436]"
