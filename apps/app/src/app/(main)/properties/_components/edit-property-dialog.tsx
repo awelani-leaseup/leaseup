@@ -337,30 +337,8 @@ export function EditPropertyDialog({
 
         <div className="py-4">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-            {/* Map Column */}
-            <div className="col-span-1">
-              <div className="sticky top-4">
-                <div className="overflow-hidden rounded-lg border p-2">
-                  {address ? (
-                    <StaticMap
-                      className="map h-[18.3rem] max-h-[18.3rem] rounded-md"
-                      url={staticMapsUrl}
-                    />
-                  ) : (
-                    <div className="flex h-[18.3rem] max-h-[18.3rem] w-full items-center justify-center px-4">
-                      <p className="text-muted-foreground text-center text-sm font-bold">
-                        Enter an address to see the map preview
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Form Column */}
-            <div className="col-span-3">
+            <div className="col-span-4">
               <form.AppForm>
-                {/* Basic Info Section */}
                 <div className="mb-8">
                   <H5>Basic Information</H5>
                   <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2">

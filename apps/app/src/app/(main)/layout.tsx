@@ -54,14 +54,11 @@ if (!NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const isActive = (path: string) => {
-    if (typeof window !== "undefined") {
-      return window.location.pathname.startsWith(path);
-    }
-    return false;
-  };
-
   const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    return pathname.startsWith(path);
+  };
 
   return (
     <SidebarProvider open={!pathname.startsWith("/onboarding")}>

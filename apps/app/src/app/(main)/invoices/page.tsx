@@ -56,7 +56,6 @@ import { DataTableFilter } from "@leaseup/ui/components/data-table/data-table-fi
 import { DataTablePagination } from "@leaseup/ui/components/data-table/data-table-pagination";
 import { formatCurrency, getStatusColor, getStatusBadge } from "./_utils";
 
-// Invoice type definition that matches the actual API response
 type Invoice = {
   id: string;
   dueAmount: number;
@@ -481,16 +480,13 @@ export default function Invoices() {
   const statusColumn = table.getColumn("status");
   const propertyColumn = table.getColumn("property");
 
-  // Show full page skeleton while initial data is loading
   if (statsLoading && invoicesLoading) {
     return <InvoicePageSkeleton />;
   }
 
   return (
     <div className="mx-auto my-10 flex max-w-7xl flex-col">
-      {/* Single Card for Page Header and Main Content */}
       <Card>
-        {/* Page Header */}
         <CardHeader>
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
@@ -594,8 +590,8 @@ export default function Invoices() {
                   All Invoices
                 </CardTitle>
                 <CardDescription>
-                  {invoicesData?.totalCount
-                    ? `${invoicesData.totalCount} total invoices`
+                  {invoicesLoading
+                    ? `${invoicesData?.totalCount} total invoices`
                     : "Loading..."}
                 </CardDescription>
               </div>

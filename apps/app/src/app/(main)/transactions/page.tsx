@@ -87,7 +87,6 @@ type Transaction = {
 const columnHelper = createColumnHelper<Transaction>();
 
 export default function Transactions() {
-  // Table state
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -96,27 +95,22 @@ export default function Transactions() {
     pageSize: 20,
   });
 
-  // Debounce search input to avoid excessive API calls
   const debouncedGlobalFilter = useDebounce(globalFilter, 500);
 
-  // Reset pagination when search changes
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, [debouncedGlobalFilter]);
 
-  // Build query parameters for backend
   const queryParams = useMemo(() => {
     const params: any = {
       page: pagination.pageIndex + 1,
       limit: pagination.pageSize,
     };
 
-    // Add search filter
     if (debouncedGlobalFilter) {
       params.search = debouncedGlobalFilter;
     }
 
-    // Add sorting
     if (sorting.length > 0) {
       const sort = sorting[0];
       if (sort) {
@@ -125,7 +119,6 @@ export default function Transactions() {
       }
     }
 
-    // Add column filters
     columnFilters.forEach((filter) => {
       if (filter.id === "property" && filter.value && filter.value !== "all") {
         params.propertyId = filter.value;
@@ -138,14 +131,11 @@ export default function Transactions() {
     return params;
   }, [pagination, debouncedGlobalFilter, sorting, columnFilters]);
 
-  // Fetch transactions with filters and sorting
   const { data: transactionsData, isLoading: transactionsLoading } =
     api.transaction.getAll.useQuery(queryParams);
 
-  // Fetch properties for filter dropdown
   const { data: properties } = api.portfolio.getAllProperties.useQuery();
 
-  // Fetch tenants for filter dropdown
   const { data: tenants } = api.tenant.getAll.useQuery({
     page: 1,
     limit: 1000,
@@ -289,7 +279,6 @@ export default function Transactions() {
     [],
   );
 
-  // Initialize table with manual pagination
   const table = useReactTable({
     data: transactionsData?.transactions ?? [],
     columns,
@@ -317,7 +306,6 @@ export default function Transactions() {
     }).format(amount);
   };
 
-  // Calculate summary stats
   const summaryStats = useMemo(() => {
     if (!transactionsData?.transactions) return null;
 
@@ -336,21 +324,16 @@ export default function Transactions() {
     };
   }, [transactionsData?.transactions]);
 
-  // Get property filter column
   const propertyColumn = table.getColumn("property");
-  // Get tenant filter column
   const tenantColumn = table.getColumn("tenant");
 
-  // Show full page skeleton on initial load
   if (transactionsLoading && !transactionsData) {
     return <TransactionPageSkeleton />;
   }
 
   return (
     <div className="mx-auto my-10 flex max-w-7xl flex-col">
-      {/* Single Card for Page Header and Main Content */}
       <Card>
-        {/* Page Header */}
         <CardHeader>
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
@@ -360,7 +343,6 @@ export default function Transactions() {
             </div>
           </div>
 
-          {/* Summary Stats */}
           <div className="mt-6">
             {(() => {
               if (transactionsLoading) {
@@ -442,12 +424,10 @@ export default function Transactions() {
               </div>
             </div>
 
-            {/* Filters */}
             {transactionsLoading ? (
               <TransactionFiltersSkeleton />
             ) : (
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-                {/* Search */}
                 <div className="relative flex-1">
                   <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <Input

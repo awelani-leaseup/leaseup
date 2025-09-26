@@ -426,9 +426,7 @@ export default function Documents() {
 
   return (
     <div className="mx-auto my-10 flex max-w-7xl flex-col">
-      {/* Single Card for Page Header and Main Content */}
       <Card>
-        {/* Page Header */}
         <CardHeader>
           <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
             <div>
@@ -444,7 +442,6 @@ export default function Documents() {
             </div>
           </div>
 
-          {/* Summary Stats */}
           <div className="mt-6">
             {(() => {
               if (documentsLoading) {
@@ -526,12 +523,10 @@ export default function Documents() {
               </div>
             </div>
 
-            {/* Filters */}
             {documentsLoading ? (
               <DocumentFiltersSkeleton />
             ) : (
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-                {/* Search */}
                 <div className="relative flex-1">
                   <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <Input

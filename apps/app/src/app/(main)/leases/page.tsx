@@ -403,8 +403,8 @@ export default function Leases() {
                   All Leases
                 </CardTitle>
                 <CardDescription>
-                  {leasesData?.totalCount
-                    ? `${leasesData.totalCount} total leases`
+                  {leasesLoading
+                    ? `${leasesData?.totalCount} total leases`
                     : "Loading..."}
                 </CardDescription>
               </div>
