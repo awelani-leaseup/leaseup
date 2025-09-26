@@ -417,8 +417,8 @@ export default function Transactions() {
                   All Transactions
                 </CardTitle>
                 <CardDescription>
-                  {transactionsData?.totalCount
-                    ? `${transactionsData.totalCount} total transactions`
+                  {!transactionsLoading
+                    ? `${transactionsData?.totalCount} total transactions`
                     : "Loading..."}
                 </CardDescription>
               </div>

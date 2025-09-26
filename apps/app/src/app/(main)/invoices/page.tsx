@@ -590,7 +590,7 @@ export default function Invoices() {
                   All Invoices
                 </CardTitle>
                 <CardDescription>
-                  {invoicesLoading
+                  {!invoicesLoading
                     ? `${invoicesData?.totalCount} total invoices`
                     : "Loading..."}
                 </CardDescription>
