@@ -327,7 +327,7 @@ export function EditPropertyDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-7xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl">Edit Property</DialogTitle>
           <DialogDescription>
@@ -358,7 +358,7 @@ export function EditPropertyDialog({
                                   field.setValue(value as any);
                                 }}
                               >
-                                <div className="flex h-40 flex-1 space-x-2 rounded-md border border-gray-200 p-4">
+                                <div className="flex h-32 flex-1 space-x-2 rounded-md border border-gray-200 p-4">
                                   <RadioGroupItem
                                     value="SINGLE_UNIT"
                                     id="SINGLE_UNIT"
@@ -377,7 +377,7 @@ export function EditPropertyDialog({
                                     </Label>
                                   </div>
                                 </div>
-                                <div className="flex h-40 flex-1 space-x-2 rounded-md border border-gray-200 p-4">
+                                <div className="flex h-32 flex-1 space-x-2 rounded-md border border-gray-200 p-4">
                                   <RadioGroupItem
                                     value="MULTI_UNIT"
                                     id="MULTI_UNIT"

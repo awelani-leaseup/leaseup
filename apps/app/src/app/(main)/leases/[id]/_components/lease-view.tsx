@@ -155,7 +155,6 @@ export function LeaseView({ lease }: LeaseViewProps) {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
-        {/* Lease Header */}
         <Card className="mb-8">
           <CardHeader className="pb-6">
             <div className="mb-6 flex items-start justify-between">
@@ -168,14 +167,6 @@ export function LeaseView({ lease }: LeaseViewProps) {
                 </p>
               </div>
               <div className="flex gap-3">
-                <Button
-                  variant="outlined"
-                  onClick={handleDownloadPDF}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Download PDF
-                </Button>
                 <Button
                   variant="outlined"
                   onClick={handlePrint}
@@ -310,7 +301,6 @@ export function LeaseView({ lease }: LeaseViewProps) {
               </CardContent>
             </Card>
 
-            {/* Terms & Conditions */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl">Terms & Conditions</CardTitle>

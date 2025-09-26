@@ -125,12 +125,6 @@ export function PropertyOverview({ id }: PropertyOverviewProps) {
                   title="No documents"
                   icon={<FileText className="h-12 w-12" />}
                   description="No property documents have been uploaded yet."
-                  buttons={
-                    <Button>
-                      <Plus className="h-4 w-4" />
-                      Add Document
-                    </Button>
-                  }
                 />
               )}
             </div>

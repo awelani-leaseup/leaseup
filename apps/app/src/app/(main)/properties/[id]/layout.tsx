@@ -149,10 +149,6 @@ export default function PropertyLayout({
                     </Button>
                   </EditPropertyDialog>
                 )}
-                <Button className="bg-[#3498DB] text-white">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Unit
-                </Button>
               </div>
             </div>
 

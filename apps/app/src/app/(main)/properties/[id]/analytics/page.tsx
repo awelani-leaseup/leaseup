@@ -2,15 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { api } from "@/trpc/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@leaseup/ui/components/card";
+import { CardTitle } from "@leaseup/ui/components/card";
 import { Badge } from "@leaseup/ui/components/badge";
-import { H4, H6 } from "@leaseup/ui/components/typography";
+import { Button } from "@leaseup/ui/components/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@leaseup/ui/components/avatar";
 import {
   Home,
   Users,
@@ -18,7 +17,15 @@ import {
   TrendingUp,
   TrendingDown,
   BarChart3,
+  Bed,
+  Bath,
+  RulerDimensionLine,
+  Circle,
+  Eye,
 } from "lucide-react";
+import Link from "next/link";
+import { cn } from "@leaseup/ui/utils/cn";
+import { formatCurrency } from "@/app/(main)/invoices/_utils";
 
 export default function PropertyAnalyticsPage() {
   const { id } = useParams<{ id: string }>();
@@ -235,49 +242,109 @@ export default function PropertyAnalyticsPage() {
 
       <CardTitle>Unit Breakdown</CardTitle>
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {property.unit.map((unit) => {
-          const isOccupied = unit.lease && unit.lease.length > 0;
+          const currentLease =
+            unit.lease && unit.lease.length > 0 ? unit.lease[0] : null;
+          const tenant = currentLease?.tenantLease?.[0]?.tenant;
+          const isOccupied = !!currentLease;
 
           return (
             <div
-              className="flex items-center justify-between border-b border-gray-200 pb-4"
               key={unit.id}
+              className="rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-md"
             >
-              <div className="flex-1">
-                <H4 className="text-base font-semibold">Unit #{unit.name}</H4>
-                <p className="text-muted-foreground text-sm">
-                  {unit.bedrooms} bed, {unit.bathrooms} bath • {unit.sqmt} sqm
-                </p>
-                <div className="mt-2 flex gap-2">
+              <div className="mb-4 flex items-start justify-between">
+                <div className="flex flex-row items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Unit {unit.name}
+                  </h3>
                   <Badge
-                    variant="soft"
                     size="sm"
+                    variant="soft"
                     color={isOccupied ? "success" : "warning"}
                   >
+                    <Circle
+                      className={cn(
+                        isOccupied
+                          ? "fill-success text-success"
+                          : "fill-warning text-warning",
+                        "animate-pulse",
+                      )}
+                    />
                     {isOccupied ? "Occupied" : "Vacant"}
                   </Badge>
-                  {isOccupied && unit.lease?.[0]?.tenantLease?.[0]?.tenant && (
-                    <Badge variant="outlined" size="sm">
-                      {unit.lease[0].tenantLease[0].tenant.firstName}{" "}
-                      {unit.lease[0].tenantLease[0].tenant.lastName}
-                    </Badge>
-                  )}
                 </div>
               </div>
-              <div className="text-right">
-                <H6 className="text-primary tabular-nums">
-                  {new Intl.NumberFormat("en-ZA", {
-                    style: "currency",
-                    currency: "ZAR",
-                  }).format(unit.marketRent)}
-                  <span className="text-muted-foreground text-sm font-normal">
-                    /mo
+
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Badge variant="outlined" size="sm">
+                    <Bed className="mr-1 h-3 w-3" /> {unit.bedrooms}
+                  </Badge>
+                  <Badge variant="outlined" size="sm">
+                    <Bath className="mr-1 h-3 w-3" /> {unit.bathrooms}
+                  </Badge>
+                  <Badge variant="outlined" size="sm">
+                    <RulerDimensionLine className="mr-1 h-3 w-3" /> {unit.sqmt}
+                    m²
+                  </Badge>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Market Rent</span>
+                  <span className="font-semibold text-gray-900">
+                    {formatCurrency(unit.marketRent || 0)}/mo
                   </span>
-                </H6>
-                <p className="text-muted-foreground text-sm">
-                  {isOccupied ? "Collecting" : "Potential"} Revenue
-                </p>
+                </div>
+
+                {currentLease && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Current Rent</span>
+                    <span className="font-semibold text-green-600">
+                      {formatCurrency(currentLease.rent || 0)}/mo
+                    </span>
+                  </div>
+                )}
+
+                {unit.deposit && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Deposit</span>
+                    <span className="font-semibold text-gray-900">
+                      {formatCurrency(unit.deposit)}
+                    </span>
+                  </div>
+                )}
+
+                {tenant && (
+                  <div className="mt-4 border-t border-gray-100 pt-4">
+                    <h4 className="mb-2 text-sm font-medium text-gray-900">
+                      Current Tenant
+                    </h4>
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={tenant.avatarUrl || undefined} />
+                        <AvatarFallback className="text-xs">
+                          {tenant.firstName?.[0]}
+                          {tenant.lastName?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-gray-900">
+                          {tenant.firstName} {tenant.lastName}
+                        </p>
+                        <p className="truncate text-xs text-gray-500">
+                          {tenant.email}
+                        </p>
+                      </div>
+                      <Link href={`/tenants/${tenant.id}`}>
+                        <Button variant="outlined" size="sm">
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );
