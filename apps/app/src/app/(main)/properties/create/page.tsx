@@ -158,10 +158,33 @@ export default function CreatePropertyPage() {
     form.store,
     (state) => state.values.addressLine2,
   );
+  const propertyType = useStore(
+    form.store,
+    (state) => state.values.propertyType,
+  );
+
   const city = useStore(form.store, (state) => state.values.city);
   const state = useStore(form.store, (state) => state.values.state);
   const zip = useStore(form.store, (state) => state.values.zip);
   const countryCode = useStore(form.store, (state) => state.values.countryCode);
+
+  useEffect(() => {
+    if (propertyType === "MULTI_UNIT") {
+      form.setFieldValue("propertyUnits", [
+        {
+          unitNumber: "",
+          bedrooms: 0,
+          bathrooms: 0,
+          sqmt: 0,
+          rent: 0,
+          deposit: 0,
+        },
+      ]);
+    } else {
+      form.setFieldValue("propertyUnits", []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propertyType]);
 
   useEffect(() => {
     if (addressLine1 && city && state && zip && countryCode) {

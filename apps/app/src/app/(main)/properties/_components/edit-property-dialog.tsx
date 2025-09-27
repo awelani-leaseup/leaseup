@@ -648,9 +648,10 @@ export function EditPropertyDialog({
                                 <Badge
                                   key={feature}
                                   variant="outlined"
-                                  className="cursor-pointer font-semibold"
+                                  className="border-border cursor-pointer font-semibold"
                                 >
                                   <Checkbox
+                                    className="rounded-full"
                                     checked={field.state.value.includes(
                                       feature,
                                     )}
@@ -690,9 +691,10 @@ export function EditPropertyDialog({
                                 <label key={amenity}>
                                   <Badge
                                     variant="outlined"
-                                    className="cursor-pointer font-semibold"
+                                    className="border-border cursor-pointer font-semibold"
                                   >
                                     <Checkbox
+                                      className="rounded-full"
                                       checked={field.state.value.includes(
                                         amenity,
                                       )}

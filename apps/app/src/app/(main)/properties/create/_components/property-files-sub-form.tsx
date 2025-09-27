@@ -10,6 +10,7 @@ import {
   FileIcon,
   FileText,
   Download,
+  Trash2Icon,
 } from "lucide-react";
 import { useFileUpload, formatBytes } from "@/hooks/use-file-upload";
 import { Badge } from "@leaseup/ui/components/badge";
@@ -21,6 +22,7 @@ import { upload } from "@vercel/blob/client";
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { getUploadFileExtension } from "@/utils/file-utils";
+import { cn } from "@leaseup/ui/utils/cn";
 
 interface PropertyDocumentManagementContentProps {
   form?: any;
@@ -153,7 +155,6 @@ const PropertyDocumentManagementContent = ({
       </div>
 
       <div className="mt-2 space-y-4">
-        {/* Existing Files (for update mode) */}
         {existingFiles.length > 0 && (
           <div className="space-y-4">
             <h6 className="text-sm font-medium text-gray-700">
@@ -195,7 +196,6 @@ const PropertyDocumentManagementContent = ({
           </div>
         )}
 
-        {/* File Upload Section */}
         {!propertyId && form && (
           <form.AppField name="files" mode="array">
             {() => (
@@ -276,7 +276,7 @@ interface FileUploadAreaProps {
     getInputProps: () => any;
     updateFileProgress: (id: string, progress: number) => void;
   };
-  form: any;
+  form?: any;
 }
 
 const FileUploadArea = ({
@@ -292,7 +292,6 @@ const FileUploadArea = ({
 }: FileUploadAreaProps) => {
   return (
     <>
-      {/* Drop area */}
       <button
         type="button"
         tabIndex={0}
@@ -308,7 +307,10 @@ const FileUploadArea = ({
         }}
         data-dragging={isDragging || undefined}
         data-files={files.length > 0 || undefined}
-        className="data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 focus:ring-ring flex min-h-56 w-full cursor-pointer flex-col items-center transition-colors not-data-[files]:justify-center focus:ring-2 focus:ring-offset-2 focus:outline-none has-[input:focus]:ring-[3px]"
+        className={cn(
+          "data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 focus:ring-ring flex min-h-56 w-full cursor-pointer flex-col items-center transition-colors not-data-[files]:justify-center focus:ring-2 focus:ring-offset-2 focus:outline-none has-[input:focus]:ring-[3px]",
+          files.length === 0 && "rounded border border-dashed",
+        )}
       >
         <input
           {...handlers.getInputProps()}
@@ -355,6 +357,17 @@ const FileUploadArea = ({
                       )}
                     </div>
                   </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="icon"
+                      color="danger"
+                      onClick={() => {
+                        handlers.removeFile(file.id);
+                      }}
+                    >
+                      <Trash2Icon className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
 
@@ -372,7 +385,7 @@ const FileUploadArea = ({
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center">
+          <div className="border-border flex flex-col items-center justify-center text-center">
             <div
               className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
               aria-hidden="true"
@@ -416,5 +429,4 @@ export const PropertyFilesSubForm = withForm({
   render: ({ form }) => <PropertyDocumentManagementContent form={form} />,
 });
 
-// Export the content component for use in update scenarios
 export { PropertyDocumentManagementContent };

@@ -23,9 +23,10 @@ export const FeaturesAndAmenitiesSubForm = withForm({
                     <Badge
                       key={feature}
                       variant="outlined"
-                      className="cursor-pointer font-semibold"
+                      className="border-border cursor-pointer font-semibold"
                     >
                       <Checkbox
+                        className="rounded-full"
                         checked={field.state.value.includes(feature)}
                         onCheckedChange={(checked) => {
                           if (checked) {
@@ -56,9 +57,10 @@ export const FeaturesAndAmenitiesSubForm = withForm({
                     <label key={amenity}>
                       <Badge
                         variant="outlined"
-                        className="cursor-pointer font-semibold"
+                        className="border-border cursor-pointer font-semibold"
                       >
                         <Checkbox
+                          className="rounded-full"
                           checked={field.state.value.includes(amenity)}
                           onCheckedChange={(checked) => {
                             if (checked) {
