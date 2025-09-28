@@ -2,17 +2,17 @@ import { schedules, logger, wait } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
 import { InvoiceStatus, SubscriptionPlanStatus } from '@leaseup/prisma/client';
 import { resend } from '@leaseup/email/utils/resend';
-import TenantOverdueInvoices from '@leaseup/email/templates/tenant-overdue-invoices';
+import LandlordPostedInvoices from '@leaseup/email/templates/landlord-posted-invoices';
 import {
   getLandlordTestEmail,
   isDevelopment,
 } from '../utils/resend-test-emails';
 
-export const checkOverdueInvoicesTask = schedules.task({
-  id: 'check-overdue-invoices',
+export const checkPostedInvoicesTask = schedules.task({
+  id: 'check-posted-invoices',
   maxDuration: 300, // 5 minutes
   cron: {
-    pattern: '0 8 * * *',
+    pattern: '0 6 * * *', // Daily at 6:00 AM
     timezone: 'Africa/Johannesburg',
   },
   retry: {
@@ -23,36 +23,55 @@ export const checkOverdueInvoicesTask = schedules.task({
     randomize: true,
   },
   run: async (payload) => {
-    logger.log('Starting overdue invoices check', {
+    logger.log('Starting posted invoices check', {
       scheduledTime: payload.timestamp,
       timezone: payload.timezone,
+    });
+
+    logger.log('Payload', {
+      key: process.env.POSTGRES_PRISMA_URL ?? 'No URL',
     });
 
     try {
       const currentDateUTC = new Date(payload.timestamp);
       currentDateUTC.setUTCHours(0, 0, 0, 0);
 
-      logger.log('Checking for overdue invoices', {
+      const yesterdayStartUTC = new Date(currentDateUTC);
+      yesterdayStartUTC.setUTCDate(yesterdayStartUTC.getUTCDate() - 1);
+
+      const yesterdayEndUTC = new Date(currentDateUTC);
+      yesterdayEndUTC.setUTCMilliseconds(-1); // End of yesterday
+
+      logger.log('Checking for invoices posted yesterday', {
+        yesterdayStartUTC: yesterdayStartUTC.toISOString(),
+        yesterdayEndUTC: yesterdayEndUTC.toISOString(),
         currentDateUTC: currentDateUTC.toISOString(),
-        currentDateUTCString: currentDateUTC.toDateString(),
       });
 
-      const totalOverdueCount = await db.invoice.count({
+      const totalPostedCount = await db.invoice.count({
         where: {
-          status: InvoiceStatus.PENDING,
-          dueDate: {
+          createdAt: {
+            gte: yesterdayStartUTC,
             lt: currentDateUTC,
+          },
+          status: {
+            in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
           },
         },
       });
 
+      // Get posted invoices from landlords (skip subscription check in development)
       const whereClause: any = {
-        status: InvoiceStatus.PENDING,
-        dueDate: {
+        createdAt: {
+          gte: yesterdayStartUTC,
           lt: currentDateUTC,
+        },
+        status: {
+          in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
         },
       };
 
+      // Only check subscription status in production
       if (!isDevelopment) {
         whereClause.landlord = {
           paystackSubscriptionStatus: {
@@ -64,7 +83,7 @@ export const checkOverdueInvoicesTask = schedules.task({
         };
       }
 
-      const overdueInvoices = await db.invoice.findMany({
+      const postedInvoices = await db.invoice.findMany({
         where: whereClause,
         include: {
           landlord: {
@@ -98,62 +117,52 @@ export const checkOverdueInvoicesTask = schedules.task({
         },
       });
 
-      const filteredOutCount = totalOverdueCount - overdueInvoices.length;
+      const filteredOutCount = totalPostedCount - postedInvoices.length;
 
       logger.log(
-        `Found ${overdueInvoices.length} overdue invoices${isDevelopment ? ' (subscription check skipped in development)' : ' from landlords with active subscriptions'}`,
+        `Found ${postedInvoices.length} posted invoices${isDevelopment ? ' (subscription check skipped in development)' : ' from landlords with active subscriptions'}`,
         {
-          totalOverdueInvoices: totalOverdueCount,
-          activeSubscriptionInvoices: overdueInvoices.length,
+          totalPostedInvoices: totalPostedCount,
+          activeSubscriptionInvoices: postedInvoices.length,
           filteredOutDueToInactiveSubscription: isDevelopment
             ? 0
             : filteredOutCount,
           subscriptionCheckSkipped: isDevelopment,
-          comparisonDate: currentDateUTC.toISOString(),
-          sampleOverdueInvoices: overdueInvoices.slice(0, 3).map((inv) => ({
+          dateRange: {
+            from: yesterdayStartUTC.toISOString(),
+            to: yesterdayEndUTC.toISOString(),
+          },
+          samplePostedInvoices: postedInvoices.slice(0, 3).map((inv) => ({
             id: inv.id,
-            dueDate: inv.dueDate?.toISOString(),
+            createdAt: inv.createdAt.toISOString(),
             description: inv.description.substring(0, 50),
+            status: inv.status,
             landlordSubscriptionStatus: inv.landlord.paystackSubscriptionStatus,
           })),
         }
       );
 
-      if (overdueInvoices.length === 0) {
-        let message = 'No overdue invoices found';
-        if (totalOverdueCount > 0) {
+      if (postedInvoices.length === 0) {
+        let message = 'No invoices were posted yesterday';
+        if (totalPostedCount > 0) {
           message = isDevelopment
-            ? 'No overdue invoices found (subscription check skipped in development)'
-            : 'No overdue invoices found from landlords with active subscriptions';
+            ? 'No posted invoices found (subscription check skipped in development)'
+            : 'No posted invoices found from landlords with active subscriptions';
         }
 
         return {
           message,
-          totalOverdueInvoices: totalOverdueCount,
-          overdueInvoicesCount: 0,
+          totalPostedInvoices: totalPostedCount,
+          postedInvoicesCount: 0,
           filteredOutDueToInactiveSubscription: isDevelopment
             ? 0
             : filteredOutCount,
           subscriptionCheckSkipped: isDevelopment,
-          invoicesUpdated: 0,
           notificationsSent: 0,
         };
       }
 
-      const updateResult = await db.invoice.updateMany({
-        where: {
-          id: {
-            in: overdueInvoices.map((invoice) => invoice.id),
-          },
-        },
-        data: {
-          status: InvoiceStatus.OVERDUE,
-        },
-      });
-
-      logger.log(`Updated ${updateResult.count} invoices to OVERDUE status`);
-
-      const invoicesByLandlord = overdueInvoices.reduce(
+      const invoicesByLandlord = postedInvoices.reduce(
         (acc, invoice) => {
           const landlordId = invoice.landlordId;
           acc[landlordId] ??= {
@@ -167,7 +176,7 @@ export const checkOverdueInvoicesTask = schedules.task({
           string,
           {
             landlord: { id: string; email: string; name: string | null };
-            invoices: (typeof overdueInvoices)[0][];
+            invoices: (typeof postedInvoices)[0][];
           }
         >
       );
@@ -183,35 +192,22 @@ export const checkOverdueInvoicesTask = schedules.task({
             'DELIVERED'
           );
 
-          // Calculate days overdue for each invoice
-          const invoicesWithDaysOverdue = invoices.map((invoice) => {
-            const daysOverdue = invoice.dueDate
-              ? Math.floor(
-                  (currentDateUTC.getTime() - invoice.dueDate.getTime()) /
-                    (1000 * 60 * 60 * 24)
-                )
-              : 0;
-
-            return {
-              amount: `R ${invoice.dueAmount}`,
-              tenantName:
-                `${invoice.tenant?.firstName || ''} ${invoice.tenant?.lastName || ''}`.trim(),
-              daysOverdue: `${daysOverdue} day${daysOverdue !== 1 ? 's' : ''}`,
-            };
-          });
-
           return {
             landlordId,
             landlord,
             emailPayload: {
               from: 'Leaseup Dev <devdonotreply@leaseup.co.za>',
               to: emailAddress,
-              subject: 'Overdue Invoices Alert',
-              react: TenantOverdueInvoices({
+              subject: 'Invoices Sent',
+              react: LandlordPostedInvoices({
                 landlordName: landlord.name || 'Landlord',
-                invoices: invoicesWithDaysOverdue,
+                invoices: invoices.map((invoice) => ({
+                  amount: `R ${invoice.dueAmount}`,
+                  tenantName:
+                    `${invoice.tenant?.firstName || ''} ${invoice.tenant?.lastName || ''}`.trim(),
+                })),
                 ctaUrl: `${process.env.NEXT_PUBLIC_APP_URL}/invoices`,
-                overdueDate: currentDateUTC.toLocaleDateString(),
+                datePosted: yesterdayStartUTC.toLocaleDateString(),
               }),
             },
           };
@@ -284,34 +280,32 @@ export const checkOverdueInvoicesTask = schedules.task({
       }
 
       const result = {
-        message: 'Overdue invoices check completed',
-        totalOverdueInvoices: totalOverdueCount,
-        overdueInvoicesCount: overdueInvoices.length,
+        message: 'Posted invoices check completed',
+        totalPostedInvoices: totalPostedCount,
+        postedInvoicesCount: postedInvoices.length,
         filteredOutDueToInactiveSubscription: isDevelopment
           ? 0
           : filteredOutCount,
         subscriptionCheckSkipped: isDevelopment,
-        invoicesUpdated: updateResult.count,
         landlordsNotified: Object.keys(invoicesByLandlord).length,
         notificationsSent,
         testEmailsEnabled: isDevelopment,
         notificationErrors:
           notificationErrors.length > 0 ? notificationErrors : undefined,
-        processedAt: new Date().toISOString(),
       };
 
-      logger.log('Overdue invoices check completed', result);
+      logger.log('Posted invoices check completed', result);
       return result;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
 
-      logger.error('Error during overdue invoices check', {
+      logger.error('Error during posted invoices check', {
         error: errorMessage,
         stack: error instanceof Error ? error.stack : undefined,
       });
 
-      throw new Error(`Failed to check overdue invoices: ${errorMessage}`);
+      throw new Error(`Failed to check posted invoices: ${errorMessage}`);
     }
   },
 });

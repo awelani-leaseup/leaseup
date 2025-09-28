@@ -11,8 +11,8 @@ import {
   PropertyType,
   TenantIncomeType,
   LeaseStatus,
+  TenantRelationship,
 } from './generated/client/client.js';
-import { TenantRelationship } from './generated/client/enums.ts';
 
 function generateSouthAfricanIntlNumber() {
   const prefixes = [

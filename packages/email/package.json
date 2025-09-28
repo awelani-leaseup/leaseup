@@ -1,0 +1,29 @@
+{
+  "name": "@leaseup/email",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    "./templates/*": "./src/templates/*.tsx",
+    "./utils/*": "./src/utils/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@leaseup/typescript-config": "workspace:*",
+    "@react-email/components": "^0.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "resend": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/react": "19.1.15",
+    "@types/react-dom": "19.1.9",
+    "react-email": "^4.0.16"
+  }
+}
