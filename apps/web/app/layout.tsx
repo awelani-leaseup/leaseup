@@ -75,6 +75,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
+      <head>
+        <script
+          defer
+          src='https://cloud.umami.is/script.js'
+          data-website-id='aa25e1e0-ccae-4cf2-ab50-ad09515cdb93'
+        ></script>
+      </head>
       <body className={font.className + ' antialiased'}>
         <Header />
         {children}

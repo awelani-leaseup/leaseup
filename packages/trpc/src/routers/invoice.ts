@@ -27,7 +27,6 @@ export const invoiceRouter = createTRPCRouter({
 
       const whereClause: Prisma.InvoiceWhereInput = {
         OR: [
-          // Invoices with leases
           {
             lease: {
               unit: {
@@ -37,7 +36,6 @@ export const invoiceRouter = createTRPCRouter({
               },
             },
           },
-          // Invoices without leases but with tenants belonging to landlord
           {
             AND: [
               { leaseId: null },
@@ -51,26 +49,21 @@ export const invoiceRouter = createTRPCRouter({
         ],
       };
 
-      // Add status filter if provided
       if (status && status !== 'All Status') {
         whereClause.status = status.toUpperCase() as InvoiceStatus;
       }
 
-      // Add property filter if provided
       if (propertyId && propertyId !== 'All Properties') {
         // If we already have search filters with AND structure
         if (whereClause.AND) {
-          // Ensure AND is an array
           const andConditions = Array.isArray(whereClause.AND)
             ? whereClause.AND
             : [whereClause.AND];
 
-          // Find and modify the landlord filter part
           const landlordFilterIndex = andConditions.findIndex(
             (condition: any) => condition.OR
           );
           if (landlordFilterIndex !== -1) {
-            // Modify the lease part of the landlord filter to include property filter
             const landlordCondition = andConditions[landlordFilterIndex] as any;
             const landlordFilter = landlordCondition.OR;
             if (Array.isArray(landlordFilter)) {
@@ -84,7 +77,6 @@ export const invoiceRouter = createTRPCRouter({
                 landlordFilter[leaseFilterIndex].lease.unit.property.id =
                   propertyId;
               }
-              // Remove the non-lease part since property filter only applies to leases
               landlordCondition.OR = landlordFilter.filter(
                 (condition: any) => condition.lease
               );
@@ -92,7 +84,6 @@ export const invoiceRouter = createTRPCRouter({
           }
           whereClause.AND = andConditions;
         } else {
-          // No search filters, modify the original OR structure
           if (whereClause.OR && Array.isArray(whereClause.OR)) {
             const leaseFilterIndex = whereClause.OR.findIndex(
               (condition: any) => condition.lease
@@ -103,7 +94,6 @@ export const invoiceRouter = createTRPCRouter({
                 leaseCondition.lease.unit.property.id = propertyId;
               }
             }
-            // Remove the non-lease part since property filter only applies to leases
             whereClause.OR = whereClause.OR.filter(
               (condition: any) => condition.lease
             );
@@ -111,14 +101,10 @@ export const invoiceRouter = createTRPCRouter({
         }
       }
 
-      // Add search filter if provided (search in tenant name or invoice description)
       if (search) {
-        // Need to combine the landlord filter with search using AND
         const landlordFilter = whereClause.OR;
         whereClause.AND = [
-          // Landlord filter
           { OR: landlordFilter },
-          // Search filter
           {
             OR: [
               {
@@ -127,7 +113,6 @@ export const invoiceRouter = createTRPCRouter({
                   mode: 'insensitive',
                 },
               },
-              // Search in lease tenants
               {
                 lease: {
                   tenantLease: {
@@ -158,7 +143,6 @@ export const invoiceRouter = createTRPCRouter({
                   },
                 },
               },
-              // Search in direct tenant (for invoices without leases)
               {
                 tenant: {
                   OR: [
@@ -186,11 +170,9 @@ export const invoiceRouter = createTRPCRouter({
             ],
           },
         ];
-        // Remove the original OR since we moved it to AND
         delete whereClause.OR;
       }
 
-      // Build orderBy clause for sorting
       const getOrderBy = () => {
         if (!sortBy || !sortOrder) {
           return { createdAt: 'desc' as const };
@@ -582,6 +564,7 @@ export const invoiceRouter = createTRPCRouter({
                           state: true,
                           zip: true,
                           countryCode: true,
+                          paystackSubAccountId: true,
                         },
                       },
                     },
@@ -605,6 +588,7 @@ export const invoiceRouter = createTRPCRouter({
                           state: true,
                           zip: true,
                           countryCode: true,
+                          paystackSubAccountId: true,
                         },
                       },
                     },
@@ -628,6 +612,7 @@ export const invoiceRouter = createTRPCRouter({
                   state: true,
                   zip: true,
                   countryCode: true,
+                  paystackSubAccountId: true,
                 },
               },
             },
@@ -643,6 +628,39 @@ export const invoiceRouter = createTRPCRouter({
         });
       }
 
-      return invoice;
+      // Get landlord information and fetch bank details from Paystack
+      const landlord =
+        invoice.lease?.unit?.property?.landlord ||
+        invoice.tenant?.landlord ||
+        invoice.lease?.tenantLease?.[0]?.tenant?.landlord;
+
+      let bankDetails = null;
+      if (landlord?.paystackSubAccountId) {
+        try {
+          const { data, error } = await paystack.GET('/subaccount/{code}', {
+            params: {
+              path: {
+                code: landlord.paystackSubAccountId,
+              },
+            },
+          });
+
+          if (!error && data?.data) {
+            bankDetails = {
+              bankName: data.data.settlement_bank,
+              accountNumber: data.data.account_number,
+              accountName: data.data.business_name,
+            };
+          }
+        } catch (error) {
+          console.error('Error fetching subaccount details:', error);
+          // Don't throw error, just log it and continue without bank details
+        }
+      }
+
+      return {
+        ...invoice,
+        landlordBankDetails: bankDetails,
+      };
     }),
 });

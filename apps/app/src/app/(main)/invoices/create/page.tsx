@@ -82,7 +82,7 @@ export default function CreateInvoice() {
                 <Button variant="outlined">Cancel</Button>
               </Link>
               {/* <Button variant="outlined">
-                <Save className="mr-2 h-4 w-4" />
+                <Save className="h-4 w-4" />
                 Save Draft
               </Button> */}
             </div>
@@ -90,7 +90,6 @@ export default function CreateInvoice() {
         </CardHeader>
         <CardContent className="p-8">
           <form.AppForm>
-            {/* Basic Information Section */}
             <div className="mb-8">
               <H5>Basic Information</H5>
               <div className="mt-3 grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -135,15 +134,15 @@ export default function CreateInvoice() {
                 isLoading={isPending}
                 className="flex-1"
               >
-                <Send className="mr-2 h-4 w-4" />
+                <Send className="h-4 w-4" />
                 Send Invoice
               </Button>
               <Button type="button" variant="outlined" className="flex-1">
-                <Eye className="mr-2 h-4 w-4" />
+                <Eye className="h-4 w-4" />
                 Preview Invoice
               </Button>
               <Button type="button" variant="outlined" className="flex-1">
-                <Download className="mr-2 h-4 w-4" />
+                <Download className="h-4 w-4" />
                 Download PDF
               </Button>
             </div>

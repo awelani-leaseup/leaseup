@@ -36,12 +36,10 @@ export const tenantRouter = createTRPCRouter({
         input;
       const skip = (page - 1) * limit;
 
-      // Build where clause for filtering tenants by landlord
       const whereClause: Prisma.TenantWhereInput = {
         landlordId: ctx.auth?.session?.userId ?? '',
       };
 
-      // Add search filter
       if (search && search.trim()) {
         whereClause.OR = [
           { firstName: { contains: search, mode: 'insensitive' } },
@@ -51,7 +49,6 @@ export const tenantRouter = createTRPCRouter({
         ];
       }
 
-      // Add property filter
       if (propertyId && propertyId !== 'all') {
         whereClause.tenantLease = {
           some: {
@@ -64,7 +61,6 @@ export const tenantRouter = createTRPCRouter({
         };
       }
 
-      // Add status filter
       if (status && status !== 'all') {
         switch (status) {
           case 'active':
@@ -93,7 +89,6 @@ export const tenantRouter = createTRPCRouter({
         }
       }
 
-      // Build orderBy clause
       let orderBy: Prisma.TenantOrderByWithRelationInput = {
         createdAt: 'desc',
       };
@@ -117,12 +112,10 @@ export const tenantRouter = createTRPCRouter({
         }
       }
 
-      // Get total count for pagination
       const totalCount = await ctx.db.tenant.count({
         where: whereClause,
       });
 
-      // Get tenants with pagination
       const tenants = await ctx.db.tenant.findMany({
         where: whereClause,
         orderBy,

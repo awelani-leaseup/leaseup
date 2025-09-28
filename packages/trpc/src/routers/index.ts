@@ -1,7 +1,6 @@
 export * from './portfolio';
 export * from './onboarding';
 export * from './file';
-export * from './landlord';
 export * from './lease';
 export * from './tenant';
 export * from './transaction';

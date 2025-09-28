@@ -43,6 +43,216 @@ import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { PDFDownloadButton } from "@/components/pdf/PDFDownloadButton";
 
+// Type for invoice with bank details
+type LandlordBankDetails = {
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+};
+
+function InvoiceSkeleton() {
+  return (
+    <div className="mx-auto my-10 flex max-w-4xl flex-col space-y-8">
+      <Card>
+        <CardHeader>
+          <div className="h-8 w-64 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-4 w-96 animate-pulse rounded bg-gray-200"></div>
+          <CardAction>
+            <div className="flex gap-3">
+              <div className="h-10 w-20 animate-pulse rounded bg-gray-200"></div>
+              <div className="h-10 w-24 animate-pulse rounded bg-gray-200"></div>
+            </div>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-6 w-16 animate-pulse rounded-full bg-gray-200"></div>
+              <div className="h-4 w-32 animate-pulse rounded bg-gray-200"></div>
+            </div>
+            <div className="text-right">
+              <div className="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+              <div className="h-8 w-32 animate-pulse rounded bg-gray-200"></div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="h-6 w-48 animate-pulse rounded bg-gray-200"></div>
+          <div className="h-4 w-80 animate-pulse rounded bg-gray-200"></div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-3 rounded-lg bg-[#ECF0F1] p-4">
+            <div className="h-4 flex-1 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-8 w-24 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-8">
+          {/* Company & Tenant Info Skeleton */}
+          <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div>
+              <div className="mb-4 h-6 w-16 animate-pulse rounded bg-gray-200"></div>
+              <div className="space-y-2">
+                <div className="h-4 w-48 animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-40 animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-44 animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-36 animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-52 animate-pulse rounded bg-gray-200"></div>
+              </div>
+            </div>
+            <div>
+              <div className="mb-4 h-6 w-16 animate-pulse rounded bg-gray-200"></div>
+              <div className="flex items-start">
+                <div className="mr-3 h-12 w-12 animate-pulse rounded-full bg-gray-200"></div>
+                <div className="space-y-2">
+                  <div className="h-4 w-32 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-48 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-40 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-44 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-36 animate-pulse rounded bg-gray-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 grid grid-cols-2 gap-6 rounded-lg bg-[#ECF0F1] p-4 md:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i}>
+                <div className="mb-1 h-3 w-20 animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-8">
+            <div className="mb-4 h-6 w-32 animate-pulse rounded bg-gray-200"></div>
+            <div className="overflow-x-auto">
+              <Table className="rounded-lg">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="p-4">
+                      <div className="h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+                    </TableHead>
+                    <TableHead className="p-4">
+                      <div className="h-4 w-8 animate-pulse rounded bg-gray-200"></div>
+                    </TableHead>
+                    <TableHead className="p-4">
+                      <div className="h-4 w-12 animate-pulse rounded bg-gray-200"></div>
+                    </TableHead>
+                    <TableHead className="p-4">
+                      <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...Array(3)].map((_, i) => (
+                    <TableRow key={i} className="border-t border-gray-200">
+                      <TableCell className="p-4">
+                        <div className="h-4 w-48 animate-pulse rounded bg-gray-200"></div>
+                        <div className="mt-1 h-3 w-32 animate-pulse rounded bg-gray-200"></div>
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <div className="h-4 w-4 animate-pulse rounded bg-gray-200"></div>
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <div className="h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+
+          {/* Invoice Summary Skeleton */}
+          <div className="mb-8 flex justify-end">
+            <div className="w-full rounded-lg bg-[#ECF0F1] p-6 md:w-80">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-16 animate-pulse rounded bg-gray-200"></div>
+                </div>
+                <div className="border-t border-gray-300 pt-3">
+                  <div className="flex justify-between">
+                    <div className="h-5 w-12 animate-pulse rounded bg-gray-200"></div>
+                    <div className="h-5 w-24 animate-pulse rounded bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <div className="mb-3 h-6 w-32 animate-pulse rounded bg-gray-200"></div>
+              <div className="h-4 w-48 animate-pulse rounded bg-gray-200"></div>
+            </div>
+            <div>
+              <div className="mb-3 h-6 w-32 animate-pulse rounded bg-gray-200"></div>
+              <div className="h-4 w-40 animate-pulse rounded bg-gray-200"></div>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <div className="mb-4 h-6 w-24 animate-pulse rounded bg-gray-200"></div>
+            <div className="rounded-lg bg-[#ECF0F1] p-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div>
+                  <div className="mb-2 h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-32 animate-pulse rounded bg-gray-200"></div>
+                </div>
+                <div>
+                  <div className="mb-2 h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-28 animate-pulse rounded bg-gray-200"></div>
+                </div>
+                <div>
+                  <div className="mb-2 h-4 w-24 animate-pulse rounded bg-gray-200"></div>
+                  <div className="h-4 w-36 animate-pulse rounded bg-gray-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-3 h-6 w-16 animate-pulse rounded bg-gray-200"></div>
+            <div className="rounded-lg bg-[#ECF0F1] p-4">
+              <div className="space-y-2">
+                <div className="h-4 w-full animate-pulse rounded bg-gray-200"></div>
+                <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200"></div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col gap-4 sm:flex-row">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-10 flex-1 animate-pulse rounded bg-gray-200"
+              ></div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export default function InvoiceViewPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
@@ -160,14 +370,7 @@ export default function InvoiceViewPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="mx-auto my-10 flex max-w-7xl items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600"></div>
-          <p className="text-gray-600">Loading invoice...</p>
-        </div>
-      </div>
-    );
+    return <InvoiceSkeleton />;
   }
 
   if (!invoice) {
@@ -177,7 +380,7 @@ export default function InvoiceViewPage() {
           <p className="text-gray-600">Invoice not found</p>
           <Link href="/invoices">
             <Button className="mt-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" />
               Back to Invoices
             </Button>
           </Link>
@@ -200,7 +403,6 @@ export default function InvoiceViewPage() {
 
   return (
     <div className="mx-auto my-10 flex max-w-4xl flex-col space-y-8">
-      {/* Page Header */}
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
@@ -220,7 +422,6 @@ export default function InvoiceViewPage() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          {/* Status and Amount */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Badge
@@ -293,10 +494,8 @@ export default function InvoiceViewPage() {
           </Card>
         )}
 
-      {/* Invoice Details */}
       <Card>
         <CardContent className="p-8">
-          {/* Company & Tenant Info */}
           <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
             <div>
               <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#2D3436]">
@@ -354,7 +553,6 @@ export default function InvoiceViewPage() {
             </div>
           </div>
 
-          {/* Invoice Meta */}
           <div className="mb-8 grid grid-cols-2 gap-6 rounded-lg bg-[#ECF0F1] p-4 md:grid-cols-4">
             <div>
               <p className="text-sm text-[#7F8C8D]">Invoice Number</p>
@@ -384,7 +582,6 @@ export default function InvoiceViewPage() {
             </div>
           </div>
 
-          {/* Invoice Items Table */}
           <div className="mb-8">
             <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#2D3436]">
               Invoice Items
@@ -503,7 +700,6 @@ export default function InvoiceViewPage() {
             </div>
           </div>
 
-          {/* Payment Information */}
           <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
               <h3 className="mb-3 text-lg font-semibold text-[#2D3436]">
@@ -523,7 +719,57 @@ export default function InvoiceViewPage() {
             </div>
           </div>
 
-          {/* Payment History */}
+          {(invoice as any)?.landlordBankDetails && (
+            <div className="mb-8">
+              <h3 className="mb-4 text-lg font-semibold text-[#2D3436]">
+                Bank Details
+              </h3>
+              <div className="rounded-lg bg-[#ECF0F1] p-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div>
+                    <p className="text-sm font-medium text-[#7F8C8D]">
+                      Bank Name
+                    </p>
+                    <p className="font-medium text-[#2D3436]">
+                      {
+                        (
+                          (invoice as any)
+                            .landlordBankDetails as LandlordBankDetails
+                        ).bankName
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[#7F8C8D]">
+                      Account Number
+                    </p>
+                    <p className="font-medium text-[#2D3436]">
+                      {
+                        (
+                          (invoice as any)
+                            .landlordBankDetails as LandlordBankDetails
+                        ).accountNumber
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[#7F8C8D]">
+                      Account Name
+                    </p>
+                    <p className="font-medium text-[#2D3436]">
+                      {
+                        (
+                          (invoice as any)
+                            .landlordBankDetails as LandlordBankDetails
+                        ).accountName
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {invoice.transactions && invoice.transactions.length > 0 && (
             <div className="mb-8">
               <h3 className="mb-4 text-lg font-semibold text-[#2D3436]">
@@ -563,7 +809,6 @@ export default function InvoiceViewPage() {
             </div>
           )}
 
-          {/* Notes */}
           <div>
             <h3 className="mb-3 text-lg font-semibold text-[#2D3436]">Notes</h3>
             <div className="rounded-lg bg-[#ECF0F1] p-4">
@@ -576,7 +821,6 @@ export default function InvoiceViewPage() {
         </CardContent>
       </Card>
 
-      {/* Action Buttons */}
       <Card>
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row">
@@ -587,7 +831,7 @@ export default function InvoiceViewPage() {
                 invoice.status === "PAID" || invoice.status === "CANCELLED"
               }
             >
-              <Send className="mr-2 h-4 w-4" />
+              <Send className="h-4 w-4" />
               Send Reminder
             </Button>
             <Button
@@ -595,11 +839,11 @@ export default function InvoiceViewPage() {
               className="flex-1 border-[#3498DB] text-[#3498DB]"
               onClick={handleDuplicateInvoice}
             >
-              <Copy className="mr-2 h-4 w-4" />
+              <Copy className="h-4 w-4" />
               Duplicate Invoice
             </Button>
             <Button variant="outlined" className="flex-1" onClick={handlePrint}>
-              <Printer className="mr-2 h-4 w-4" />
+              <Printer className="h-4 w-4" />
               Print Invoice
             </Button>
             <Button
@@ -609,7 +853,7 @@ export default function InvoiceViewPage() {
               isLoading={isVoiding}
               disabled={invoice.status === "PAID"}
             >
-              <Ban className="mr-2 h-4 w-4" />
+              <Ban className="h-4 w-4" />
               Void Invoice
             </Button>
           </div>

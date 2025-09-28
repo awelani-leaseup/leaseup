@@ -89,7 +89,7 @@ export function DeleteAccountForm() {
               className="w-full sm:w-auto"
               isLoading={isDeleting}
             >
-              <Trash2 className="mr-2 h-4 w-4" />
+              <Trash2 className="h-4 w-4" />
               Delete Account
             </Button>
           </AlertDialogTrigger>

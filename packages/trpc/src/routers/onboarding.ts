@@ -7,7 +7,7 @@ export const onboardingRouter = createTRPCRouter({
   completeOnboarding: protectedProcedure
     .input(VOnboardingInput)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.auth!.user.id;
+      const userId = ctx.auth?.user?.id;
 
       try {
         // Update the user with onboarding information
@@ -30,7 +30,7 @@ export const onboardingRouter = createTRPCRouter({
         });
 
         await runLandlordOnboardSuccessfulEffect({
-          userId,
+          userId: userId!,
           businessName: input.businessName,
           settlementBank: input.bankCode,
           accountNumber: input.accountNumber,
@@ -54,10 +54,10 @@ export const onboardingRouter = createTRPCRouter({
    * Get the current user's onboarding status
    */
   getOnboardingStatus: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.auth!.user.id;
+    const userId = ctx.auth?.user?.id;
 
     const user = await ctx.db.user.findUnique({
-      where: { id: userId },
+      where: { id: userId! },
       select: {
         id: true,
         name: true,

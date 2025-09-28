@@ -123,26 +123,26 @@ export default function CreateTenantPage() {
             <div className="col-span-2">
               <form.AppForm>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <PersonalInformation form={form} />
+                  <PersonalInformation form={form as any} />
                   <Separator className="col-span-full my-4" />
                   <div className="col-span-full grid grid-cols-2 gap-4">
                     <div className="col-span-1">
-                      <AdditionalEmails form={form} />
+                      <AdditionalEmails form={form as any} />
                     </div>
                     <div className="col-span-1">
-                      <AdditionalPhones form={form} />
+                      <AdditionalPhones form={form as any} />
                     </div>
                   </div>
                   <Separator className="col-span-full my-4" />
                   <div className="col-span-full">
-                    <EmergencyContacts form={form} />
+                    <EmergencyContacts form={form as any} />
                   </div>
                   <div className="col-span-full">
-                    <Vehicles form={form} />
+                    <Vehicles form={form as any} />
                   </div>
                   <Separator className="col-span-full my-4" />
                   <div className="col-span-full">
-                    <DocumentManagementSubForm form={form} />
+                    <DocumentManagementSubForm form={form as any} />
                   </div>
                   <div className="col-span-full">
                     <form.FormMessage />

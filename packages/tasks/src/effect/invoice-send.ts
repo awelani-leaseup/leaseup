@@ -1,11 +1,8 @@
 import { Schema, Effect, Layer, Console } from 'effect';
 import { schemaTask } from '@trigger.dev/sdk/v3';
 import { nanoid } from 'nanoid';
-import {
-  InvoiceCategory,
-  InvoiceStatus,
-} from '@leaseup/prisma/client/client.js';
-import type { Invoice } from '@leaseup/prisma/client/client.js';
+import { InvoiceCategory, InvoiceStatus } from '@leaseup/prisma/client';
+import type { Invoice } from '@leaseup/prisma/client';
 import {
   DatabaseServiceLive,
   DatabaseServiceTag,
@@ -82,6 +79,7 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       recurringBillableId: null,
       paymentRequestUrl: `${PAYSTACK_BASE_URL}/pay/${paystackResponse.data?.data?.request_code}`,
       invoiceNumber: `${getYear(new Date())}-${getMonth(new Date())}-${paystackResponse.data?.data?.invoice_number}`,
+      offlineReference: paystackResponse.data?.data?.offline_reference ?? '',
     };
 
     if (!invoice.dueDate) {

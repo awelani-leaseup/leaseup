@@ -1,5 +1,5 @@
 import { Schema, Effect, Console } from 'effect';
-import { InvoiceStatus } from '@leaseup/prisma/client/client.js';
+import { InvoiceStatus } from '@leaseup/prisma/client';
 import { nanoid } from 'nanoid';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';

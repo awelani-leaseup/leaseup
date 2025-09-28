@@ -4,7 +4,7 @@ import {
   Invoice,
   InvoiceStatus,
   SubscriptionPlanStatus,
-} from '@leaseup/prisma/client/client.js';
+} from '@leaseup/prisma/client';
 import { novu } from '@leaseup/novu/client.ts';
 import {
   getLandlordTestEmail,
@@ -164,7 +164,7 @@ export const checkOverdueInvoicesTask = schedules.task({
           string,
           {
             landlord: { id: string; email: string; name: string | null };
-            invoices: Invoice[];
+            invoices: Omit<Invoice, 'offlineReference'>[];
           }
         >
       );

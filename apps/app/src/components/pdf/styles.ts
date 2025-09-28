@@ -209,6 +209,34 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: "#7F8C8D",
   },
+  // Bank details styles
+  bankDetailsSection: {
+    marginBottom: 30,
+  },
+  bankDetailsBox: {
+    backgroundColor: "#ECF0F1",
+    padding: 15,
+    borderRadius: 4,
+  },
+  bankDetailsRow: {
+    flexDirection: "row",
+    marginBottom: 15,
+  },
+  bankDetailsColumn: {
+    flex: 1,
+    paddingRight: 20,
+  },
+  bankDetailLabel: {
+    fontSize: 9,
+    color: "#7F8C8D",
+    marginBottom: 3,
+    fontWeight: "bold",
+  },
+  bankDetailValue: {
+    fontSize: 10,
+    color: "#2D3436",
+    fontWeight: "bold",
+  },
   // Payment history styles
   paymentHistorySection: {
     marginBottom: 30,

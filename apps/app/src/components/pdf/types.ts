@@ -27,6 +27,7 @@ export interface User {
   state?: string;
   zip?: string;
   phone?: string;
+  paystackSubAccountId?: string;
 }
 
 export interface Tenant {
@@ -67,6 +68,12 @@ export interface Lease {
   tenantLease?: TenantLease[];
 }
 
+export interface LandlordBankDetails {
+  bankName: string;
+  accountNumber: string;
+  accountName: string;
+}
+
 export interface Invoice {
   id: string;
   description: string;
@@ -84,4 +91,6 @@ export interface Invoice {
   transactions?: Transaction[];
   lease?: Lease;
   tenant?: Tenant;
+  paymentRequestUrl?: string;
+  landlordBankDetails?: LandlordBankDetails | null;
 }

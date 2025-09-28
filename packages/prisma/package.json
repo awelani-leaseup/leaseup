@@ -4,6 +4,8 @@
   "description": "",
   "exports": {
     "./db.ts": "./src/db.ts",
+    "./client": "./generated/client/index.js",
+    "./client/*": "./generated/client/*",
     "./*": "./generated/*"
   },
   "scripts": {
@@ -23,10 +25,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.16.2",
     "better-auth": "^1.2.12",
     "nanoid": "^5.1.5",
-    "prisma": "^6.9.0"
+    "prisma": "^6.16.2"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",

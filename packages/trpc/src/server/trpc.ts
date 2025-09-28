@@ -1,17 +1,10 @@
-/**
- * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
- * 1. You want to modify request context (see Part 1).
- * 2. You want to create a new middleware or type of procedure (see Part 3).
- *
- * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
- * need to use are documented accordingly near the end.
- */
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ValiError } from 'valibot';
 import { supabaseServer } from '../utils/supabase';
 import { db } from '@leaseup/prisma/db.ts';
 import { auth } from './auth/auth';
+import type { Session, User } from 'better-auth';
 /**
  * 1. CONTEXT
  *
@@ -30,16 +23,20 @@ export const createTRPCContext: (opts: { headers: Headers }) => Promise<
   {
     db: typeof db;
     supabaseServer: typeof supabaseServer;
-    auth: Awaited<ReturnType<typeof auth.api.getSession>>;
+    auth: { session: Session | undefined; user: User | undefined };
   } & { headers: Headers }
 > = async (opts) => {
   const authSession = await auth.api.getSession({
     headers: opts.headers,
   });
+
   return {
     db,
     supabaseServer,
-    auth: authSession,
+    auth: {
+      session: authSession?.session ?? undefined,
+      user: authSession?.user ?? undefined,
+    },
     ...opts,
   };
 };
@@ -109,7 +106,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 });
 
 const isAuthed = t.middleware(({ next, ctx }) => {
-  if (!ctx.auth?.user?.id) {
+  if (!ctx.auth?.session?.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Unauthorized' });
   }
 
@@ -120,12 +117,5 @@ const isAuthed = t.middleware(({ next, ctx }) => {
   });
 });
 
-/**
- * Public (unauthenticated) procedure
- *
- * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
- * guarantee that a user querying is authorized, but you can still access user session data if they
- * are logged in.
- */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure: typeof t.procedure = t.procedure.use(isAuthed);

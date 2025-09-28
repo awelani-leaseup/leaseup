@@ -106,7 +106,7 @@ export default function PropertyLayout({
           <p className="text-gray-600">Property not found</p>
           <Link href="/properties">
             <Button className="mt-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" />
               Back to Properties
             </Button>
           </Link>
@@ -144,7 +144,7 @@ export default function PropertyLayout({
                       variant="outlined"
                       className="border-[#3498DB] text-[#3498DB]"
                     >
-                      <Edit className="mr-2 h-4 w-4" />
+                      <Edit className="h-4 w-4" />
                       Edit Property
                     </Button>
                   </EditPropertyDialog>

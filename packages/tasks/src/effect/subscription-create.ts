@@ -1,7 +1,7 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client';
 
 const WELCOME_WORKFLOW_ID = 'landlord-welcome-copy';
 

@@ -255,20 +255,79 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoice }) => {
             </Text>
           </View>
           <View style={styles.paymentColumn}>
-            <Text style={styles.paymentTitle}>Payment Method</Text>
+            <Text style={styles.paymentTitle}>Payment Options</Text>
             <Text style={styles.paymentText}>
-              Bank Transfer / Online Payment
+              • Online Payment: Use the payment link provided
+            </Text>
+            <Text style={styles.paymentText}>
+              • Bank Transfer: Use the bank details below
             </Text>
           </View>
         </View>
+
+        {/* Bank Details */}
+        {invoice.landlordBankDetails && (
+          <View style={styles.bankDetailsSection}>
+            <Text style={styles.sectionTitle}>
+              Bank Details for Direct Transfer
+            </Text>
+            <View style={styles.bankDetailsBox}>
+              <View style={styles.bankDetailsRow}>
+                <View style={styles.bankDetailsColumn}>
+                  <Text style={styles.bankDetailLabel}>Bank Name</Text>
+                  <Text style={styles.bankDetailValue}>
+                    {invoice.landlordBankDetails.bankName}
+                  </Text>
+                </View>
+                <View style={styles.bankDetailsColumn}>
+                  <Text style={styles.bankDetailLabel}>Account Number</Text>
+                  <Text style={styles.bankDetailValue}>
+                    {invoice.landlordBankDetails.accountNumber}
+                  </Text>
+                </View>
+                <View style={styles.bankDetailsColumn}>
+                  <Text style={styles.bankDetailLabel}>Account Name</Text>
+                  <Text style={styles.bankDetailValue}>
+                    {invoice.landlordBankDetails.accountName}
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.paymentText}>
+                Please use invoice number #{invoice.id.slice(-8).toUpperCase()}{" "}
+                as your payment reference.
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Online Payment URL */}
+        {invoice.paymentRequestUrl &&
+          invoice.status !== "PAID" &&
+          invoice.status !== "CANCELLED" && (
+            <View style={styles.bankDetailsSection}>
+              <Text style={styles.sectionTitle}>Online Payment</Text>
+              <View style={styles.bankDetailsBox}>
+                <Text style={styles.paymentText}>
+                  For convenient online payment, visit:
+                </Text>
+                <Text style={styles.bankDetailValue}>
+                  {invoice.paymentRequestUrl}
+                </Text>
+              </View>
+            </View>
+          )}
 
         {/* Notes */}
         <View style={styles.notesSection}>
           <Text style={styles.sectionTitle}>Notes</Text>
           <View style={styles.notesBox}>
             <Text style={styles.notesText}>
-              Thank you for your prompt payment. Please contact us if you have
-              any questions regarding this invoice.
+              Thank you for your prompt payment. You can pay this invoice either
+              online using the payment link provided above, or by making a
+              direct bank transfer using the bank details shown. When making a
+              bank transfer, please use the invoice number as your payment
+              reference. Please contact us if you have any questions regarding
+              this invoice.
             </Text>
           </View>
         </View>

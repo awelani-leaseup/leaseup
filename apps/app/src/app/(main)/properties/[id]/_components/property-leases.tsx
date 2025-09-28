@@ -82,7 +82,7 @@ export function PropertyLeases({ property }: PropertyLeasesProps) {
         <div className="flex items-center justify-between">
           <CardTitle>Leases</CardTitle>
           <Button>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             Create Lease
           </Button>
         </div>
@@ -92,7 +92,7 @@ export function PropertyLeases({ property }: PropertyLeasesProps) {
           description="This property doesn't have any leases yet."
           buttons={
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="h-4 w-4" />
               Create First Lease
             </Button>
           }

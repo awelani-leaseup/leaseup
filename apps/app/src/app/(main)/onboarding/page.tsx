@@ -175,19 +175,19 @@ export default function OnboardingPage() {
                       onClick={handleBack}
                       disabled={currentStep === 1 || isSubmitting}
                     >
-                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      <ArrowLeft className="h-4 w-4" />
                       Back
                     </Button>
                     <Button onClick={handleNext} disabled={isSubmitting}>
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="h-4 w-4 animate-spin" />
                           Submitting...
                         </>
                       ) : (
                         <>
                           {currentStep === steps.length ? "Submit" : "Next"}
-                          <ArrowRight className="ml-2 h-4 w-4" />
+                          <ArrowRight className="h-4 w-4" />
                         </>
                       )}
                     </Button>

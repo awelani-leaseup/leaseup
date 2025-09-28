@@ -1,7 +1,7 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
 import { novu } from '@leaseup/novu/client.ts';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client';
 import { paystack } from '@leaseup/payments/open-api/client';
 
 // Schema for invoice.payment_failed webhook payload

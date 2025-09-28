@@ -34,7 +34,6 @@ import {
 } from "@leaseup/ui/components/popover";
 
 export const Onboarding = () => {
-
   const businessTypes = [
     "Individual Landlord",
     "Property Management Company",
@@ -314,7 +313,7 @@ export const Onboarding = () => {
                   variant="outlined"
                   className="flex items-center rounded-lg border border-[#7F8C8D] px-6 py-3 text-[#7F8C8D] hover:bg-gray-50"
                 >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <ArrowLeft className="h-4 w-4" />
                   Previous
                 </Button>
                 <div className="flex space-x-3">
@@ -322,7 +321,7 @@ export const Onboarding = () => {
                     variant="outlined"
                     className="flex items-center rounded-lg border border-[#3498DB] px-6 py-3 text-[#3498DB] hover:bg-[#3498DB]/5"
                   >
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="h-4 w-4" />
                     Save as Draft
                   </Button>
                   <Button className="flex items-center rounded-lg bg-[#3498DB] px-6 py-3 text-white hover:bg-[#2980B9]">

@@ -13,10 +13,10 @@ import {
   InvoiceCycle,
   InvoiceStatus,
   LeaseStatus,
+  SubscriptionPlanStatus,
   type RecurringBillable,
   type Prisma,
-  SubscriptionPlanStatus,
-} from '@leaseup/prisma/client/client.js';
+} from '@leaseup/prisma/client';
 
 const CONFIG = {
   CHECK_DAYS_AHEAD: 3, // Increase days ahead to allow for more time to process invoices
@@ -327,7 +327,7 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
 
   const { today, checkUntilDate } = calculateInvoiceDates();
 
-  const whereClause: Prisma.RecurringBillableFindManyArgs['where'] = {
+  const whereClause = {
     isActive: true,
     cycle: InvoiceCycle.MONTHLY,
     lease: {
@@ -349,15 +349,16 @@ const fetchBillablesForProcessing = async (): Promise<Array<any>> => {
         },
       },
     },
+    ...(isDevelopment
+      ? {}
+      : {
+          tenant: {
+            landlord: {
+              paystackSubscriptionStatus: SubscriptionPlanStatus.ACTIVE,
+            },
+          },
+        }),
   };
-
-  if (!isDevelopment) {
-    whereClause.tenant = {
-      landlord: {
-        paystackSubscriptionStatus: SubscriptionPlanStatus.ACTIVE,
-      },
-    };
-  }
 
   const recurringBillables = await db.recurringBillable.findMany({
     where: whereClause,

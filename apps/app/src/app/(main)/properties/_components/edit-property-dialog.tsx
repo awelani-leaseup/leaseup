@@ -761,7 +761,7 @@ export function EditPropertyDialog({
               form.handleSubmit();
             }}
           >
-            <Save className="mr-2 h-4 w-4" />
+            <Save className="h-4 w-4" />
             Update Property
           </Button>
         </DialogFooter>

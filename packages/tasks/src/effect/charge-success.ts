@@ -1,6 +1,6 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client';
 
 const ChargeSuccessPayload = Schema.Struct({
   event: Schema.String,

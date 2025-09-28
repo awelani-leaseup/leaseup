@@ -230,7 +230,7 @@ export default function DocumentManagement() {
               size='lg'
               className='bg-[#2C3E50] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#34495E] transition-colors w-full sm:w-auto'
             >
-              <ArrowRight className='h-4 w-4 mr-2' />
+              <ArrowRight className='h-4 w-4' />
               Explore All Features
             </Button>
           </div>

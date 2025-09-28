@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.10.1
- * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+ * Prisma Client JS version: 6.16.2
+ * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
  */
 Prisma.prismaVersion = {
-  client: "6.10.1",
-  engine: "9b628578b3b7cae625e8c927178f15a170e74a9c"
+  client: "6.16.2",
+  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -149,6 +149,7 @@ exports.Prisma.UserScalarFieldEnum = {
   state: 'state',
   zip: 'zip',
   onboardingCompleted: 'onboardingCompleted',
+  customerIdentificationStatus: 'customerIdentificationStatus',
   businessName: 'businessName',
   countryCode: 'countryCode',
   numberOfProperties: 'numberOfProperties',
@@ -281,6 +282,7 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   tenantId: 'tenantId',
   invoiceNumber: 'invoiceNumber',
   paymentRequestUrl: 'paymentRequestUrl',
+  offlineReference: 'offlineReference',
   recurringBillableId: 'recurringBillableId'
 };
 
@@ -376,6 +378,13 @@ exports.SubscriptionPlanStatus = exports.$Enums.SubscriptionPlanStatus = {
   DISABLED: 'DISABLED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'
+};
+
+exports.CustomerIdentificationStatus = exports.$Enums.CustomerIdentificationStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
 };
 
 exports.PropertyStatus = exports.$Enums.PropertyStatus = {

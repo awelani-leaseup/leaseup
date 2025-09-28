@@ -1,6 +1,6 @@
 import { Schema, Effect, Console } from 'effect';
 import { DatabaseServiceLive, DatabaseServiceTag } from './services';
-import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
+import { SubscriptionPlanStatus } from '@leaseup/prisma/client';
 
 // Schema for subscription.disable webhook payload
 const SubscriptionDisablePayload = Schema.Struct({

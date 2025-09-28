@@ -1,7 +1,7 @@
 import { schemaTask, logger, retry } from '@trigger.dev/sdk';
 import { nanoid } from 'nanoid';
 import { db } from '@leaseup/prisma/db.ts';
-import { InvoiceCategory } from '@leaseup/prisma/client/client.js';
+import { InvoiceCategory } from '@leaseup/prisma/client';
 import * as v from 'valibot';
 import { getMonth, getYear } from 'date-fns';
 import {

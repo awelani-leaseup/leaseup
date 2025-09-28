@@ -149,7 +149,6 @@ export const userRouter = createTRPCRouter({
       }
 
       try {
-        // Fetch customer data from Paystack customer endpoint
         const { data: customerData, error: customerError } = await paystack.GET(
           '/customer/{code}',
           {
@@ -291,7 +290,6 @@ export const userRouter = createTRPCRouter({
     }
 
     try {
-      // Get the current user with their Paystack customer ID
       const user = await ctx.db.user.findUnique({
         where: { id: userId },
         select: {
@@ -315,7 +313,6 @@ export const userRouter = createTRPCRouter({
         });
       }
 
-      // Fetch customer data from Paystack to access subscriptions array
       const { data: customerData, error: customerError } = await paystack.GET(
         '/customer/{code}',
         {
@@ -326,8 +323,6 @@ export const userRouter = createTRPCRouter({
           },
         }
       );
-
-      console.log('Customer data:', customerData);
 
       if (customerError || !customerData?.data) {
         throw new TRPCError({

@@ -36,7 +36,7 @@ export function PropertyUnits({ property }: PropertyUnitsProps) {
         <div className="flex flex-row items-center justify-between">
           <CardTitle>Units</CardTitle>
           <Button>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             Add Unit
           </Button>
         </div>
@@ -47,7 +47,7 @@ export function PropertyUnits({ property }: PropertyUnitsProps) {
             description="This property doesn't have any units yet."
             buttons={
               <Button>
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="h-4 w-4" />
                 Add First Unit
               </Button>
             }
@@ -62,7 +62,7 @@ export function PropertyUnits({ property }: PropertyUnitsProps) {
       <div className="flex flex-row items-center justify-between">
         <CardTitle>Units</CardTitle>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="h-4 w-4" />
           Add Unit
         </Button>
       </div>

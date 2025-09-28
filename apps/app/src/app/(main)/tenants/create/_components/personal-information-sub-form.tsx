@@ -15,7 +15,7 @@ import { authClient } from "@/utils/auth/client";
 
 export const PersonalInformation = withForm({
   ...createTenantFormOptions,
-  render: ({ form }) => {
+  render: function PersonalInformation({ form }) {
     const { data: session } = authClient.useSession();
     const user = session?.user;
     const [{ files }, { removeFile, openFileDialog, getInputProps }] =

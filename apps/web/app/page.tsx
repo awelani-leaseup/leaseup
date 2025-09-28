@@ -442,14 +442,13 @@ export default function Home() {
                       Transparent Payment Processing
                     </h3>
                     <p className='text-[#7F8C8D] mb-3'>
-                      We use Paystack, South Africa&apos;s most trusted payment
+                      We use Paystack, Africa&apos;s most trusted payment
                       processor, to handle all rent payments securely. The 2.9%
-                      transaction fee is charged directly by Paystack and
-                      covers:
+                      transaction fee is charged directly by Paystack.
                     </p>
                     <p className='text-[#7F8C8D] text-sm'>
-                      <strong>Example:</strong> On a R10,000 rent payment, the
-                      transaction fee would be R290, which is automatically
+                      <strong>Example:</strong> On a R5,000 rent payment, the
+                      transaction fee would be R145, which is automatically
                       deducted before the payment reaches your account. This
                       industry-standard rate is competitive with other payment
                       processors and ensures your tenants can pay securely

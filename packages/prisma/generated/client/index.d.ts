@@ -246,6 +246,16 @@ export const SubscriptionPlanStatus: {
 
 export type SubscriptionPlanStatus = (typeof SubscriptionPlanStatus)[keyof typeof SubscriptionPlanStatus]
 
+
+export const CustomerIdentificationStatus: {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+};
+
+export type CustomerIdentificationStatus = (typeof CustomerIdentificationStatus)[keyof typeof CustomerIdentificationStatus]
+
 }
 
 export type InvoiceCycle = $Enums.InvoiceCycle
@@ -304,6 +314,10 @@ export type SubscriptionPlanStatus = $Enums.SubscriptionPlanStatus
 
 export const SubscriptionPlanStatus: typeof $Enums.SubscriptionPlanStatus
 
+export type CustomerIdentificationStatus = $Enums.CustomerIdentificationStatus
+
+export const CustomerIdentificationStatus: typeof $Enums.CustomerIdentificationStatus
+
 /**
  * ##  Prisma Client ʲˢ
  *
@@ -320,7 +334,7 @@ export const SubscriptionPlanStatus: typeof $Enums.SubscriptionPlanStatus
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -352,13 +366,6 @@ export class PrismaClient<
    * Disconnect from the database
    */
   $disconnect(): $Utils.JsPromise<void>;
-
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
 
 /**
    * Executes a prepared raw query and returns the number of affected rows.
@@ -626,8 +633,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.10.1
-   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+   * Prisma Client JS version: 6.16.2
+   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
     client: string
@@ -2123,16 +2130,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -2147,6 +2162,10 @@ export namespace Prisma {
       timeout?: number
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
+    /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
     /**
      * Global configuration for omitting model fields by default.
      * 
@@ -2187,10 +2206,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -2230,25 +2254,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -2709,6 +2714,7 @@ export namespace Prisma {
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
+    customerIdentificationStatus: $Enums.CustomerIdentificationStatus | null
     businessName: string | null
     countryCode: string | null
     numberOfProperties: number | null
@@ -2745,6 +2751,7 @@ export namespace Prisma {
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
+    customerIdentificationStatus: $Enums.CustomerIdentificationStatus | null
     businessName: string | null
     countryCode: string | null
     numberOfProperties: number | null
@@ -2781,6 +2788,7 @@ export namespace Prisma {
     state: number
     zip: number
     onboardingCompleted: number
+    customerIdentificationStatus: number
     businessName: number
     countryCode: number
     numberOfProperties: number
@@ -2833,6 +2841,7 @@ export namespace Prisma {
     state?: true
     zip?: true
     onboardingCompleted?: true
+    customerIdentificationStatus?: true
     businessName?: true
     countryCode?: true
     numberOfProperties?: true
@@ -2869,6 +2878,7 @@ export namespace Prisma {
     state?: true
     zip?: true
     onboardingCompleted?: true
+    customerIdentificationStatus?: true
     businessName?: true
     countryCode?: true
     numberOfProperties?: true
@@ -2905,6 +2915,7 @@ export namespace Prisma {
     state?: true
     zip?: true
     onboardingCompleted?: true
+    customerIdentificationStatus?: true
     businessName?: true
     countryCode?: true
     numberOfProperties?: true
@@ -3028,6 +3039,7 @@ export namespace Prisma {
     state: string | null
     zip: string | null
     onboardingCompleted: boolean
+    customerIdentificationStatus: $Enums.CustomerIdentificationStatus
     businessName: string | null
     countryCode: string | null
     numberOfProperties: number | null
@@ -3083,6 +3095,7 @@ export namespace Prisma {
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: boolean
     businessName?: boolean
     countryCode?: boolean
     numberOfProperties?: boolean
@@ -3125,6 +3138,7 @@ export namespace Prisma {
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: boolean
     businessName?: boolean
     countryCode?: boolean
     numberOfProperties?: boolean
@@ -3161,6 +3175,7 @@ export namespace Prisma {
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: boolean
     businessName?: boolean
     countryCode?: boolean
     numberOfProperties?: boolean
@@ -3197,6 +3212,7 @@ export namespace Prisma {
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: boolean
     businessName?: boolean
     countryCode?: boolean
     numberOfProperties?: boolean
@@ -3204,7 +3220,7 @@ export namespace Prisma {
     phone?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackCustomerId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackCustomerId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "customerIdentificationStatus" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     property?: boolean | User$propertyArgs<ExtArgs>
@@ -3254,6 +3270,7 @@ export namespace Prisma {
       state: string | null
       zip: string | null
       onboardingCompleted: boolean
+      customerIdentificationStatus: $Enums.CustomerIdentificationStatus
       businessName: string | null
       countryCode: string | null
       numberOfProperties: number | null
@@ -3715,6 +3732,7 @@ export namespace Prisma {
     readonly state: FieldRef<"User", 'String'>
     readonly zip: FieldRef<"User", 'String'>
     readonly onboardingCompleted: FieldRef<"User", 'Boolean'>
+    readonly customerIdentificationStatus: FieldRef<"User", 'CustomerIdentificationStatus'>
     readonly businessName: FieldRef<"User", 'String'>
     readonly countryCode: FieldRef<"User", 'String'>
     readonly numberOfProperties: FieldRef<"User", 'Int'>
@@ -12788,6 +12806,7 @@ export namespace Prisma {
     tenantId: string | null
     invoiceNumber: string | null
     paymentRequestUrl: string | null
+    offlineReference: string | null
     recurringBillableId: string | null
   }
 
@@ -12806,6 +12825,7 @@ export namespace Prisma {
     tenantId: string | null
     invoiceNumber: string | null
     paymentRequestUrl: string | null
+    offlineReference: string | null
     recurringBillableId: string | null
   }
 
@@ -12825,6 +12845,7 @@ export namespace Prisma {
     tenantId: number
     invoiceNumber: number
     paymentRequestUrl: number
+    offlineReference: number
     recurringBillableId: number
     _all: number
   }
@@ -12853,6 +12874,7 @@ export namespace Prisma {
     tenantId?: true
     invoiceNumber?: true
     paymentRequestUrl?: true
+    offlineReference?: true
     recurringBillableId?: true
   }
 
@@ -12871,6 +12893,7 @@ export namespace Prisma {
     tenantId?: true
     invoiceNumber?: true
     paymentRequestUrl?: true
+    offlineReference?: true
     recurringBillableId?: true
   }
 
@@ -12890,6 +12913,7 @@ export namespace Prisma {
     tenantId?: true
     invoiceNumber?: true
     paymentRequestUrl?: true
+    offlineReference?: true
     recurringBillableId?: true
     _all?: true
   }
@@ -12996,6 +13020,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber: string
     paymentRequestUrl: string
+    offlineReference: string | null
     recurringBillableId: string | null
     _count: InvoiceCountAggregateOutputType | null
     _avg: InvoiceAvgAggregateOutputType | null
@@ -13034,6 +13059,7 @@ export namespace Prisma {
     tenantId?: boolean
     invoiceNumber?: boolean
     paymentRequestUrl?: boolean
+    offlineReference?: boolean
     recurringBillableId?: boolean
     File?: boolean | Invoice$FileArgs<ExtArgs>
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
@@ -13060,6 +13086,7 @@ export namespace Prisma {
     tenantId?: boolean
     invoiceNumber?: boolean
     paymentRequestUrl?: boolean
+    offlineReference?: boolean
     recurringBillableId?: boolean
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -13083,6 +13110,7 @@ export namespace Prisma {
     tenantId?: boolean
     invoiceNumber?: boolean
     paymentRequestUrl?: boolean
+    offlineReference?: boolean
     recurringBillableId?: boolean
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -13106,10 +13134,11 @@ export namespace Prisma {
     tenantId?: boolean
     invoiceNumber?: boolean
     paymentRequestUrl?: boolean
+    offlineReference?: boolean
     recurringBillableId?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "category" | "status" | "createdAt" | "updatedAt" | "paystackId" | "dueDate" | "lineItems" | "landlordId" | "tenantId" | "invoiceNumber" | "paymentRequestUrl" | "recurringBillableId", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "dueAmount" | "category" | "status" | "createdAt" | "updatedAt" | "paystackId" | "dueDate" | "lineItems" | "landlordId" | "tenantId" | "invoiceNumber" | "paymentRequestUrl" | "offlineReference" | "recurringBillableId", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     File?: boolean | Invoice$FileArgs<ExtArgs>
     lease?: boolean | Invoice$leaseArgs<ExtArgs>
@@ -13158,6 +13187,7 @@ export namespace Prisma {
       tenantId: string
       invoiceNumber: string
       paymentRequestUrl: string
+      offlineReference: string | null
       recurringBillableId: string | null
     }, ExtArgs["result"]["invoice"]>
     composites: {}
@@ -13603,6 +13633,7 @@ export namespace Prisma {
     readonly tenantId: FieldRef<"Invoice", 'String'>
     readonly invoiceNumber: FieldRef<"Invoice", 'String'>
     readonly paymentRequestUrl: FieldRef<"Invoice", 'String'>
+    readonly offlineReference: FieldRef<"Invoice", 'String'>
     readonly recurringBillableId: FieldRef<"Invoice", 'String'>
   }
     
@@ -20094,6 +20125,7 @@ export namespace Prisma {
     state: 'state',
     zip: 'zip',
     onboardingCompleted: 'onboardingCompleted',
+    customerIdentificationStatus: 'customerIdentificationStatus',
     businessName: 'businessName',
     countryCode: 'countryCode',
     numberOfProperties: 'numberOfProperties',
@@ -20250,6 +20282,7 @@ export namespace Prisma {
     tenantId: 'tenantId',
     invoiceNumber: 'invoiceNumber',
     paymentRequestUrl: 'paymentRequestUrl',
+    offlineReference: 'offlineReference',
     recurringBillableId: 'recurringBillableId'
   };
 
@@ -20437,6 +20470,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerIdentificationStatus'
+   */
+  export type EnumCustomerIdentificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerIdentificationStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomerIdentificationStatus[]'
+   */
+  export type ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomerIdentificationStatus[]'>
     
 
 
@@ -20629,6 +20676,7 @@ export namespace Prisma {
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFilter<"User"> | $Enums.CustomerIdentificationStatus
     businessName?: StringNullableFilter<"User"> | string | null
     countryCode?: StringNullableFilter<"User"> | string | null
     numberOfProperties?: IntNullableFilter<"User"> | number | null
@@ -20670,6 +20718,7 @@ export namespace Prisma {
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
+    customerIdentificationStatus?: SortOrder
     businessName?: SortOrderInput | SortOrder
     countryCode?: SortOrderInput | SortOrder
     numberOfProperties?: SortOrderInput | SortOrder
@@ -20714,6 +20763,7 @@ export namespace Prisma {
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFilter<"User"> | $Enums.CustomerIdentificationStatus
     businessName?: StringNullableFilter<"User"> | string | null
     countryCode?: StringNullableFilter<"User"> | string | null
     numberOfProperties?: IntNullableFilter<"User"> | number | null
@@ -20755,6 +20805,7 @@ export namespace Prisma {
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
+    customerIdentificationStatus?: SortOrder
     businessName?: SortOrderInput | SortOrder
     countryCode?: SortOrderInput | SortOrder
     numberOfProperties?: SortOrderInput | SortOrder
@@ -20799,6 +20850,7 @@ export namespace Prisma {
     state?: StringNullableWithAggregatesFilter<"User"> | string | null
     zip?: StringNullableWithAggregatesFilter<"User"> | string | null
     onboardingCompleted?: BoolWithAggregatesFilter<"User"> | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusWithAggregatesFilter<"User"> | $Enums.CustomerIdentificationStatus
     businessName?: StringNullableWithAggregatesFilter<"User"> | string | null
     countryCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     numberOfProperties?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -21520,6 +21572,7 @@ export namespace Prisma {
     tenantId?: StringFilter<"Invoice"> | string
     invoiceNumber?: StringFilter<"Invoice"> | string
     paymentRequestUrl?: StringFilter<"Invoice"> | string
+    offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
     File?: FileListRelationFilter
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
@@ -21545,6 +21598,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     invoiceNumber?: SortOrder
     paymentRequestUrl?: SortOrder
+    offlineReference?: SortOrderInput | SortOrder
     recurringBillableId?: SortOrderInput | SortOrder
     File?: FileOrderByRelationAggregateInput
     lease?: LeaseOrderByWithRelationInput
@@ -21573,6 +21627,7 @@ export namespace Prisma {
     tenantId?: StringFilter<"Invoice"> | string
     invoiceNumber?: StringFilter<"Invoice"> | string
     paymentRequestUrl?: StringFilter<"Invoice"> | string
+    offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
     File?: FileListRelationFilter
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
@@ -21598,6 +21653,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     invoiceNumber?: SortOrder
     paymentRequestUrl?: SortOrder
+    offlineReference?: SortOrderInput | SortOrder
     recurringBillableId?: SortOrderInput | SortOrder
     _count?: InvoiceCountOrderByAggregateInput
     _avg?: InvoiceAvgOrderByAggregateInput
@@ -21625,6 +21681,7 @@ export namespace Prisma {
     tenantId?: StringWithAggregatesFilter<"Invoice"> | string
     invoiceNumber?: StringWithAggregatesFilter<"Invoice"> | string
     paymentRequestUrl?: StringWithAggregatesFilter<"Invoice"> | string
+    offlineReference?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
   }
 
@@ -22068,6 +22125,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -22109,6 +22167,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -22150,6 +22209,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22191,6 +22251,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22232,6 +22293,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -22268,6 +22330,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22304,6 +22367,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -23137,6 +23201,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
@@ -23161,6 +23226,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -23179,6 +23245,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
@@ -23203,6 +23270,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -23224,6 +23292,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
   }
 
@@ -23240,6 +23309,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InvoiceUncheckedUpdateManyInput = {
@@ -23258,6 +23328,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -23751,6 +23822,13 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type EnumCustomerIdentificationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerIdentificationStatus | EnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel> | $Enums.CustomerIdentificationStatus
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
@@ -23835,6 +23913,7 @@ export namespace Prisma {
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
+    customerIdentificationStatus?: SortOrder
     businessName?: SortOrder
     countryCode?: SortOrder
     numberOfProperties?: SortOrder
@@ -23878,6 +23957,7 @@ export namespace Prisma {
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
+    customerIdentificationStatus?: SortOrder
     businessName?: SortOrder
     countryCode?: SortOrder
     numberOfProperties?: SortOrder
@@ -23914,6 +23994,7 @@ export namespace Prisma {
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
+    customerIdentificationStatus?: SortOrder
     businessName?: SortOrder
     countryCode?: SortOrder
     numberOfProperties?: SortOrder
@@ -24024,6 +24105,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumCustomerIdentificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerIdentificationStatus | EnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerIdentificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomerIdentificationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -24699,6 +24790,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     invoiceNumber?: SortOrder
     paymentRequestUrl?: SortOrder
+    offlineReference?: SortOrder
     recurringBillableId?: SortOrder
   }
 
@@ -24721,6 +24813,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     invoiceNumber?: SortOrder
     paymentRequestUrl?: SortOrder
+    offlineReference?: SortOrder
     recurringBillableId?: SortOrder
   }
 
@@ -24739,6 +24832,7 @@ export namespace Prisma {
     tenantId?: SortOrder
     invoiceNumber?: SortOrder
     paymentRequestUrl?: SortOrder
+    offlineReference?: SortOrder
     recurringBillableId?: SortOrder
   }
 
@@ -25129,6 +25223,10 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type EnumCustomerIdentificationStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CustomerIdentificationStatus
   }
 
   export type AccountUpdateManyWithoutUserNestedInput = {
@@ -26534,6 +26632,13 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedEnumCustomerIdentificationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerIdentificationStatus | EnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel> | $Enums.CustomerIdentificationStatus
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -26650,6 +26755,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCustomerIdentificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomerIdentificationStatus | EnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomerIdentificationStatus[] | ListEnumCustomerIdentificationStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomerIdentificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomerIdentificationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomerIdentificationStatusFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -27064,6 +27179,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
@@ -27086,6 +27202,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -27279,6 +27396,7 @@ export namespace Prisma {
     tenantId?: StringFilter<"Invoice"> | string
     invoiceNumber?: StringFilter<"Invoice"> | string
     paymentRequestUrl?: StringFilter<"Invoice"> | string
+    offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
   }
 
@@ -27311,6 +27429,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27351,6 +27470,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27407,6 +27527,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27447,6 +27568,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27487,6 +27609,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27527,6 +27650,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27583,6 +27707,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27623,6 +27748,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27687,6 +27813,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
@@ -27709,6 +27836,7 @@ export namespace Prisma {
     landlordId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -27753,6 +27881,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27793,6 +27922,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -27964,6 +28094,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28004,6 +28135,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28145,6 +28277,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -28185,6 +28318,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -28337,6 +28471,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28377,6 +28512,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28688,6 +28824,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
@@ -28710,6 +28847,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
@@ -29286,6 +29424,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -29326,6 +29465,7 @@ export namespace Prisma {
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
+    customerIdentificationStatus?: $Enums.CustomerIdentificationStatus
     businessName?: string | null
     countryCode?: string | null
     numberOfProperties?: number | null
@@ -29579,6 +29719,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -29619,6 +29760,7 @@ export namespace Prisma {
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    customerIdentificationStatus?: EnumCustomerIdentificationStatusFieldUpdateOperationsInput | $Enums.CustomerIdentificationStatus
     businessName?: NullableStringFieldUpdateOperationsInput | string | null
     countryCode?: NullableStringFieldUpdateOperationsInput | string | null
     numberOfProperties?: NullableIntFieldUpdateOperationsInput | number | null
@@ -29751,6 +29893,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
@@ -29774,6 +29917,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -30037,6 +30181,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
@@ -30060,6 +30205,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -30148,6 +30294,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
@@ -30171,6 +30318,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -30649,6 +30797,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
     tenant: TenantCreateNestedOneWithoutInvoiceInput
     transactions?: TransactionsCreateNestedManyWithoutInvoiceInput
@@ -30672,6 +30821,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
     transactions?: TransactionsUncheckedCreateNestedManyWithoutInvoiceInput
   }
@@ -30885,6 +31035,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
@@ -30908,6 +31059,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -31194,6 +31346,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
   }
 
@@ -31413,6 +31566,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
@@ -31435,6 +31589,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -31455,6 +31610,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31488,6 +31644,7 @@ export namespace Prisma {
     landlordId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
   }
 
@@ -31570,6 +31727,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
@@ -31592,6 +31750,7 @@ export namespace Prisma {
     landlordId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -31612,6 +31771,7 @@ export namespace Prisma {
     landlordId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31974,6 +32134,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
     recurringBillableId?: string | null
   }
 
@@ -32075,6 +32236,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
     transactions?: TransactionsUpdateManyWithoutInvoiceNestedInput
@@ -32097,6 +32259,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -32117,6 +32280,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -32360,6 +32524,7 @@ export namespace Prisma {
     tenantId: string
     invoiceNumber?: string
     paymentRequestUrl?: string
+    offlineReference?: string | null
   }
 
   export type InvoiceUpdateWithoutRecurringBillableInput = {
@@ -32375,6 +32540,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
     tenant?: TenantUpdateOneRequiredWithoutInvoiceNestedInput
@@ -32398,6 +32564,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
     transactions?: TransactionsUncheckedUpdateManyWithoutInvoiceNestedInput
   }
@@ -32418,6 +32585,7 @@ export namespace Prisma {
     tenantId?: StringFieldUpdateOperationsInput | string
     invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileCreateManyMaintenanceRequestInput = {

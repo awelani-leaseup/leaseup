@@ -97,7 +97,7 @@ export default async function Properties() {
                           </H6>
                           <Link href={`/properties/${property.id}`}>
                             <Button variant="outlined" size="sm">
-                              <Eye className="mr-2 h-4 w-4" />
+                              <Eye className="h-4 w-4" />
                               View Property
                             </Button>
                           </Link>
