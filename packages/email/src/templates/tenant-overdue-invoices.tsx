@@ -3,7 +3,6 @@ import {
   Button,
   Column,
   Container,
-  Font,
   Head,
   Heading,
   Html,
@@ -29,19 +28,9 @@ export default function TenantOverdueInvoices({
   return (
     <Html dir='ltr' lang='en'>
       <Head>
-        <Font
-          fontFamily='Inter'
-          fallbackFontFamily='sans-serif'
-          webFont={{
-            url: 'https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.19',
-            format: 'woff2',
-          }}
-          fontWeight={400}
-          fontStyle='normal'
-        />
         <style>{`
           * {
-            font-family: 'Inter', sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
           }
           blockquote,h1,h2,h3,img,li,ol,p,ul{margin-top:0;margin-bottom:0}
           @media only screen and (max-width:425px){
