@@ -227,7 +227,7 @@ const processInvoiceWithRateLimit = async (
           `Monthly invoice batch ${batchNumber} - landlord notification`
         );
       }
-    } catch (error) {
+    } catch  {
       logger.warn('Could not fetch emails for test email logging', {
         tenantId: invoicePayload.tenantId,
         batchNumber,

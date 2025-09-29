@@ -49,7 +49,7 @@ export default async function Dashboard() {
                     <div className="mt-4 flex space-x-3 md:mt-0">
                       <Link href="/properties/create">
                         <Button>
-                          <PlusIcon className="mr-2" />
+                          <PlusIcon  />
                           Add Property
                         </Button>
                       </Link>

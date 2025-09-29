@@ -210,7 +210,6 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
       const endTime = Date.now();
       const durationMs = endTime - startTime;
 
-      // In development, log what test emails would be used for notifications
       if (isDevelopment && invoiceData.tenantId) {
         try {
           const tenant = await db.tenant.findUnique({
@@ -232,7 +231,7 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
               `Invoice ${newInvoice.id} tenant notification`
             );
           }
-        } catch (error) {
+        } catch  {
           logger.warn('Could not fetch tenant email for test email logging', {
             tenantId: invoiceData.tenantId,
             invoiceId: newInvoice.id,

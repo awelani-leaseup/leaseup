@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <footer id='footer' className='bg-[#2C3E50] text-white py-12'>
       <div className='max-w-7xl mx-auto px-4 md:px-8'>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
           <div>
             <div className='flex items-center gap-3 mb-4'>
               <div className='bg-[#3498DB] text-white h-10 w-10 rounded-lg flex items-center justify-center'>
@@ -17,7 +17,7 @@ export const Footer = () => {
               Modern tenant management for smart landlords
             </p>
           </div>
-          <div>
+          {/* <div>
             <H5 className='font-semibold mb-4'>Product</H5>
             <div className='flex flex-col gap-4'>
               <Link
@@ -57,7 +57,7 @@ export const Footer = () => {
                 Financial Reports
               </Link>
             </div>
-          </div>
+          </div> */}
           <div>
             <H5 className='font-semibold mb-4'>Support</H5>
             <div className='space-y-2'>
@@ -97,7 +97,7 @@ export const Footer = () => {
           </div>
         </div>
         <div className='border-t border-gray-600 mt-8 pt-8 text-center text-gray-400'>
-          <p>&copy; 2024 LeaseUp. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} LeaseUp. All rights reserved.</p>
         </div>
       </div>
     </footer>

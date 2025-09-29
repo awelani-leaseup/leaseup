@@ -73,11 +73,11 @@ export function DocumentDropdownActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={handleView} className="cursor-pointer">
-          <Eye className="mr-2 h-4 w-4" />
+          <Eye className="h-4 w-4" />
           View
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDownload} className="cursor-pointer">
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="h-4 w-4" />
           Download
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -87,7 +87,7 @@ export function DocumentDropdownActions({
             rel="noopener noreferrer"
             className="cursor-pointer"
           >
-            <ExternalLink className="mr-2 h-4 w-4" />
+            <ExternalLink className="h-4 w-4" />
             Open in new tab
           </a>
         </DropdownMenuItem>
@@ -96,7 +96,7 @@ export function DocumentDropdownActions({
           disabled={deleteDocument.isPending}
           className="cursor-pointer text-red-600 focus:text-red-600"
         >
-          <Trash2 className="mr-2 h-4 w-4" />
+          <Trash2 className="h-4 w-4" />
           {deleteDocument.isPending ? "Deleting..." : "Delete"}
         </DropdownMenuItem>
       </DropdownMenuContent>
