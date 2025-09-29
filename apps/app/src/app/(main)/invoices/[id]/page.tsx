@@ -261,7 +261,17 @@ export default function InvoiceViewPage() {
 
   const { data: invoice, isLoading } = api.invoice.getById.useQuery(id);
   const { mutate: voidInvoice, isPending: isVoiding } =
-    api.invoice.voidInvoice.useMutation();
+    api.invoice.voidInvoice.useMutation({
+      onSuccess: () => {
+        utils.lease.getById.invalidate();
+      },
+    });
+  const { mutateAsync: markInvoiceAsPaid, isPending: isMarkingInvoiceAsPaid } =
+    api.invoice.markInvoiceAsPaid.useMutation({
+      onSuccess: () => {
+        utils.lease.getById.invalidate();
+      },
+    });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-ZA", {
@@ -313,6 +323,21 @@ export default function InvoiceViewPage() {
     }
   };
 
+  const handleMarkAsPaid = () => {
+    markInvoiceAsPaid(
+      { invoiceId: id },
+      {
+        onSuccess: () => {
+          toast.success("Invoice marked as paid");
+          utils.lease.getById.invalidate();
+        },
+        onError: () => {
+          toast.error("Failed to mark invoice as paid");
+        },
+      },
+    );
+  };
+
   const calculateSubtotal = () => {
     if (!invoice?.lineItems) return 0;
     const lineItems = Array.isArray(invoice.lineItems) ? invoice.lineItems : [];
@@ -324,10 +349,6 @@ export default function InvoiceViewPage() {
 
   const calculateTax = (subtotal: number) => {
     return subtotal * 0.15;
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const handleVoidInvoice = () => {
@@ -347,10 +368,6 @@ export default function InvoiceViewPage() {
 
   const handleDuplicateInvoice = () => {
     router.push(`/invoices/create?duplicate=${id}`);
-  };
-
-  const handleSendReminder = () => {
-    console.log("Send reminder");
   };
 
   const handleCopyPaymentUrl = async () => {
@@ -825,28 +842,25 @@ export default function InvoiceViewPage() {
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button
-              className="flex-1"
-              onClick={handleSendReminder}
-              disabled={
-                invoice.status === "PAID" || invoice.status === "CANCELLED"
-              }
-            >
-              <Send className="h-4 w-4" />
-              Send Reminder
-            </Button>
-            <Button
               variant="outlined"
-              className="flex-1 border-[#3498DB] text-[#3498DB]"
+              className="border-info text-info flex-1"
               onClick={handleDuplicateInvoice}
             >
               <Copy className="h-4 w-4" />
-              Duplicate Invoice
-            </Button>
-            <Button variant="outlined" className="flex-1" onClick={handlePrint}>
-              <Printer className="h-4 w-4" />
-              Print Invoice
+              Duplicate
             </Button>
             <Button
+              variant="outlined"
+              className="flex-1"
+              onClick={handleMarkAsPaid}
+              color="success"
+              isLoading={isMarkingInvoiceAsPaid}
+            >
+              <Check className="h-4 w-4" />
+              Mark as Paid
+            </Button>
+            <Button
+              className="flex-1"
               variant="outlined"
               color="danger"
               onClick={handleVoidInvoice}
@@ -854,7 +868,7 @@ export default function InvoiceViewPage() {
               disabled={invoice.status === "PAID"}
             >
               <Ban className="h-4 w-4" />
-              Void Invoice
+              Void
             </Button>
           </div>
         </CardContent>

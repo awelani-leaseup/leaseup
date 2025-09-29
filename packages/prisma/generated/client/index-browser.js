@@ -311,6 +311,7 @@ exports.Prisma.TransactionsScalarFieldEnum = {
   referenceId: 'referenceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  method: 'method',
   invoiceId: 'invoiceId'
 };
 
@@ -340,6 +341,7 @@ exports.Prisma.FileScalarFieldEnum = {
   leaseId: 'leaseId',
   invoiceId: 'invoiceId',
   maintenanceRequestId: 'maintenanceRequestId',
+  transactionId: 'transactionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   size: 'size',
@@ -432,6 +434,11 @@ exports.InvoiceStatus = exports.$Enums.InvoiceStatus = {
   OVERDUE: 'OVERDUE',
   PARTIALLY_PAID: 'PARTIALLY_PAID',
   DRAFT: 'DRAFT'
+};
+
+exports.TransactionMethod = exports.$Enums.TransactionMethod = {
+  OFFLINE: 'OFFLINE',
+  PAYSTACK: 'PAYSTACK'
 };
 
 exports.MaintenanceRequestStatus = exports.$Enums.MaintenanceRequestStatus = {

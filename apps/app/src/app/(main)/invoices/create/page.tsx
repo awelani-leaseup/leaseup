@@ -3,7 +3,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@leaseup/ui/components/card";
@@ -16,7 +15,7 @@ import {
 } from "@leaseup/ui/components/form";
 import { Separator } from "@leaseup/ui/components/separator";
 import { H5 } from "@leaseup/ui/components/typography";
-import { Save, Send, Eye, Download } from "lucide-react";
+import { Send } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
@@ -123,10 +122,8 @@ export default function CreateInvoice() {
 
             <Separator className="my-8" />
 
-            {/* Invoice Items Section */}
             <InvoiceItemsSubForm form={form} />
 
-            {/* Action Buttons */}
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 type="button"
@@ -136,14 +133,6 @@ export default function CreateInvoice() {
               >
                 <Send className="h-4 w-4" />
                 Send Invoice
-              </Button>
-              <Button type="button" variant="outlined" className="flex-1">
-                <Eye className="h-4 w-4" />
-                Preview Invoice
-              </Button>
-              <Button type="button" variant="outlined" className="flex-1">
-                <Download className="h-4 w-4" />
-                Download PDF
               </Button>
             </div>
 

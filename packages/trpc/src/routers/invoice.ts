@@ -1,4 +1,8 @@
-import { VGetAllInvoicesSchema, VCreateInvoiceSchema } from './invoice.types';
+import {
+  VGetAllInvoicesSchema,
+  VCreateInvoiceSchema,
+  VMarkInvoiceAsPaidSchema,
+} from './invoice.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
 import * as v from 'valibot';
@@ -661,6 +665,109 @@ export const invoiceRouter = createTRPCRouter({
       return {
         ...invoice,
         landlordBankDetails: bankDetails,
+      };
+    }),
+
+  markInvoiceAsPaid: protectedProcedure
+    .input(VMarkInvoiceAsPaidSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { invoiceId } = input;
+
+      const invoice = await ctx.db.invoice.findFirst({
+        where: {
+          id: invoiceId,
+          OR: [
+            {
+              lease: {
+                unit: {
+                  property: {
+                    landlordId: ctx.auth?.session?.userId ?? '',
+                  },
+                },
+              },
+            },
+            {
+              AND: [
+                { leaseId: null },
+                {
+                  tenant: {
+                    landlordId: ctx.auth?.session?.userId ?? '',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        include: {
+          transactions: true,
+        },
+      });
+
+      if (!invoice) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message:
+            'Invoice not found or you do not have permission to modify it',
+        });
+      }
+
+      if (invoice.status === InvoiceStatus.CANCELLED) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Cannot mark a cancelled invoice as paid',
+        });
+      }
+
+      let newStatus: InvoiceStatus = InvoiceStatus.PAID;
+
+      const result = await ctx.db.$transaction(async (tx) => {
+        const transaction = await tx.transactions.create({
+          data: {
+            leaseId: invoice.leaseId,
+            description: `Offline payment for invoice ${invoice.invoiceNumber || invoiceId}`,
+            amountPaid: invoice.dueAmount,
+            method: 'OFFLINE',
+          },
+        });
+
+        const updatedInvoice = await tx.invoice.update({
+          where: { id: invoiceId },
+          data: {
+            status: newStatus,
+            transactions: {
+              connect: {
+                id: transaction.id,
+              },
+            },
+          },
+          include: {
+            transactions: true,
+            lease: {
+              include: {
+                unit: {
+                  include: {
+                    property: true,
+                  },
+                },
+                tenantLease: {
+                  include: {
+                    tenant: true,
+                  },
+                },
+              },
+            },
+            tenant: true,
+          },
+        });
+
+        return { transaction, invoice: updatedInvoice };
+      });
+
+      return {
+        message: `Invoice marked as ${newStatus.toLowerCase()}. Transaction created successfully.`,
+        transaction: result.transaction,
+        invoice: result.invoice,
+        newStatus,
       };
     }),
 });

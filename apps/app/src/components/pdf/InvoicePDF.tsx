@@ -229,39 +229,18 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoice }) => {
                 {formatCurrency(subtotal || invoice.dueAmount)}
               </Text>
             </View>
-            <View style={styles.summaryRow}>
+            {/* <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>VAT (15%):</Text>
               <Text style={styles.summaryValue}>
                 {formatCurrency(tax || 0)}
               </Text>
-            </View>
+            </View> */}
             <View style={styles.totalRow}>
               <Text style={styles.totalLabel}>Total:</Text>
               <Text style={styles.totalValue}>
                 {formatCurrency(invoice.dueAmount)}
               </Text>
             </View>
-          </View>
-        </View>
-
-        {/* Payment Information */}
-        <View style={styles.paymentSection}>
-          <View style={styles.paymentColumn}>
-            <Text style={styles.paymentTitle}>Payment Terms</Text>
-            <Text style={styles.paymentText}>
-              {invoice.dueDate
-                ? `Due by ${format(new Date(invoice.dueDate), "MMM dd, yyyy")}`
-                : "Payment terms not specified"}
-            </Text>
-          </View>
-          <View style={styles.paymentColumn}>
-            <Text style={styles.paymentTitle}>Payment Options</Text>
-            <Text style={styles.paymentText}>
-              • Online Payment: Use the payment link provided
-            </Text>
-            <Text style={styles.paymentText}>
-              • Bank Transfer: Use the bank details below
-            </Text>
           </View>
         </View>
 
@@ -292,10 +271,10 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoice }) => {
                   </Text>
                 </View>
               </View>
-              <Text style={styles.paymentText}>
+              {/* <Text style={styles.paymentText}>
                 Please use invoice number #{invoice.id.slice(-8).toUpperCase()}{" "}
                 as your payment reference.
-              </Text>
+              </Text> */}
             </View>
           </View>
         )}
@@ -316,6 +295,27 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = ({ invoice }) => {
               </View>
             </View>
           )}
+
+        {/* Payment Information */}
+        <View style={styles.paymentSection}>
+          <View style={styles.paymentColumn}>
+            <Text style={styles.paymentTitle}>Payment Terms</Text>
+            <Text style={styles.paymentText}>
+              {invoice.dueDate
+                ? `Due by ${format(new Date(invoice.dueDate), "MMM dd, yyyy")}`
+                : "Payment terms not specified"}
+            </Text>
+          </View>
+          <View style={styles.paymentColumn}>
+            <Text style={styles.paymentTitle}>Payment Options</Text>
+            <Text style={styles.paymentText}>
+              • Online Payment: Use the payment link provided
+            </Text>
+            <Text style={styles.paymentText}>
+              • Bank Transfer: Use the bank details below
+            </Text>
+          </View>
+        </View>
 
         {/* Notes */}
         <View style={styles.notesSection}>

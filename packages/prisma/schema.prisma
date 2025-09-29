@@ -251,16 +251,18 @@ model RecurringBillable {
 }
 
 model Transactions {
-  id          String   @id @default(uuid())
+  id          String            @id @default(uuid())
   leaseId     String?
   description String
   amountPaid  Float
   referenceId String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  method      TransactionMethod @default(OFFLINE)
   invoiceId   String?
-  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
-  lease       Lease?   @relation(fields: [leaseId], references: [id])
+  invoice     Invoice?          @relation(fields: [invoiceId], references: [id])
+  lease       Lease?            @relation(fields: [leaseId], references: [id])
+  File        File[]
 
   @@map("transaction")
 }
@@ -299,6 +301,7 @@ model File {
   leaseId              String?
   invoiceId            String?
   maintenanceRequestId String?
+  transactionId        String?
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @updatedAt
   size                 Int?
@@ -308,6 +311,7 @@ model File {
   maintenanceRequest   MaintenanceRequest? @relation(fields: [maintenanceRequestId], references: [id])
   property             Property?           @relation(fields: [propertyId], references: [id])
   tenant               Tenant?             @relation(fields: [tenantId], references: [id])
+  transaction          Transactions?       @relation(fields: [transactionId], references: [id])
 
   @@map("file")
 }
@@ -345,6 +349,8 @@ enum LeaseStatus {
   ACTIVE
   INACTIVE
   EXPIRED
+  ENDED
+  RENEWED
 }
 
 enum TenantIncomeType {
@@ -434,4 +440,9 @@ enum CustomerIdentificationStatus {
   IN_PROGRESS
   VERIFIED
   REJECTED
+}
+
+enum TransactionMethod {
+  OFFLINE
+  PAYSTACK
 }

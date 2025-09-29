@@ -8,6 +8,10 @@ import {
   Calendar,
   User,
   Edit,
+  Square,
+  Trash,
+  MoreVertical,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@leaseup/ui/components/button";
 import {
@@ -30,6 +34,12 @@ import { UpdateLeaseDocumentsDialog } from "../../_components/update-lease-docum
 import { ViewAllDocumentsDialog } from "../../_components/view-all-documents-dialog";
 import { EditLeaseDialog } from "../../_components/edit-lease-dialog";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@leaseup/ui/components/dropdown-menu";
 
 type LeaseData = {
   id: string;
@@ -131,10 +141,6 @@ export function LeaseView({ lease }: LeaseViewProps) {
   const property = lease.unit?.property;
   const landlord = property?.landlord;
 
-  const handleDownloadPDF = () => {
-    console.log("Download PDF for lease:", lease.id);
-  };
-
   const handlePrint = () => {
     window.print();
   };
@@ -175,13 +181,45 @@ export function LeaseView({ lease }: LeaseViewProps) {
                   <Printer className="h-4 w-4" />
                   Print
                 </Button>
-                {/* @ts-expect-error - Lease is defined in the parent component */}
-                <EditLeaseDialog lease={lease}>
-                  <Button>
-                    <Edit className="h-4 w-4" />
-                    Edit Lease
-                  </Button>
-                </EditLeaseDialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button>
+                      Actions
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    onCloseAutoFocus={(event) => {
+                      event.preventDefault();
+                    }}
+                  >
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      {/* @ts-expect-error - Lease is defined in the parent component */}
+                      <EditLeaseDialog lease={lease}>
+                        <>
+                          <Edit className="h-4 w-4" />
+                          Edit Lease
+                        </>
+                      </EditLeaseDialog>
+                    </DropdownMenuItem>
+                    {lease.status === "ACTIVE" && (
+                      <DropdownMenuItem asChild>
+                        <Link href={`/leases/${lease.id}/end`}>
+                          <Square className="h-4 w-4" />
+                          End Lease
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem className="text-destructive">
+                      <Trash className="h-4 w-4" />
+                      Delete Lease
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 

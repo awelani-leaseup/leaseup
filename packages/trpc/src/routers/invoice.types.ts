@@ -41,3 +41,7 @@ export const VCreateInvoiceSchema = v.object({
   ),
   totalAmount: v.number(),
 });
+
+export const VMarkInvoiceAsPaidSchema = v.object({
+  invoiceId: v.pipe(v.string(), v.nonEmpty('Invoice ID is required')),
+});

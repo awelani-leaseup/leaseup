@@ -256,6 +256,14 @@ export const CustomerIdentificationStatus: {
 
 export type CustomerIdentificationStatus = (typeof CustomerIdentificationStatus)[keyof typeof CustomerIdentificationStatus]
 
+
+export const TransactionMethod: {
+  OFFLINE: 'OFFLINE',
+  PAYSTACK: 'PAYSTACK'
+};
+
+export type TransactionMethod = (typeof TransactionMethod)[keyof typeof TransactionMethod]
+
 }
 
 export type InvoiceCycle = $Enums.InvoiceCycle
@@ -317,6 +325,10 @@ export const SubscriptionPlanStatus: typeof $Enums.SubscriptionPlanStatus
 export type CustomerIdentificationStatus = $Enums.CustomerIdentificationStatus
 
 export const CustomerIdentificationStatus: typeof $Enums.CustomerIdentificationStatus
+
+export type TransactionMethod = $Enums.TransactionMethod
+
+export const TransactionMethod: typeof $Enums.TransactionMethod
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2621,6 +2633,37 @@ export namespace Prisma {
    */
   export type RecurringBillableCountOutputTypeCountInvoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvoiceWhereInput
+  }
+
+
+  /**
+   * Count Type TransactionsCountOutputType
+   */
+
+  export type TransactionsCountOutputType = {
+    File: number
+  }
+
+  export type TransactionsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    File?: boolean | TransactionsCountOutputTypeCountFileArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TransactionsCountOutputType without action
+   */
+  export type TransactionsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransactionsCountOutputType
+     */
+    select?: TransactionsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TransactionsCountOutputType without action
+   */
+  export type TransactionsCountOutputTypeCountFileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FileWhereInput
   }
 
 
@@ -15456,6 +15499,7 @@ export namespace Prisma {
     referenceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    method: $Enums.TransactionMethod | null
     invoiceId: string | null
   }
 
@@ -15467,6 +15511,7 @@ export namespace Prisma {
     referenceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    method: $Enums.TransactionMethod | null
     invoiceId: string | null
   }
 
@@ -15478,6 +15523,7 @@ export namespace Prisma {
     referenceId: number
     createdAt: number
     updatedAt: number
+    method: number
     invoiceId: number
     _all: number
   }
@@ -15499,6 +15545,7 @@ export namespace Prisma {
     referenceId?: true
     createdAt?: true
     updatedAt?: true
+    method?: true
     invoiceId?: true
   }
 
@@ -15510,6 +15557,7 @@ export namespace Prisma {
     referenceId?: true
     createdAt?: true
     updatedAt?: true
+    method?: true
     invoiceId?: true
   }
 
@@ -15521,6 +15569,7 @@ export namespace Prisma {
     referenceId?: true
     createdAt?: true
     updatedAt?: true
+    method?: true
     invoiceId?: true
     _all?: true
   }
@@ -15619,6 +15668,7 @@ export namespace Prisma {
     referenceId: string | null
     createdAt: Date
     updatedAt: Date
+    method: $Enums.TransactionMethod
     invoiceId: string | null
     _count: TransactionsCountAggregateOutputType | null
     _avg: TransactionsAvgAggregateOutputType | null
@@ -15649,9 +15699,12 @@ export namespace Prisma {
     referenceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    method?: boolean
     invoiceId?: boolean
     invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
     lease?: boolean | Transactions$leaseArgs<ExtArgs>
+    File?: boolean | Transactions$FileArgs<ExtArgs>
+    _count?: boolean | TransactionsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["transactions"]>
 
   export type TransactionsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15662,6 +15715,7 @@ export namespace Prisma {
     referenceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    method?: boolean
     invoiceId?: boolean
     invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
     lease?: boolean | Transactions$leaseArgs<ExtArgs>
@@ -15675,6 +15729,7 @@ export namespace Prisma {
     referenceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    method?: boolean
     invoiceId?: boolean
     invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
     lease?: boolean | Transactions$leaseArgs<ExtArgs>
@@ -15688,13 +15743,16 @@ export namespace Prisma {
     referenceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    method?: boolean
     invoiceId?: boolean
   }
 
-  export type TransactionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "amountPaid" | "referenceId" | "createdAt" | "updatedAt" | "invoiceId", ExtArgs["result"]["transactions"]>
+  export type TransactionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "leaseId" | "description" | "amountPaid" | "referenceId" | "createdAt" | "updatedAt" | "method" | "invoiceId", ExtArgs["result"]["transactions"]>
   export type TransactionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
     lease?: boolean | Transactions$leaseArgs<ExtArgs>
+    File?: boolean | Transactions$FileArgs<ExtArgs>
+    _count?: boolean | TransactionsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TransactionsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | Transactions$invoiceArgs<ExtArgs>
@@ -15710,6 +15768,7 @@ export namespace Prisma {
     objects: {
       invoice: Prisma.$InvoicePayload<ExtArgs> | null
       lease: Prisma.$LeasePayload<ExtArgs> | null
+      File: Prisma.$FilePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -15719,6 +15778,7 @@ export namespace Prisma {
       referenceId: string | null
       createdAt: Date
       updatedAt: Date
+      method: $Enums.TransactionMethod
       invoiceId: string | null
     }, ExtArgs["result"]["transactions"]>
     composites: {}
@@ -16116,6 +16176,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     invoice<T extends Transactions$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, Transactions$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lease<T extends Transactions$leaseArgs<ExtArgs> = {}>(args?: Subset<T, Transactions$leaseArgs<ExtArgs>>): Prisma__LeaseClient<$Result.GetResult<Prisma.$LeasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    File<T extends Transactions$FileArgs<ExtArgs> = {}>(args?: Subset<T, Transactions$FileArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16152,6 +16213,7 @@ export namespace Prisma {
     readonly referenceId: FieldRef<"Transactions", 'String'>
     readonly createdAt: FieldRef<"Transactions", 'DateTime'>
     readonly updatedAt: FieldRef<"Transactions", 'DateTime'>
+    readonly method: FieldRef<"Transactions", 'TransactionMethod'>
     readonly invoiceId: FieldRef<"Transactions", 'String'>
   }
     
@@ -16584,6 +16646,30 @@ export namespace Prisma {
      */
     include?: LeaseInclude<ExtArgs> | null
     where?: LeaseWhereInput
+  }
+
+  /**
+   * Transactions.File
+   */
+  export type Transactions$FileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the File
+     */
+    select?: FileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the File
+     */
+    omit?: FileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FileInclude<ExtArgs> | null
+    where?: FileWhereInput
+    orderBy?: FileOrderByWithRelationInput | FileOrderByWithRelationInput[]
+    cursor?: FileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
   }
 
   /**
@@ -18789,6 +18875,7 @@ export namespace Prisma {
     leaseId: string | null
     invoiceId: string | null
     maintenanceRequestId: string | null
+    transactionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     size: number | null
@@ -18805,6 +18892,7 @@ export namespace Prisma {
     leaseId: string | null
     invoiceId: string | null
     maintenanceRequestId: string | null
+    transactionId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     size: number | null
@@ -18821,6 +18909,7 @@ export namespace Prisma {
     leaseId: number
     invoiceId: number
     maintenanceRequestId: number
+    transactionId: number
     createdAt: number
     updatedAt: number
     size: number
@@ -18847,6 +18936,7 @@ export namespace Prisma {
     leaseId?: true
     invoiceId?: true
     maintenanceRequestId?: true
+    transactionId?: true
     createdAt?: true
     updatedAt?: true
     size?: true
@@ -18863,6 +18953,7 @@ export namespace Prisma {
     leaseId?: true
     invoiceId?: true
     maintenanceRequestId?: true
+    transactionId?: true
     createdAt?: true
     updatedAt?: true
     size?: true
@@ -18879,6 +18970,7 @@ export namespace Prisma {
     leaseId?: true
     invoiceId?: true
     maintenanceRequestId?: true
+    transactionId?: true
     createdAt?: true
     updatedAt?: true
     size?: true
@@ -18982,6 +19074,7 @@ export namespace Prisma {
     leaseId: string | null
     invoiceId: string | null
     maintenanceRequestId: string | null
+    transactionId: string | null
     createdAt: Date
     updatedAt: Date
     size: number | null
@@ -19017,6 +19110,7 @@ export namespace Prisma {
     leaseId?: boolean
     invoiceId?: boolean
     maintenanceRequestId?: boolean
+    transactionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     size?: boolean
@@ -19026,6 +19120,7 @@ export namespace Prisma {
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["file"]>
 
   export type FileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19038,6 +19133,7 @@ export namespace Prisma {
     leaseId?: boolean
     invoiceId?: boolean
     maintenanceRequestId?: boolean
+    transactionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     size?: boolean
@@ -19047,6 +19143,7 @@ export namespace Prisma {
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["file"]>
 
   export type FileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19059,6 +19156,7 @@ export namespace Prisma {
     leaseId?: boolean
     invoiceId?: boolean
     maintenanceRequestId?: boolean
+    transactionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     size?: boolean
@@ -19068,6 +19166,7 @@ export namespace Prisma {
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }, ExtArgs["result"]["file"]>
 
   export type FileSelectScalar = {
@@ -19080,19 +19179,21 @@ export namespace Prisma {
     leaseId?: boolean
     invoiceId?: boolean
     maintenanceRequestId?: boolean
+    transactionId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     size?: boolean
     type?: boolean
   }
 
-  export type FileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "url" | "ownerId" | "tenantId" | "propertyId" | "leaseId" | "invoiceId" | "maintenanceRequestId" | "createdAt" | "updatedAt" | "size" | "type", ExtArgs["result"]["file"]>
+  export type FileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "url" | "ownerId" | "tenantId" | "propertyId" | "leaseId" | "invoiceId" | "maintenanceRequestId" | "transactionId" | "createdAt" | "updatedAt" | "size" | "type", ExtArgs["result"]["file"]>
   export type FileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | File$invoiceArgs<ExtArgs>
     lease?: boolean | File$leaseArgs<ExtArgs>
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }
   export type FileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | File$invoiceArgs<ExtArgs>
@@ -19100,6 +19201,7 @@ export namespace Prisma {
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }
   export type FileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | File$invoiceArgs<ExtArgs>
@@ -19107,6 +19209,7 @@ export namespace Prisma {
     maintenanceRequest?: boolean | File$maintenanceRequestArgs<ExtArgs>
     property?: boolean | File$propertyArgs<ExtArgs>
     tenant?: boolean | File$tenantArgs<ExtArgs>
+    transaction?: boolean | File$transactionArgs<ExtArgs>
   }
 
   export type $FilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19117,6 +19220,7 @@ export namespace Prisma {
       maintenanceRequest: Prisma.$MaintenanceRequestPayload<ExtArgs> | null
       property: Prisma.$PropertyPayload<ExtArgs> | null
       tenant: Prisma.$TenantPayload<ExtArgs> | null
+      transaction: Prisma.$TransactionsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19128,6 +19232,7 @@ export namespace Prisma {
       leaseId: string | null
       invoiceId: string | null
       maintenanceRequestId: string | null
+      transactionId: string | null
       createdAt: Date
       updatedAt: Date
       size: number | null
@@ -19531,6 +19636,7 @@ export namespace Prisma {
     maintenanceRequest<T extends File$maintenanceRequestArgs<ExtArgs> = {}>(args?: Subset<T, File$maintenanceRequestArgs<ExtArgs>>): Prisma__MaintenanceRequestClient<$Result.GetResult<Prisma.$MaintenanceRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     property<T extends File$propertyArgs<ExtArgs> = {}>(args?: Subset<T, File$propertyArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tenant<T extends File$tenantArgs<ExtArgs> = {}>(args?: Subset<T, File$tenantArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    transaction<T extends File$transactionArgs<ExtArgs> = {}>(args?: Subset<T, File$transactionArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19569,6 +19675,7 @@ export namespace Prisma {
     readonly leaseId: FieldRef<"File", 'String'>
     readonly invoiceId: FieldRef<"File", 'String'>
     readonly maintenanceRequestId: FieldRef<"File", 'String'>
+    readonly transactionId: FieldRef<"File", 'String'>
     readonly createdAt: FieldRef<"File", 'DateTime'>
     readonly updatedAt: FieldRef<"File", 'DateTime'>
     readonly size: FieldRef<"File", 'Int'>
@@ -20064,6 +20171,25 @@ export namespace Prisma {
   }
 
   /**
+   * File.transaction
+   */
+  export type File$transactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    where?: TransactionsWhereInput
+  }
+
+  /**
    * File without action
    */
   export type FileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20317,6 +20443,7 @@ export namespace Prisma {
     referenceId: 'referenceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    method: 'method',
     invoiceId: 'invoiceId'
   };
 
@@ -20355,6 +20482,7 @@ export namespace Prisma {
     leaseId: 'leaseId',
     invoiceId: 'invoiceId',
     maintenanceRequestId: 'maintenanceRequestId',
+    transactionId: 'transactionId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     size: 'size',
@@ -20610,6 +20738,20 @@ export namespace Prisma {
    * Reference to a field of type 'InvoiceStatus[]'
    */
   export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionMethod'
+   */
+  export type EnumTransactionMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionMethod'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionMethod[]'
+   */
+  export type ListEnumTransactionMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionMethod[]'>
     
 
 
@@ -21807,9 +21949,11 @@ export namespace Prisma {
     referenceId?: StringNullableFilter<"Transactions"> | string | null
     createdAt?: DateTimeFilter<"Transactions"> | Date | string
     updatedAt?: DateTimeFilter<"Transactions"> | Date | string
+    method?: EnumTransactionMethodFilter<"Transactions"> | $Enums.TransactionMethod
     invoiceId?: StringNullableFilter<"Transactions"> | string | null
     invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
+    File?: FileListRelationFilter
   }
 
   export type TransactionsOrderByWithRelationInput = {
@@ -21820,9 +21964,11 @@ export namespace Prisma {
     referenceId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    method?: SortOrder
     invoiceId?: SortOrderInput | SortOrder
     invoice?: InvoiceOrderByWithRelationInput
     lease?: LeaseOrderByWithRelationInput
+    File?: FileOrderByRelationAggregateInput
   }
 
   export type TransactionsWhereUniqueInput = Prisma.AtLeast<{
@@ -21836,9 +21982,11 @@ export namespace Prisma {
     referenceId?: StringNullableFilter<"Transactions"> | string | null
     createdAt?: DateTimeFilter<"Transactions"> | Date | string
     updatedAt?: DateTimeFilter<"Transactions"> | Date | string
+    method?: EnumTransactionMethodFilter<"Transactions"> | $Enums.TransactionMethod
     invoiceId?: StringNullableFilter<"Transactions"> | string | null
     invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
     lease?: XOR<LeaseNullableScalarRelationFilter, LeaseWhereInput> | null
+    File?: FileListRelationFilter
   }, "id">
 
   export type TransactionsOrderByWithAggregationInput = {
@@ -21849,6 +21997,7 @@ export namespace Prisma {
     referenceId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    method?: SortOrder
     invoiceId?: SortOrderInput | SortOrder
     _count?: TransactionsCountOrderByAggregateInput
     _avg?: TransactionsAvgOrderByAggregateInput
@@ -21868,6 +22017,7 @@ export namespace Prisma {
     referenceId?: StringNullableWithAggregatesFilter<"Transactions"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Transactions"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Transactions"> | Date | string
+    method?: EnumTransactionMethodWithAggregatesFilter<"Transactions"> | $Enums.TransactionMethod
     invoiceId?: StringNullableWithAggregatesFilter<"Transactions"> | string | null
   }
 
@@ -22000,6 +22150,7 @@ export namespace Prisma {
     leaseId?: StringNullableFilter<"File"> | string | null
     invoiceId?: StringNullableFilter<"File"> | string | null
     maintenanceRequestId?: StringNullableFilter<"File"> | string | null
+    transactionId?: StringNullableFilter<"File"> | string | null
     createdAt?: DateTimeFilter<"File"> | Date | string
     updatedAt?: DateTimeFilter<"File"> | Date | string
     size?: IntNullableFilter<"File"> | number | null
@@ -22009,6 +22160,7 @@ export namespace Prisma {
     maintenanceRequest?: XOR<MaintenanceRequestNullableScalarRelationFilter, MaintenanceRequestWhereInput> | null
     property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
     tenant?: XOR<TenantNullableScalarRelationFilter, TenantWhereInput> | null
+    transaction?: XOR<TransactionsNullableScalarRelationFilter, TransactionsWhereInput> | null
   }
 
   export type FileOrderByWithRelationInput = {
@@ -22021,6 +22173,7 @@ export namespace Prisma {
     leaseId?: SortOrderInput | SortOrder
     invoiceId?: SortOrderInput | SortOrder
     maintenanceRequestId?: SortOrderInput | SortOrder
+    transactionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     size?: SortOrderInput | SortOrder
@@ -22030,6 +22183,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestOrderByWithRelationInput
     property?: PropertyOrderByWithRelationInput
     tenant?: TenantOrderByWithRelationInput
+    transaction?: TransactionsOrderByWithRelationInput
   }
 
   export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -22045,6 +22199,7 @@ export namespace Prisma {
     leaseId?: StringNullableFilter<"File"> | string | null
     invoiceId?: StringNullableFilter<"File"> | string | null
     maintenanceRequestId?: StringNullableFilter<"File"> | string | null
+    transactionId?: StringNullableFilter<"File"> | string | null
     createdAt?: DateTimeFilter<"File"> | Date | string
     updatedAt?: DateTimeFilter<"File"> | Date | string
     size?: IntNullableFilter<"File"> | number | null
@@ -22054,6 +22209,7 @@ export namespace Prisma {
     maintenanceRequest?: XOR<MaintenanceRequestNullableScalarRelationFilter, MaintenanceRequestWhereInput> | null
     property?: XOR<PropertyNullableScalarRelationFilter, PropertyWhereInput> | null
     tenant?: XOR<TenantNullableScalarRelationFilter, TenantWhereInput> | null
+    transaction?: XOR<TransactionsNullableScalarRelationFilter, TransactionsWhereInput> | null
   }, "id">
 
   export type FileOrderByWithAggregationInput = {
@@ -22066,6 +22222,7 @@ export namespace Prisma {
     leaseId?: SortOrderInput | SortOrder
     invoiceId?: SortOrderInput | SortOrder
     maintenanceRequestId?: SortOrderInput | SortOrder
+    transactionId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     size?: SortOrderInput | SortOrder
@@ -22090,6 +22247,7 @@ export namespace Prisma {
     leaseId?: StringNullableWithAggregatesFilter<"File"> | string | null
     invoiceId?: StringNullableWithAggregatesFilter<"File"> | string | null
     maintenanceRequestId?: StringNullableWithAggregatesFilter<"File"> | string | null
+    transactionId?: StringNullableWithAggregatesFilter<"File"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"File"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"File"> | Date | string
     size?: IntNullableWithAggregatesFilter<"File"> | number | null
@@ -23459,8 +23617,10 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
     lease?: LeaseCreateNestedOneWithoutTransactionsInput
+    File?: FileCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsUncheckedCreateInput = {
@@ -23471,7 +23631,9 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoiceId?: string | null
+    File?: FileUncheckedCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsUpdateInput = {
@@ -23481,8 +23643,10 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
     lease?: LeaseUpdateOneWithoutTransactionsNestedInput
+    File?: FileUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsUncheckedUpdateInput = {
@@ -23493,7 +23657,9 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    File?: FileUncheckedUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsCreateManyInput = {
@@ -23504,6 +23670,7 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoiceId?: string | null
   }
 
@@ -23514,6 +23681,7 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
   }
 
   export type TransactionsUncheckedUpdateManyInput = {
@@ -23524,6 +23692,7 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -23654,6 +23823,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
     property?: PropertyCreateNestedOneWithoutFilesInput
     tenant?: TenantCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateInput = {
@@ -23666,6 +23836,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -23686,6 +23857,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
     property?: PropertyUpdateOneWithoutFilesNestedInput
     tenant?: TenantUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateInput = {
@@ -23698,6 +23870,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -23714,6 +23887,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -23741,6 +23915,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -24924,6 +25099,13 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
+  export type EnumTransactionMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionMethod | EnumTransactionMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionMethodFilter<$PrismaModel> | $Enums.TransactionMethod
+  }
+
   export type InvoiceNullableScalarRelationFilter = {
     is?: InvoiceWhereInput | null
     isNot?: InvoiceWhereInput | null
@@ -24937,6 +25119,7 @@ export namespace Prisma {
     referenceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    method?: SortOrder
     invoiceId?: SortOrder
   }
 
@@ -24952,6 +25135,7 @@ export namespace Prisma {
     referenceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    method?: SortOrder
     invoiceId?: SortOrder
   }
 
@@ -24963,11 +25147,22 @@ export namespace Prisma {
     referenceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    method?: SortOrder
     invoiceId?: SortOrder
   }
 
   export type TransactionsSumOrderByAggregateInput = {
     amountPaid?: SortOrder
+  }
+
+  export type EnumTransactionMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionMethod | EnumTransactionMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionMethodWithAggregatesFilter<$PrismaModel> | $Enums.TransactionMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionMethodFilter<$PrismaModel>
+    _max?: NestedEnumTransactionMethodFilter<$PrismaModel>
   }
 
   export type LeaseScalarRelationFilter = {
@@ -25067,6 +25262,11 @@ export namespace Prisma {
     isNot?: TenantWhereInput | null
   }
 
+  export type TransactionsNullableScalarRelationFilter = {
+    is?: TransactionsWhereInput | null
+    isNot?: TransactionsWhereInput | null
+  }
+
   export type FileCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -25077,6 +25277,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     invoiceId?: SortOrder
     maintenanceRequestId?: SortOrder
+    transactionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     size?: SortOrder
@@ -25097,6 +25298,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     invoiceId?: SortOrder
     maintenanceRequestId?: SortOrder
+    transactionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     size?: SortOrder
@@ -25113,6 +25315,7 @@ export namespace Prisma {
     leaseId?: SortOrder
     invoiceId?: SortOrder
     maintenanceRequestId?: SortOrder
+    transactionId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     size?: SortOrder
@@ -26367,6 +26570,24 @@ export namespace Prisma {
     connect?: LeaseWhereUniqueInput
   }
 
+  export type FileCreateNestedManyWithoutTransactionInput = {
+    create?: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput> | FileCreateWithoutTransactionInput[] | FileUncheckedCreateWithoutTransactionInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutTransactionInput | FileCreateOrConnectWithoutTransactionInput[]
+    createMany?: FileCreateManyTransactionInputEnvelope
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+  }
+
+  export type FileUncheckedCreateNestedManyWithoutTransactionInput = {
+    create?: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput> | FileCreateWithoutTransactionInput[] | FileUncheckedCreateWithoutTransactionInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutTransactionInput | FileCreateOrConnectWithoutTransactionInput[]
+    createMany?: FileCreateManyTransactionInputEnvelope
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+  }
+
+  export type EnumTransactionMethodFieldUpdateOperationsInput = {
+    set?: $Enums.TransactionMethod
+  }
+
   export type InvoiceUpdateOneWithoutTransactionsNestedInput = {
     create?: XOR<InvoiceCreateWithoutTransactionsInput, InvoiceUncheckedCreateWithoutTransactionsInput>
     connectOrCreate?: InvoiceCreateOrConnectWithoutTransactionsInput
@@ -26385,6 +26606,34 @@ export namespace Prisma {
     delete?: LeaseWhereInput | boolean
     connect?: LeaseWhereUniqueInput
     update?: XOR<XOR<LeaseUpdateToOneWithWhereWithoutTransactionsInput, LeaseUpdateWithoutTransactionsInput>, LeaseUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type FileUpdateManyWithoutTransactionNestedInput = {
+    create?: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput> | FileCreateWithoutTransactionInput[] | FileUncheckedCreateWithoutTransactionInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutTransactionInput | FileCreateOrConnectWithoutTransactionInput[]
+    upsert?: FileUpsertWithWhereUniqueWithoutTransactionInput | FileUpsertWithWhereUniqueWithoutTransactionInput[]
+    createMany?: FileCreateManyTransactionInputEnvelope
+    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    update?: FileUpdateWithWhereUniqueWithoutTransactionInput | FileUpdateWithWhereUniqueWithoutTransactionInput[]
+    updateMany?: FileUpdateManyWithWhereWithoutTransactionInput | FileUpdateManyWithWhereWithoutTransactionInput[]
+    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
+  }
+
+  export type FileUncheckedUpdateManyWithoutTransactionNestedInput = {
+    create?: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput> | FileCreateWithoutTransactionInput[] | FileUncheckedCreateWithoutTransactionInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutTransactionInput | FileCreateOrConnectWithoutTransactionInput[]
+    upsert?: FileUpsertWithWhereUniqueWithoutTransactionInput | FileUpsertWithWhereUniqueWithoutTransactionInput[]
+    createMany?: FileCreateManyTransactionInputEnvelope
+    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    update?: FileUpdateWithWhereUniqueWithoutTransactionInput | FileUpdateWithWhereUniqueWithoutTransactionInput[]
+    updateMany?: FileUpdateManyWithWhereWithoutTransactionInput | FileUpdateManyWithWhereWithoutTransactionInput[]
+    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
   export type LeaseCreateNestedOneWithoutTenantLeaseInput = {
@@ -26509,6 +26758,12 @@ export namespace Prisma {
     connect?: TenantWhereUniqueInput
   }
 
+  export type TransactionsCreateNestedOneWithoutFileInput = {
+    create?: XOR<TransactionsCreateWithoutFileInput, TransactionsUncheckedCreateWithoutFileInput>
+    connectOrCreate?: TransactionsCreateOrConnectWithoutFileInput
+    connect?: TransactionsWhereUniqueInput
+  }
+
   export type InvoiceUpdateOneWithoutFileNestedInput = {
     create?: XOR<InvoiceCreateWithoutFileInput, InvoiceUncheckedCreateWithoutFileInput>
     connectOrCreate?: InvoiceCreateOrConnectWithoutFileInput
@@ -26557,6 +26812,16 @@ export namespace Prisma {
     delete?: TenantWhereInput | boolean
     connect?: TenantWhereUniqueInput
     update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutFilesInput, TenantUpdateWithoutFilesInput>, TenantUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type TransactionsUpdateOneWithoutFileNestedInput = {
+    create?: XOR<TransactionsCreateWithoutFileInput, TransactionsUncheckedCreateWithoutFileInput>
+    connectOrCreate?: TransactionsCreateOrConnectWithoutFileInput
+    upsert?: TransactionsUpsertWithoutFileInput
+    disconnect?: TransactionsWhereInput | boolean
+    delete?: TransactionsWhereInput | boolean
+    connect?: TransactionsWhereUniqueInput
+    update?: XOR<XOR<TransactionsUpdateToOneWithWhereWithoutFileInput, TransactionsUpdateWithoutFileInput>, TransactionsUncheckedUpdateWithoutFileInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -26950,6 +27215,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumInvoiceStatusFilter<$PrismaModel>
     _max?: NestedEnumInvoiceStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTransactionMethodFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionMethod | EnumTransactionMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionMethodFilter<$PrismaModel> | $Enums.TransactionMethod
+  }
+
+  export type NestedEnumTransactionMethodWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionMethod | EnumTransactionMethodFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TransactionMethod[] | ListEnumTransactionMethodFieldRefInput<$PrismaModel>
+    not?: NestedEnumTransactionMethodWithAggregatesFilter<$PrismaModel> | $Enums.TransactionMethod
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionMethodFilter<$PrismaModel>
+    _max?: NestedEnumTransactionMethodFilter<$PrismaModel>
   }
 
   export type NestedEnumMaintenanceRequestStatusNullableFilter<$PrismaModel = never> = {
@@ -27773,6 +28055,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutFileInput
     maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
     property?: PropertyCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutTenantInput = {
@@ -27784,6 +28067,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -28032,6 +28316,7 @@ export namespace Prisma {
     leaseId?: StringNullableFilter<"File"> | string | null
     invoiceId?: StringNullableFilter<"File"> | string | null
     maintenanceRequestId?: StringNullableFilter<"File"> | string | null
+    transactionId?: StringNullableFilter<"File"> | string | null
     createdAt?: DateTimeFilter<"File"> | Date | string
     updatedAt?: DateTimeFilter<"File"> | Date | string
     size?: IntNullableFilter<"File"> | number | null
@@ -28221,6 +28506,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutFileInput
     maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
     tenant?: TenantCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutPropertyInput = {
@@ -28232,6 +28518,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -28784,6 +29071,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
     property?: PropertyCreateNestedOneWithoutFilesInput
     tenant?: TenantCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutLeaseInput = {
@@ -28795,6 +29083,7 @@ export namespace Prisma {
     propertyId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -28951,7 +29240,9 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
+    File?: FileCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsUncheckedCreateWithoutLeaseInput = {
@@ -28961,7 +29252,9 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoiceId?: string | null
+    File?: FileUncheckedCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsCreateOrConnectWithoutLeaseInput = {
@@ -29159,6 +29452,7 @@ export namespace Prisma {
     referenceId?: StringNullableFilter<"Transactions"> | string | null
     createdAt?: DateTimeFilter<"Transactions"> | Date | string
     updatedAt?: DateTimeFilter<"Transactions"> | Date | string
+    method?: EnumTransactionMethodFilter<"Transactions"> | $Enums.TransactionMethod
     invoiceId?: StringNullableFilter<"Transactions"> | string | null
   }
 
@@ -29191,6 +29485,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
     property?: PropertyCreateNestedOneWithoutFilesInput
     tenant?: TenantCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutInvoiceInput = {
@@ -29202,6 +29497,7 @@ export namespace Prisma {
     propertyId?: string | null
     leaseId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -29333,7 +29629,9 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     lease?: LeaseCreateNestedOneWithoutTransactionsInput
+    File?: FileCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsUncheckedCreateWithoutInvoiceInput = {
@@ -29344,6 +29642,8 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
+    File?: FileUncheckedCreateNestedManyWithoutTransactionInput
   }
 
   export type TransactionsCreateOrConnectWithoutInvoiceInput = {
@@ -30270,6 +30570,48 @@ export namespace Prisma {
     create: XOR<LeaseCreateWithoutTransactionsInput, LeaseUncheckedCreateWithoutTransactionsInput>
   }
 
+  export type FileCreateWithoutTransactionInput = {
+    id?: string
+    name: string
+    url: string
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    size?: number | null
+    type?: string | null
+    invoice?: InvoiceCreateNestedOneWithoutFileInput
+    lease?: LeaseCreateNestedOneWithoutFileInput
+    maintenanceRequest?: MaintenanceRequestCreateNestedOneWithoutFileInput
+    property?: PropertyCreateNestedOneWithoutFilesInput
+    tenant?: TenantCreateNestedOneWithoutFilesInput
+  }
+
+  export type FileUncheckedCreateWithoutTransactionInput = {
+    id?: string
+    name: string
+    url: string
+    ownerId: string
+    tenantId?: string | null
+    propertyId?: string | null
+    leaseId?: string | null
+    invoiceId?: string | null
+    maintenanceRequestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    size?: number | null
+    type?: string | null
+  }
+
+  export type FileCreateOrConnectWithoutTransactionInput = {
+    where: FileWhereUniqueInput
+    create: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput>
+  }
+
+  export type FileCreateManyTransactionInputEnvelope = {
+    data: FileCreateManyTransactionInput | FileCreateManyTransactionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type InvoiceUpsertWithoutTransactionsInput = {
     update: XOR<InvoiceUpdateWithoutTransactionsInput, InvoiceUncheckedUpdateWithoutTransactionsInput>
     create: XOR<InvoiceCreateWithoutTransactionsInput, InvoiceUncheckedCreateWithoutTransactionsInput>
@@ -30382,6 +30724,22 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestUncheckedUpdateManyWithoutLeaseNestedInput
     tenantLease?: TenantLeaseUncheckedUpdateManyWithoutLeaseNestedInput
     recurringBillable?: RecurringBillableUncheckedUpdateManyWithoutLeaseNestedInput
+  }
+
+  export type FileUpsertWithWhereUniqueWithoutTransactionInput = {
+    where: FileWhereUniqueInput
+    update: XOR<FileUpdateWithoutTransactionInput, FileUncheckedUpdateWithoutTransactionInput>
+    create: XOR<FileCreateWithoutTransactionInput, FileUncheckedCreateWithoutTransactionInput>
+  }
+
+  export type FileUpdateWithWhereUniqueWithoutTransactionInput = {
+    where: FileWhereUniqueInput
+    data: XOR<FileUpdateWithoutTransactionInput, FileUncheckedUpdateWithoutTransactionInput>
+  }
+
+  export type FileUpdateManyWithWhereWithoutTransactionInput = {
+    where: FileScalarWhereInput
+    data: XOR<FileUpdateManyMutationInput, FileUncheckedUpdateManyWithoutTransactionInput>
   }
 
   export type LeaseCreateWithoutTenantLeaseInput = {
@@ -30625,6 +30983,7 @@ export namespace Prisma {
     lease?: LeaseCreateNestedOneWithoutFileInput
     property?: PropertyCreateNestedOneWithoutFilesInput
     tenant?: TenantCreateNestedOneWithoutFilesInput
+    transaction?: TransactionsCreateNestedOneWithoutFileInput
   }
 
   export type FileUncheckedCreateWithoutMaintenanceRequestInput = {
@@ -30636,6 +30995,7 @@ export namespace Prisma {
     propertyId?: string | null
     leaseId?: string | null
     invoiceId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -31011,6 +31371,35 @@ export namespace Prisma {
     create: XOR<TenantCreateWithoutFilesInput, TenantUncheckedCreateWithoutFilesInput>
   }
 
+  export type TransactionsCreateWithoutFileInput = {
+    id?: string
+    description: string
+    amountPaid: number
+    referenceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
+    invoice?: InvoiceCreateNestedOneWithoutTransactionsInput
+    lease?: LeaseCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionsUncheckedCreateWithoutFileInput = {
+    id?: string
+    leaseId?: string | null
+    description: string
+    amountPaid: number
+    referenceId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
+    invoiceId?: string | null
+  }
+
+  export type TransactionsCreateOrConnectWithoutFileInput = {
+    where: TransactionsWhereUniqueInput
+    create: XOR<TransactionsCreateWithoutFileInput, TransactionsUncheckedCreateWithoutFileInput>
+  }
+
   export type InvoiceUpsertWithoutFileInput = {
     update: XOR<InvoiceUpdateWithoutFileInput, InvoiceUncheckedUpdateWithoutFileInput>
     create: XOR<InvoiceCreateWithoutFileInput, InvoiceUncheckedCreateWithoutFileInput>
@@ -31266,6 +31655,41 @@ export namespace Prisma {
     Invoice?: InvoiceUncheckedUpdateManyWithoutTenantNestedInput
     tenantLease?: TenantLeaseUncheckedUpdateManyWithoutTenantNestedInput
     recurringBillable?: RecurringBillableUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TransactionsUpsertWithoutFileInput = {
+    update: XOR<TransactionsUpdateWithoutFileInput, TransactionsUncheckedUpdateWithoutFileInput>
+    create: XOR<TransactionsCreateWithoutFileInput, TransactionsUncheckedCreateWithoutFileInput>
+    where?: TransactionsWhereInput
+  }
+
+  export type TransactionsUpdateToOneWithWhereWithoutFileInput = {
+    where?: TransactionsWhereInput
+    data: XOR<TransactionsUpdateWithoutFileInput, TransactionsUncheckedUpdateWithoutFileInput>
+  }
+
+  export type TransactionsUpdateWithoutFileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
+    invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
+    lease?: LeaseUpdateOneWithoutTransactionsNestedInput
+  }
+
+  export type TransactionsUncheckedUpdateWithoutFileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    leaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
+    invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AccountCreateManyUserInput = {
@@ -31623,6 +32047,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -31682,6 +32107,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutFileNestedInput
     maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
     property?: PropertyUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutTenantInput = {
@@ -31693,6 +32119,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31708,6 +32135,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31849,6 +32277,7 @@ export namespace Prisma {
     leaseId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -31896,6 +32325,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutFileNestedInput
     maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
     tenant?: TenantUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutPropertyInput = {
@@ -31907,6 +32337,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -31922,6 +32353,7 @@ export namespace Prisma {
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32113,6 +32545,7 @@ export namespace Prisma {
     propertyId?: string | null
     invoiceId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -32159,6 +32592,7 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
     invoiceId?: string | null
   }
 
@@ -32191,6 +32625,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
     property?: PropertyUpdateOneWithoutFilesNestedInput
     tenant?: TenantUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutLeaseInput = {
@@ -32202,6 +32637,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32217,6 +32653,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32335,7 +32772,9 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoice?: InvoiceUpdateOneWithoutTransactionsNestedInput
+    File?: FileUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsUncheckedUpdateWithoutLeaseInput = {
@@ -32345,7 +32784,9 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    File?: FileUncheckedUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsUncheckedUpdateManyWithoutLeaseInput = {
@@ -32355,6 +32796,7 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -32417,6 +32859,7 @@ export namespace Prisma {
     propertyId?: string | null
     leaseId?: string | null
     maintenanceRequestId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -32431,6 +32874,7 @@ export namespace Prisma {
     referenceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    method?: $Enums.TransactionMethod
   }
 
   export type FileUpdateWithoutInvoiceInput = {
@@ -32446,6 +32890,7 @@ export namespace Prisma {
     maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
     property?: PropertyUpdateOneWithoutFilesNestedInput
     tenant?: TenantUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutInvoiceInput = {
@@ -32457,6 +32902,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32472,6 +32918,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32485,7 +32932,9 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
     lease?: LeaseUpdateOneWithoutTransactionsNestedInput
+    File?: FileUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsUncheckedUpdateWithoutInvoiceInput = {
@@ -32496,6 +32945,8 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
+    File?: FileUncheckedUpdateManyWithoutTransactionNestedInput
   }
 
   export type TransactionsUncheckedUpdateManyWithoutInvoiceInput = {
@@ -32506,6 +32957,7 @@ export namespace Prisma {
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    method?: EnumTransactionMethodFieldUpdateOperationsInput | $Enums.TransactionMethod
   }
 
   export type InvoiceCreateManyRecurringBillableInput = {
@@ -32588,6 +33040,70 @@ export namespace Prisma {
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type FileCreateManyTransactionInput = {
+    id?: string
+    name: string
+    url: string
+    ownerId: string
+    tenantId?: string | null
+    propertyId?: string | null
+    leaseId?: string | null
+    invoiceId?: string | null
+    maintenanceRequestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    size?: number | null
+    type?: string | null
+  }
+
+  export type FileUpdateWithoutTransactionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    invoice?: InvoiceUpdateOneWithoutFileNestedInput
+    lease?: LeaseUpdateOneWithoutFileNestedInput
+    maintenanceRequest?: MaintenanceRequestUpdateOneWithoutFileNestedInput
+    property?: PropertyUpdateOneWithoutFilesNestedInput
+    tenant?: TenantUpdateOneWithoutFilesNestedInput
+  }
+
+  export type FileUncheckedUpdateWithoutTransactionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    tenantId?: NullableStringFieldUpdateOperationsInput | string | null
+    propertyId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FileUncheckedUpdateManyWithoutTransactionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    tenantId?: NullableStringFieldUpdateOperationsInput | string | null
+    propertyId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaseId?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    maintenanceRequestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type FileCreateManyMaintenanceRequestInput = {
     id?: string
     name: string
@@ -32597,6 +33113,7 @@ export namespace Prisma {
     propertyId?: string | null
     leaseId?: string | null
     invoiceId?: string | null
+    transactionId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     size?: number | null
@@ -32616,6 +33133,7 @@ export namespace Prisma {
     lease?: LeaseUpdateOneWithoutFileNestedInput
     property?: PropertyUpdateOneWithoutFilesNestedInput
     tenant?: TenantUpdateOneWithoutFilesNestedInput
+    transaction?: TransactionsUpdateOneWithoutFileNestedInput
   }
 
   export type FileUncheckedUpdateWithoutMaintenanceRequestInput = {
@@ -32627,6 +33145,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32642,6 +33161,7 @@ export namespace Prisma {
     propertyId?: NullableStringFieldUpdateOperationsInput | string | null
     leaseId?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     size?: NullableIntFieldUpdateOperationsInput | number | null
