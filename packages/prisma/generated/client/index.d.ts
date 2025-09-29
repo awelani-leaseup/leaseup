@@ -135,7 +135,9 @@ export const LeaseStatus: {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  ENDED: 'ENDED',
+  RENEWED: 'RENEWED'
 };
 
 export type LeaseStatus = (typeof LeaseStatus)[keyof typeof LeaseStatus]
@@ -146,7 +148,6 @@ export const TenantIncomeType: {
   SELF_EMPLOYED: 'SELF_EMPLOYED',
   UNEMPLOYED: 'UNEMPLOYED',
   RETIRED: 'RETIRED',
-  DISABILITY: 'DISABILITY',
   OTHER: 'OTHER'
 };
 

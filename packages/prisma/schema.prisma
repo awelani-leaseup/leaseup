@@ -358,7 +358,6 @@ enum TenantIncomeType {
   SELF_EMPLOYED
   UNEMPLOYED
   RETIRED
-  DISABILITY
   OTHER
 }
 

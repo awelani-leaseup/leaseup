@@ -403,7 +403,9 @@ exports.LeaseStatus = exports.$Enums.LeaseStatus = {
   PENDING: 'PENDING',
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  ENDED: 'ENDED',
+  RENEWED: 'RENEWED'
 };
 
 exports.InvoiceCycle = exports.$Enums.InvoiceCycle = {

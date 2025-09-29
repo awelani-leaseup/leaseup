@@ -20,7 +20,7 @@ import { VLeaseSchema } from "../create/_types";
 import * as v from "valibot";
 import { api } from "@/trpc/react";
 import { useStore } from "@tanstack/react-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Separator } from "@leaseup/ui/components/separator";
 import { RadioGroup, RadioGroupItem } from "@leaseup/ui/components/radio-group";
 import { Label } from "@leaseup/ui/components/label";
@@ -53,8 +53,8 @@ type LeaseData = {
       city: string;
       state: string;
       zip: string;
-      propertyType: string;
-      unit: Array<{
+      propertyType?: string;
+      unit?: Array<{
         id: string;
         name: string;
       }>;
@@ -82,10 +82,16 @@ type LeaseData = {
 interface EditLeaseDialogProps {
   lease: LeaseData;
   children: React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export function EditLeaseDialog({ lease, children }: EditLeaseDialogProps) {
-  const [open, setOpen] = useState(false);
+export function EditLeaseDialog({
+  lease,
+  children,
+  open,
+  onOpenChange,
+}: EditLeaseDialogProps) {
   const updateLease = api.lease.updateLease.useMutation();
   const utils = api.useUtils();
 
@@ -128,7 +134,7 @@ export function EditLeaseDialog({ lease, children }: EditLeaseDialogProps) {
         },
         {
           onSuccess: () => {
-            setOpen(false);
+            onOpenChange(false);
             toast.success("Lease updated successfully");
             utils.lease.getAll.invalidate();
             utils.lease.getById.invalidate(lease.id);
@@ -194,7 +200,7 @@ export function EditLeaseDialog({ lease, children }: EditLeaseDialogProps) {
   }, [lease, form, open]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
         <DialogHeader>
@@ -475,7 +481,7 @@ export function EditLeaseDialog({ lease, children }: EditLeaseDialogProps) {
         <DialogFooter className="flex gap-2">
           <Button
             variant="outlined"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
             disabled={updateLease.isPending}
           >
             Cancel

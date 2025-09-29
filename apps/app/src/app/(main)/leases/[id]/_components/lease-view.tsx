@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { format } from "date-fns";
 import {
   Download,
@@ -10,7 +11,6 @@ import {
   Edit,
   Square,
   Trash,
-  MoreVertical,
   ChevronDown,
 } from "lucide-react";
 import { Button } from "@leaseup/ui/components/button";
@@ -137,6 +137,7 @@ const getFileIcon = (fileType: string | null) => {
 };
 
 export function LeaseView({ lease }: LeaseViewProps) {
+  const [editLeaseOpen, setEditLeaseOpen] = useState(false);
   const primaryTenant = lease.tenantLease[0]?.tenant;
   const property = lease.unit?.property;
   const landlord = property?.landlord;
@@ -196,15 +197,11 @@ export function LeaseView({ lease }: LeaseViewProps) {
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.preventDefault();
+                        setEditLeaseOpen(true);
                       }}
                     >
-                      {/* @ts-expect-error - Lease is defined in the parent component */}
-                      <EditLeaseDialog lease={lease}>
-                        <>
-                          <Edit className="h-4 w-4" />
-                          Edit Lease
-                        </>
-                      </EditLeaseDialog>
+                      <Edit className="h-4 w-4" />
+                      Edit Lease
                     </DropdownMenuItem>
                     {lease.status === "ACTIVE" && (
                       <DropdownMenuItem asChild>
@@ -549,6 +546,15 @@ export function LeaseView({ lease }: LeaseViewProps) {
           </div>
         </div>
       </div>
+
+      {/* Edit Lease Dialog */}
+      <EditLeaseDialog
+        lease={lease}
+        open={editLeaseOpen}
+        onOpenChange={setEditLeaseOpen}
+      >
+        <></>
+      </EditLeaseDialog>
     </div>
   );
 }
