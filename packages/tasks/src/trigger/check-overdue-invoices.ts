@@ -1,6 +1,10 @@
 import { schedules, logger, wait } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
-import { InvoiceStatus, SubscriptionPlanStatus } from '@leaseup/prisma/client';
+import {
+  InvoiceStatus,
+  LeaseStatus,
+  SubscriptionPlanStatus,
+} from '@leaseup/prisma/client';
 import { resend } from '@leaseup/email/utils/resend';
 import TenantOverdueInvoices from '@leaseup/email/templates/tenant-overdue-invoices';
 import {
@@ -43,6 +47,14 @@ export const checkOverdueInvoicesTask = schedules.task({
           dueDate: {
             lt: currentDateUTC,
           },
+          OR: [
+            { leaseId: null },
+            {
+              lease: {
+                status: LeaseStatus.ACTIVE,
+              },
+            },
+          ],
         },
       });
 
@@ -51,6 +63,14 @@ export const checkOverdueInvoicesTask = schedules.task({
         dueDate: {
           lt: currentDateUTC,
         },
+        OR: [
+          { leaseId: null },
+          {
+            lease: {
+              status: LeaseStatus.ACTIVE,
+            },
+          },
+        ],
       };
 
       if (!isDevelopment) {

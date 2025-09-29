@@ -194,25 +194,27 @@ export function LeaseView({ lease }: LeaseViewProps) {
                       event.preventDefault();
                     }}
                   >
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setEditLeaseOpen(true);
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                      Edit Lease
-                    </DropdownMenuItem>
                     {lease.status === "ACTIVE" && (
-                      <DropdownMenuItem asChild>
-                        <Link href={`/leases/${lease.id}/end`}>
-                          <Square className="h-4 w-4" />
-                          End Lease
-                        </Link>
-                      </DropdownMenuItem>
+                      <>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditLeaseOpen(true);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                          Edit Lease
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/leases/${lease.id}/end`}>
+                            <Square className="h-4 w-4" />
+                            End Lease
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
                     )}
                     <DropdownMenuItem className="text-destructive">
-                      <Trash className="h-4 w-4" />
+                      <Trash className="text-destructive h-4 w-4" />
                       Delete Lease
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -273,7 +275,8 @@ export function LeaseView({ lease }: LeaseViewProps) {
               <div>
                 <h3 className="mb-2 text-sm text-gray-500">Status</h3>
                 <Badge className={getStatusColor(lease.status)}>
-                  {lease.status === "ACTIVE" ? "Active" : "Inactive"}
+                  {lease.status.charAt(0).toUpperCase() +
+                    lease.status.slice(1).toLowerCase()}
                 </Badge>
               </div>
             </div>

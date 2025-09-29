@@ -4,6 +4,7 @@ import {
   VAddLeaseFilesSchema,
   VDeleteLeaseFileSchema,
   VUpdateLeaseSchema,
+  VEndLeaseSchema,
 } from './lease.types';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
@@ -744,6 +745,130 @@ export const leaseRouter = createTRPCRouter({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to update lease',
+        });
+      }
+    }),
+
+  endLease: protectedProcedure
+    .input(VEndLeaseSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { id, endDate, reason } = input;
+      const landlordId = ctx.auth?.session?.userId;
+
+      try {
+        const existingLease = await ctx.db.lease.findFirst({
+          where: {
+            id,
+            unit: {
+              property: {
+                landlordId: landlordId,
+              },
+            },
+          },
+          include: {
+            unit: {
+              include: {
+                property: true,
+              },
+            },
+            tenantLease: {
+              include: {
+                tenant: true,
+              },
+            },
+            recurringBillable: {
+              where: {
+                isActive: true,
+              },
+            },
+          },
+        });
+
+        if (!existingLease) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Lease not found or you do not have permission to end it',
+          });
+        }
+
+        if (
+          existingLease.status === LeaseStatus.ENDED ||
+          existingLease.status === LeaseStatus.EXPIRED
+        ) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Lease is already ended or expired',
+          });
+        }
+
+        const leaseEndDate = endDate || new Date();
+
+        if (leaseEndDate < existingLease.startDate) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'End date cannot be before the lease start date',
+          });
+        }
+
+        const result = await ctx.db.$transaction(
+          async (tx: Prisma.TransactionClient) => {
+            const updatedLease = await tx.lease.update({
+              where: { id },
+              data: {
+                status: LeaseStatus.ENDED,
+                endDate: leaseEndDate,
+              },
+              include: {
+                unit: {
+                  include: {
+                    property: {
+                      include: {
+                        landlord: true,
+                      },
+                    },
+                  },
+                },
+                tenantLease: {
+                  include: {
+                    tenant: true,
+                  },
+                },
+                File: true,
+              },
+            });
+
+            if (existingLease.recurringBillable.length > 0) {
+              await tx.recurringBillable.updateMany({
+                where: {
+                  leaseId: id,
+                  isActive: true,
+                },
+                data: {
+                  isActive: false,
+                  endDate: leaseEndDate,
+                },
+              });
+            }
+
+            return updatedLease;
+          }
+        );
+
+        return {
+          success: true,
+          message: 'Lease ended successfully',
+          lease: result,
+          reason: reason || null,
+        };
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        console.error('Failed to end lease:', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to end lease',
         });
       }
     }),

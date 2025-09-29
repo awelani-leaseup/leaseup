@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { formatCurrencyToZAR } from "@/utils/currency";
@@ -116,6 +116,7 @@ const getCategoryIcon = (category: string) => {
 
 export default function EndLeasePage() {
   const utils = api.useUtils();
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const { data: lease, isLoading, error } = api.lease.getById.useQuery(id);
   const { mutateAsync: markInvoiceAsPaid, isPending: isMarkingInvoiceAsPaid } =
@@ -128,6 +129,13 @@ export default function EndLeasePage() {
     api.invoice.voidInvoice.useMutation({
       onSuccess: () => {
         utils.lease.getById.invalidate();
+      },
+    });
+  const { mutateAsync: endLease, isPending: isEndingLease } =
+    api.lease.endLease.useMutation({
+      onSuccess: () => {
+        utils.lease.getById.invalidate();
+        router.replace(`/leases`);
       },
     });
 
@@ -199,11 +207,17 @@ export default function EndLeasePage() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outlined" color="danger">
-                <X className="h-4 w-4" />
-                Cancel Process
-              </Button>
-              <Button color="danger">
+              <Link href={`/leases/${id}`}>
+                <Button variant="outlined" color="danger">
+                  <X className="h-4 w-4" />
+                  Cancel Process
+                </Button>
+              </Link>
+              <Button
+                color="danger"
+                onClick={() => endLease({ id })}
+                isLoading={isEndingLease}
+              >
                 <Check className="h-4 w-4" />
                 Complete Lease End
               </Button>

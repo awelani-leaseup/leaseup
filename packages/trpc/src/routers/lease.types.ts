@@ -72,3 +72,9 @@ export const VUpdateLeaseSchema = v.object({
 export const VDeleteLeaseFileSchema = v.object({
   id: v.string(),
 });
+
+export const VEndLeaseSchema = v.object({
+  id: v.pipe(v.string(), v.minLength(1, 'Lease ID is required')),
+  endDate: v.optional(v.date()),
+  reason: v.optional(v.string()),
+});

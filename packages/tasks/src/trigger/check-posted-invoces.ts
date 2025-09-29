@@ -1,6 +1,10 @@
 import { schedules, logger, wait } from '@trigger.dev/sdk';
 import { db } from '@leaseup/prisma/db.ts';
-import { InvoiceStatus, SubscriptionPlanStatus } from '@leaseup/prisma/client';
+import {
+  InvoiceStatus,
+  LeaseStatus,
+  SubscriptionPlanStatus,
+} from '@leaseup/prisma/client';
 import { resend } from '@leaseup/email/utils/resend';
 import LandlordPostedInvoices from '@leaseup/email/templates/landlord-posted-invoices';
 import {
@@ -57,10 +61,17 @@ export const checkPostedInvoicesTask = schedules.task({
           status: {
             in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
           },
+          OR: [
+            { leaseId: null },
+            {
+              lease: {
+                status: LeaseStatus.ACTIVE,
+              },
+            },
+          ],
         },
       });
 
-      // Get posted invoices from landlords (skip subscription check in development)
       const whereClause: any = {
         createdAt: {
           gte: yesterdayStartUTC,
@@ -69,9 +80,16 @@ export const checkPostedInvoicesTask = schedules.task({
         status: {
           in: [InvoiceStatus.PENDING, InvoiceStatus.OVERDUE],
         },
+        OR: [
+          { leaseId: null },
+          {
+            lease: {
+              status: LeaseStatus.ACTIVE,
+            },
+          },
+        ],
       };
 
-      // Only check subscription status in production
       if (!isDevelopment) {
         whereClause.landlord = {
           paystackSubscriptionStatus: {
