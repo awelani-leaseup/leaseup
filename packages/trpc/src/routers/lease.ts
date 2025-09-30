@@ -9,14 +9,23 @@ import {
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { TRPCError } from '@trpc/server';
 import * as v from 'valibot';
-import { startOfMonth, endOfMonth, isWithinInterval } from 'date-fns';
+import {
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  differenceInMonths,
+  addMonths,
+  format,
+} from 'date-fns';
 import {
   InvoiceCategory,
   InvoiceCycle,
+  InvoiceStatus,
   type Lease,
   LeaseStatus,
   LeaseTermType,
   Prisma,
+  TransactionMethod,
 } from '@leaseup/prisma/client/client.js';
 import { del } from '@vercel/blob';
 import { nanoid } from 'nanoid';
@@ -324,8 +333,7 @@ export const leaseRouter = createTRPCRouter({
             });
 
             let recurringBillable = null;
-            let automaticInvoice = true;
-            if (automaticInvoice) {
+            if (input.automaticInvoice) {
               // Ensure we work with UTC dates for invoice scheduling
               const startDateUTC = new Date(input.leaseStartDate);
               let nextInvoiceDate = new Date(
@@ -376,15 +384,87 @@ export const leaseRouter = createTRPCRouter({
               });
             }
 
-            return { lease, recurringBillable };
+            // Handle past invoices if markPastInvoicesAsPaid is true
+            let pastInvoices: any[] = [];
+            let pastTransactions: any[] = [];
+
+            if (input.markPastInvoicesAsPaid) {
+              const currentDate = new Date();
+              const leaseStartDate = new Date(input.leaseStartDate);
+
+              const monthsToCreate = differenceInMonths(
+                currentDate,
+                leaseStartDate
+              );
+
+              if (monthsToCreate > 0) {
+                for (
+                  let monthOffset = 0;
+                  monthOffset < monthsToCreate;
+                  monthOffset++
+                ) {
+                  const invoiceDate = addMonths(leaseStartDate, monthOffset);
+                  const dueDate = addMonths(invoiceDate, 1);
+
+                  const invoice = await tx.invoice.create({
+                    data: {
+                      landlordId: landlordId,
+                      tenantId: input.tenantId,
+                      leaseId: lease.id,
+                      description: `Monthly rent for ${tenant.firstName} ${tenant.lastName} - Unit ${unit.name} (${format(invoiceDate, 'MMMM yyyy')})`,
+                      dueAmount: input.rent,
+                      dueDate: dueDate,
+                      category: InvoiceCategory.RENT,
+                      status: InvoiceStatus.PAID,
+                      paystackId: `OFFLINE-${nanoid()}`,
+                      invoiceNumber: `${format(invoiceDate, 'yyyy-MM')}-${nanoid(6)}`,
+                      lineItems: [
+                        {
+                          description: 'Monthly Rent',
+                          quantity: 1,
+                          rate: input.rent,
+                          amount: input.rent,
+                        },
+                      ],
+                      offlineReference: `PAST-RENT-${format(invoiceDate, 'yyyy-MM')}-${nanoid(8)}`,
+                    },
+                  });
+
+                  const transaction = await tx.transactions.create({
+                    data: {
+                      leaseId: lease.id,
+                      invoiceId: invoice.id,
+                      description: `Offline payment for past rent - ${format(invoiceDate, 'MMMM yyyy')}`,
+                      amountPaid: input.rent,
+                      method: TransactionMethod.OFFLINE,
+                      referenceId: `PAST-TXN-${format(invoiceDate, 'yyyy-MM')}-${nanoid(8)}`,
+                      createdAt: invoiceDate,
+                    },
+                  });
+
+                  pastInvoices.push(invoice);
+                  pastTransactions.push(transaction);
+                }
+              }
+            }
+
+            return { lease, recurringBillable, pastInvoices, pastTransactions };
           }
         );
 
+        const baseMessage = 'Lease created successfully';
+        const pastInvoicesMessage =
+          result.pastInvoices.length > 0
+            ? ` with ${result.pastInvoices.length} past invoices marked as paid`
+            : '';
+
         return {
           success: true,
-          message: 'Lease created successfully',
+          message: baseMessage + pastInvoicesMessage,
           lease: result.lease,
           recurringBillable: result.recurringBillable,
+          pastInvoices: result.pastInvoices,
+          pastTransactions: result.pastTransactions,
         };
       } catch (error) {
         if (error instanceof TRPCError) {
