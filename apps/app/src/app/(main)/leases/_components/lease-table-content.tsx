@@ -148,7 +148,10 @@ export async function LeaseTableContent({
                   })()}
                 </TableCell>
                 <TableCell className="text-right">
-                  <LeaseDropdownActions leaseId={lease.id} />
+                  <LeaseDropdownActions
+                    leaseId={lease.id}
+                    status={lease.status}
+                  />
                 </TableCell>
               </TableRow>
             );
