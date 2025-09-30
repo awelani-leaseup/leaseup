@@ -40,6 +40,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@leaseup/ui/components/dropdown-menu";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 type LeaseData = {
   id: string;
@@ -137,7 +138,10 @@ const getFileIcon = (fileType: string | null) => {
 };
 
 export function LeaseView({ lease }: LeaseViewProps) {
-  const [editLeaseOpen, setEditLeaseOpen] = useState(false);
+  const [editLeaseOpen, setEditLeaseOpen] = useQueryState(
+    "edit",
+    parseAsBoolean.withDefault(false),
+  );
   const primaryTenant = lease.tenantLease[0]?.tenant;
   const property = lease.unit?.property;
   const landlord = property?.landlord;

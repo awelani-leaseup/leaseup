@@ -2,10 +2,18 @@ import { withForm } from "@leaseup/ui/components/form";
 import { createInvoiceFormOptions } from "../_utils";
 import { api } from "@/trpc/react";
 import { useStore } from "@tanstack/react-form";
+import { parseAsString, useQueryStates } from "nuqs";
+import { useEffect } from "react";
 
 export const BasicInformationSubForm = withForm({
   ...createInvoiceFormOptions,
-  render: ({ form }) => {
+  render: function BasicInformationSubForm({ form }) {
+    const [{ leaseId }] = useQueryStates({
+      leaseId: parseAsString,
+    });
+    const { data: lease } = api.invoice.getLeaseById.useQuery(leaseId || "", {
+      enabled: !!leaseId,
+    });
     const { data: allTenants } = api.invoice.getAllTenants.useQuery();
 
     const selectedTenantId = useStore(
@@ -22,9 +30,14 @@ export const BasicInformationSubForm = withForm({
     const { data: invoiceCategories } =
       api.invoice.getInvoiceCategory.useQuery();
 
+    useEffect(() => {
+      form.setFieldValue("tenantId", lease?.tenantLease?.[0]?.tenant.id || "");
+      form.setFieldValue("leaseId", leaseId || "");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lease, leaseId]);
+
     return (
       <>
-        {/* Tenant Selection */}
         <form.AppField name="tenantId">
           {(field) => (
             <field.ComboboxField
@@ -41,14 +54,14 @@ export const BasicInformationSubForm = withForm({
           )}
         </form.AppField>
 
-        {/* Lease Selection - Optional */}
         <form.AppField name="leaseId">
           {(field) => {
-            const placeholder = !selectedTenantId
-              ? "Select a tenant first..."
-              : leasesLoading
-                ? "Loading leases..."
-                : "Choose a lease...";
+            let placeholder = "Choose a lease...";
+            if (!selectedTenantId) {
+              placeholder = "Select a tenant first...";
+            } else if (leasesLoading) {
+              placeholder = "Loading leases...";
+            }
 
             const options = !selectedTenantId
               ? []

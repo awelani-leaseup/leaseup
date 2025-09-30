@@ -7,19 +7,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@leaseup/ui/components/dropdown-menu";
-import {
-  Edit,
-  Eye,
-  MoreVertical,
-  Receipt,
-  FileText,
-  Trash,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Edit, Eye, MoreVertical, Receipt, Square } from "lucide-react";
+import Link from "next/link";
 
-export const LeaseDropdownActions = ({ leaseId }: { leaseId: string }) => {
-  const router = useRouter();
-
+export const LeaseDropdownActions = ({
+  leaseId,
+  status,
+}: {
+  leaseId: string;
+  status: string;
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,26 +25,34 @@ export const LeaseDropdownActions = ({ leaseId }: { leaseId: string }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          <Eye className="size-4" />
-          View Details
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <FileText className="size-4" />
-          View Contract
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Receipt className="size-4" />
-          Generate Invoice
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Edit className="size-4" />
-          Edit Lease
-        </DropdownMenuItem>
-        <DropdownMenuItem className="text-destructive">
-          <Trash className="text-destructive size-4" />
-          Terminate Lease
-        </DropdownMenuItem>
+        <Link href={`/leases/${leaseId}`}>
+          <DropdownMenuItem>
+            <Eye className="size-4" />
+            View Details
+          </DropdownMenuItem>
+        </Link>
+        {status === "ACTIVE" && (
+          <>
+            <Link href={`/invoices/create?leaseId=${leaseId}`}>
+              <DropdownMenuItem>
+                <Receipt className="size-4" />
+                Generate Invoice
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/leases/${leaseId}?edit=true`}>
+              <DropdownMenuItem>
+                <Edit className="size-4" />
+                Edit Lease
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/leases/${leaseId}/end`}>
+              <DropdownMenuItem>
+                <Square className="size-4" />
+                End Lease
+              </DropdownMenuItem>
+            </Link>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@leaseup/ui/components/dropdown-menu";
 import { Edit, Eye, MoreVertical, Plus, Receipt, Trash } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const TenantDropdownActions = ({
@@ -19,7 +20,8 @@ export const TenantDropdownActions = ({
   lease: boolean;
 }) => {
   const router = useRouter();
-  const { mutate } = api.tenant.removeTenant.useMutation();
+  const { mutate, isPending: isRemovingTenant } =
+    api.tenant.removeTenant.useMutation();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,17 +34,21 @@ export const TenantDropdownActions = ({
           <Eye className="size-4" />
           View
         </DropdownMenuItem>
-        {lease && (
+        {!lease && (
           <DropdownMenuItem>
             <Plus className="size-4" />
             Add Lease
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem>
-          <Receipt className="size-4" />
-          Invoice
-        </DropdownMenuItem>
-        <DropdownMenuItem>
+        <Link href={`/invoices/create?tenantId=${tenantId}`}>
+          <DropdownMenuItem>
+            <Receipt className="size-4" />
+            Invoice
+          </DropdownMenuItem>
+        </Link>
+        <DropdownMenuItem
+          onClick={() => router.push(`/tenants/${tenantId}/profile?edit=true`)}
+        >
           <Edit className="size-4" />
           Edit
         </DropdownMenuItem>
@@ -52,6 +58,7 @@ export const TenantDropdownActions = ({
             mutate({ id: tenantId });
             router.refresh();
           }}
+          disabled={isRemovingTenant}
         >
           <Trash className="text-destructive size-4" />
           Delete

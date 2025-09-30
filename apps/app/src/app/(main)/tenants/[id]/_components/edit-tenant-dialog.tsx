@@ -62,7 +62,7 @@ import { upload } from "@vercel/blob/client";
 import { nanoid } from "nanoid";
 import { api } from "@/trpc/react";
 import toast from "react-hot-toast";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { authClient } from "@/utils/auth/client";
 import { getUploadFileExtension } from "@/utils/file-utils";
 
@@ -573,14 +573,17 @@ interface EditTenantDialogProps {
   tenantId: string;
   tenant: any;
   children: React.ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export function EditTenantDialog({
   tenantId,
   tenant,
   children,
+  open,
+  onOpenChange,
 }: EditTenantDialogProps) {
-  const [open, setOpen] = useState(false);
   const utils = api.useUtils();
 
   const { mutateAsync: updateTenant, isPending } =
@@ -637,7 +640,7 @@ export function EditTenantDialog({
         })
           .then(() => {
             utils.tenant.getTenantById.invalidate({ id: tenantId });
-            setOpen(false);
+            onOpenChange(false);
             form.reset();
           })
           .catch((error) => {
@@ -660,7 +663,7 @@ export function EditTenantDialog({
   }, [tenant, form, open]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
@@ -701,7 +704,7 @@ export function EditTenantDialog({
         <DialogFooter className="flex gap-2">
           <Button
             variant="outlined"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
             disabled={isPending}
           >
             Cancel

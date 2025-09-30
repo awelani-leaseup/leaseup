@@ -14,6 +14,7 @@ import { Skeleton } from "@leaseup/ui/components/skeleton";
 import { FileText, User, CreditCard, Edit } from "lucide-react";
 import { format } from "date-fns";
 import { EditTenantDialog } from "./_components/edit-tenant-dialog";
+import { parseAsBoolean, useQueryState } from "nuqs";
 
 interface TenantLayoutProps {
   children: React.ReactNode;
@@ -23,6 +24,10 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
   const params = useParams();
   const pathname = usePathname();
   const tenantId = params.id as string;
+  const [isEditDialogOpen, setIsEditDialogOpen] = useQueryState(
+    "edit",
+    parseAsBoolean.withDefault(false),
+  );
 
   const {
     data: tenant,
@@ -157,7 +162,12 @@ export default function TenantLayout({ children }: TenantLayoutProps) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
-                <EditTenantDialog tenantId={tenantId} tenant={tenant}>
+                <EditTenantDialog
+                  tenantId={tenantId}
+                  tenant={tenant}
+                  open={isEditDialogOpen}
+                  onOpenChange={setIsEditDialogOpen}
+                >
                   <Button
                     variant="outlined"
                     className="border-[#E74C3C] text-[#E74C3C] hover:bg-[#E74C3C] hover:text-white"

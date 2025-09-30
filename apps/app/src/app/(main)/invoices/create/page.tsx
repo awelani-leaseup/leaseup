@@ -25,13 +25,22 @@ import { BasicInformationSubForm } from "./_components/basic-information-sub-for
 import { InvoiceItemsSubForm } from "./_components/invoice-items-sub-form";
 
 import { Switch } from "@leaseup/ui/components/switch";
+import { parseAsString, useQueryStates } from "nuqs";
+import { useEffect } from "react";
 
 export default function CreateInvoice() {
   const router = useRouter();
 
+  const [{ leaseId, tenantId }] = useQueryStates({
+    leaseId: parseAsString,
+    tenantId: parseAsString,
+  });
   const { mutateAsync: createInvoice, isPending } =
     api.invoice.createInvoice.useMutation();
 
+  const { data: lease } = api.invoice.getLeaseById.useQuery(leaseId || "", {
+    enabled: !!leaseId,
+  });
   const form = useAppForm({
     ...createInvoiceFormOptions,
     onSubmit: async ({ value }) => {
@@ -62,6 +71,16 @@ export default function CreateInvoice() {
       }
     },
   });
+
+  useEffect(() => {
+    if (leaseId) {
+      form.setFieldValue("leaseId", leaseId);
+      form.setFieldValue("tenantId", lease?.tenantLease?.[0]?.tenant.id || "");
+    } else if (tenantId) {
+      form.setFieldValue("tenantId", tenantId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leaseId]);
 
   return (
     <div className="mx-auto my-10 max-w-4xl">

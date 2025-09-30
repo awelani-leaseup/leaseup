@@ -343,7 +343,12 @@ export default function Leases() {
       columnHelper.display({
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => <LeaseDropdownActions leaseId={row.original.id} />,
+        cell: ({ row }) => (
+          <LeaseDropdownActions
+            leaseId={row.original.id}
+            status={row.original.status}
+          />
+        ),
       }),
     ],
     [],
@@ -439,7 +444,7 @@ export default function Leases() {
                     { label: "All Status", value: "all" },
                     { label: "Active", value: "ACTIVE" },
                     { label: "Expired", value: "EXPIRED" },
-                    { label: "Terminated", value: "TERMINATED" },
+                    { label: "Ended", value: "ENDED" },
                   ]}
                   type="select"
                 />

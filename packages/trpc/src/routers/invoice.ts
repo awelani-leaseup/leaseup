@@ -770,4 +770,33 @@ export const invoiceRouter = createTRPCRouter({
         newStatus,
       };
     }),
+
+  getLeaseById: protectedProcedure
+    .input(v.string())
+    .query(async ({ ctx, input }) => {
+      return ctx.db.lease.findFirst({
+        where: { id: input },
+        select: {
+          id: true,
+          unit: {
+            select: {
+              property: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
+          tenantLease: {
+            select: {
+              tenant: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 });
