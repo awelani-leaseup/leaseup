@@ -10,7 +10,6 @@ function LeaseViewSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
-        {/* Header Skeleton */}
         <Card className="mb-8">
           <div className="p-6">
             <div className="mb-6 flex items-start justify-between">
@@ -48,7 +47,6 @@ function LeaseViewSkeleton() {
         </Card>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {/* Left Column Skeleton */}
           <div className="space-y-8 lg:col-span-2">
             <Card>
               <div className="p-6">

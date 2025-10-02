@@ -15,7 +15,6 @@ import {
   LeaseStatus,
   SubscriptionPlanStatus,
   type RecurringBillable,
-  type Prisma,
 } from '@leaseup/prisma/client';
 
 const CONFIG = {

@@ -30,7 +30,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when clicking outside or on a link
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -61,7 +60,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
     >
       <div className='max-w-7xl mx-auto px-4 md:px-8'>
         <div className='flex items-center justify-between h-16'>
-          {/* Logo */}
           <div className='flex items-center gap-3'>
             <Link
               href='/'
@@ -81,7 +79,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <NavigationMenu viewport={false} className='hidden md:flex'>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -114,20 +111,9 @@ export const Header: FC<ComponentProps<'header'>> = () => {
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link
-                    href='#contact'
-                    className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors px-4 py-2`}
-                  >
-                    Contact
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Desktop Buttons */}
           <div className='hidden md:flex items-center gap-4'>
             <Button asChild color='secondary'>
               <Link href={SIGNIN_URL} aria-label='Sign in to your account'>
@@ -147,7 +133,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className='md:hidden flex flex-col items-center justify-center w-8 h-8 space-y-1.5'
             onClick={toggleMobileMenu}
@@ -172,7 +157,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`md:hidden bg-white transition-all duration-300 ease-in-out ${
             isMobileMenuOpen
@@ -196,21 +180,13 @@ export const Header: FC<ComponentProps<'header'>> = () => {
               Pricing
             </Link>
             <Link
-              href='#reviews'
+              href='#faq'
               className='text-black hover:text-gray-600 transition-colors px-4 py-2 text-left'
               onClick={closeMobileMenu}
             >
-              Reviews
-            </Link>
-            <Link
-              href='#contact'
-              className='text-black hover:text-gray-600 transition-colors px-4 py-2 text-left'
-              onClick={closeMobileMenu}
-            >
-              Contact
+              FAQ
             </Link>
 
-            {/* Mobile Buttons */}
             <div className='flex flex-col gap-3 px-4 pt-4'>
               <Button asChild className='w-full' color='secondary'>
                 <Link
@@ -226,7 +202,7 @@ export const Header: FC<ComponentProps<'header'>> = () => {
                   href={SIGNUP_URL}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='bg-[#1ABC9C] text-white px-6 py-3 rounded-lg hover:bg-[#2980B9] transition-colors text-center w-full'
+                  className='bg-[#1ABC9C] text-white px-2 py-2 rounded-lg hover:bg-[#2980B9] transition-colors text-center w-full'
                   aria-label='Get started with Leaseup'
                   onClick={closeMobileMenu}
                 >
