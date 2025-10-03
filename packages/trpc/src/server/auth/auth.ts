@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { novu } from '@leaseup/novu/client.ts';
 import { db as prisma } from '@leaseup/prisma/db.ts';
+import { createAuthMiddleware } from 'better-auth/api';
 
 let BASE_URL = 'http://localhost:3001';
 
@@ -67,9 +68,12 @@ export const auth = betterAuth({
       },
     },
   },
-  hooks: {},
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      ctx.redirect('/onboarding');
+    }),
+  },
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
 });
-

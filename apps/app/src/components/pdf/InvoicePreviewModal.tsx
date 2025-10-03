@@ -12,7 +12,6 @@ import {
 import { Button } from "@leaseup/ui/components/button";
 import { Eye } from "lucide-react";
 import { InvoicePDF } from "./InvoicePDF";
-import { PDFDownloadButton } from "./PDFDownloadButton";
 import type { Invoice } from "./types";
 
 interface InvoicePreviewModalProps {

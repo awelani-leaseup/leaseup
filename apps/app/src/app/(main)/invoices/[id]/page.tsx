@@ -263,13 +263,13 @@ export default function InvoiceViewPage() {
   const { mutate: voidInvoice, isPending: isVoiding } =
     api.invoice.voidInvoice.useMutation({
       onSuccess: () => {
-        utils.lease.getById.invalidate();
+        utils.invoice.getById.invalidate();
       },
     });
   const { mutateAsync: markInvoiceAsPaid, isPending: isMarkingInvoiceAsPaid } =
     api.invoice.markInvoiceAsPaid.useMutation({
       onSuccess: () => {
-        utils.lease.getById.invalidate();
+        utils.invoice.getById.invalidate();
       },
     });
 
