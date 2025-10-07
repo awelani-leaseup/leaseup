@@ -65,7 +65,10 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       paystackResponse.data?.data?.request_code
     );
 
-    const invoice: Omit<Invoice, 'createdAt' | 'updatedAt' | 'leaseId'> = {
+    const invoice: Omit<
+      Invoice,
+      'createdAt' | 'updatedAt' | 'leaseId' | 'invoiceNumber'
+    > = {
       id: nanoid(),
       landlordId: payload.landlordId,
       tenantId: payload.tenantId ?? '',
@@ -78,7 +81,6 @@ const createInvoiceEffect = (payload: CreateInvoicePayload) =>
       paystackId: paystackResponse.data?.data?.request_code ?? '',
       recurringBillableId: null,
       paymentRequestUrl: `${PAYSTACK_BASE_URL}/pay/${paystackResponse.data?.data?.request_code}`,
-      invoiceNumber: `${getYear(new Date())}-${getMonth(new Date())}-${paystackResponse.data?.data?.invoice_number}`,
       offlineReference: paystackResponse.data?.data?.offline_reference ?? '',
     };
 

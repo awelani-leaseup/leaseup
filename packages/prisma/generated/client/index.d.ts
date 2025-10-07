@@ -646,8 +646,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.16.2
-   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+   * Prisma Client JS version: 6.16.3
+   * Query Engine version: bb420e667c1820a8c05a38023385f6cc7ef8e83a
    */
   export type PrismaVersion = {
     client: string
@@ -12829,10 +12829,12 @@ export namespace Prisma {
 
   export type InvoiceAvgAggregateOutputType = {
     dueAmount: number | null
+    invoiceNumber: number | null
   }
 
   export type InvoiceSumAggregateOutputType = {
     dueAmount: number | null
+    invoiceNumber: number | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -12848,7 +12850,7 @@ export namespace Prisma {
     dueDate: Date | null
     landlordId: string | null
     tenantId: string | null
-    invoiceNumber: string | null
+    invoiceNumber: number | null
     paymentRequestUrl: string | null
     offlineReference: string | null
     recurringBillableId: string | null
@@ -12867,7 +12869,7 @@ export namespace Prisma {
     dueDate: Date | null
     landlordId: string | null
     tenantId: string | null
-    invoiceNumber: string | null
+    invoiceNumber: number | null
     paymentRequestUrl: string | null
     offlineReference: string | null
     recurringBillableId: string | null
@@ -12897,10 +12899,12 @@ export namespace Prisma {
 
   export type InvoiceAvgAggregateInputType = {
     dueAmount?: true
+    invoiceNumber?: true
   }
 
   export type InvoiceSumAggregateInputType = {
     dueAmount?: true
+    invoiceNumber?: true
   }
 
   export type InvoiceMinAggregateInputType = {
@@ -13062,7 +13066,7 @@ export namespace Prisma {
     lineItems: JsonValue | null
     landlordId: string
     tenantId: string
-    invoiceNumber: string
+    invoiceNumber: number
     paymentRequestUrl: string
     offlineReference: string | null
     recurringBillableId: string | null
@@ -13229,7 +13233,7 @@ export namespace Prisma {
       lineItems: Prisma.JsonValue | null
       landlordId: string
       tenantId: string
-      invoiceNumber: string
+      invoiceNumber: number
       paymentRequestUrl: string
       offlineReference: string | null
       recurringBillableId: string | null
@@ -13675,7 +13679,7 @@ export namespace Prisma {
     readonly lineItems: FieldRef<"Invoice", 'Json'>
     readonly landlordId: FieldRef<"Invoice", 'String'>
     readonly tenantId: FieldRef<"Invoice", 'String'>
-    readonly invoiceNumber: FieldRef<"Invoice", 'String'>
+    readonly invoiceNumber: FieldRef<"Invoice", 'Int'>
     readonly paymentRequestUrl: FieldRef<"Invoice", 'String'>
     readonly offlineReference: FieldRef<"Invoice", 'String'>
     readonly recurringBillableId: FieldRef<"Invoice", 'String'>
@@ -21713,7 +21717,7 @@ export namespace Prisma {
     lineItems?: JsonNullableFilter<"Invoice">
     landlordId?: StringFilter<"Invoice"> | string
     tenantId?: StringFilter<"Invoice"> | string
-    invoiceNumber?: StringFilter<"Invoice"> | string
+    invoiceNumber?: IntFilter<"Invoice"> | number
     paymentRequestUrl?: StringFilter<"Invoice"> | string
     offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
@@ -21753,6 +21757,7 @@ export namespace Prisma {
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    invoiceNumber?: number
     AND?: InvoiceWhereInput | InvoiceWhereInput[]
     OR?: InvoiceWhereInput[]
     NOT?: InvoiceWhereInput | InvoiceWhereInput[]
@@ -21768,7 +21773,6 @@ export namespace Prisma {
     lineItems?: JsonNullableFilter<"Invoice">
     landlordId?: StringFilter<"Invoice"> | string
     tenantId?: StringFilter<"Invoice"> | string
-    invoiceNumber?: StringFilter<"Invoice"> | string
     paymentRequestUrl?: StringFilter<"Invoice"> | string
     offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
@@ -21778,7 +21782,7 @@ export namespace Prisma {
     transactions?: TransactionsListRelationFilter
     recurringBillable?: XOR<RecurringBillableNullableScalarRelationFilter, RecurringBillableWhereInput> | null
     landlord?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
+  }, "id" | "invoiceNumber">
 
   export type InvoiceOrderByWithAggregationInput = {
     id?: SortOrder
@@ -21822,7 +21826,7 @@ export namespace Prisma {
     lineItems?: JsonNullableWithAggregatesFilter<"Invoice">
     landlordId?: StringWithAggregatesFilter<"Invoice"> | string
     tenantId?: StringWithAggregatesFilter<"Invoice"> | string
-    invoiceNumber?: StringWithAggregatesFilter<"Invoice"> | string
+    invoiceNumber?: IntWithAggregatesFilter<"Invoice"> | number
     paymentRequestUrl?: StringWithAggregatesFilter<"Invoice"> | string
     offlineReference?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableWithAggregatesFilter<"Invoice"> | string | null
@@ -23358,7 +23362,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -23383,7 +23387,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -23402,7 +23406,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -23427,7 +23430,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23449,7 +23452,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -23466,7 +23469,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -23485,7 +23487,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24972,6 +24974,7 @@ export namespace Prisma {
 
   export type InvoiceAvgOrderByAggregateInput = {
     dueAmount?: SortOrder
+    invoiceNumber?: SortOrder
   }
 
   export type InvoiceMaxOrderByAggregateInput = {
@@ -25014,6 +25017,7 @@ export namespace Prisma {
 
   export type InvoiceSumOrderByAggregateInput = {
     dueAmount?: SortOrder
+    invoiceNumber?: SortOrder
   }
 
   export type EnumInvoiceCategoryWithAggregatesFilter<$PrismaModel = never> = {
@@ -27460,7 +27464,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -27483,7 +27487,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -27677,7 +27681,7 @@ export namespace Prisma {
     lineItems?: JsonNullableFilter<"Invoice">
     landlordId?: StringFilter<"Invoice"> | string
     tenantId?: StringFilter<"Invoice"> | string
-    invoiceNumber?: StringFilter<"Invoice"> | string
+    invoiceNumber?: IntFilter<"Invoice"> | number
     paymentRequestUrl?: StringFilter<"Invoice"> | string
     offlineReference?: StringNullableFilter<"Invoice"> | string | null
     recurringBillableId?: StringNullableFilter<"Invoice"> | string | null
@@ -28096,7 +28100,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -28119,7 +28123,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -29112,7 +29116,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -29135,7 +29139,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -30192,7 +30196,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -30216,7 +30220,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileUncheckedCreateNestedManyWithoutInvoiceInput
@@ -30480,7 +30484,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     File?: FileCreateNestedManyWithoutInvoiceInput
@@ -30504,7 +30508,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -30635,7 +30639,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -30659,7 +30662,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31156,7 +31159,7 @@ export namespace Prisma {
     paystackId: string
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     lease?: LeaseCreateNestedOneWithoutInvoiceInput
@@ -31180,7 +31183,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -31423,7 +31426,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     lease?: LeaseUpdateOneWithoutInvoiceNestedInput
@@ -31447,7 +31449,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31769,7 +31771,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -31989,7 +31991,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -32012,7 +32013,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32033,7 +32034,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32068,7 +32069,7 @@ export namespace Prisma {
     dueDate?: Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -32154,7 +32155,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -32177,7 +32177,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32198,7 +32198,7 @@ export namespace Prisma {
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32566,7 +32566,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
     recurringBillableId?: string | null
@@ -32672,7 +32672,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -32695,7 +32694,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32716,7 +32715,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     recurringBillableId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32975,7 +32974,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId: string
     tenantId: string
-    invoiceNumber?: string
+    invoiceNumber?: number
     paymentRequestUrl?: string
     offlineReference?: string | null
   }
@@ -32991,7 +32990,6 @@ export namespace Prisma {
     paystackId?: StringFieldUpdateOperationsInput | string
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lineItems?: NullableJsonNullValueInput | InputJsonValue
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUpdateManyWithoutInvoiceNestedInput
@@ -33015,7 +33013,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
     File?: FileUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -33036,7 +33034,7 @@ export namespace Prisma {
     lineItems?: NullableJsonNullValueInput | InputJsonValue
     landlordId?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
-    invoiceNumber?: StringFieldUpdateOperationsInput | string
+    invoiceNumber?: IntFieldUpdateOperationsInput | number
     paymentRequestUrl?: StringFieldUpdateOperationsInput | string
     offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
   }

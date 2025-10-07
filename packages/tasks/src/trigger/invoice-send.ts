@@ -202,7 +202,6 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
           lineItems: invoiceData.lineItems ?? [],
           paystackId: paystackResult?.data?.request_code ?? '',
           paymentRequestUrl: `${PAYSTACK_BASE_URL}/pay/${paystackResult?.data?.request_code}`,
-          invoiceNumber: `${getYear(new Date())}-${getMonth(new Date())}-${paystackResult?.data?.invoice_number}`,
           recurringBillableId: invoiceData.recurringBillableId,
         },
       });
@@ -231,7 +230,7 @@ export const createInvoiceTask: ReturnType<typeof schemaTask> = schemaTask({
               `Invoice ${newInvoice.id} tenant notification`
             );
           }
-        } catch  {
+        } catch {
           logger.warn('Could not fetch tenant email for test email logging', {
             tenantId: invoiceData.tenantId,
             invoiceId: newInvoice.id,

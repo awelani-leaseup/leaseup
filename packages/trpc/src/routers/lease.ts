@@ -417,7 +417,6 @@ export const leaseRouter = createTRPCRouter({
                       category: InvoiceCategory.RENT,
                       status: InvoiceStatus.PAID,
                       paystackId: `OFFLINE-${nanoid()}`,
-                      invoiceNumber: `${format(invoiceDate, 'yyyy-MM')}-${nanoid(6)}`,
                       lineItems: [
                         {
                           description: 'Monthly Rent',

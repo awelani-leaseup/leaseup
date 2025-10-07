@@ -57,7 +57,7 @@ export class DatabaseError extends Schema.TaggedError<DatabaseError>()(
 
 export interface DatabaseService {
   readonly createInvoice: (
-    data: Omit<Invoice, 'createdAt' | 'updatedAt'>
+    data: Omit<Invoice, 'createdAt' | 'updatedAt' | 'invoiceNumber'>
   ) => Effect.Effect<Omit<Invoice, 'createdAt' | 'updatedAt'>, DatabaseError>;
   readonly getTenantById: (
     tenantId: string

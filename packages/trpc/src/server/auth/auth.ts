@@ -13,7 +13,6 @@ if (process.env.VERCEL_ENV === 'production') {
 }
 
 const NOVU_PASSWORD_FORGOT_WORKFLOW_ID = 'landlord-password-forgot';
-const NOVU_USER_CREATED_WORKFLOW_ID = 'landlord-welcome-copy';
 
 const NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID =
   process.env.NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID;

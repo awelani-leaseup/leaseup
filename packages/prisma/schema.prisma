@@ -213,7 +213,7 @@ model Invoice {
   lineItems           Json?
   landlordId          String
   tenantId            String
-  invoiceNumber       String             @default("")
+  invoiceNumber       Int                @unique @default(autoincrement())
   File                File[]
   paymentRequestUrl   String             @default("")
   offlineReference    String?            @default("")
