@@ -15,7 +15,6 @@ import {
   AlertTitle,
 } from "@leaseup/ui/components/alert";
 import { CircleAlert } from "lucide-react";
-import { Separator } from "@leaseup/ui/components/separator";
 
 interface BankingInfoFormProps {
   initialData?: {
