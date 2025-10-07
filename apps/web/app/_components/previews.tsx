@@ -112,7 +112,7 @@ const PreviewSidebar = ({ activeItem }: { activeItem: string }) => {
   const isActive = (path: string) => activeItem === path;
 
   return (
-    <div className='w-64'>
+    <div className='w-64 pointer-events-none'>
       <SidebarProvider>
         <Sidebar>
           <SidebarHeader>
@@ -282,7 +282,7 @@ const PreviewSidebar = ({ activeItem }: { activeItem: string }) => {
 
 const DashboardPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10 pointer-events-none'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='dashboard' />
@@ -513,7 +513,7 @@ const DashboardPreview = () => {
 
 const PropertiesPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10 pointer-events-none'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='properties' />
@@ -811,7 +811,7 @@ const PropertiesPreview = () => {
 
 const AccountingPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10 pointer-events-none'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='accounting' />
@@ -1162,7 +1162,7 @@ const AccountingPreview = () => {
 
 const DocumentsPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10 pointer-events-none'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='documents' />
@@ -1565,7 +1565,7 @@ const DocumentsPreview = () => {
 
 const LeasesPreview = () => {
   return (
-    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10'>
+    <div className='bg-[#ECF0F1] p-2 sm:p-4 rounded-2xl *:text-left scale-[0.7] sm:scale-[0.85] lg:scale-[0.95] relative border border-[#CBD5E1] transition-all overflow-hidden hidden lg:block h-[50rem] ring-8 ring-primary/10 pointer-events-none'>
       <div className='flex w-full mx-auto min-h-[400px]'>
         <div className='hidden lg:block'>
           <PreviewSidebar activeItem='leases' />

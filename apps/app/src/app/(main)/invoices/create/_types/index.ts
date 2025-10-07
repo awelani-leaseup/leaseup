@@ -10,7 +10,6 @@ export const VInvoiceItemSchema = v.object({
 export const VCreateInvoiceFormSchema = v.object({
   tenantId: v.pipe(v.string(), v.minLength(1, "Tenant is required")),
   leaseId: v.optional(v.string()), // Made optional
-  // invoiceNumber field removed
   invoiceDate: v.date("Invoice date is required"),
   dueDate: v.date("Due date is required"),
   invoiceCategory: v.pipe(

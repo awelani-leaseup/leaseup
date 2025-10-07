@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://leaseup.co.za/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /settings/
+
+# Allow important pages
+Allow: /features/
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /cookie-policy

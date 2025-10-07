@@ -1,6 +1,69 @@
 import { Button } from '@leaseup/ui/components/button';
 import { Previews } from './_components/previews';
-import { Calendar, Rocket } from 'lucide-react';
+import { Calendar, Rocket, UserPlus, Building, CreditCard } from 'lucide-react';
+import Image from 'next/image';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title:
+    'LeaseUp - Property Management Software for South African Landlords | Online Rent Collection',
+  description:
+    'Property management software for South African landlords. Automate rent collection, tenant management, and lease tracking with online payments through Paystack. Start your free trial today.',
+  keywords: [
+    'property management software South Africa',
+    'online rent collection South Africa',
+    'landlord software South Africa',
+    'tenant management system',
+    'lease management software',
+    'Paystack rent collection',
+    'South African property management',
+    'automated rent reminders',
+    'property rental software',
+    'landlord dashboard South Africa',
+    'EFT rent collection',
+    'property management Cape Town',
+    'property management Johannesburg',
+    'property management Durban',
+  ],
+  openGraph: {
+    title: 'LeaseUp - Property Management Software for South African Landlords',
+    description:
+      "Automate rent collection, manage tenants, and track leases with South Africa's leading property management software. Secure online payments via Paystack.",
+    url: 'https://leaseup.co.za',
+    siteName: 'LeaseUp',
+    images: [
+      {
+        url: 'https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp',
+        width: 1200,
+        height: 630,
+        alt: 'LeaseUp Property Management Dashboard - Online Rent Collection for South African Landlords',
+      },
+    ],
+    locale: 'en_ZA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LeaseUp - Property Management Software for South African Landlords',
+    description:
+      "Automate rent collection, manage tenants, and track leases with South Africa's leading property management software.",
+    images: ['https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp'],
+  },
+  alternates: {
+    canonical: 'https://leaseup.co.za',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
 
 export default function Home() {
   const structuredData = {
@@ -14,10 +77,20 @@ export default function Home() {
         url: 'https://leaseup.co.za',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web Browser',
+        screenshot:
+          'https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp',
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.8',
+          ratingCount: '127',
+          bestRating: '5',
+          worstRating: '1',
+        },
         offers: {
           '@type': 'Offer',
           price: '799.00',
           priceCurrency: 'ZAR',
+          availability: 'https://schema.org/InStock',
           priceSpecification: {
             '@type': 'RecurringPaymentsPriceSpecification',
             price: '799.00',
@@ -27,26 +100,67 @@ export default function Home() {
           },
         },
         featureList: [
-          'Online rent collection',
-          'Automated rent reminders',
-          'Tenant management',
-          'Lease tracking',
-          'Document management',
-          'Payment tracking',
-          'South African payment methods',
+          'Online rent collection with Paystack integration',
+          'Automated rent reminders and notifications',
+          'Comprehensive tenant management system',
+          'Digital lease tracking and management',
+          'Secure document management and storage',
+          'Real-time payment tracking and reporting',
+          'South African payment methods (EFT, Credit Cards)',
+          'WhatsApp and email notifications',
+          'FICA document management',
+          'Lease expiry alerts',
         ],
+        softwareVersion: '2.0',
+        releaseNotes:
+          'Enhanced South African payment integration and improved tenant management features',
       },
       {
         '@type': 'Organization',
         name: 'LeaseUp',
         url: 'https://leaseup.co.za',
         logo: 'https://leaseup.co.za/leaseup-logo.svg',
+        description: 'Property management software for South African landlords',
+        foundingDate: '2024',
+      },
+      {
+        '@type': 'LocalBusiness',
+        '@id': 'https://leaseup.co.za/#business',
+        name: 'LeaseUp Property Management',
         description:
-          'Leading property management software for South African landlords',
+          'Property management software solutions for South African landlords and property managers',
+        url: 'https://leaseup.co.za',
+        email: 'awelani@leaseup.co.za',
         address: {
           '@type': 'PostalAddress',
           addressCountry: 'ZA',
+          addressRegion: 'Guateng',
         },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: '-33.9249',
+          longitude: '18.4241',
+        },
+        areaServed: [
+          {
+            '@type': 'Country',
+            name: 'South Africa',
+          },
+          {
+            '@type': 'City',
+            name: 'Cape Town',
+          },
+          {
+            '@type': 'City',
+            name: 'Johannesburg',
+          },
+          {
+            '@type': 'City',
+            name: 'Durban',
+          },
+        ],
+        serviceType: 'Property Management Software',
+        priceRange: 'R799/month',
       },
       {
         '@type': 'FAQPage',
@@ -110,6 +224,30 @@ export default function Home() {
     throw new Error('Missing SIGNUP_URL');
   }
 
+  const howItWorksSteps = [
+    {
+      name: 'Complete Onboarding',
+      description:
+        'Sign up and set up your landlord profile in under 5 minutes. Add your business details, bank details etc and verify your account to get started.',
+      icon: UserPlus,
+      href: SIGNUP_URL,
+    },
+    {
+      name: 'Add Property and Tenant Information',
+      description:
+        'Upload your properties and tenant details. Import existing lease agreements and tenant documents to centralize your rental management.',
+      icon: Building,
+      href: SIGNUP_URL,
+    },
+    {
+      name: 'Start Collecting Rent',
+      description:
+        'Rental Invoices are automatically sent to tenants. Tenants can pay via EFT, credit card, or bank transfer with automatic tracking.',
+      icon: CreditCard,
+      href: SIGNUP_URL,
+    },
+  ];
+
   return (
     <>
       <script
@@ -123,7 +261,7 @@ export default function Home() {
               <div className='max-w-3xl w-full mb-8 sm:mb-0'>
                 <h1 className='text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tight leading-tight font-bold'>
                   Simplify Your{' '}
-                  <span className='text-[#1ABC9C]'>Rental Property</span>{' '}
+                  <span className='text-secondary'>Rental Property</span>{' '}
                   Management
                 </h1>
                 <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed text-pretty max-w-lg mx-auto'>
@@ -152,176 +290,161 @@ export default function Home() {
 
         <section
           id='features'
-          className='py-20 bg-[#ECF0F1]'
+          className='bg-[#ECF0F1] py-24 sm:py-32'
           aria-labelledby='features-heading'
         >
-          <div className='max-w-7xl mx-auto px-4 md:px-8'>
-            <div className='text-center mb-16'>
-              <h2
-                id='features-heading'
-                className='text-3xl sm:text-4xl font-bold text-[#2C3E50] mb-4'
-              >
-                Property Management Made Simple
+          <div className='mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8'>
+            <h2 className='text-base/7 font-semibold text-secondary'>
+              Property Management Made Simple
+            </h2>
+            <p className='mt-2 max-w-lg text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl'>
+              Everything you need to manage your rental properties
+            </p>
+            <div className='mt-10 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-6 lg:grid-rows-2'>
+              <div className='flex p-px lg:col-span-4'>
+                <div className='w-full overflow-hidden rounded-lg bg-white shadow-sm outline outline-black/5 max-lg:rounded-t-4xl lg:rounded-tl-4xl px-5'>
+                  <Image
+                    alt='LeaseUp automated rent collection dashboard showing online invoicing, payment tracking, and financial reports for South African landlords'
+                    src='/Screenshot 2025-10-07 at 21.45.13.webp'
+                    width={800}
+                    height={320}
+                    className='h-80 object-cover object-left border-b border-r shadow rounded-b-lg w-full'
+                  />
+                  <div className='p-5'>
+                    <h3 className='text-sm/4 font-semibold text-gray-500'>
+                      Rent Collection / Online Payments
+                    </h3>
+                    <p className='mt-2 text-lg font-medium tracking-tight text-gray-900'>
+                      Automated rent collection with South African payment
+                      methods
+                    </p>
+                    <p className='mt-2 max-w-lg text-sm/6 text-gray-600'>
+                      Provide tenants with convenient online payment options
+                      through Paystack, supporting credit cards, EFT, bank
+                      transfers, and installment payments with real-time
+                      tracking.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className='flex p-px lg:col-span-2'>
+                <div className='w-full overflow-hidden rounded-lg bg-white shadow-sm outline outline-black/5 lg:rounded-tr-4xl'>
+                  <Image
+                    alt='LeaseUp tenant management system showing lease agreements, tenant profiles, and communication tools for property managers'
+                    src='/feature-tenant-management.webp'
+                    width={400}
+                    height={320}
+                    className='h-80 object-cover'
+                  />
+                  <div className='p-10'>
+                    <h3 className='text-sm/4 font-semibold text-gray-500'>
+                      Tenant Management
+                    </h3>
+                    <p className='mt-2 text-lg font-medium tracking-tight text-gray-900'>
+                      Organize tenants and lease agreements
+                    </p>
+                    <p className='mt-2 max-w-lg text-sm/6 text-gray-600'>
+                      Secure tenant database with FICA documents, lease tracking
+                      with expiry alerts, and complete payment history.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className='flex p-px lg:col-span-2'>
+                <div className='w-full overflow-hidden rounded-lg bg-white shadow-sm outline outline-black/5 lg:rounded-bl-4xl'>
+                  <Image
+                    alt='Document management system for landlords showing lease agreements, FICA documents, and property records storage'
+                    src='/feature-file-management.webp'
+                    width={400}
+                    height={320}
+                    className='h-80 object-cover object-left'
+                  />
+                  <div className='p-10'>
+                    <h3 className='text-sm/4 font-semibold text-gray-500'>
+                      Document Management
+                    </h3>
+                    <p className='mt-2 text-lg font-medium tracking-tight text-gray-900'>
+                      Secure cloud storage with automated backups
+                    </p>
+                    <p className='mt-2 max-w-lg text-sm/6 text-gray-600'>
+                      Store lease agreements, FICA documents, and property
+                      records with automated backups and easy access.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className='flex p-px lg:col-span-4'>
+                <div className='w-full overflow-hidden rounded-lg bg-white shadow-sm outline outline-black/5 max-lg:rounded-b-4xl lg:rounded-br-4xl px-5'>
+                  <Image
+                    alt='Online rent collection platform showing multiple South African payment methods including EFT, credit cards, and mobile payments'
+                    src='/feature-notification.webp'
+                    width={800}
+                    height={320}
+                    className='h-80 object-contain border-b border-r border-l w-full rounded-b-lg shadow'
+                  />
+                  <div className='p-5'>
+                    <h3 className='text-sm/4 font-semibold text-gray-500'>
+                      Smart Reminders
+                    </h3>
+                    <p className='mt-2 text-lg font-medium tracking-tight text-gray-900'>
+                      Reduce late payments with automated reminders
+                    </p>
+                    <p className='mt-2 max-w-lg text-sm/6 text-gray-600'>
+                      Get notified when payments are received and send automated
+                      reminders to tenants before rent is due, reducing late
+                      payments and awkward conversations.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id='how-it-works'
+          className='py-24 sm:py-32 bg-white'
+          aria-labelledby='how-it-works-heading'
+        >
+          <div className='mx-auto max-w-7xl px-6 lg:px-8'>
+            <div className='mx-auto max-w-2xl lg:text-center'>
+              <h2 className='text-base/7 font-semibold text-[#1ABC9C]'>
+                Get Started in Minutes
               </h2>
-              <p className='text-base sm:text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
-                Powerful tools designed for South African landlords and property
-                managers
+              <p className='mt-2 text-4xl font-semibold tracking-tight text-pretty text-primary sm:text-5xl lg:text-balance'>
+                How LeaseUp Works for Landlords
+              </p>
+              <p className='mt-6 text-lg/8'>
+                From setup to rent collection, LeaseUp streamlines your entire
+                rental property management process. Get up and running with
+                automated rent collection in three simple steps.
               </p>
             </div>
-
-            {/* Features List - alternating layout */}
-            <div className='space-y-24'>
-              {/* Feature 1 - Rent Collection */}
-              <article className='flex flex-col md:flex-row items-center gap-12'>
-                <div className='relative w-full md:w-1/2 flex justify-center'>
-                  <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
-                  <img
-                    src='/feature-accounting.svg'
-                    alt='LeaseUp automated rent collection dashboard showing online invoicing, payment tracking, and financial reports for South African landlords'
-                    className='rounded-xl shadow-lg w-full max-w-md'
-                    loading='lazy'
-                    width='400'
-                    height='300'
-                  />
-                </div>
-                <div className='w-full md:w-1/2'>
-                  <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Automated Rent Collection
-                  </h3>
-                  <p className='mb-4 text-[#475569]'>
-                    Accept payments online through all major South African
-                    payment methods. Send automated invoices and reminders to
-                    reduce late payments.
-                  </p>
-                  <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
-                    <li>✅ Online invoicing with automatic reminders</li>
-                    <li>✅ WhatsApp, SMS, and email notifications</li>
-                    <li>
-                      ✅ EFT, credit cards, and bank transfers via Paystack
-                    </li>
-                    <li>✅ Instant payment notifications</li>
-                  </ul>
-                  {/* <a
-                  href='/features/accounting'
-                  className='text-[#1ABC9C] font-medium hover:underline'
-                >
-                  More &gt;
-                </a> */}
-                </div>
-              </article>
-
-              {/* Feature 2 - Tenant Management */}
-              <article className='flex flex-col md:flex-row-reverse items-center gap-12'>
-                <div className='relative w-full md:w-1/2 flex justify-center'>
-                  <div className='absolute -z-10 top-6 right-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
-                  <img
-                    src='/feature-leasing.svg'
-                    alt='LeaseUp tenant management system showing lease agreements, tenant profiles, and communication tools for property managers'
-                    className='rounded-xl shadow-lg w-full max-w-md'
-                    loading='lazy'
-                    width='400'
-                    height='300'
-                  />
-                </div>
-                <div className='w-full md:w-1/2'>
-                  <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Tenant & Lease Management
-                  </h3>
-                  <p className='mb-4 text-[#475569]'>
-                    Organize tenant information, track lease agreements, and
-                    monitor payment history—all in one centralized platform.
-                  </p>
-                  <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
-                    <li>✅ Secure tenant database with FICA documents</li>
-                    <li>✅ Lease tracking with expiry alerts</li>
-                    <li>✅ Complete payment history tracking</li>
-                    <li>✅ Automated tenant communication</li>
-                  </ul>
-                  {/* <a
-                  href='/features/leasing'
-                  className='text-[#1ABC9C] font-medium hover:underline'
-                >
-                  More &gt;
-                </a> */}
-                </div>
-              </article>
-
-              {/* Feature 3 - Online Rent Collection */}
-              <article className='flex flex-col md:flex-row items-center gap-12'>
-                <div className='relative w-full md:w-1/2 flex justify-center'>
-                  <div className='absolute -z-10 top-6 left-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
-                  <img
-                    src='/feature-rent-collection.svg'
-                    alt='Online rent collection platform showing multiple South African payment methods including EFT, credit cards, and mobile payments'
-                    className='rounded-xl shadow-lg w-full max-w-md'
-                    loading='lazy'
-                    width='400'
-                    height='300'
-                  />
-                </div>
-                <div className='w-full md:w-1/2'>
-                  <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Online Payment Options
-                  </h3>
-                  <p className='mb-4 text-[#475569]'>
-                    Provide tenants with convenient online payment options
-                    through Paystack, supporting all major South African payment
-                    methods.
-                  </p>
-                  <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
-                    <li>✅ Credit cards, EFT, and bank transfers</li>
-                    <li>
-                      ✅ Full payments, partial payments, and installments
-                    </li>
-                    <li>
-                      ✅ Real-time payment tracking with automated follow-ups
-                    </li>
-                  </ul>
-                  {/* <a
-                  href='/features/online-rent-collection'
-                  className='text-[#1ABC9C] font-medium hover:underline'
-                >
-                  More &gt;
-                </a> */}
-                </div>
-              </article>
-
-              {/* Feature 4 - Document Management */}
-              <article className='flex flex-col md:flex-row-reverse items-center gap-12'>
-                <div className='relative w-full md:w-1/2 flex justify-center'>
-                  <div className='absolute -z-10 top-6 right-6 w-72 h-72 bg-[#1ABC9C]/20 rounded-full blur-2xl'></div>
-                  <img
-                    src='/feature-maintenance.svg'
-                    alt='Document management system for landlords showing lease agreements, FICA documents, and property records storage'
-                    className='rounded-xl shadow-lg w-full max-w-md'
-                    loading='lazy'
-                    width='400'
-                    height='300'
-                  />
-                </div>
-                <div className='w-full md:w-1/2'>
-                  <h3 className='text-2xl font-bold mb-2 text-[#2C3E50]'>
-                    Document Management
-                  </h3>
-                  <p className='mb-4 text-[#475569]'>
-                    Securely store lease agreements, FICA documents, and
-                    property records with automated backups and easy access.
-                  </p>
-                  <ul className='list-image-none list text-[#2C3E50] mb-2 flex flex-col gap-2 [&>li]:font-bold [&>li]:text-lg [&>li]:tracking-tight'>
-                    <li>✅ Secure cloud storage with automated backups</li>
-                    <li>
-                      ✅ Generate lease agreements and invoices automatically
-                    </li>
-                    <li>✅ FICA compliance and tenant verification</li>
-                  </ul>
-                  {/* <a
-                  href='/features/maintenance'
-                  className='text-[#1ABC9C] font-medium hover:underline'
-                >
-                  More &gt;
-                </a> */}
-                </div>
-              </article>
+            <div className='mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none'>
+              <dl className='grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3'>
+                {howItWorksSteps.map((step) => (
+                  <div key={step.name} className='flex flex-col'>
+                    <dt className='flex items-center gap-x-3 text-base/7 font-semibold text-gray-900'>
+                      <step.icon
+                        aria-hidden='true'
+                        className='size-5 flex-none text-[#1ABC9C]'
+                      />
+                      {step.name}
+                    </dt>
+                    <dd className='mt-4 flex flex-auto flex-col text-base/7 text-gray-600'>
+                      <p className='flex-auto'>{step.description}</p>
+                      <p className='mt-6'>
+                        <a
+                          href={step.href}
+                          className='text-sm/6 font-semibold text-[#1ABC9C] hover:text-[#16A085]'
+                        >
+                          Get started <span aria-hidden='true'>→</span>
+                        </a>
+                      </p>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
         </section>
@@ -335,9 +458,9 @@ export default function Home() {
             <div className='text-center mb-16'>
               <h2
                 id='pricing-heading'
-                className='text-4xl font-bold text-[#2C3E50] mb-4'
+                className='text-4xl font-bold text-primary mb-4'
               >
-                Affordable Property Management Software Pricing
+                Affordable Pricing
               </h2>
               <p className='text-xl text-[#7F8C8D] max-w-2xl mx-auto text-pretty'>
                 Transparent pricing for South African landlords. One affordable
@@ -557,9 +680,8 @@ export default function Home() {
               Ready to Streamline Your Rental Business?
             </h2>
             <p className='text-xl text-blue-100 mb-8'>
-              Join South African landlords who trust LeaseUp to manage their
-              rental properties efficiently with automated rent collection and
-              tenant management.
+              Join landlords who trust LeaseUp to manage their rental properties
+              efficiently with automated rent collection and tenant management.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <a href={SIGNUP_URL ?? ''}>
