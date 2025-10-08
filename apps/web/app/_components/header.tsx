@@ -125,7 +125,6 @@ export const Header: FC<ComponentProps<'header'>> = () => {
                 href={SIGNUP_URL}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='bg-[#1ABC9C] text-white px-6 py-2 rounded-lg hover:bg-[#2980B9] transition-colors'
                 aria-label='Get started with Leaseup'
               >
                 Get Started

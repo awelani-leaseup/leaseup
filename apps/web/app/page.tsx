@@ -1,6 +1,8 @@
 import { Button } from '@leaseup/ui/components/button';
 import { Previews } from './_components/previews';
+import { GridPattern } from './_components/grid-pattern';
 import { Calendar, Rocket, UserPlus, Building, CreditCard } from 'lucide-react';
+import { cn } from '@leaseup/ui/utils/cn';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 
@@ -136,11 +138,6 @@ export default function Home() {
           addressCountry: 'ZA',
           addressRegion: 'Guateng',
         },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: '-33.9249',
-          longitude: '18.4241',
-        },
         areaServed: [
           {
             '@type': 'Country',
@@ -255,16 +252,26 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <main>
-        <section className='bg-[#fefefe] text-[#1E293B] pt-20 sm:pt-52 md:min-h-[700px] flex items-center'>
-          <div className='max-w-[1392px] mx-auto px-4 md:px-8 w-full'>
+        <section className='relative bg-[#fefefe] text-[#1E293B] pt-20 sm:pt-52 md:min-h-[700px] flex items-center overflow-hidden'>
+          <GridPattern
+            width={30}
+            height={30}
+            x={-1}
+            y={-1}
+            strokeDasharray={'4 2'}
+            className={cn(
+              '[mask-image:radial-gradient(1000px_circle_at_center,white,transparent)]'
+            )}
+          />
+          <div className='relative max-w-[1392px] mx-auto px-4 md:px-8 w-full z-10'>
             <div className='flex flex-col items-center text-center gap-0 w-full'>
-              <div className='max-w-3xl w-full mb-8 sm:mb-0'>
+              <div className='relative max-w-3xl w-full mb-8 sm:mb-0'>
                 <h1 className='text-4xl sm:text-5xl md:text-7xl mb-6 tracking-tight leading-tight font-bold'>
                   Simplify Your{' '}
                   <span className='text-secondary'>Rental Property</span>{' '}
                   Management
                 </h1>
-                <p className='text-base sm:text-xl text-[#475569] mb-8 tracking-tight leading-relaxed text-pretty max-w-lg mx-auto'>
+                <p className='text-base sm:text-xl text-primary mb-8 tracking-tight leading-relaxed text-pretty max-w-lg mx-auto'>
                   Collect rent online, manage tenants, and grow your property
                   portfolio.
                 </p>

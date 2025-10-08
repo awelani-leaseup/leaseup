@@ -50,7 +50,7 @@ export const Previews: FC = () => {
   return (
     <div className='flex-col gap-4 w-full my-10 hidden lg:flex'>
       <Tabs defaultValue='dashboard'>
-        <TabsList className='self-center w-full max-w-md bg-transparent'>
+        <TabsList className='self-center w-full max-w-md bg-white'>
           <TabsTrigger value='dashboard' className='text-xs sm:text-sm'>
             <LayoutDashboard className='w-4 h-4' />
             <span className='hidden sm:inline'>Dashboard</span>
