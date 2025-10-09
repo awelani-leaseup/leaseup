@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     siteName: 'LeaseUp',
     images: [
       {
-        url: 'https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp',
+        url: 'https://leaseup.co.za/leaseup.png',
         width: 1200,
         height: 630,
         alt: 'LeaseUp Property Management Dashboard - Online Rent Collection for South African Landlords',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: 'LeaseUp - Property Management Software for South African Landlords',
     description:
       "Automate rent collection, manage tenants, and track leases with South Africa's leading property management software.",
-    images: ['https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp'],
+    images: ['https://leaseup.co.za/leaseup.png'],
   },
   alternates: {
     canonical: 'https://leaseup.co.za',
@@ -79,8 +79,7 @@ export default function Home() {
         url: 'https://leaseup.co.za',
         applicationCategory: 'BusinessApplication',
         operatingSystem: 'Web Browser',
-        screenshot:
-          'https://leaseup.co.za/Screenshot 2025-10-07 at 21.45.13.webp',
+        screenshot: 'https://leaseup.co.za/leaseup.png',
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: '4.8',
