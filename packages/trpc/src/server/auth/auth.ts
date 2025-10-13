@@ -3,6 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { novu } from '@leaseup/novu/client.ts';
 import { db as prisma } from '@leaseup/prisma/db.ts';
 import { createAuthMiddleware } from 'better-auth/api';
+import { createRedisClient } from '../../utils/redis';
 
 let BASE_URL = 'http://localhost:3001';
 
@@ -29,6 +30,20 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: BASE_URL,
   productionUrl: BASE_URL,
+  secondaryStorage: {
+    get: async (key: string) => {
+      const redis = await createRedisClient();
+      return redis.get(key);
+    },
+    set: async (key: string, value: string) => {
+      const redis = await createRedisClient();
+      return redis.set(key, value);
+    },
+    delete: async (key: string) => {
+      const redis = await createRedisClient();
+      redis.del(key);
+    },
+  },
   socialProviders: {
     google: {
       clientId: NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID,
