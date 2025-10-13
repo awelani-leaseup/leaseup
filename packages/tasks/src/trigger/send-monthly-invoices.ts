@@ -4,8 +4,6 @@ import { addDays, isAfter, isBefore } from 'date-fns';
 import { createInvoiceTask, type CreateInvoicePayload } from './invoice-send';
 import { calculateNextInvoiceDate } from '../utils/calculate-next-invoice-date';
 import {
-  getLandlordTestEmail,
-  getTenantTestEmail,
   logTestEmailUsage,
   isDevelopment as isDevEnvironment,
 } from '../utils/resend-test-emails';
@@ -200,12 +198,7 @@ const processInvoiceWithRateLimit = async (
       });
 
       if (tenant?.email) {
-        const tenantTestEmail = getTenantTestEmail(
-          tenant.email,
-          invoicePayload.tenantId,
-          'DELIVERED'
-        );
-
+        const tenantTestEmail = tenant.email;
         logTestEmailUsage(
           tenant.email,
           tenantTestEmail,
@@ -214,11 +207,7 @@ const processInvoiceWithRateLimit = async (
       }
 
       if (tenant?.landlord?.email) {
-        const landlordTestEmail = getLandlordTestEmail(
-          tenant.landlord.email,
-          invoicePayload.landlordId,
-          'DELIVERED'
-        );
+        const landlordTestEmail = tenant.landlord.email;
 
         logTestEmailUsage(
           tenant.landlord.email,
@@ -226,7 +215,7 @@ const processInvoiceWithRateLimit = async (
           `Monthly invoice batch ${batchNumber} - landlord notification`
         );
       }
-    } catch  {
+    } catch {
       logger.warn('Could not fetch emails for test email logging', {
         tenantId: invoicePayload.tenantId,
         batchNumber,

@@ -5,7 +5,7 @@ import { RecentActivity } from "./_components/recent-activity";
 import { UpcomingPayments } from "./_components/upcoming-payments";
 import { LeaseRenewals } from "./_components/lease-renewals";
 import { PlusIcon } from "lucide-react";
-import { authClient } from "@/utils/auth/client";
+import { auth } from "@leaseup/trpc/auth";
 import { headers } from "next/headers";
 import {
   Card,
@@ -18,13 +18,11 @@ import {
 import Link from "next/link";
 
 export default async function Dashboard() {
-  // Prefetch dashboard data
   await api.dashboard.getStats.prefetch();
   await api.dashboard.getMaintenanceRequests.prefetch();
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
   });
 
   return (
@@ -42,14 +40,14 @@ export default async function Dashboard() {
                     Dashboard
                   </CardTitle>
                   <CardDescription className="text-base text-[#7F8C8D]">
-                    Welcome back, {session?.data?.user?.name.split(" ")[0]}!
+                    Welcome back, {session?.user?.name.split(" ")[0]}!
                     Let&apos;s start managing your properties.
                   </CardDescription>
                   <CardAction>
                     <div className="mt-4 flex space-x-3 md:mt-0">
                       <Link href="/properties/create">
                         <Button>
-                          <PlusIcon  />
+                          <PlusIcon />
                           Add Property
                         </Button>
                       </Link>

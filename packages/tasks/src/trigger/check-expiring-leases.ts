@@ -3,10 +3,7 @@ import { db } from '@leaseup/prisma/db.ts';
 import { LeaseStatus, SubscriptionPlanStatus } from '@leaseup/prisma/client';
 import { resend } from '@leaseup/email/utils/resend';
 import { ExpiringLeases } from '@leaseup/email/templates/expiring-leases';
-import {
-  getLandlordTestEmail,
-  isDevelopment,
-} from '../utils/resend-test-emails';
+import { isDevelopment } from '../utils/resend-test-emails';
 
 export const checkExpiringLeasesTask = schedules.task({
   id: 'check-expiring-leases',
@@ -238,11 +235,7 @@ export const checkExpiringLeasesTask = schedules.task({
 
       const emailData = Object.entries(leasesByLandlord).map(
         ([landlordId, { landlord, leases }]) => {
-          const emailAddress = getLandlordTestEmail(
-            landlord.email,
-            landlordId,
-            'DELIVERED'
-          );
+          const emailAddress = landlord.email;
 
           // Format leases for the email template
           const formattedLeases = leases.map((lease) => ({

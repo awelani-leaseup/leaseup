@@ -146,13 +146,7 @@ export const checkPaidInvoicesTask = schedules.task({
           const reportDate = yesterday.toLocaleDateString('en-ZA');
           const ctaUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invoices?status=PAID`;
 
-          const recipientEmail = isDevelopment
-            ? getInvoiceTestEmail(
-                landlord.email,
-                landlordInvoices[0]?.id || 'unknown',
-                'landlord'
-              )
-            : landlord.email;
+          const recipientEmail = landlord.email;
 
           await resend.emails.send({
             from: 'LeaseUp <notifications@leaseup.co.za>',

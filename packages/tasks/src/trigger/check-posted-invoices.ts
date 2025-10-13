@@ -204,11 +204,7 @@ export const checkPostedInvoicesTask = schedules.task({
 
       const emailData = Object.entries(invoicesByLandlord).map(
         ([landlordId, { landlord, invoices }]) => {
-          const emailAddress = getLandlordTestEmail(
-            landlord.email,
-            landlordId,
-            'DELIVERED'
-          );
+          const emailAddress = landlord.email;
 
           return {
             landlordId,

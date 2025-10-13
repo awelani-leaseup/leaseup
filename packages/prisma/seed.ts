@@ -45,6 +45,16 @@ function generateSouthAfricanIntlNumber() {
   return `+27${prefix}${lineNumber}`;
 }
 
+// Generate Resend test emails with labels for different scenarios
+function generateTestEmail(
+  type: 'user' | 'tenant' | 'additional' | 'emergency' = 'user'
+) {
+  const testDomains = ['delivered', 'bounced', 'complained'];
+  const domain = faker.helpers.arrayElement(testDomains);
+  const label = `${type}-${faker.string.alphanumeric(6).toLowerCase()}`;
+  return `${domain}+${label}@resend.dev`;
+}
+
 const PASSWORD = '123456789';
 
 async function main() {
@@ -65,14 +75,14 @@ async function main() {
   await db.$executeRawUnsafe(`DELETE FROM "session";`);
   await db.$executeRawUnsafe(`DELETE FROM "user";`);
 
-  const USER_COUNT = faker.number.int({ min: 10, max: 20 });
+  const USER_COUNT = faker.number.int({ min: 15, max: 20 });
 
   const userPromises: Promise<
     Awaited<ReturnType<typeof auth.api.signUpEmail>>
   >[] = new Array(USER_COUNT).fill(null).map(() => {
     return auth.api.signUpEmail({
       body: {
-        email: faker.internet.email(),
+        email: generateTestEmail('user'),
         password: PASSWORD,
         name: faker.person.fullName(),
       },
@@ -175,7 +185,7 @@ async function main() {
       data: Array.from(
         { length: faker.number.int({ min: 10, max: 50 }) },
         () => ({
-          email: faker.internet.email(),
+          email: generateTestEmail('tenant'),
           avatarUrl: faker.image.avatar(),
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
@@ -193,13 +203,13 @@ async function main() {
               Object.values(TenantIncomeType)
             ),
           },
-          additionalEmails: [faker.internet.email()],
+          additionalEmails: [generateTestEmail('additional')],
           additionalPhones: [generateSouthAfricanIntlNumber()],
           emergencyContacts: [
             {
               fullName: faker.person.fullName(),
               phoneNumber: generateSouthAfricanIntlNumber(),
-              email: faker.internet.email(),
+              email: generateTestEmail('emergency'),
               relationship: faker.helpers.arrayElement(
                 Object.values(TenantRelationship)
               ),
