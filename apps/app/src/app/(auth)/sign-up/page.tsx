@@ -111,6 +111,23 @@ export default function SignUp() {
             <CardContent>
               <form.AppForm>
                 <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-3">
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={handleGoogleSignIn}
+                      isLoading={status === "loading"}
+                    >
+                      <GoogleIcon />
+                      Continue with Google
+                    </Button>
+                    <div className="relative flex items-center justify-center">
+                      <Separator className="my-4" />
+                      <span className="text-muted-foreground absolute bg-white px-2 text-sm">
+                        Or
+                      </span>
+                    </div>
+                  </div>
                   <form.AppField name="fullName">
                     {(field) => <field.TextField label="Full Name" />}
                   </form.AppField>
@@ -171,30 +188,13 @@ export default function SignUp() {
                       </div>
                     )}
                   </form.AppField>
-                  <div className="flex flex-col gap-3">
-                    <Button
-                      type="button"
-                      className="w-full"
-                      onClick={() => form.handleSubmit()}
-                    >
-                      Register
-                    </Button>
-                    <div className="relative flex items-center justify-center">
-                      <Separator className="my-4" />
-                      <span className="text-muted-foreground absolute bg-white px-2 text-sm">
-                        Or
-                      </span>
-                    </div>
-                    <Button
-                      type="button"
-                      className="w-full"
-                      onClick={handleGoogleSignIn}
-                      isLoading={status === "loading"}
-                    >
-                      <GoogleIcon />
-                      Continue with Google
-                    </Button>
-                  </div>
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={() => form.handleSubmit()}
+                  >
+                    Register
+                  </Button>
                 </div>
                 <form.FormMessage>{errors}</form.FormMessage>
                 <div className="mt-4 text-center text-sm">

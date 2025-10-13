@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@leaseup/ui/components/card";
 import { useAppForm } from "@leaseup/ui/components/form";
+import { Separator } from "@leaseup/ui/components/separator";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -116,6 +117,22 @@ export default function SignIn() {
             <CardContent>
               <form.AppForm>
                 <div className="flex flex-col gap-6">
+                  <Button
+                    type="button"
+                    variant="outlined"
+                    className="w-full"
+                    onClick={handleGoogleSignIn}
+                    isLoading={isLoadingGoogle}
+                  >
+                    <GoogleIcon />
+                    Login with Google
+                  </Button>
+                  <div className="relative flex items-center justify-center">
+                    <Separator />
+                    <span className="text-muted-foreground absolute bg-white px-2 text-sm">
+                      Or
+                    </span>
+                  </div>
                   <form.AppField name="email">
                     {(field) => <field.TextField label="Email" />}
                   </form.AppField>
@@ -144,16 +161,6 @@ export default function SignIn() {
                       isLoading={status === "loading"}
                     >
                       Login
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outlined"
-                      className="w-full"
-                      onClick={handleGoogleSignIn}
-                      isLoading={isLoadingGoogle}
-                    >
-                      <GoogleIcon />
-                      Login with Google
                     </Button>
                   </div>
                 </div>
