@@ -17,20 +17,13 @@ import { Button } from "@leaseup/ui/components/button";
 import { useAppForm } from "@leaseup/ui/components/form";
 import { Separator } from "@leaseup/ui/components/separator";
 import { H5 } from "@leaseup/ui/components/typography";
-import { StaticMap, createStaticMapsUrl } from "@vis.gl/react-google-maps";
 import { useStore } from "@tanstack/react-form";
 import { api } from "@/trpc/react";
 import { toast } from "react-hot-toast";
 import { Save } from "lucide-react";
-import { createPropertyFormOptions } from "../create/_utils";
 import { formOptions } from "@tanstack/react-form";
-import * as v from "valibot";
 import { PropertyDocumentManagementContent } from "../create/_components/property-files-sub-form";
-import {
-  withForm,
-  FieldLabel,
-  FieldMessage,
-} from "@leaseup/ui/components/form";
+import { FieldLabel, FieldMessage } from "@leaseup/ui/components/form";
 import { Label } from "@leaseup/ui/components/label";
 import { RadioGroup, RadioGroupItem } from "@leaseup/ui/components/radio-group";
 import { Badge } from "@leaseup/ui/components/badge";
@@ -99,25 +92,19 @@ export function EditPropertyDialog({
   const user = session?.user;
   const utils = api.useUtils();
 
-  const staticMapsUrl = createStaticMapsUrl({
-    apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    scale: 2,
-    width: 600,
-    height: 600,
-    center: address,
-    zoom: 17,
-    language: "en",
-    markers: [
-      {
-        location: address,
-      },
-    ],
-  });
-
   const { mutateAsync: updateProperty, isPending } =
-    api.portfolio.updateProperty.useMutation();
+    api.portfolio.updateProperty.useMutation({
+      onError: (error) => {
+        if (error.data?.code === "BAD_REQUEST") {
+          toast.error(error.message, {
+            duration: 10000,
+          });
+        } else {
+          toast.error("Failed to update property");
+        }
+      },
+    });
 
-  // Transform property data to match form schema
   const getDefaultValues = () => {
     if (property.propertyType === "SINGLE_UNIT" && property.unit.length > 0) {
       const unit = property.unit[0];
@@ -286,7 +273,6 @@ export function EditPropertyDialog({
         {
           success: "Property updated successfully",
           loading: "Updating property...",
-          error: "Failed to update property",
         },
       );
     },
@@ -306,6 +292,10 @@ export function EditPropertyDialog({
   const zip = useStore(form.store, (state) => state.values.zip);
   const countryCode = useStore(form.store, (state) => state.values.countryCode);
   const { data: features } = api.portfolio.getPropertyFeatures.useQuery();
+  const propertyType = useStore(
+    form.store,
+    (state) => state.values.propertyType,
+  );
 
   useEffect(() => {
     if (addressLine1 && city && state && zip && countryCode) {
@@ -323,6 +313,25 @@ export function EditPropertyDialog({
       form.reset();
     }
   }, [property, form, open]);
+
+  useEffect(() => {
+    if (propertyType === "MULTI_UNIT") {
+      form.setFieldValue("propertyUnits", [
+        {
+          id: "",
+          unitNumber: "",
+          bedrooms: 0,
+          bathrooms: 0,
+          sqmt: 0,
+          rent: 0,
+          deposit: 0,
+        },
+      ]);
+    } else {
+      form.setFieldValue("propertyUnits", []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propertyType]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

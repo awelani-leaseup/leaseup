@@ -109,7 +109,11 @@ export const portfolioRouter = createTRPCRouter({
             landlordId,
           },
           include: {
-            unit: true,
+            unit: {
+              include: {
+                lease: true,
+              },
+            },
           },
         });
 
@@ -118,6 +122,16 @@ export const portfolioRouter = createTRPCRouter({
             code: 'NOT_FOUND',
             message:
               'Property not found or you do not have permission to update it',
+          });
+        }
+
+        const units = existingProperty.unit;
+
+        if (units.some((unit) => unit.lease.length > 0)) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message:
+              'Property has active leases, please deactivate/delete them first',
           });
         }
 
