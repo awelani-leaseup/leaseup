@@ -483,7 +483,7 @@ export default function Home() {
                     business needs.
                   </p>
                   <dl className='mt-10 max-w-xl space-y-8 text-base/7 text-gray-600 lg:max-w-none'>
-                    <div className='relative pl-9'>
+                    <div className='relative pl-9 flex flex-col gap-2'>
                       <dt className='inline font-semibold text-gray-900'>
                         <Building
                           aria-hidden='true'
@@ -498,7 +498,7 @@ export default function Home() {
                         software.
                       </dd>
                     </div>
-                    <div className='relative pl-9'>
+                    <div className='relative pl-9 flex flex-col gap-2'>
                       <dt className='inline font-semibold text-gray-900'>
                         <UserPlus
                           aria-hidden='true'
