@@ -89,12 +89,12 @@ export default function Home() {
         },
         offers: {
           '@type': 'Offer',
-          price: '799.00',
+          price: '499.00',
           priceCurrency: 'ZAR',
           availability: 'https://schema.org/InStock',
           priceSpecification: {
             '@type': 'RecurringPaymentsPriceSpecification',
-            price: '799.00',
+            price: '499.00',
             priceCurrency: 'ZAR',
             billingDuration: 'P1M',
             billingIncrement: 1,
@@ -156,7 +156,7 @@ export default function Home() {
           },
         ],
         serviceType: 'Property Management Software',
-        priceRange: 'R799/month',
+        priceRange: 'R499/month',
       },
       {
         '@type': 'FAQPage',
@@ -478,7 +478,7 @@ export default function Home() {
               {[
                 {
                   name: 'Professional',
-                  price: 'R799.00',
+                  price: 'R499.00',
                   features: [
                     'Send Rent Invoices Online',
                     'Automated Rent Reminders',
