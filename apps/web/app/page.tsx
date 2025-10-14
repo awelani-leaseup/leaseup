@@ -1,7 +1,14 @@
 import { Button } from '@leaseup/ui/components/button';
 import { Previews } from './_components/previews';
 import { GridPattern } from './_components/grid-pattern';
-import { Calendar, Rocket, UserPlus, Building, CreditCard } from 'lucide-react';
+import {
+  Calendar,
+  Rocket,
+  UserPlus,
+  Building,
+  CreditCard,
+  CircleCheck,
+} from 'lucide-react';
 import { cn } from '@leaseup/ui/utils/cn';
 import Image from 'next/image';
 import type { Metadata } from 'next';
@@ -451,6 +458,167 @@ export default function Home() {
                   </div>
                 ))}
               </dl>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id='who-is-it-for'
+          className='overflow-hidden bg-white py-24 sm:py-32'
+          aria-labelledby='who-is-it-for-heading'
+        >
+          <div className='mx-auto max-w-7xl md:px-6 lg:px-8'>
+            <div className='grid grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:grid-cols-2 lg:items-start'>
+              <div className='px-6 md:px-0 lg:pt-4 lg:pr-4'>
+                <div className='mx-auto max-w-2xl lg:mx-0 lg:max-w-lg'>
+                  <h2 className='text-base/7 font-semibold text-secondary'>
+                    Perfect for Property Professionals
+                  </h2>
+                  <p className='mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl'>
+                    Who is LeaseUp for?
+                  </p>
+                  <p className='mt-6 text-lg/8 text-gray-700'>
+                    Whether you're managing a few rental properties or building
+                    a growing property portfolio, LeaseUp scales with your
+                    business needs.
+                  </p>
+                  <dl className='mt-10 max-w-xl space-y-8 text-base/7 text-gray-600 lg:max-w-none'>
+                    <div className='relative pl-9'>
+                      <dt className='inline font-semibold text-gray-900'>
+                        <Building
+                          aria-hidden='true'
+                          className='absolute top-1 left-1 size-5 text-secondary'
+                        />
+                        Individual Landlords.
+                      </dt>
+                      <dd className='inline'>
+                        Perfect for property owners managing 1-50 rental units.
+                        Streamline rent collection, tenant communication, and
+                        lease management without the complexity of enterprise
+                        software.
+                      </dd>
+                    </div>
+                    <div className='relative pl-9'>
+                      <dt className='inline font-semibold text-gray-900'>
+                        <UserPlus
+                          aria-hidden='true'
+                          className='absolute top-1 left-1 size-5 text-secondary'
+                        />
+                        Growing Property Agencies.
+                      </dt>
+                      <dd className='inline'>
+                        Ideal for property management companies expanding their
+                        portfolio. Centralize operations, automate workflows,
+                        and provide professional service to property owners and
+                        tenants.
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              <div className='sm:px-6 lg:px-0'>
+                <div className='relative isolate overflow-hidden bg-secondary px-6 pt-8 sm:mx-auto sm:max-w-2xl sm:rounded-3xl sm:pt-16 sm:pr-0 sm:pl-16 lg:mx-0 lg:max-w-none'>
+                  <div
+                    aria-hidden='true'
+                    className='absolute -inset-y-px -left-3 -z-10 w-full origin-bottom-left skew-x-[-30deg] bg-green-100 opacity-20 ring-1 ring-white ring-inset'
+                  ></div>
+                  <div className='mx-auto max-w-2xl sm:mx-0 sm:max-w-none'>
+                    <div className='w-screen overflow-hidden rounded-tl-xl bg-gray-900 ring-1 ring-white/10'>
+                      <div className='flex bg-gray-800/40 ring-1 ring-white/5'>
+                        <div className='-mb-px flex text-sm/6 font-medium text-gray-400'>
+                          <div className='border-r border-b border-r-white/10 border-b-white/20 bg-white/5 px-4 py-2 text-white'>
+                            Dashboard
+                          </div>
+                          <div className='border-r border-gray-600/10 px-4 py-2'>
+                            Properties
+                          </div>
+                        </div>
+                      </div>
+                      <div className='px-6 pt-6 pb-14'>
+                        <div className='space-y-6'>
+                          <div className='bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border border-green-200'>
+                            <h3 className='text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2 tracking-tight'>
+                              Your Property Portfolio
+                            </h3>
+                            <div className='grid grid-cols-2 gap-4'>
+                              <div className='text-center'>
+                                <div className='text-2xl font-bold text-green-600'>
+                                  5
+                                </div>
+                                <div className='text-sm text-gray-600'>
+                                  Properties
+                                </div>
+                              </div>
+                              <div className='text-center'>
+                                <div className='text-2xl font-bold text-blue-600'>
+                                  43
+                                </div>
+                                <div className='text-sm text-gray-600'>
+                                  Tenants
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className='bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 border border-blue-200'>
+                            <h3 className='text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2 tracking-tight'>
+                              Monthly Performance
+                            </h3>
+                            <div className='grid grid-cols-2 gap-4'>
+                              <div className='text-center'>
+                                <div className='text-2xl font-bold text-blue-600'>
+                                  R55,000
+                                </div>
+                                <div className='text-sm text-gray-600'>
+                                  Revenue
+                                </div>
+                              </div>
+                              <div className='text-center'>
+                                <div className='text-2xl font-bold text-green-600'>
+                                  98%
+                                </div>
+                                <div className='text-sm text-gray-600'>
+                                  Collection Rate
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className='bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200'>
+                            <h3 className='text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2 tracking-tight'>
+                              Automated Tasks
+                            </h3>
+                            <div className='space-y-2'>
+                              <div className='flex items-center gap-2 text-sm'>
+                                <CircleCheck className='size-4.5 text-success stroke-1 fill-success/10' />
+                                <span className='text-gray-700'>
+                                  Rent reminders sent automatically
+                                </span>
+                              </div>
+                              <div className='flex items-center gap-2 text-sm'>
+                                <CircleCheck className='size-4.5 text-success stroke-1 fill-success/10' />
+                                <span className='text-gray-700'>
+                                  Payments processed instantly
+                                </span>
+                              </div>
+                              <div className='flex items-center gap-2 text-sm'>
+                                <CircleCheck className='size-4.5 text-success stroke-1 fill-success/10' />
+                                <span className='text-gray-700'>
+                                  Reports updated in real-time
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden='true'
+                    className='pointer-events-none absolute inset-0 ring-1 ring-black/10 ring-inset sm:rounded-3xl'
+                  ></div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
