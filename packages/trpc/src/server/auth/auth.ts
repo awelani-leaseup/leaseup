@@ -82,7 +82,8 @@ export const auth = betterAuth({
         },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    // disable email verification for now until I figure out why manual sending verification emails is not working
+    requireEmailVerification: false,
     maxPasswordLength: 100,
     minPasswordLength: 8,
     revokeSessionsOnPasswordReset: true,
