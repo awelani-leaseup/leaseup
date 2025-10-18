@@ -1,5 +1,8 @@
 {
   "extends": "@leaseup/typescript-config/base.json",
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
   "exclude": ["node_modules", "dist"]
 }

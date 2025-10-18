@@ -22,6 +22,16 @@
     "generate": {
       "dependsOn": ["^generate"],
       "outputs": ["generated/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["test-results/**", "playwright-report/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["test-results/**", "playwright-report/**"]
     }
   },
   "globalEnv": [

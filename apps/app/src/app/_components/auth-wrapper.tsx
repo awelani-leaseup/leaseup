@@ -20,7 +20,8 @@ export function AuthWrapper({ children }: AuthWrapperProps) {
     pathname?.startsWith("/sign-in") ||
     pathname?.startsWith("/sign-up") ||
     pathname?.startsWith("/forgot-password") ||
-    pathname?.startsWith("/reset-password");
+    pathname?.startsWith("/reset-password") ||
+    pathname?.startsWith("/verify-email");
 
   const isOnboardingPage = pathname?.startsWith("/onboarding");
 

@@ -81,15 +81,10 @@ const processChargeSuccessEffect = (payload: ChargeSuccessPayload) =>
   Effect.gen(function* () {
     const databaseService = yield* DatabaseServiceTag;
 
-    yield* Console.log(`Processing ${payload.event} event with Effect-TS`, {
-      reference: payload.data.reference,
-      customerEmail: payload.data.customer.email,
-      amount: payload.data.amount,
-      currency: payload.data.currency,
-      status: payload.data.status,
-      planCode: payload.data.plan?.plan_code || null,
-      channel: payload.data.channel,
-    });
+    yield* Console.log(
+      `Processing ${payload.event} event with Effect-TS`,
+      payload.data
+    );
 
     // Check if this is a subscription renewal by verifying if a plan is associated
     if (!payload.data.plan) {

@@ -146,6 +146,9 @@ exports.Prisma.UserScalarFieldEnum = {
   subscriptionUpdatedAt: 'subscriptionUpdatedAt',
   lastPaymentFailure: 'lastPaymentFailure',
   paymentRetryCount: 'paymentRetryCount',
+  trialStartDate: 'trialStartDate',
+  trialEndDate: 'trialEndDate',
+  trialTokenizationTransactionId: 'trialTokenizationTransactionId',
   state: 'state',
   zip: 'zip',
   onboardingCompleted: 'onboardingCompleted',
@@ -379,7 +382,9 @@ exports.SubscriptionPlanStatus = exports.$Enums.SubscriptionPlanStatus = {
   ATTENTION: 'ATTENTION',
   DISABLED: 'DISABLED',
   COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  TRIAL_ACTIVE: 'TRIAL_ACTIVE',
+  TRIAL_EXPIRED: 'TRIAL_EXPIRED'
 };
 
 exports.CustomerIdentificationStatus = exports.$Enums.CustomerIdentificationStatus = {

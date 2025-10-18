@@ -13,15 +13,6 @@ import {
 } from "@leaseup/ui/components/alert-dialog";
 import { Button } from "@leaseup/ui/components/button";
 import { CreditCard, Loader2, LogOut } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@leaseup/ui/components/card";
-import { Separator } from "@leaseup/ui/components/separator";
-import { formatCurrency } from "../(main)/invoices/_utils";
 import { authClient } from "@/utils/auth/client";
 import { usePaystackPayment } from "react-paystack";
 import { useRouter } from "next/navigation";
@@ -73,6 +64,8 @@ export function SubscriptionWrapper({
   const [isOpen, setIsOpen] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const syncSubscriptionMutation = api.user.syncSubscription.useMutation();
+  const processTrialTokenizationMutation =
+    api.user.processTrialTokenization.useMutation();
 
   useEffect(() => {
     const newUserId = session?.user?.id || null;
@@ -84,6 +77,8 @@ export function SubscriptionWrapper({
       setIsOpen(true);
     }
   }, [session?.user?.id, currentUserId, utils]);
+
+  // Note: URL parameter handling removed since we're using inline checkout
 
   const { data: onboardingStatus, isLoading: isOnboardingLoading } =
     api.onboarding.getOnboardingStatus.useQuery(undefined, {
@@ -108,12 +103,39 @@ export function SubscriptionWrapper({
 
   const isLoading = isOnboardingLoading || isSubscriptionLoading;
 
-  const initializePayment = usePaystackPayment({
+  // Configuration for trial tokenization (R1 payment)
+  const trialConfig = {
+    reference: Date.now().toString(),
+    email: session?.user?.email || "",
+    amount: 100, // R1 in cents (100 cents = R1)
     publicKey: PAYSTACK_PUBLIC_KEY,
-    email: session?.user?.email,
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Transaction Type",
+          variable_name: "transaction_type",
+          value: "trial_tokenization",
+        },
+        {
+          display_name: "Plan Code",
+          variable_name: "plan_code",
+          value: PROFESSIONAL_PLAN_CODE,
+        },
+      ],
+    },
+  };
+
+  // Configuration for regular subscription payment
+  const subscriptionConfig = {
+    reference: Date.now().toString(),
+    email: session?.user?.email || "",
     plan: PROFESSIONAL_PLAN_CODE,
-    amount: 0,
-  });
+    amount: 0, // Amount is handled by the plan
+    publicKey: PAYSTACK_PUBLIC_KEY,
+  };
+
+  const initializeTrialPayment = usePaystackPayment(trialConfig);
+  const initializeSubscriptionPayment = usePaystackPayment(subscriptionConfig);
 
   if (error) {
     console.warn("Failed to fetch subscription status:", error);
@@ -139,13 +161,18 @@ export function SubscriptionWrapper({
 
   if (
     subscriptionStatus?.status === "ACTIVE" ||
-    subscriptionStatus?.status === "NON_RENEWING"
+    subscriptionStatus?.status === "NON_RENEWING" ||
+    subscriptionStatus?.isTrialActive
   ) {
     return <>{children}</>;
   }
 
   const getSubscriptionMessage = () => {
     if (customMessage) return customMessage;
+
+    if (subscriptionStatus?.isTrialExpired) {
+      return "Your 30-day free trial has ended. Subscribe now to continue accessing all premium features and manage your properties effectively.";
+    }
 
     if (subscriptionStatus?.status === "ATTENTION") {
       return "Your subscription needs attention due to a payment issue. Please update your payment method to continue using this feature.";
@@ -162,38 +189,15 @@ export function SubscriptionWrapper({
       return "Your subscription will not renew automatically. Renew now to continue accessing this feature without interruption.";
     }
 
-    return (
-      <Card className="border-primary relative cursor-pointer shadow-md transition-all hover:shadow-lg">
-        <CardHeader className="text-center">
-          <CardTitle className="text-base">{subscriptionPlan.name}</CardTitle>
-          <CardDescription>{subscriptionPlan.description}</CardDescription>
-          <div className="mt-4">
-            <span className="text-lg font-black">
-              {formatCurrency(subscriptionPlan.price)}
-            </span>
-            <span className="text-muted-foreground">
-              /{subscriptionPlan.interval}
-            </span>
-          </div>
-        </CardHeader>
-
-        <Separator />
-
-        <CardContent>
-          <ul className="flex flex-col gap-y-4">
-            {subscriptionPlan.features.map((feature) => (
-              <li key={feature} className="flex items-start gap-2">
-                ✅<span className="text-base tracking-tight">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-    );
+    return "Start your 30-day trial for just R1 (refunded immediately), then continue with full access for R799/month. Cancel anytime during your trial period.";
   };
 
   const getSubscriptionTitle = () => {
     if (customTitle) return customTitle;
+
+    if (subscriptionStatus?.isTrialExpired) {
+      return "Free Trial Ended";
+    }
 
     if (subscriptionStatus?.status === "ATTENTION") {
       return "Payment Issue";
@@ -210,10 +214,14 @@ export function SubscriptionWrapper({
       return "Subscription Not Renewing";
     }
 
-    return "Subscription Required";
+    return "Start Your Free Trial for Just R1";
   };
 
   const getActionButtonText = () => {
+    if (subscriptionStatus?.isTrialExpired) {
+      return "Subscribe Now";
+    }
+
     if (subscriptionStatus?.status === "ATTENTION") {
       return "Update Payment Method";
     }
@@ -222,12 +230,12 @@ export function SubscriptionWrapper({
       return "Renew Subscription";
     }
 
-    return "Continue";
+    return "Start Free Trial for R1";
   };
 
   return (
     <AlertDialog open={isOpen}>
-      <AlertDialogContent className="sm:max-w-sm">
+      <AlertDialogContent className="sm:max-w-md">
         <AlertDialogHeader className="text-center">
           <AlertDialogTitle className="text-center">
             {getSubscriptionTitle()}
@@ -235,6 +243,52 @@ export function SubscriptionWrapper({
           <AlertDialogDescription className="text-muted-foreground text-base">
             {getSubscriptionMessage()}
           </AlertDialogDescription>
+
+          {/* Show trial pricing for new users */}
+          {!subscriptionStatus?.hasSubscription &&
+            !subscriptionStatus?.isTrialExpired && (
+              <div className="mt-4 space-y-4">
+                {/* Pricing Information */}
+                <div className="rounded-lg border border-green-200 bg-gradient-to-r from-green-50 to-blue-50 p-4">
+                  <div className="text-center">
+                    <div className="mb-2 flex items-center justify-center gap-2">
+                      <span className="text-3xl font-black text-green-600">
+                        R1
+                      </span>
+                      <span className="text-lg text-gray-600">today</span>
+                    </div>
+                    <div className="mb-2 text-sm text-gray-600">
+                      Then <span className="font-semibold">R799/month</span>{" "}
+                      after your 30-day trial
+                    </div>
+                    <div className="mb-2 text-sm font-medium text-green-700">
+                      R1 refunded immediately after verification
+                    </div>
+                    <div className="text-sm font-medium text-green-700">
+                      Cancel anytime during trial
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature List */}
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="mb-3 text-center text-sm font-semibold text-gray-900">
+                    What&apos;s included:
+                  </h4>
+                  <ul className="space-y-2">
+                    {subscriptionPlan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2 text-sm"
+                      >
+                        <span className="text-green-600">✅</span>
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
         </AlertDialogHeader>
 
         {subscriptionStatus?.status === "ATTENTION" &&
@@ -251,36 +305,109 @@ export function SubscriptionWrapper({
           <AlertDialogAction asChild>
             <Button
               onClick={() => {
-                setIsOpen(false);
-                initializePayment({
-                  onClose: () => {
-                    setIsOpen(true);
-                  },
-                  onSuccess: async () => {
-                    setIsOpen(false);
-                    try {
-                      const { success } =
-                        await syncSubscriptionMutation.mutateAsync();
-                      if (success) {
-                        utils.user.getSubscriptionStatus.invalidate();
-                      } else {
-                        console.warn("Failed to sync subscription");
-                      }
-                    } catch (error) {
-                      console.warn(
-                        "Failed to optimistically update subscription status:",
-                        error,
-                      );
-                    }
+                if (
+                  !subscriptionStatus?.hasSubscription &&
+                  !subscriptionStatus?.isTrialExpired
+                ) {
+                  setIsOpen(false);
 
-                    setTimeout(() => {
-                      router.push("/dashboard");
-                      utils.onboarding.getOnboardingStatus.invalidate();
-                    }, 200);
-                  },
-                });
+                  initializeTrialPayment({
+                    config: {
+                      currency: "ZAR",
+                      amount: 100,
+                      email: session?.user?.email || "",
+                      metadata: {
+                        custom_fields: [
+                          {
+                            display_name: "Transaction Type",
+                            variable_name: "transaction_type",
+                            value: "trial_tokenization",
+                          },
+                          {
+                            display_name: "Plan Code",
+                            variable_name: "plan_code",
+                            value: PROFESSIONAL_PLAN_CODE,
+                          },
+                        ],
+                      },
+                    },
+                    onSuccess: async (reference) => {
+                      console.log("Trial payment successful:", reference);
+                      setIsOpen(false);
+
+                      try {
+                        // Process the trial tokenization with the payment reference
+                        await processTrialTokenizationMutation.mutateAsync({
+                          reference: reference.reference,
+                        });
+
+                        // Invalidate queries to refresh subscription status
+                        utils.user.getSubscriptionStatus.invalidate();
+
+                        setTimeout(() => {
+                          router.push("/dashboard");
+                          utils.onboarding.getOnboardingStatus.invalidate();
+                        }, 200);
+                      } catch (error) {
+                        console.error(
+                          "Failed to process trial tokenization:",
+                          error,
+                        );
+                        setIsOpen(true);
+                      }
+                    },
+                    onClose: () => {
+                      console.log("Trial payment dialog closed");
+                      setIsOpen(true);
+                    },
+                  });
+                } else {
+                  // Handle regular subscription payment for existing users or trial expired
+                  initializeSubscriptionPayment({
+                    onClose: () => {
+                      setIsOpen(true);
+                    },
+                    onSuccess: async (reference) => {
+                      console.log(
+                        "Subscription payment successful:",
+                        reference,
+                      );
+                      setIsOpen(false);
+
+                      try {
+                        const { success } =
+                          await syncSubscriptionMutation.mutateAsync();
+                        if (success) {
+                          utils.user.getSubscriptionStatus.invalidate();
+                        } else {
+                          console.warn("Failed to sync subscription");
+                        }
+                      } catch (error) {
+                        console.warn(
+                          "Failed to optimistically update subscription status:",
+                          error,
+                        );
+                      }
+
+                      setTimeout(() => {
+                        router.push("/dashboard");
+                        utils.onboarding.getOnboardingStatus.invalidate();
+                      }, 200);
+                    },
+                    config: {
+                      currency: "ZAR",
+                      amount: 0,
+                      email: session?.user?.email || "",
+                      plan: PROFESSIONAL_PLAN_CODE,
+                    },
+                  });
+                }
               }}
               className="w-full"
+              disabled={
+                processTrialTokenizationMutation.isPending ||
+                syncSubscriptionMutation.isPending
+              }
             >
               <CreditCard />
               {getActionButtonText()}

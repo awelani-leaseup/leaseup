@@ -242,7 +242,9 @@ export const SubscriptionPlanStatus: {
   ATTENTION: 'ATTENTION',
   DISABLED: 'DISABLED',
   COMPLETED: 'COMPLETED',
-  CANCELLED: 'CANCELLED'
+  CANCELLED: 'CANCELLED',
+  TRIAL_ACTIVE: 'TRIAL_ACTIVE',
+  TRIAL_EXPIRED: 'TRIAL_EXPIRED'
 };
 
 export type SubscriptionPlanStatus = (typeof SubscriptionPlanStatus)[keyof typeof SubscriptionPlanStatus]
@@ -2755,6 +2757,9 @@ export namespace Prisma {
     subscriptionUpdatedAt: Date | null
     lastPaymentFailure: string | null
     paymentRetryCount: number | null
+    trialStartDate: Date | null
+    trialEndDate: Date | null
+    trialTokenizationTransactionId: string | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
@@ -2792,6 +2797,9 @@ export namespace Prisma {
     subscriptionUpdatedAt: Date | null
     lastPaymentFailure: string | null
     paymentRetryCount: number | null
+    trialStartDate: Date | null
+    trialEndDate: Date | null
+    trialTokenizationTransactionId: string | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean | null
@@ -2829,6 +2837,9 @@ export namespace Prisma {
     subscriptionUpdatedAt: number
     lastPaymentFailure: number
     paymentRetryCount: number
+    trialStartDate: number
+    trialEndDate: number
+    trialTokenizationTransactionId: number
     state: number
     zip: number
     onboardingCompleted: number
@@ -2882,6 +2893,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: true
     lastPaymentFailure?: true
     paymentRetryCount?: true
+    trialStartDate?: true
+    trialEndDate?: true
+    trialTokenizationTransactionId?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -2919,6 +2933,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: true
     lastPaymentFailure?: true
     paymentRetryCount?: true
+    trialStartDate?: true
+    trialEndDate?: true
+    trialTokenizationTransactionId?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -2956,6 +2973,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: true
     lastPaymentFailure?: true
     paymentRetryCount?: true
+    trialStartDate?: true
+    trialEndDate?: true
+    trialTokenizationTransactionId?: true
     state?: true
     zip?: true
     onboardingCompleted?: true
@@ -3080,6 +3100,9 @@ export namespace Prisma {
     subscriptionUpdatedAt: Date | null
     lastPaymentFailure: string | null
     paymentRetryCount: number | null
+    trialStartDate: Date | null
+    trialEndDate: Date | null
+    trialTokenizationTransactionId: string | null
     state: string | null
     zip: string | null
     onboardingCompleted: boolean
@@ -3136,6 +3159,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: boolean
     lastPaymentFailure?: boolean
     paymentRetryCount?: boolean
+    trialStartDate?: boolean
+    trialEndDate?: boolean
+    trialTokenizationTransactionId?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3179,6 +3205,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: boolean
     lastPaymentFailure?: boolean
     paymentRetryCount?: boolean
+    trialStartDate?: boolean
+    trialEndDate?: boolean
+    trialTokenizationTransactionId?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3216,6 +3245,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: boolean
     lastPaymentFailure?: boolean
     paymentRetryCount?: boolean
+    trialStartDate?: boolean
+    trialEndDate?: boolean
+    trialTokenizationTransactionId?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3253,6 +3285,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: boolean
     lastPaymentFailure?: boolean
     paymentRetryCount?: boolean
+    trialStartDate?: boolean
+    trialEndDate?: boolean
+    trialTokenizationTransactionId?: boolean
     state?: boolean
     zip?: boolean
     onboardingCompleted?: boolean
@@ -3264,7 +3299,7 @@ export namespace Prisma {
     phone?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackCustomerId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "state" | "zip" | "onboardingCompleted" | "customerIdentificationStatus" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "addressLine1" | "addressLine2" | "city" | "idNumber" | "paystackSplitGroupId" | "paystackSubAccountId" | "paystackCustomerId" | "paystackSubscriptionId" | "paystackSubscriptionStatus" | "subscriptionPlanCode" | "subscriptionAmount" | "subscriptionCurrency" | "subscriptionInterval" | "nextPaymentDate" | "subscriptionCreatedAt" | "subscriptionUpdatedAt" | "lastPaymentFailure" | "paymentRetryCount" | "trialStartDate" | "trialEndDate" | "trialTokenizationTransactionId" | "state" | "zip" | "onboardingCompleted" | "customerIdentificationStatus" | "businessName" | "countryCode" | "numberOfProperties" | "numberOfUnits" | "phone", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     property?: boolean | User$propertyArgs<ExtArgs>
@@ -3311,6 +3346,9 @@ export namespace Prisma {
       subscriptionUpdatedAt: Date | null
       lastPaymentFailure: string | null
       paymentRetryCount: number | null
+      trialStartDate: Date | null
+      trialEndDate: Date | null
+      trialTokenizationTransactionId: string | null
       state: string | null
       zip: string | null
       onboardingCompleted: boolean
@@ -3773,6 +3811,9 @@ export namespace Prisma {
     readonly subscriptionUpdatedAt: FieldRef<"User", 'DateTime'>
     readonly lastPaymentFailure: FieldRef<"User", 'String'>
     readonly paymentRetryCount: FieldRef<"User", 'Int'>
+    readonly trialStartDate: FieldRef<"User", 'DateTime'>
+    readonly trialEndDate: FieldRef<"User", 'DateTime'>
+    readonly trialTokenizationTransactionId: FieldRef<"User", 'String'>
     readonly state: FieldRef<"User", 'String'>
     readonly zip: FieldRef<"User", 'String'>
     readonly onboardingCompleted: FieldRef<"User", 'Boolean'>
@@ -20253,6 +20294,9 @@ export namespace Prisma {
     subscriptionUpdatedAt: 'subscriptionUpdatedAt',
     lastPaymentFailure: 'lastPaymentFailure',
     paymentRetryCount: 'paymentRetryCount',
+    trialStartDate: 'trialStartDate',
+    trialEndDate: 'trialEndDate',
+    trialTokenizationTransactionId: 'trialTokenizationTransactionId',
     state: 'state',
     zip: 'zip',
     onboardingCompleted: 'onboardingCompleted',
@@ -20820,6 +20864,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastPaymentFailure?: StringNullableFilter<"User"> | string | null
     paymentRetryCount?: IntNullableFilter<"User"> | number | null
+    trialStartDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    trialEndDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    trialTokenizationTransactionId?: StringNullableFilter<"User"> | string | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
@@ -20862,6 +20909,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: SortOrderInput | SortOrder
     lastPaymentFailure?: SortOrderInput | SortOrder
     paymentRetryCount?: SortOrderInput | SortOrder
+    trialStartDate?: SortOrderInput | SortOrder
+    trialEndDate?: SortOrderInput | SortOrder
+    trialTokenizationTransactionId?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
@@ -20907,6 +20957,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastPaymentFailure?: StringNullableFilter<"User"> | string | null
     paymentRetryCount?: IntNullableFilter<"User"> | number | null
+    trialStartDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    trialEndDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    trialTokenizationTransactionId?: StringNullableFilter<"User"> | string | null
     state?: StringNullableFilter<"User"> | string | null
     zip?: StringNullableFilter<"User"> | string | null
     onboardingCompleted?: BoolFilter<"User"> | boolean
@@ -20949,6 +21002,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: SortOrderInput | SortOrder
     lastPaymentFailure?: SortOrderInput | SortOrder
     paymentRetryCount?: SortOrderInput | SortOrder
+    trialStartDate?: SortOrderInput | SortOrder
+    trialEndDate?: SortOrderInput | SortOrder
+    trialTokenizationTransactionId?: SortOrderInput | SortOrder
     state?: SortOrderInput | SortOrder
     zip?: SortOrderInput | SortOrder
     onboardingCompleted?: SortOrder
@@ -20994,6 +21050,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastPaymentFailure?: StringNullableWithAggregatesFilter<"User"> | string | null
     paymentRetryCount?: IntNullableWithAggregatesFilter<"User"> | number | null
+    trialStartDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    trialEndDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    trialTokenizationTransactionId?: StringNullableWithAggregatesFilter<"User"> | string | null
     state?: StringNullableWithAggregatesFilter<"User"> | string | null
     zip?: StringNullableWithAggregatesFilter<"User"> | string | null
     onboardingCompleted?: BoolWithAggregatesFilter<"User"> | boolean
@@ -22285,6 +22344,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -22327,6 +22389,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -22369,6 +22434,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -22411,6 +22479,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -22453,6 +22524,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -22490,6 +22564,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -22527,6 +22604,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -24088,6 +24168,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: SortOrder
     lastPaymentFailure?: SortOrder
     paymentRetryCount?: SortOrder
+    trialStartDate?: SortOrder
+    trialEndDate?: SortOrder
+    trialTokenizationTransactionId?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -24132,6 +24215,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: SortOrder
     lastPaymentFailure?: SortOrder
     paymentRetryCount?: SortOrder
+    trialStartDate?: SortOrder
+    trialEndDate?: SortOrder
+    trialTokenizationTransactionId?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -24169,6 +24255,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: SortOrder
     lastPaymentFailure?: SortOrder
     paymentRetryCount?: SortOrder
+    trialStartDate?: SortOrder
+    trialEndDate?: SortOrder
+    trialTokenizationTransactionId?: SortOrder
     state?: SortOrder
     zip?: SortOrder
     onboardingCompleted?: SortOrder
@@ -27713,6 +27802,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27754,6 +27846,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27811,6 +27906,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27852,6 +27950,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -27893,6 +27994,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27934,6 +28038,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -27991,6 +28098,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28032,6 +28142,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28167,6 +28280,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28208,6 +28324,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28381,6 +28500,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28422,6 +28544,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28566,6 +28691,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28607,6 +28735,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -28760,6 +28891,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -28801,6 +28935,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -29726,6 +29863,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -29767,6 +29907,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: Date | string | null
     lastPaymentFailure?: string | null
     paymentRetryCount?: number | null
+    trialStartDate?: Date | string | null
+    trialEndDate?: Date | string | null
+    trialTokenizationTransactionId?: string | null
     state?: string | null
     zip?: string | null
     onboardingCompleted?: boolean
@@ -30021,6 +30164,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
@@ -30062,6 +30208,9 @@ export namespace Prisma {
     subscriptionUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastPaymentFailure?: NullableStringFieldUpdateOperationsInput | string | null
     paymentRetryCount?: NullableIntFieldUpdateOperationsInput | number | null
+    trialStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trialTokenizationTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
     state?: NullableStringFieldUpdateOperationsInput | string | null
     zip?: NullableStringFieldUpdateOperationsInput | string | null
     onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean

@@ -285,7 +285,7 @@ export default function Home() {
                   <a href={SIGNUP_URL ?? ''}>
                     <Button size='lg'>
                       <Rocket />
-                      Get Started
+                      Start Free Trial
                     </Button>
                   </a>
                   <a href='mailto:awelani@leaseup.co.za'>
@@ -680,10 +680,20 @@ export default function Home() {
                     >
                       {plan.name}
                     </h3>
-                    <div
-                      className={`text-4xl font-bold ${plan.popular ? '' : 'text-[#3498DB]'} mb-2`}
-                    >
-                      {plan.price}
+                    <div className='mb-3'>
+                      <div className='flex items-center justify-center gap-3 mb-2'>
+                        <span className='text-lg text-[#95A5A6] line-through'>
+                          R799.00
+                        </span>
+                        <div
+                          className={`text-4xl font-bold ${plan.popular ? '' : 'text-[#3498DB]'}`}
+                        >
+                          {plan.price}
+                        </div>
+                      </div>
+                      <div className='bg-[#E74C3C] text-white px-3 py-1 rounded-full text-sm font-medium inline-block mb-2'>
+                        Limited Time Offer - Save R300!
+                      </div>
                     </div>
                     <div
                       className={
@@ -693,11 +703,18 @@ export default function Home() {
                       per month
                     </div>
                     <div
-                      className={`text-sm mt-2 ${
+                      className={`text-sm mt-1 ${
                         plan.popular ? 'text-blue-200' : 'text-[#95A5A6]'
                       }`}
                     >
                       + 2.9% transaction fee on rent payments
+                    </div>
+                    <div
+                      className={`text-sm mt-2 font-medium ${
+                        plan.popular ? 'text-[#1ABC9C]' : 'text-[#1ABC9C]'
+                      }`}
+                    >
+                      🎉 Start with a FREE 30-day trial
                     </div>
                   </div>
                   <ul className='space-y-4 mb-8'>
@@ -721,7 +738,7 @@ export default function Home() {
                     <Rocket />
                     {plan.name === 'Enterprise'
                       ? 'Contact Sales'
-                      : 'Get Started'}
+                      : 'Start Free Trial'}
                   </Button>
                 </div>
               ))}
@@ -759,7 +776,7 @@ export default function Home() {
         </section>
 
         <section
-          id='faq'
+          id='faqs'
           className='py-20 bg-[#ECF0F1]'
           aria-labelledby='faq-heading'
           itemScope
@@ -864,7 +881,7 @@ export default function Home() {
                   className='bg-[#1ABC9C] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2 w-full sm:w-auto'
                 >
                   <Rocket />
-                  Get Started
+                  Start Free Trial
                 </Button>
               </a>
               <a href='mailto:awelani@leaseup.co.za'>

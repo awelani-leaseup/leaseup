@@ -2,6 +2,7 @@
   "name": "@leaseup/prisma",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "exports": {
     "./db.ts": "./src/db.ts",
     "./client": "./generated/client/index.js",

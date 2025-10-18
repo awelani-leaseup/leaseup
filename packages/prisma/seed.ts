@@ -49,8 +49,7 @@ function generateSouthAfricanIntlNumber() {
 function generateTestEmail(
   type: 'user' | 'tenant' | 'additional' | 'emergency' = 'user'
 ) {
-  const testDomains = ['delivered', 'bounced', 'complained'];
-  const domain = faker.helpers.arrayElement(testDomains);
+  const domain = 'delivered'; // Only use delivered emails
   const label = `${type}-${faker.string.alphanumeric(6).toLowerCase()}`;
   return `${domain}+${label}@resend.dev`;
 }

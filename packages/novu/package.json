@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
+  "module": "esm",
   "exports": {
     "./client.ts": "./src/utils/client.ts",
     "./client": "./src/utils/client.ts"

@@ -104,10 +104,10 @@ export const Header: FC<ComponentProps<'header'>> = () => {
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
                   <Link
-                    href='#reviews'
+                    href='#faqs'
                     className={`${isScrolled ? 'text-black' : 'text-black'} hover:text-black transition-colors px-4 py-2`}
                   >
-                    Reviews
+                    FAQS
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -127,7 +127,7 @@ export const Header: FC<ComponentProps<'header'>> = () => {
                 rel='noopener noreferrer'
                 aria-label='Get started with Leaseup'
               >
-                Get Started
+                Start Free Trial
               </Link>
             </Button>
           </div>
@@ -205,7 +205,7 @@ export const Header: FC<ComponentProps<'header'>> = () => {
                   aria-label='Get started with Leaseup'
                   onClick={closeMobileMenu}
                 >
-                  Get Started
+                  Start Free Trial
                 </Link>
               </Button>
             </div>

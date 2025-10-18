@@ -646,7 +646,7 @@ export default function DocumentManagement() {
               className='bg-[#1ABC9C] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium hover:bg-[#16A085] transition-colors flex items-center justify-center gap-2 w-full sm:w-auto'
             >
               <ArrowRight className='h-4 w-4' />
-              Start Organizing Today
+              Start Free Trial
             </Button>
             <Button
               size='lg'

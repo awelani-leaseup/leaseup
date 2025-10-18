@@ -82,6 +82,11 @@ export default function SignIn() {
         },
         {
           onError: (error) => {
+            if (error.error.status === 403) {
+              router.push(`/verify-email?email=${value.email}`);
+              return;
+            }
+
             setStatus("error");
             setError(error.error.message);
           },
@@ -155,7 +160,7 @@ export default function SignIn() {
                   </div>
                   <div className="flex flex-col gap-3">
                     <Button
-                      type="button"
+                      type="submit"
                       className="w-full"
                       onClick={() => form.handleSubmit()}
                       isLoading={status === "loading"}

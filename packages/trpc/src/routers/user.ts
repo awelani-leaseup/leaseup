@@ -2,6 +2,7 @@ import { SubscriptionPlanStatus } from '@leaseup/prisma/client/client.js';
 import { createTRPCRouter, protectedProcedure } from '../server/trpc';
 import { paystack } from '@leaseup/payments/open-api/client';
 import { TRPCError } from '@trpc/server';
+import * as v from 'valibot';
 
 export const userRouter = createTRPCRouter({
   getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
@@ -94,12 +95,29 @@ export const userRouter = createTRPCRouter({
           nextPaymentDate: true,
           lastPaymentFailure: true,
           paymentRetryCount: true,
+          trialStartDate: true,
+          trialEndDate: true,
+          trialTokenizationTransactionId: true,
         },
       });
 
       if (!user) {
         return null;
       }
+
+      const now = new Date();
+      const isTrialActive =
+        user.paystackSubscriptionStatus ===
+          SubscriptionPlanStatus.TRIAL_ACTIVE &&
+        user.trialEndDate &&
+        user.trialEndDate > now;
+      const isTrialExpired =
+        user.paystackSubscriptionStatus ===
+          SubscriptionPlanStatus.TRIAL_EXPIRED ||
+        (user.paystackSubscriptionStatus ===
+          SubscriptionPlanStatus.TRIAL_ACTIVE &&
+          user.trialEndDate &&
+          user.trialEndDate <= now);
 
       return {
         hasSubscription: user.paystackSubscriptionId !== null,
@@ -111,9 +129,23 @@ export const userRouter = createTRPCRouter({
         nextPaymentDate: user.nextPaymentDate,
         lastPaymentFailure: user.lastPaymentFailure,
         paymentRetryCount: user.paymentRetryCount,
+        trialStartDate: user.trialStartDate,
+        trialEndDate: user.trialEndDate,
+        isTrialActive,
+        isTrialExpired,
+        daysLeftInTrial: user.trialEndDate
+          ? Math.max(
+              0,
+              Math.ceil(
+                (user.trialEndDate.getTime() - now.getTime()) /
+                  (1000 * 60 * 60 * 24)
+              )
+            )
+          : 0,
         isActive:
-          user.paystackSubscriptionStatus === SubscriptionPlanStatus.ACTIVE &&
-          user.paystackSubscriptionId !== null,
+          (user.paystackSubscriptionStatus === SubscriptionPlanStatus.ACTIVE &&
+            user.paystackSubscriptionId !== null) ||
+          isTrialActive,
       };
     } catch (error) {
       console.error('Error fetching subscription status:', error);
@@ -296,6 +328,7 @@ export const userRouter = createTRPCRouter({
           id: true,
           paystackCustomerId: true,
           email: true,
+          name: true,
         },
       });
 
@@ -343,14 +376,45 @@ export const userRouter = createTRPCRouter({
 
       const firstSubscription = subscriptions[0];
 
+      let subscriptionStatus: SubscriptionPlanStatus;
+      if (firstSubscription.status === 'active') {
+        subscriptionStatus = SubscriptionPlanStatus.ACTIVE;
+      } else if (firstSubscription.status === 'attention') {
+        subscriptionStatus = SubscriptionPlanStatus.ATTENTION;
+      } else if (firstSubscription.status === 'non-renewing') {
+        subscriptionStatus = SubscriptionPlanStatus.NON_RENEWING;
+      } else if (firstSubscription.status === 'cancelled') {
+        subscriptionStatus = SubscriptionPlanStatus.CANCELLED;
+      } else if (firstSubscription.status === 'completed') {
+        subscriptionStatus = SubscriptionPlanStatus.COMPLETED;
+      } else {
+        subscriptionStatus = SubscriptionPlanStatus.DISABLED;
+      }
+
+      const currentUser = await ctx.db.user.findUnique({
+        where: { id: userId },
+        select: {
+          paystackSubscriptionStatus: true,
+          trialEndDate: true,
+        },
+      });
+
+      const now = new Date();
+      const isCurrentlyInTrial =
+        currentUser?.paystackSubscriptionStatus ===
+          SubscriptionPlanStatus.TRIAL_ACTIVE &&
+        currentUser?.trialEndDate &&
+        currentUser.trialEndDate > now;
+
+      if (isCurrentlyInTrial && firstSubscription.status !== 'active') {
+        subscriptionStatus = SubscriptionPlanStatus.TRIAL_ACTIVE;
+      }
+
       await ctx.db.user.update({
         where: { id: userId },
         data: {
           paystackSubscriptionId: firstSubscription.subscription_code,
-          paystackSubscriptionStatus:
-            firstSubscription.status === 'active'
-              ? SubscriptionPlanStatus.ACTIVE
-              : SubscriptionPlanStatus.DISABLED,
+          paystackSubscriptionStatus: subscriptionStatus,
           subscriptionPlanCode: firstSubscription.plan?.plan_code || null,
           subscriptionAmount: firstSubscription.amount
             ? Math.floor(firstSubscription.amount / 100)
@@ -405,4 +469,160 @@ export const userRouter = createTRPCRouter({
       });
     }
   }),
+
+  processTrialTokenization: protectedProcedure
+    .input(
+      v.object({
+        reference: v.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth?.user?.id;
+
+      if (!userId) {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'User not authenticated',
+        });
+      }
+
+      try {
+        // Verify the transaction
+        const { data: transactionData, error: transactionError } =
+          await paystack.GET('/transaction/verify/{reference}', {
+            params: {
+              path: {
+                reference: input.reference,
+              },
+            },
+          });
+
+        if (transactionError || !transactionData?.data) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Failed to verify tokenization transaction',
+          });
+        }
+
+        const transaction = transactionData.data;
+
+        if (transaction.status !== 'success') {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Tokenization transaction was not successful',
+          });
+        }
+
+        if (!transaction?.metadata) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'No metadata received from transaction',
+          });
+        }
+
+        // @ts-ignore - ignore type error
+        const planCode = transaction?.metadata?.custom_fields?.find(
+          (field: any) => field.variable_name === 'plan_code'
+        )?.value;
+
+        if (!planCode) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'No plan code received from transaction',
+          });
+        }
+
+        // @ts-ignore - ignore type error
+        const authorizationCode = transaction.authorization?.authorization_code;
+
+        if (!authorizationCode) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'No authorization code received from transaction',
+          });
+        }
+
+        const { error: refundError } = await paystack.POST('/refund', {
+          body: {
+            transaction: input.reference,
+            amount: 100, // R1 in kobo
+          },
+        });
+
+        if (refundError) {
+          console.warn('Failed to refund tokenization charge:', refundError);
+          // Don't throw error here as the trial should still proceed
+        }
+
+        const subscriptionStartDate = new Date();
+        subscriptionStartDate.setDate(subscriptionStartDate.getDate() + 30);
+
+        const user = await ctx.db.user.findUnique({
+          where: { id: userId },
+          select: {
+            paystackCustomerId: true,
+            subscriptionPlanCode: true,
+          },
+        });
+
+        if (!user?.paystackCustomerId) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Missing customer or plan information',
+          });
+        }
+
+        const { data: subscriptionData, error: subscriptionError } =
+          await paystack.POST('/subscription', {
+            body: {
+              customer: user.paystackCustomerId,
+              plan: planCode,
+              authorization: authorizationCode,
+              start_date: subscriptionStartDate.toISOString(),
+            },
+          });
+
+        console.log('Subscription data:', subscriptionData);
+
+        if (subscriptionError || !subscriptionData?.data) {
+          console.warn(
+            'Failed to create delayed subscription:',
+            subscriptionError
+          );
+        }
+
+        const trialStartDate = new Date();
+        const trialEndDate = new Date();
+
+        trialEndDate.setDate(trialEndDate.getDate() + 30);
+
+        await ctx.db.user.update({
+          where: { id: userId },
+          data: {
+            paystackSubscriptionStatus: SubscriptionPlanStatus.TRIAL_ACTIVE,
+            trialStartDate,
+            trialEndDate,
+            trialTokenizationTransactionId: input.reference,
+          },
+        });
+
+        return {
+          success: true,
+          message: 'Trial tokenization processed successfully',
+          refundProcessed: !refundError,
+          subscriptionScheduled: !subscriptionError,
+        };
+      } catch (error) {
+        console.error('Error processing trial tokenization:', error);
+
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to process trial tokenization. Please try again.',
+        });
+      }
+    }),
 });

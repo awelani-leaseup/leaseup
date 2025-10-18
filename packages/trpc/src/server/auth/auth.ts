@@ -4,6 +4,8 @@ import { novu } from '@leaseup/novu/client.ts';
 import { db as prisma } from '@leaseup/prisma/db.ts';
 import { createAuthMiddleware } from 'better-auth/api';
 import { createRedisClient } from '../../utils/redis';
+import VerificationEmail from '@leaseup/email/templates/verification';
+import { resend } from '@leaseup/email/utils/resend';
 
 let BASE_URL = 'http://localhost:3001';
 
@@ -20,7 +22,14 @@ const NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID =
 
 const GOOGLE_OATH_CLIENT_SECRET = process.env.GOOGLE_OATH_CLIENT_SECRET;
 
-if (!NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID || !GOOGLE_OATH_CLIENT_SECRET) {
+// Allow missing Google OAuth credentials in test environment
+const isTestEnvironment =
+  process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === '1';
+
+if (
+  !isTestEnvironment &&
+  (!NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID || !GOOGLE_OATH_CLIENT_SECRET)
+) {
   throw new Error(
     `Missing Google OAuth client ID or secret ${process.env.GOOGLE_OATH_CLIENT_SECRET}`
   );
@@ -44,18 +53,40 @@ export const auth = betterAuth({
       redis.del(key);
     },
   },
-  socialProviders: {
-    google: {
-      clientId: NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID,
-      clientSecret: GOOGLE_OATH_CLIENT_SECRET,
+  emailVerification: {
+    sendVerificationEmail: async (data, request) => {
+      await resend.emails.send({
+        from: 'LeaseUp <onboarding@leaseup.co.za>',
+        to: data.user.email,
+        subject: 'Verify your email address',
+        react: VerificationEmail({
+          userName: data.user.name || data.user.email,
+          verificationUrl: data.url,
+        }),
+      });
     },
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
   },
+  socialProviders:
+    isTestEnvironment ||
+    !NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID ||
+    !GOOGLE_OATH_CLIENT_SECRET
+      ? {}
+      : {
+          google: {
+            clientId: NEXT_PUBLIC_GOOGLE_OATH_CLIENT_ID,
+            clientSecret: GOOGLE_OATH_CLIENT_SECRET,
+          },
+        },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false,
+    requireEmailVerification: true,
     maxPasswordLength: 100,
     minPasswordLength: 8,
     revokeSessionsOnPasswordReset: true,
+
     sendResetPassword: async ({ user, url }, request) => {
       await novu.trigger({
         to: {
